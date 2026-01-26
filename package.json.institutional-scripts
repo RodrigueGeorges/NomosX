@@ -1,0 +1,7 @@
+{
+  "scripts": {
+    "test:institutional": "node scripts/test-institutional.mjs",
+    "demo:institutional": "node scripts/demo-institutional.mjs",
+    "migrate:institutional": "npx prisma migrate dev --name add_institutional_fields"
+  }
+}

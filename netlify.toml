@@ -1,0 +1,32 @@
+[[build]]
+  command = "npm run build"
+  publish = ".next"
+  
+[build.environment]
+  NODE_VERSION = "18"
+  NODE_ENV = "production"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
+
+# Scheduled functions for autonomous operation
+
+[[functions]]
+  name = "daily-ingest"
+  schedule = "0 2 * * *"  # Every day at 2 AM UTC
+  
+[[functions]]
+  name = "weekly-digest"
+  schedule = "0 10 * * 1"  # Every Monday at 10 AM UTC
+
+[[functions]]
+  name = "embed-sources"
+  schedule = "0 4 * * *"  # Every day at 4 AM UTC
+
+[build.environment]
+  NODE_VERSION = "18"
+
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
