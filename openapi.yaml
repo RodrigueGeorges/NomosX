@@ -1,0 +1,319 @@
+openapi: 3.0.3
+info:
+  title: NomosX API
+  description: API pour le think tank agentic NomosX
+  version: 1.0.0
+  contact:
+    name: NomosX Team
+servers:
+  - url: http://localhost:3000/api
+    description: Development
+  - url: https://your-domain.netlify.app/api
+    description: Production
+
+components:
+  securitySchemes:
+    AdminKey:
+      type: apiKey
+      in: header
+      name: x-admin-key
+      description: Admin key pour les endpoints protégés
+  
+  schemas:
+    Topic:
+      type: object
+      properties:
+        id:
+          type: string
+        name:
+          type: string
+        query:
+          type: string
+        tags:
+          type: array
+          items:
+            type: string
+        description:
+          type: string
+          nullable: true
+        isActive:
+          type: boolean
+        createdAt:
+          type: string
+          format: date-time
+        updatedAt:
+          type: string
+          format: date-time
+    
+    Source:
+      type: object
+      properties:
+        id:
+          type: string
+        title:
+          type: string
+        year:
+          type: integer
+        qualityScore:
+          type: integer
+        provider:
+          type: string
+        authors:
+          type: array
+          items:
+            type: string
+    
+    Error:
+      type: object
+      properties:
+        error:
+          type: string
+
+paths:
+  /topics:
+    get:
+      summary: Liste tous les topics
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  topics:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Topic'
+    
+    post:
+      summary: Crée un nouveau topic
+      security:
+        - AdminKey: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - name
+                - query
+              properties:
+                name:
+                  type: string
+                query:
+                  type: string
+                tags:
+                  type: array
+                  items:
+                    type: string
+                description:
+                  type: string
+                isActive:
+                  type: boolean
+      responses:
+        '201':
+          description: Topic créé
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  topic:
+                    $ref: '#/components/schemas/Topic'
+        '400':
+          description: Bad request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/Error'
+        '401':
+          description: Unauthorized
+        '409':
+          description: Conflict
+  
+  /topics/{id}:
+    get:
+      summary: Récupère un topic
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  topic:
+                    $ref: '#/components/schemas/Topic'
+        '404':
+          description: Not found
+    
+    patch:
+      summary: Met à jour un topic
+      security:
+        - AdminKey: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                name:
+                  type: string
+                query:
+                  type: string
+                tags:
+                  type: array
+                  items:
+                    type: string
+                description:
+                  type: string
+                isActive:
+                  type: boolean
+      responses:
+        '200':
+          description: Updated
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+    
+    delete:
+      summary: Supprime un topic
+      security:
+        - AdminKey: []
+      parameters:
+        - name: id
+          in: path
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Deleted
+        '401':
+          description: Unauthorized
+        '404':
+          description: Not found
+  
+  /runs:
+    post:
+      summary: Crée un ingestion run
+      security:
+        - AdminKey: []
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                query:
+                  type: string
+                providers:
+                  type: array
+                  items:
+                    type: string
+                    enum: [openalex, thesesfr, crossref, semanticscholar]
+                perProvider:
+                  type: integer
+                  default: 20
+      responses:
+        '200':
+          description: Run created
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  runId:
+                    type: string
+  
+  /briefs:
+    post:
+      summary: Génère un brief
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              required:
+                - question
+              properties:
+                question:
+                  type: string
+      responses:
+        '200':
+          description: Brief généré
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                  html:
+                    type: string
+        '400':
+          description: Bad request
+        '422':
+          description: Citation guard failed
+  
+  /search:
+    get:
+      summary: Recherche hybride
+      parameters:
+        - name: q
+          in: query
+          required: true
+          schema:
+            type: string
+        - name: limit
+          in: query
+          schema:
+            type: integer
+            default: 20
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  results:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/Source'
+  
+  /stats:
+    get:
+      summary: Statistiques système
+      responses:
+        '200':
+          description: Success
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  overview:
+                    type: object
+                  jobs:
+                    type: object
+                  sources:
+                    type: object
