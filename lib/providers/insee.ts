@@ -1,9 +1,11 @@
 /**
  * INSEE client for French economic data
+ * Supports both legacy API and new Melodi API
  */
 
 import { fetchFromProvider } from "../http-client";
 import { env } from "../env";
+import { searchMelodi } from "./melodi";
 
 export interface MacroDataPoint {
   date: Date;
@@ -92,4 +94,31 @@ export async function ingestINSEEIndicators(): Promise<MacroSeries[]> {
   }
   
   return series;
+}
+
+/**
+ * Search INSEE datasets using Melodi API
+ * Replaces the legacy search functionality
+ */
+export async function searchINSEE(query: string, limit = 10): Promise<any[]> {
+  try {
+    console.log(`[INSEE] Searching Melodi for: "${query}"`);
+    
+    // Use Melodi API for comprehensive search
+    const results = await searchMelodi(query, limit);
+    
+    // Transform to INSEE format for compatibility
+    return results.map(dataset => ({
+      ...dataset,
+      provider: 'insee', // Keep legacy provider name
+      originalProvider: 'melodi'
+    }));
+    
+  } catch (error: any) {
+    console.error(`[INSEE] Melodi search failed: ${error.message}`);
+    
+    // Fallback to empty array - Melodi requires API key
+    console.log(`[INSEE] Note: Melodi requires INSEE_API_KEY in .env file`);
+    return [];
+  }
 }

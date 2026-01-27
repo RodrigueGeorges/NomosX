@@ -92,6 +92,7 @@ setRateLimiter("orcid", { requestsPerSecond: 10, burstSize: 20 });
 setRateLimiter("eurostat", { requestsPerSecond: 5, burstSize: 10 });
 setRateLimiter("ecb", { requestsPerSecond: 5, burstSize: 10 });
 setRateLimiter("insee", { requestsPerSecond: 5, burstSize: 10 });
+setRateLimiter("melodi", { requestsPerSecond: 3, burstSize: 5 });
 setRateLimiter("arxiv", { requestsPerSecond: 3, burstSize: 5 }); // NCBI guidelines
 setRateLimiter("hal", { requestsPerSecond: 10, burstSize: 20 });
 setRateLimiter("pubmed", { requestsPerSecond: 3, burstSize: 5 }); // NCBI guidelines
@@ -327,5 +328,18 @@ export async function fetchFromProvider<T = any>(
     await limiter.acquire();
   }
 
-  return httpGet<T>(url, options);
+  // Add provider-specific headers
+  const headers = { ...options.headers };
+  
+  // INSEE Melodi API requires authentication
+  if (provider === 'insee' || provider === 'melodi') {
+    const apiKey = process.env.INSEE_KEY;
+    if (apiKey) {
+      headers['Authorization'] = `Bearer ${apiKey}`;
+    } else {
+      console.warn(`[${provider.toUpperCase()}] No INSEE_KEY found in environment`);
+    }
+  }
+
+  return httpGet<T>(url, { ...options, headers });
 }
