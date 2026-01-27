@@ -1,8 +1,13 @@
 /**
  * Netlify scheduled function: Daily ingestion for active topics
+ * Runs every day at 2 AM UTC
  */
 
 import { PrismaClient } from "@prisma/client";
+
+export const config = {
+  schedule: "0 2 * * *"
+};
 
 const prisma = new PrismaClient();
 

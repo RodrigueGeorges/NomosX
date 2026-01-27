@@ -1,9 +1,14 @@
 /**
  * Netlify scheduled function: Generate embeddings for sources without them
+ * Runs every day at 4 AM UTC
  */
 
 import { PrismaClient } from "@prisma/client";
 import { embedSources } from "../../lib/embeddings.js";
+
+export const config = {
+  schedule: "0 4 * * *"
+};
 
 const prisma = new PrismaClient();
 

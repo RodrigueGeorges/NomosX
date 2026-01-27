@@ -6,6 +6,10 @@
 
 import { evaluatePendingSignals } from "../../lib/agent/editorial-gate";
 
+export const config = {
+  schedule: "0 6 * * *"
+};
+
 type Handler = (event: any, context: any) => Promise<{ statusCode: number; body: string }>;
 
 const handler: Handler = async (event, context) => {

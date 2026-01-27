@@ -6,6 +6,10 @@
 
 import { resetDailyCounters, resetWeeklyCounters } from "../../lib/agent/cadence-enforcer";
 
+export const config = {
+  schedule: "0 0 * * *"
+};
+
 type Handler = (event: any, context: any) => Promise<{ statusCode: number; body: string }>;
 
 const handler: Handler = async (event, context) => {
