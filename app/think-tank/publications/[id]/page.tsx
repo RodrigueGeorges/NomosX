@@ -20,67 +20,17 @@ import {
   ExternalLink
 } from "lucide-react";
 import Link from "next/link";
-import Shell from "@/components/Shell";
 import { Card } from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 import Badge from "@/components/ui/Badge";
 import TrustScoreBadge from "@/components/TrustScoreBadge";
-
-interface Publication {
-  id: string;
-  vertical: { id: string; slug: string; name: string; icon?: string; color?: string };
-  signal?: { id: string; title: string; signalType: string; priorityScore: number } | null;
-  type: string;
-  title: string;
-  html: string;
-  wordCount: number;
-  trustScore: number;
-  qualityScore: number;
-  citationCoverage: number;
-  claimCount: number;
-  factClaimCount: number;
-  citedClaimCount: number;
-  criticalLoopResult?: any;
-  sources: Array<{
-    id: string;
-    title: string;
-    authors?: string[];
-    year?: number;
-    provider: string;
-    qualityScore?: number;
-    url?: string;
-  }>;
-  claims: Array<{
-    id: string;
-    text: string;
-    claimType: string;
-    section: string;
-    confidence: number;
-    citations: string[];
-    hasContradiction: boolean;
-  }>;
-  qualityChecks: Array<{
-    checkType: string;
-    passed: boolean;
-    score?: number;
-  }>;
-  publishedAt?: string | null;
-  viewCount: number;
-  createdAt: string;
-}
-
-const TYPE_LABELS: Record<string, string> = {
-  RESEARCH_BRIEF: "Research Brief",
-  UPDATE_NOTE: "Update Note",
-  DATA_NOTE: "Data Note",
-  POLICY_NOTE: "Policy Note",
-  DOSSIER: "Dossier"
-};
+import type { PublicationDetail } from "@/lib/think-tank/ui-types";
+import { PUBLICATION_TYPE_LABELS } from "@/lib/think-tank/ui-types";
 
 export default function PublicationDetailPage() {
   const params = useParams();
   const router = useRouter();
-  const [publication, setPublication] = useState<Publication | null>(null);
+  const [publication, setPublication] = useState<PublicationDetail | null>(null);
   const [loading, setLoading] = useState(true);
   const [activeTab, setActiveTab] = useState<"content" | "audit" | "sources">("content");
 
@@ -107,17 +57,15 @@ export default function PublicationDetailPage() {
 
   if (loading) {
     return (
-      <Shell>
-        <div className="flex items-center justify-center py-20">
-          <div className="w-8 h-8 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin" />
-        </div>
-      </Shell>
+      <div className="p-6 flex items-center justify-center py-20">
+        <div className="w-8 h-8 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin" />
+      </div>
     );
   }
 
   if (!publication) {
     return (
-      <Shell>
+      <div className="p-6">
         <Card className="p-12 text-center">
           <FileText size={32} className="text-white/20 mx-auto mb-3" />
           <p className="text-white/50">Publication non trouvée</p>
@@ -125,15 +73,14 @@ export default function PublicationDetailPage() {
             <ArrowLeft size={16} /> Retour
           </Button>
         </Card>
-      </Shell>
+      </div>
     );
   }
 
   const isPublished = !!publication.publishedAt;
 
   return (
-    <Shell>
-      <div className="space-y-6">
+    <div className="p-6 space-y-6">
         {/* Header */}
         <div className="flex items-start justify-between">
           <div>
@@ -153,7 +100,7 @@ export default function PublicationDetailPage() {
               <div>
                 <span className="text-sm text-white/50">{publication.vertical.name}</span>
                 <span className="mx-2 text-white/20">•</span>
-                <span className="text-sm text-white/50">{TYPE_LABELS[publication.type]}</span>
+                <span className="text-sm text-white/50">{PUBLICATION_TYPE_LABELS[publication.type]}</span>
               </div>
               <Badge variant={isPublished ? "success" : "warning"}>
                 {isPublished ? "Publié" : "Brouillon"}
@@ -359,8 +306,7 @@ export default function PublicationDetailPage() {
             </div>
           </Card>
         )}
-      </div>
-    </Shell>
+    </div>
   );
 }
 

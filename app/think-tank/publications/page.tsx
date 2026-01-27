@@ -14,32 +14,10 @@ import {
   RefreshCw,
   ChevronDown
 } from "lucide-react";
-import Shell from "@/components/Shell";
 import { Card } from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 import { PublicationCard } from "@/components/think-tank";
-
-interface Publication {
-  id: string;
-  verticalId: string;
-  vertical: { id: string; slug: string; name: string; icon?: string; color?: string };
-  type: string;
-  title: string;
-  wordCount: number;
-  trustScore: number;
-  qualityScore: number;
-  sourceCount: number;
-  publishedAt?: string | null;
-  viewCount: number;
-  createdAt: string;
-}
-
-interface Vertical {
-  id: string;
-  slug: string;
-  name: string;
-  icon?: string;
-}
+import type { PublicationSummary, VerticalRef } from "@/lib/think-tank/ui-types";
 
 const PUBLICATION_TYPES = [
   { value: "", label: "Tous les types" },
@@ -58,8 +36,8 @@ const PUBLICATION_STATUS = [
 
 export default function PublicationsPage() {
   const searchParams = useSearchParams();
-  const [publications, setPublications] = useState<Publication[]>([]);
-  const [verticals, setVerticals] = useState<Vertical[]>([]);
+  const [publications, setPublications] = useState<PublicationSummary[]>([]);
+  const [verticals, setVerticals] = useState<VerticalRef[]>([]);
   const [loading, setLoading] = useState(true);
   const [total, setTotal] = useState(0);
 
@@ -112,30 +90,24 @@ export default function PublicationsPage() {
   }
 
   return (
-    <Shell>
-      <div className="space-y-6">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-white flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 border border-emerald-500/30 flex items-center justify-center">
-                <FileText size={20} className="text-emerald-400" />
-              </div>
-              Publications
-            </h1>
-            <p className="text-white/50 mt-1">
-              {total} publication{total !== 1 ? "s" : ""}
-            </p>
-          </div>
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            onClick={loadPublications}
-            disabled={loading}
-          >
-            <RefreshCw size={16} className={loading ? "animate-spin" : ""} />
-          </Button>
+    <div className="p-6 space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-xl font-bold text-white">Publications</h1>
+          <p className="text-sm text-white/40 mt-0.5">
+            {total} publication{total !== 1 ? "s" : ""}
+          </p>
         </div>
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          onClick={loadPublications}
+          disabled={loading}
+        >
+          <RefreshCw size={16} className={loading ? "animate-spin" : ""} />
+        </Button>
+      </div>
 
         {/* Filters */}
         <Card className="p-4">
@@ -181,8 +153,7 @@ export default function PublicationsPage() {
             </p>
           </Card>
         )}
-      </div>
-    </Shell>
+    </div>
   );
 }
 

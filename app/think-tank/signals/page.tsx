@@ -14,30 +14,10 @@ import {
   RefreshCw,
   ChevronDown
 } from "lucide-react";
-import Shell from "@/components/Shell";
 import { Card } from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 import { SignalCard } from "@/components/think-tank";
-
-interface Signal {
-  id: string;
-  verticalId: string;
-  vertical: { id: string; slug: string; name: string; icon?: string; color?: string };
-  signalType: string;
-  title: string;
-  summary: string;
-  scores: { novelty: number; impact: number; confidence: number; urgency: number; priority: number };
-  status: string;
-  sourceCount: number;
-  detectedAt: string;
-}
-
-interface Vertical {
-  id: string;
-  slug: string;
-  name: string;
-  icon?: string;
-}
+import type { SignalSummary, VerticalRef } from "@/lib/think-tank/ui-types";
 
 const SIGNAL_STATUSES = [
   { value: "", label: "Tous les statuts" },
@@ -58,8 +38,8 @@ const SIGNAL_TYPES = [
 
 export default function SignalsPage() {
   const searchParams = useSearchParams();
-  const [signals, setSignals] = useState<Signal[]>([]);
-  const [verticals, setVerticals] = useState<Vertical[]>([]);
+  const [signals, setSignals] = useState<SignalSummary[]>([]);
+  const [verticals, setVerticals] = useState<VerticalRef[]>([]);
   const [loading, setLoading] = useState(true);
   const [total, setTotal] = useState(0);
 
@@ -112,30 +92,24 @@ export default function SignalsPage() {
   }
 
   return (
-    <Shell>
-      <div className="space-y-6">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-white flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 border border-amber-500/30 flex items-center justify-center">
-                <Zap size={20} className="text-amber-400" />
-              </div>
-              Signaux
-            </h1>
-            <p className="text-white/50 mt-1">
-              {total} signal{total !== 1 ? "s" : ""} détecté{total !== 1 ? "s" : ""}
-            </p>
-          </div>
-          <Button 
-            variant="ghost" 
-            size="sm" 
-            onClick={loadSignals}
-            disabled={loading}
-          >
-            <RefreshCw size={16} className={loading ? "animate-spin" : ""} />
-          </Button>
+    <div className="p-6 space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-xl font-bold text-white">Signaux</h1>
+          <p className="text-sm text-white/40 mt-0.5">
+            {total} signal{total !== 1 ? "s" : ""} détecté{total !== 1 ? "s" : ""}
+          </p>
         </div>
+        <Button 
+          variant="ghost" 
+          size="sm" 
+          onClick={loadSignals}
+          disabled={loading}
+        >
+          <RefreshCw size={16} className={loading ? "animate-spin" : ""} />
+        </Button>
+      </div>
 
         {/* Filters */}
         <Card className="p-4">
@@ -181,8 +155,7 @@ export default function SignalsPage() {
             </p>
           </Card>
         )}
-      </div>
-    </Shell>
+    </div>
   );
 }
 

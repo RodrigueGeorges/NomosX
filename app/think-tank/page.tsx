@@ -9,73 +9,29 @@
 
 import { useEffect, useState } from "react";
 import { 
-  LayoutDashboard, 
   Zap, 
   FileText, 
   TrendingUp,
   RefreshCw,
-  ChevronRight
+  ChevronRight,
+  Layers,
+  Activity
 } from "lucide-react";
 import Link from "next/link";
-import Shell from "@/components/Shell";
 import { Card } from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
 import { VerticalCard, SignalCard, CadenceIndicator, PublicationCard } from "@/components/think-tank";
-
-interface Vertical {
-  id: string;
-  slug: string;
-  name: string;
-  nameEn?: string;
-  description?: string;
-  icon?: string;
-  color?: string;
-  pendingSignals: number;
-  publishedCount: number;
-  cadence: { current: number; max: number };
-}
-
-interface Signal {
-  id: string;
-  verticalId: string;
-  vertical: { id: string; slug: string; name: string; icon?: string; color?: string };
-  signalType: string;
-  title: string;
-  summary: string;
-  scores: { novelty: number; impact: number; confidence: number; urgency: number; priority: number };
-  status: string;
-  sourceCount: number;
-  detectedAt: string;
-}
-
-interface Publication {
-  id: string;
-  verticalId: string;
-  vertical: { id: string; slug: string; name: string; icon?: string; color?: string };
-  type: string;
-  title: string;
-  wordCount: number;
-  trustScore: number;
-  qualityScore: number;
-  sourceCount: number;
-  publishedAt?: string | null;
-  viewCount: number;
-  createdAt: string;
-}
-
-interface CadenceData {
-  global: {
-    daily: { current: number; max: number };
-    weekly: { current: number; max: number };
-  };
-  nextPublishWindow: string;
-  isQuietHours: boolean;
-}
+import type { 
+  VerticalSummary, 
+  SignalSummary, 
+  PublicationSummary, 
+  CadenceData 
+} from "@/lib/think-tank/ui-types";
 
 export default function ThinkTankDashboard() {
-  const [verticals, setVerticals] = useState<Vertical[]>([]);
-  const [signals, setSignals] = useState<Signal[]>([]);
-  const [publications, setPublications] = useState<Publication[]>([]);
+  const [verticals, setVerticals] = useState<VerticalSummary[]>([]);
+  const [signals, setSignals] = useState<SignalSummary[]>([]);
+  const [publications, setPublications] = useState<PublicationSummary[]>([]);
   const [cadence, setCadence] = useState<CadenceData | null>(null);
   const [loading, setLoading] = useState(true);
 
@@ -123,43 +79,37 @@ export default function ThinkTankDashboard() {
   const totalPublications = verticals.reduce((sum, v) => sum + v.publishedCount, 0);
 
   return (
-    <Shell>
-      <div className="space-y-8">
-        {/* Header */}
-        <div className="flex items-center justify-between">
-          <div>
-            <h1 className="text-2xl font-bold text-white flex items-center gap-3">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500/20 to-blue-500/20 border border-cyan-500/30 flex items-center justify-center">
-                <LayoutDashboard size={20} className="text-cyan-400" />
-              </div>
-              Think Tank
-            </h1>
-            <p className="text-white/50 mt-1">
-              Système de publication institutionnel autonome
-            </p>
-          </div>
-          <div className="flex items-center gap-3">
-            {cadence && (
-              <CadenceIndicator 
-                global={cadence.global} 
-                compact 
-              />
-            )}
-            <Button 
-              variant="ghost" 
-              size="sm" 
-              onClick={loadDashboardData}
-              disabled={loading}
-            >
-              <RefreshCw size={16} className={loading ? "animate-spin" : ""} />
-            </Button>
-          </div>
+    <div className="p-6 space-y-6">
+      {/* Header */}
+      <div className="flex items-center justify-between">
+        <div>
+          <h1 className="text-xl font-bold text-white">Vue d'ensemble</h1>
+          <p className="text-sm text-white/40 mt-0.5">
+            État actuel du système de publication
+          </p>
         </div>
+        <div className="flex items-center gap-3">
+          {cadence && (
+            <CadenceIndicator 
+              global={cadence.global} 
+              compact 
+            />
+          )}
+          <Button 
+            variant="ghost" 
+            size="sm" 
+            onClick={loadDashboardData}
+            disabled={loading}
+          >
+            <RefreshCw size={16} className={loading ? "animate-spin" : ""} />
+          </Button>
+        </div>
+      </div>
 
         {/* Stats Overview */}
         <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
           <StatCard 
-            icon={<LayoutDashboard size={18} />}
+            icon={<Layers size={18} />}
             label="Verticales actives"
             value={verticals.length}
             color="#3B82F6"
@@ -276,8 +226,7 @@ export default function ThinkTankDashboard() {
             </div>
           </section>
         )}
-      </div>
-    </Shell>
+    </div>
   );
 }
 
