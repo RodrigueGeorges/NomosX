@@ -5,24 +5,24 @@ import { useRouter, usePathname } from "next/navigation";
 import { useState, useEffect } from "react";
 import { 
   LayoutDashboard, 
-  Radar, 
+  Zap, 
   Search, 
-  Library, 
+  Archive, 
   Settings, 
   LogOut,
   User as UserIcon,
   Menu,
   X,
-  Building2
+  PenTool
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 
-// Navigation principale
+// Navigation principale - Unified Think Tank model
 const mainNav = [
-  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
-  { href: "/think-tank", label: "Think Tank", icon: Building2 },
-  { href: "/library", label: "Bibliothèque", icon: Library },
-  { href: "/radar", label: "Radar", icon: Radar },
+  { href: "/dashboard", label: "Control Center", icon: LayoutDashboard },
+  { href: "/studio", label: "Publication Studio", icon: PenTool },
+  { href: "/signals", label: "Signals", icon: Zap },
+  { href: "/publications", label: "Publications", icon: Archive },
   { href: "/search", label: "Explorer", icon: Search },
 ];
 
