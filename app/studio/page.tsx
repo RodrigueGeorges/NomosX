@@ -8,7 +8,7 @@
  * Output is NOT the brief itself — output is a Publication (or silence)
  */
 
-import { useState, useEffect } from "react";
+import { useState, useEffect, Suspense } from "react";
 import { useSearchParams, useRouter } from "next/navigation";
 import Shell from "@/components/Shell";
 import Textarea from "@/components/ui/Textarea";
@@ -66,7 +66,7 @@ type CouncilResult = {
   sources: Array<{ id: string; num: number; title: string; year?: number; provider?: string }>;
 };
 
-export default function StudioPage() {
+function StudioPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   
@@ -574,5 +574,22 @@ export default function StudioPage() {
         )}
       </div>
     </Shell>
+  );
+}
+
+export default function StudioPage() {
+  return (
+    <Suspense fallback={
+      <Shell>
+        <div className="flex items-center justify-center min-h-screen">
+          <div className="text-center">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-400 mx-auto mb-4"></div>
+            <p className="text-white/50">Chargement...</p>
+          </div>
+        </div>
+      </Shell>
+    }>
+      <StudioPageContent />
+    </Suspense>
   );
 }
