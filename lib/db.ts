@@ -19,6 +19,9 @@ const prismaClientSingleton = () => {
 
 export const prisma = globalThis.__prisma ?? prismaClientSingleton();
 
+// Default export for compatibility
+export default prisma;
+
 // Singleton in dev to prevent hot-reload connection leaks
 if (process.env.NODE_ENV !== "production") {
   globalThis.__prisma = prisma;
