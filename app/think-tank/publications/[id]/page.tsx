@@ -57,7 +57,7 @@ export default function PublicationDetailPage() {
 
   if (loading) {
     return (
-      <div className="p-6 flex items-center justify-center py-20">
+      <div className="flex items-center justify-center py-20">
         <div className="w-8 h-8 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin" />
       </div>
     );
@@ -65,7 +65,7 @@ export default function PublicationDetailPage() {
 
   if (!publication) {
     return (
-      <div className="p-6">
+      <div>
         <Card className="p-12 text-center">
           <FileText size={32} className="text-white/20 mx-auto mb-3" />
           <p className="text-white/50">Publication non trouvée</p>
@@ -80,7 +80,7 @@ export default function PublicationDetailPage() {
   const isPublished = !!publication.publishedAt;
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-6">
         {/* Header */}
         <div className="flex items-start justify-between">
           <div>
