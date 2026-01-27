@@ -155,7 +155,7 @@ export async function cadenceEnforcer(input: CadenceEnforcerInput): Promise<Cade
     };
   }
   
-  const config = vertical.config as VerticalConfig;
+  const config = vertical.config as unknown as VerticalConfig;
   
   // Time windows
   const dayStart = getStartOfDay(timestamp);
