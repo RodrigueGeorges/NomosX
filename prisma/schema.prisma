@@ -1009,3 +1009,332 @@ model FeatureFlag {
   @@index([key])
   @@index([isEnabled])
 }
+
+// ============================================================================
+// INSTITUTIONAL THINK TANK - VERTICALS
+// ============================================================================
+
+model Vertical {
+  id          String   @id @default(cuid())
+  slug        String   @unique
+  name        String
+  nameEn      String?
+  description String?  @db.Text
+  icon        String?
+  color       String?
+  
+  // Configuration (JSON) - VerticalConfig type
+  config      Json
+  
+  // Status
+  isActive    Boolean  @default(true)
+  
+  // Relations
+  signals            Signal[]
+  publications       ThinkTankPublication[]
+  editorialDecisions EditorialDecision[]
+  cadenceCounters    CadenceCounter[]
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([slug])
+  @@index([isActive])
+}
+
+// ============================================================================
+// INSTITUTIONAL THINK TANK - SIGNALS
+// ============================================================================
+
+model Signal {
+  id          String   @id @default(cuid())
+  
+  // Classification
+  verticalId  String
+  signalType  String   // NEW_EVIDENCE, CONTRADICTION, TREND_BREAK, DATA_RELEASE, POLICY_CHANGE, METHODOLOGY_SHIFT
+  
+  // Content
+  title       String
+  summary     String   @db.Text
+  
+  // Scores (0-100)
+  noveltyScore    Int
+  impactScore     Int
+  confidenceScore Int
+  urgencyScore    Int
+  priorityScore   Int  // Composite score
+  
+  // Status
+  status      String   @default("NEW") // NEW, HELD, PUBLISHED, REJECTED, EXPIRED
+  
+  // Sources
+  sourceIds   String[]
+  
+  // Metadata
+  detectedAt  DateTime @default(now())
+  expiresAt   DateTime?
+  
+  // Relations
+  vertical           Vertical             @relation(fields: [verticalId], references: [id])
+  editorialDecisions EditorialDecision[]
+  publications       ThinkTankPublication[]
+  
+  createdAt   DateTime @default(now())
+  updatedAt   DateTime @updatedAt
+  
+  @@index([verticalId])
+  @@index([status])
+  @@index([signalType])
+  @@index([priorityScore])
+  @@index([detectedAt])
+}
+
+// ============================================================================
+// INSTITUTIONAL THINK TANK - EDITORIAL DECISIONS
+// ============================================================================
+
+model EditorialDecision {
+  id          String   @id @default(cuid())
+  
+  // Links
+  signalId    String
+  verticalId  String
+  
+  // Decision
+  decision    String   // APPROVE, HOLD, REJECT
+  reasons     String[]
+  
+  // Check Results (JSON) - EditorialChecks type
+  checks      Json
+  
+  // Human Review
+  humanReviewRequired Boolean  @default(false)
+  humanReviewedBy     String?
+  humanReviewedAt     DateTime?
+  humanNotes          String?  @db.Text
+  
+  // Relations
+  signal   Signal   @relation(fields: [signalId], references: [id], onDelete: Cascade)
+  vertical Vertical @relation(fields: [verticalId], references: [id])
+  
+  createdAt DateTime @default(now())
+  
+  @@index([signalId])
+  @@index([verticalId])
+  @@index([decision])
+  @@index([humanReviewRequired])
+}
+
+// ============================================================================
+// INSTITUTIONAL THINK TANK - PUBLICATIONS
+// ============================================================================
+
+model ThinkTankPublication {
+  id          String   @id @default(cuid())
+  
+  // Classification
+  verticalId  String
+  signalId    String?
+  type        String   // RESEARCH_BRIEF, UPDATE_NOTE, DATA_NOTE, POLICY_NOTE, DOSSIER
+  
+  // Content
+  title       String
+  html        String   @db.Text
+  wordCount   Int
+  
+  // Quality Metrics (0-100)
+  trustScore      Int
+  qualityScore    Int
+  citationCoverage Float  // 0-1
+  
+  // Claim Stats
+  claimCount      Int    @default(0)
+  factClaimCount  Int    @default(0)
+  citedClaimCount Int    @default(0)
+  
+  // Critical Loop Results (JSON)
+  criticalLoopResult Json?
+  
+  // Sources
+  sourceIds   String[]
+  
+  // Publishing
+  publicId    String?  @unique
+  publishedAt DateTime?
+  
+  // Distribution
+  distributedAt DateTime?
+  viewCount     Int      @default(0)
+  
+  // Relations
+  vertical Vertical  @relation(fields: [verticalId], references: [id])
+  signal   Signal?   @relation(fields: [signalId], references: [id])
+  claims   ThinkTankClaim[]
+  runs     ThinkTankPublicationRun[]
+  checks   ThinkTankQualityCheck[]
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([verticalId])
+  @@index([type])
+  @@index([trustScore])
+  @@index([publishedAt])
+  @@index([publicId])
+}
+
+// ============================================================================
+// INSTITUTIONAL THINK TANK - CLAIMS
+// ============================================================================
+
+model ThinkTankClaim {
+  id            String   @id @default(cuid())
+  publicationId String
+  
+  // Content
+  text          String   @db.Text
+  claimType     String   // FACT, INTERPRETATION, SCENARIO, OPINION
+  section       String
+  
+  // Quality
+  confidence    Float    // 0-1
+  citations     String[] // [SRC-1, SRC-3]
+  
+  // Methodology
+  methodologyScore Int?
+  
+  // Contradictions
+  hasContradiction Boolean  @default(false)
+  contradictedBy   String[]
+  
+  // Relations
+  publication   ThinkTankPublication    @relation(fields: [publicationId], references: [id], onDelete: Cascade)
+  evidenceSpans ThinkTankEvidenceSpan[]
+  
+  createdAt DateTime @default(now())
+  
+  @@index([publicationId])
+  @@index([claimType])
+  @@index([hasContradiction])
+}
+
+// ============================================================================
+// INSTITUTIONAL THINK TANK - EVIDENCE SPANS
+// ============================================================================
+
+model ThinkTankEvidenceSpan {
+  id       String @id @default(cuid())
+  claimId  String
+  sourceId String
+  
+  // Span
+  text     String @db.Text
+  startPos Int
+  endPos   Int
+  
+  // Quality
+  relevanceScore Float
+  strengthScore  Float
+  evidenceType   String // direct_quote, paraphrase, statistical, methodological
+  
+  // Relations
+  claim ThinkTankClaim @relation(fields: [claimId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  
+  @@index([claimId])
+  @@index([sourceId])
+}
+
+// ============================================================================
+// INSTITUTIONAL THINK TANK - PUBLICATION RUNS
+// ============================================================================
+
+model ThinkTankPublicationRun {
+  id            String   @id @default(cuid())
+  publicationId String
+  
+  // Orchestration
+  correlationId String   @unique
+  status        String   @default("PENDING") // PENDING, RUNNING, COMPLETED, FAILED
+  
+  // Steps (JSON array) - PublicationStep[]
+  steps         Json
+  
+  // Timing
+  startedAt     DateTime?
+  finishedAt    DateTime?
+  duration      Int?     // milliseconds
+  
+  // Cost
+  tokensUsed    Int      @default(0)
+  costUsd       Float    @default(0)
+  
+  // Error
+  lastError     String?  @db.Text
+  retryCount    Int      @default(0)
+  
+  // Relations
+  publication ThinkTankPublication @relation(fields: [publicationId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([publicationId])
+  @@index([correlationId])
+  @@index([status])
+}
+
+// ============================================================================
+// INSTITUTIONAL THINK TANK - QUALITY CHECKS
+// ============================================================================
+
+model ThinkTankQualityCheck {
+  id            String   @id @default(cuid())
+  publicationId String
+  
+  // Check
+  checkType     String   // CADENCE, THRESHOLD, QUALITY, CITATION, FORBIDDEN_PATTERN, METHODOLOGY, ADVERSARIAL, CALIBRATION
+  passed        Boolean
+  score         Float?
+  
+  // Details (JSON)
+  details       Json
+  
+  // Relations
+  publication ThinkTankPublication @relation(fields: [publicationId], references: [id], onDelete: Cascade)
+  
+  createdAt DateTime @default(now())
+  
+  @@index([publicationId])
+  @@index([checkType])
+  @@index([passed])
+}
+
+// ============================================================================
+// INSTITUTIONAL THINK TANK - CADENCE COUNTERS
+// ============================================================================
+
+model CadenceCounter {
+  id          String   @id @default(cuid())
+  verticalId  String?  // null = global counter
+  
+  // Window
+  windowType  String   // DAILY, WEEKLY
+  windowStart DateTime
+  windowEnd   DateTime
+  
+  // Count
+  count       Int      @default(0)
+  maxAllowed  Int
+  
+  // Relations
+  vertical Vertical? @relation(fields: [verticalId], references: [id])
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@unique([verticalId, windowType, windowStart])
+  @@index([verticalId])
+  @@index([windowStart, windowEnd])
+}

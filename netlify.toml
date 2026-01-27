@@ -23,8 +23,18 @@
   name = "embed-sources"
   schedule = "0 4 * * *"  # Every day at 4 AM UTC
 
-[build.environment]
-  NODE_VERSION = "18"
+# Think Tank scheduled functions
+[[functions]]
+  name = "signal-build"
+  schedule = "0 3 * * *"  # Every day at 3 AM UTC
+
+[[functions]]
+  name = "editorial-precheck"
+  schedule = "0 6 * * *"  # Every day at 6 AM UTC
+
+[[functions]]
+  name = "cadence-reset"
+  schedule = "0 0 * * *"  # Every day at midnight UTC
 
 [[redirects]]
   from = "/api/*"

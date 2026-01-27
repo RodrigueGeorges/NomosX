@@ -12,13 +12,15 @@ import {
   LogOut,
   User as UserIcon,
   Menu,
-  X
+  X,
+  Building2
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 
 // Navigation principale
 const mainNav = [
   { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/think-tank", label: "Think Tank", icon: Building2 },
   { href: "/library", label: "Bibliothèque", icon: Library },
   { href: "/radar", label: "Radar", icon: Radar },
   { href: "/search", label: "Explorer", icon: Search },
