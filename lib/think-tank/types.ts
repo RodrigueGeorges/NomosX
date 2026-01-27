@@ -24,7 +24,8 @@ export const SIGNAL_STATUSES = [
   "HELD",
   "PUBLISHED",
   "REJECTED",
-  "EXPIRED"
+  "EXPIRED",
+  "SILENT"
 ] as const;
 
 export type SignalStatus = typeof SIGNAL_STATUSES[number];
@@ -49,9 +50,10 @@ export const CLAIM_TYPES = [
 export type ClaimType = typeof CLAIM_TYPES[number];
 
 export const EDITORIAL_DECISIONS = [
-  "APPROVE",
+  "PUBLISH",
   "HOLD",
-  "REJECT"
+  "REJECT",
+  "SILENCE"
 ] as const;
 
 export type EditorialDecisionType = typeof EDITORIAL_DECISIONS[number];
@@ -81,6 +83,7 @@ export interface VerticalConfig {
     minNoveltyScore: number;
     minImpactScore: number;
     minSources: number;
+    silenceThreshold?: number; // Below this, signal results in SILENCE decision
   };
   cooldownHours: number;
   updateBurst?: {

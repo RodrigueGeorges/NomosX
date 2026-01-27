@@ -27,7 +27,7 @@ import {
   Layers
 } from "lucide-react";
 
-type SignalStatus = "NEW" | "HELD" | "PUBLISHED" | "REJECTED" | "EXPIRED";
+type SignalStatus = "NEW" | "HELD" | "PUBLISHED" | "REJECTED" | "EXPIRED" | "SILENT";
 
 type Signal = {
   id: string;
@@ -58,6 +58,7 @@ const STATUS_CONFIG: Record<SignalStatus, { label: string; icon: React.ElementTy
   PUBLISHED: { label: "Publié", icon: CheckCircle, color: "text-emerald-400", bg: "bg-emerald-500/10 border-emerald-500/20" },
   REJECTED: { label: "Rejeté", icon: XCircle, color: "text-red-400", bg: "bg-red-500/10 border-red-500/20" },
   EXPIRED: { label: "Expiré", icon: AlertCircle, color: "text-white/40", bg: "bg-white/5 border-white/10" },
+  SILENT: { label: "Silence", icon: Pause, color: "text-slate-400", bg: "bg-slate-500/10 border-slate-500/20" },
 };
 
 const SIGNAL_TYPE_LABELS: Record<string, string> = {

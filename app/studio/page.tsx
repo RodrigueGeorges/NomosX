@@ -80,6 +80,10 @@ export default function StudioPage() {
   const [briefResult, setBriefResult] = useState<BriefResult | null>(null);
   const [councilResult, setCouncilResult] = useState<CouncilResult | null>(null);
   const [showDeliberation, setShowDeliberation] = useState(false);
+  const [draftId, setDraftId] = useState<string | null>(null);
+  const [draftStatus, setDraftStatus] = useState<string>("DRAFT");
+  const [gateDecision, setGateDecision] = useState<{ decision: string; reasons: string[] } | null>(null);
+  const [submitting, setSubmitting] = useState(false);
 
   const streamingBrief = useStreamingBrief();
   const streamingCouncil = useStreamingCouncil();
@@ -190,13 +194,71 @@ export default function StudioPage() {
     }
   }, [streamingCouncil.result]);
 
+  async function handleCreateDraft() {
+    if (!question.trim() || !selectedVertical) {
+      toast({ type: "error", title: "Erreur", message: "Question et verticale requises" });
+      return;
+    }
+
+    try {
+      const res = await fetch("/api/drafts", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({
+          verticalId: selectedVertical,
+          signalId: signalContext?.id || null,
+          type: publicationType,
+          question: question.trim(),
+          title: briefResult?.title || question.trim().slice(0, 100),
+        }),
+      });
+
+      if (!res.ok) throw new Error("Failed to create draft");
+      
+      const data = await res.json();
+      setDraftId(data.draft.id);
+      setDraftStatus("DRAFT");
+      toast({ type: "success", title: "Draft créé", message: "Vous pouvez maintenant le soumettre à l'Editorial Gate" });
+    } catch (error) {
+      console.error("Create draft error:", error);
+      toast({ type: "error", title: "Erreur", message: "Impossible de créer le draft" });
+    }
+  }
+
   async function handleSubmitToEditorialGate() {
-    toast({ 
-      type: "info", 
-      title: "Soumis à l'Editorial Gate", 
-      message: "La publication sera évaluée selon les critères institutionnels" 
-    });
-    // In production: POST to /api/think-tank/editorial-gate
+    if (!draftId) {
+      // Create draft first if not exists
+      await handleCreateDraft();
+      return;
+    }
+
+    setSubmitting(true);
+    try {
+      const res = await fetch(`/api/drafts/${draftId}/submit`, {
+        method: "POST",
+      });
+
+      if (!res.ok) throw new Error("Failed to submit to gate");
+      
+      const data = await res.json();
+      setGateDecision({ decision: data.decision, reasons: data.reasons });
+      setDraftStatus(data.decision === "PUBLISH" ? "APPROVED" : data.decision === "HOLD" ? "UNDER_REVIEW" : "REJECTED");
+      
+      const decisionMessages: Record<string, { type: "success" | "info" | "warning" | "error"; title: string; message: string }> = {
+        PUBLISH: { type: "success", title: "Publication approuvée", message: "Le draft sera publié" },
+        HOLD: { type: "warning", title: "En attente", message: "Revue humaine requise" },
+        REJECT: { type: "error", title: "Rejeté", message: data.reasons?.[0] || "Ne répond pas aux critères" },
+        SILENCE: { type: "info", title: "Silence", message: "Le sujet ne justifie pas de publication" },
+      };
+      
+      const msg = decisionMessages[data.decision] || { type: "info", title: data.decision, message: "" };
+      toast(msg);
+    } catch (error) {
+      console.error("Submit to gate error:", error);
+      toast({ type: "error", title: "Erreur", message: "Impossible de soumettre à l'Editorial Gate" });
+    } finally {
+      setSubmitting(false);
+    }
   }
 
   const isLoading = streamingBrief.loading || streamingCouncil.loading;

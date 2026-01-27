@@ -1024,6 +1024,8 @@ model Vertical {
   color       String?
   
   // Configuration (JSON) - VerticalConfig type
+  // Includes: allowedProviders, trustThreshold, noveltyThreshold, 
+  //           cadenceRules, allowedPublicationTypes
   config      Json
   
   // Status
@@ -1031,6 +1033,7 @@ model Vertical {
   
   // Relations
   signals            Signal[]
+  drafts             Draft[]
   publications       ThinkTankPublication[]
   editorialDecisions EditorialDecision[]
   cadenceCounters    CadenceCounter[]
@@ -1065,7 +1068,7 @@ model Signal {
   priorityScore   Int  // Composite score
   
   // Status
-  status      String   @default("NEW") // NEW, HELD, PUBLISHED, REJECTED, EXPIRED
+  status      String   @default("NEW") // NEW, HELD, PUBLISHED, REJECTED, EXPIRED, SILENT
   
   // Sources
   sourceIds   String[]
@@ -1076,8 +1079,10 @@ model Signal {
   
   // Relations
   vertical           Vertical             @relation(fields: [verticalId], references: [id])
-  editorialDecisions EditorialDecision[]
+  editorialDecisions EditorialDecision[]  @relation("SignalDecisions")
   publications       ThinkTankPublication[]
+  drafts             Draft[]
+  councilSessions    CouncilSession[]
   
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt
@@ -1096,16 +1101,26 @@ model Signal {
 model EditorialDecision {
   id          String   @id @default(cuid())
   
-  // Links
-  signalId    String
+  // Links (Signal OR Draft - at least one required)
+  signalId    String?
+  draftId     String?
   verticalId  String
   
   // Decision
-  decision    String   // APPROVE, HOLD, REJECT
+  decision    String   // PUBLISH, HOLD, REJECT, SILENCE
   reasons     String[]
   
   // Check Results (JSON) - EditorialChecks type
   checks      Json
+  
+  // Scores at decision time
+  trustScore      Int?
+  noveltyScore    Int?
+  qualityScore    Int?
+  
+  // Cadence info
+  cadenceBlocked  Boolean  @default(false)
+  cadenceReason   String?
   
   // Human Review
   humanReviewRequired Boolean  @default(false)
@@ -1114,15 +1129,18 @@ model EditorialDecision {
   humanNotes          String?  @db.Text
   
   // Relations
-  signal   Signal   @relation(fields: [signalId], references: [id], onDelete: Cascade)
-  vertical Vertical @relation(fields: [verticalId], references: [id])
+  signal   Signal?   @relation(fields: [signalId], references: [id], onDelete: Cascade, name: "SignalDecisions")
+  draft    Draft?    @relation(fields: [draftId], references: [id], onDelete: Cascade, name: "DraftDecisions")
+  vertical Vertical  @relation(fields: [verticalId], references: [id])
   
   createdAt DateTime @default(now())
   
   @@index([signalId])
+  @@index([draftId])
   @@index([verticalId])
   @@index([decision])
   @@index([humanReviewRequired])
+  @@index([createdAt])
 }
 
 // ============================================================================
@@ -1135,6 +1153,7 @@ model ThinkTankPublication {
   // Classification
   verticalId  String
   signalId    String?
+  draftId     String?  @unique // Link to originating Draft
   type        String   // RESEARCH_BRIEF, UPDATE_NOTE, DATA_NOTE, POLICY_NOTE, DOSSIER
   
   // Content
@@ -1158,6 +1177,9 @@ model ThinkTankPublication {
   // Sources
   sourceIds   String[]
   
+  // Status
+  status      String   @default("PUBLISHED") // PUBLISHED, HELD, SILENT
+  
   // Publishing
   publicId    String?  @unique
   publishedAt DateTime?
@@ -1169,6 +1191,7 @@ model ThinkTankPublication {
   // Relations
   vertical Vertical  @relation(fields: [verticalId], references: [id])
   signal   Signal?   @relation(fields: [signalId], references: [id])
+  draft    Draft?    @relation(fields: [draftId], references: [id], name: "DraftToPublication")
   claims   ThinkTankClaim[]
   runs     ThinkTankPublicationRun[]
   checks   ThinkTankQualityCheck[]
@@ -1178,6 +1201,7 @@ model ThinkTankPublication {
   
   @@index([verticalId])
   @@index([type])
+  @@index([status])
   @@index([trustScore])
   @@index([publishedAt])
   @@index([publicId])
@@ -1337,4 +1361,105 @@ model CadenceCounter {
   @@unique([verticalId, windowType, windowStart])
   @@index([verticalId])
   @@index([windowStart, windowEnd])
+}
+
+// ============================================================================
+// INSTITUTIONAL THINK TANK - DRAFTS (Human-Initiated Publications)
+// ============================================================================
+
+model Draft {
+  id          String   @id @default(cuid())
+  
+  // Classification
+  verticalId  String
+  signalId    String?  // Optional: if initiated from a Signal
+  type        String   // RESEARCH_BRIEF, UPDATE_NOTE, DATA_NOTE, POLICY_NOTE, DOSSIER
+  
+  // Content
+  question    String   @db.Text
+  title       String?
+  html        String?  @db.Text
+  wordCount   Int      @default(0)
+  
+  // Status Workflow
+  status      String   @default("DRAFT") // DRAFT, UNDER_REVIEW, SUBMITTED_TO_GATE, APPROVED, REJECTED, PUBLISHED
+  
+  // Quality Metrics (computed)
+  trustScore      Int?
+  qualityScore    Int?
+  noveltyScore    Int?
+  citationCoverage Float?
+  
+  // Claim Stats
+  claimCount      Int    @default(0)
+  
+  // Sources
+  sourceIds   String[]
+  
+  // User
+  userId      String?
+  
+  // Relations
+  vertical           Vertical           @relation(fields: [verticalId], references: [id])
+  signal             Signal?            @relation(fields: [signalId], references: [id])
+  councilSessions    CouncilSession[]
+  editorialDecisions EditorialDecision[] @relation("DraftDecisions")
+  publication        ThinkTankPublication? @relation("DraftToPublication")
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([verticalId])
+  @@index([signalId])
+  @@index([status])
+  @@index([userId])
+  @@index([createdAt])
+}
+
+// ============================================================================
+// INSTITUTIONAL THINK TANK - COUNCIL SESSIONS (Deliberation Room)
+// ============================================================================
+
+model CouncilSession {
+  id          String   @id @default(cuid())
+  
+  // Must be linked to Signal OR Draft (never standalone)
+  signalId    String?
+  draftId     String?
+  
+  // Question explored
+  question    String   @db.Text
+  
+  // Perspectives (JSON)
+  economic    String?  @db.Text
+  technical   String?  @db.Text
+  ethical     String?  @db.Text
+  political   String?  @db.Text
+  synthesis   String?  @db.Text
+  uncertainty String?  @db.Text
+  
+  // Sources used
+  sourceIds   String[]
+  
+  // Status
+  status      String   @default("PENDING") // PENDING, RUNNING, COMPLETED, FAILED
+  
+  // User
+  userId      String?
+  
+  // Cost tracking
+  tokensUsed  Int      @default(0)
+  costUsd     Float    @default(0)
+  
+  // Relations
+  signal Signal? @relation(fields: [signalId], references: [id])
+  draft  Draft?  @relation(fields: [draftId], references: [id])
+  
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+  
+  @@index([signalId])
+  @@index([draftId])
+  @@index([status])
+  @@index([userId])
 }
