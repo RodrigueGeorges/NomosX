@@ -13,7 +13,8 @@ import {
   User as UserIcon,
   Menu,
   X,
-  PenTool
+  PenTool,
+  DollarSign
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 
@@ -24,6 +25,11 @@ const mainNav = [
   { href: "/signals", label: "Signals", icon: Zap },
   { href: "/publications", label: "Publications", icon: Archive },
   { href: "/search", label: "Explorer", icon: Search },
+];
+
+// Secondary navigation
+const secondaryNav = [
+  { href: "/pricing", label: "Pricing", icon: DollarSign },
 ];
 
 export default function Shell({ children }: { children: React.ReactNode }) {
@@ -186,6 +192,26 @@ export default function Shell({ children }: { children: React.ReactNode }) {
               </Link>
             ))}
 
+            {/* Divider */}
+            <div className="w-px h-4 bg-white/10 mx-2" />
+
+            {/* Pricing Link */}
+            <Link
+              href="/pricing"
+              className={`
+                px-3 py-2 rounded-lg text-sm font-medium
+                inline-flex items-center gap-2 whitespace-nowrap
+                transition-all duration-200
+                ${isActive("/pricing")
+                  ? 'text-cyan-400 bg-cyan-500/10'
+                  : 'text-cyan-400/70 hover:text-cyan-400 hover:bg-cyan-500/5'
+                }
+              `}
+            >
+              <DollarSign size={16} strokeWidth={2} />
+              <span>Pricing</span>
+            </Link>
+
             {/* Settings Link */}
             <Link
               href="/settings"
@@ -247,7 +273,7 @@ export default function Shell({ children }: { children: React.ReactNode }) {
           />
           <nav className="relative bg-[#111113] border-r border-white/[0.08] h-full w-64 p-4 overflow-y-auto">
             <div className="space-y-1 mb-6">
-              {[...mainNav, { href: "/settings", label: "Paramètres", icon: Settings }].map((item) => (
+              {[...mainNav, { href: "/pricing", label: "Pricing", icon: DollarSign }, { href: "/settings", label: "Paramètres", icon: Settings }].map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}

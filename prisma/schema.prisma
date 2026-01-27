@@ -929,9 +929,68 @@ model User {
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
+  // Relations
+  subscription Subscription?
+
   @@index([email])
   @@index([role])
   @@index([emailVerified])
+}
+
+// ============================================================================
+// SUBSCRIPTION & PRICING
+// ============================================================================
+
+model Subscription {
+  id     String @id @default(cuid())
+  userId String @unique
+
+  // Plan
+  plan String @default("TRIAL") // TRIAL, NOMOSX_ACCESS
+
+  // Trial
+  trialStart      DateTime?
+  trialEnd        DateTime?
+  isTrialActive   Boolean   @default(true)
+  trialDaysUsed   Int       @default(0)
+
+  // Billing
+  stripeCustomerId       String?
+  stripeSubscriptionId   String?
+  stripePriceId          String?
+  stripeCurrentPeriodEnd DateTime?
+
+  // Status
+  status String @default("trialing") // trialing, active, past_due, canceled, paused
+
+  // Limits (reset weekly)
+  weeklyPublicationCount Int      @default(0)
+  weeklyPublicationMax   Int      @default(3)
+  activeVerticals        Int      @default(1)
+  activeVerticalsMax     Int      @default(1)
+  lastWeeklyReset        DateTime @default(now())
+
+  // Features
+  canExportPdf       Boolean @default(false)
+  canAccessStudio    Boolean @default(true)
+  canCreateVerticals Boolean @default(false)
+
+  // Metadata
+  canceledAt DateTime?
+  cancelReason String?
+
+  createdAt DateTime @default(now())
+  updatedAt DateTime @updatedAt
+
+  // Relations
+  user User @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+  @@index([userId])
+  @@index([plan])
+  @@index([status])
+  @@index([isTrialActive])
+  @@index([stripeCustomerId])
+  @@index([stripeSubscriptionId])
 }
 
 model AuditLog {
