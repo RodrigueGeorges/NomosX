@@ -5,11 +5,18 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { GLOBAL_CADENCE } from "@/lib/think-tank/types";
 
 export async function GET(request: NextRequest) {
   try {
+    // Auth protection
+    const user = await getSession();
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const now = new Date();
     const dayStart = getStartOfDay(now);
     const weekStart = getStartOfWeek(now);

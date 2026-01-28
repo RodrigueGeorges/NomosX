@@ -6,11 +6,18 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { generatePublication } from "@/lib/agent/publication-generator";
 
 export async function GET(request: NextRequest) {
   try {
+    // Auth protection
+    const user = await getSession();
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const { searchParams } = new URL(request.url);
     const verticalId = searchParams.get("verticalId");
     const type = searchParams.get("type");
@@ -75,6 +82,12 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    // Auth protection
+    const user = await getSession();
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const body = await request.json();
     const { signalId, publicationType } = body;
 

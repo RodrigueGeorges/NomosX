@@ -4,11 +4,18 @@
  * GET /api/think-tank/verticals - List all verticals
  */
 
-import { NextResponse } from "next/server";
+import { NextRequest, NextResponse } from "next/server";
+import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 
-export async function GET() {
+export async function GET(req: NextRequest) {
   try {
+    // Auth protection
+    const user = await getSession();
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const verticals = await prisma.vertical.findMany({
       where: { isActive: true },
       orderBy: { name: "asc" },

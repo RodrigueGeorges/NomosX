@@ -6,11 +6,18 @@
  */
 
 import { NextRequest, NextResponse } from "next/server";
+import { getSession } from "@/lib/auth";
 import { prisma } from "@/lib/db";
 import { signalDetector } from "@/lib/agent/signal-detector";
 
 export async function GET(request: NextRequest) {
   try {
+    // Auth protection
+    const user = await getSession();
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const { searchParams } = new URL(request.url);
     const verticalId = searchParams.get("verticalId");
     const status = searchParams.get("status");
@@ -77,6 +84,12 @@ export async function GET(request: NextRequest) {
 
 export async function POST(request: NextRequest) {
   try {
+    // Auth protection
+    const user = await getSession();
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
     const body = await request.json();
     const { sourceIds, verticalSlug } = body;
 

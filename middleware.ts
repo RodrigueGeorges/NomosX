@@ -10,6 +10,9 @@ const SESSION_COOKIE_NAME = "nomosx-session";
 // Routes that require authentication
 const PROTECTED_ROUTES = [
   "/dashboard",
+  "/studio",
+  "/signals",
+  "/publications",
   "/search",
   "/brief",
   "/briefs",
@@ -32,14 +35,26 @@ const PUBLIC_ROUTES = ["/", "/api/auth/login", "/api/auth/register", "/api/auth/
 export async function middleware(request: NextRequest) {
   const { pathname } = request.nextUrl;
 
-  // Allow API routes and public routes
+  // Allow public API routes and static files
   if (
-    pathname.startsWith("/api/") ||
     pathname.startsWith("/_next/") ||
     pathname.startsWith("/public/") ||
-    pathname.includes(".")
+    pathname.includes(".") ||
+    PUBLIC_ROUTES.some(route => pathname.startsWith(route))
   ) {
     return NextResponse.next();
+  }
+  
+  // Protected API routes (Think Tank, Subscription, etc.)
+  const isProtectedApiRoute = 
+    pathname.startsWith("/api/think-tank") ||
+    pathname.startsWith("/api/subscription") ||
+    pathname.startsWith("/api/drafts") ||
+    pathname.startsWith("/api/editorial-gate") ||
+    pathname.startsWith("/api/council-sessions");
+  
+  if (isProtectedApiRoute && !token) {
+    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
   // Get session token
