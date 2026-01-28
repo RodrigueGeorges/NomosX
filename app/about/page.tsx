@@ -86,55 +86,55 @@ export default function AboutPage() {
 
   const features = [
     {
-      icon: FileText,
+      icon: Layers,
       color: "cyan",
-      title: "Brief",
-      subtitle: "Dialectical Analysis",
-      description: "Structured synthesis identifying consensus, disagreements, and strategic implications from academic research. Evidence-based methodology with full citation tracking."
+      title: "Verticals",
+      subtitle: "Research Domains",
+      description: "Active research verticals with independent editorial lines. Each vertical monitors its domain, maintains publication cadence, and enforces quality thresholds autonomously."
     },
     {
-      icon: MessagesSquare,
+      icon: Zap,
       color: "blue",
-      title: "Council",
-      subtitle: "Multi-Perspective Analysis",
-      description: "Four expert angles—Economic, Technical, Ethical, and Political—analyzing the same question. Integrated synthesis revealing tensions and convergences across perspectives."
+      title: "Signal Detection",
+      subtitle: "Autonomous Monitoring",
+      description: "Continuous scanning of 200K+ publications for weak signals, contradictions, and emerging trends. Novelty scoring (≥60) identifies topics that may deserve analysis."
     },
     {
-      icon: RadarIcon,
+      icon: Target,
       color: "emerald",
-      title: "Radar",
-      subtitle: "Emerging Signals",
-      description: "Automated detection of weak signals and high-novelty research (noveltyScore ≥ 60). Pattern recognition across 200K+ publications identifying future trends."
+      title: "Editorial Gate",
+      subtitle: "Quality Threshold",
+      description: "Autonomous editorial board evaluating every proposal. Enforces trust score thresholds, cadence limits, and strategic silence. Publication is earned, not guaranteed."
     },
     {
-      icon: Library,
+      icon: FileText,
       color: "purple",
-      title: "Library",
-      subtitle: "Knowledge Base",
-      description: "Centralized repository of all your briefs and councils. Full-text search, tagging system, export capabilities, and complete analysis history."
+      title: "Publications",
+      subtitle: "Institutional Output",
+      description: "The only durable artifact of the Think Tank. Research briefs, policy notes, and dossiers published under strict editorial discipline. Silence is a success state."
     }
   ];
 
   const principles = [
     {
       icon: Shield,
-      title: "Full Transparency",
-      description: "Every statement is sourced with [SRC-*] citations. Real-time pipeline visibility through streaming SSE. Audit-ready traceability."
+      title: "Editorial Autonomy",
+      description: "The Think Tank decides what to publish. Enforces cadence limits (3 publications/week), quality thresholds (trust score ≥75), and strategic silence. You propose, it decides."
     },
     {
       icon: Brain,
-      title: "Agent-First Architecture",
-      description: "Autonomous agent pipelines with intent detection, smart routing, and adaptive workflows. The system optimizes itself."
+      title: "Agent-Governed Institution",
+      description: "Autonomous agent pipelines manage the entire research cycle: signal detection, source evaluation, synthesis, editorial gate, and publication. No human in the loop."
     },
     {
-      icon: Zap,
-      title: "Sub-60s Delivery",
-      description: "Optimistic UI, parallel agent execution, streaming results. Institutional-grade analysis delivered at consumer-grade speed."
+      icon: Sparkles,
+      title: "Silence is Success",
+      description: "The Think Tank may choose not to publish. Strategic silence over noise. Quiet hours (22h-6h UTC), publish windows (9h, 14h, 18h), and editorial discipline."
     },
     {
       icon: Target,
-      title: "Decision-Ready Intelligence",
-      description: "Not just information, but structured analysis designed for strategic decision-making. Export to PDF, share with teams, integrate into workflows."
+      title: "Institutional-Grade Output",
+      description: "Every publication is sourced ([SRC-*] citations), fact-checked, and quality-scored. Trust score, citation coverage, and claim verification ensure decision-ready intelligence."
     }
   ];
 
@@ -250,22 +250,22 @@ export default function AboutPage() {
           <div className="text-center mb-20">
             <div className="text-xs text-cyan-400/60 tracking-[0.25em] uppercase mb-6 flex items-center justify-center gap-3">
               <div className="w-8 h-px bg-gradient-to-r from-transparent via-cyan-400/60 to-transparent" />
-              <span>Agentic Intelligence Platform</span>
+              <span>The Autonomous Think Tank</span>
               <div className="w-8 h-px bg-gradient-to-r from-cyan-400/60 via-transparent to-transparent" />
             </div>
 
             <h1 className="text-4xl sm:text-5xl md:text-7xl font-light leading-tight mb-6">
               <span className="bg-gradient-to-r from-white via-cyan-200 to-white bg-clip-text text-transparent">
-                From academic research
+                An AI-governed research institution
               </span>
               <br />
-              <span className="text-white/70 italic text-3xl sm:text-4xl md:text-5xl">to strategic decisions</span>
+              <span className="text-white/70 italic text-3xl sm:text-4xl md:text-5xl">that publishes—or stays silent</span>
             </h1>
 
             <p className="text-xl text-white/50 leading-relaxed max-w-3xl mx-auto mb-8">
-              Autonomous agent infrastructure transforming 200,000+ academic publications 
-              into institutional-grade analysis. Evidence-based methodology trusted by 
-              Fortune 500, governments, and research institutions.
+              NomosX operates as an autonomous think tank with full editorial independence. 
+              It continuously monitors 200,000+ academic publications, detects weak signals, 
+              and publishes decision-ready insights—or chooses strategic silence.
             </p>
 
             <div className="flex gap-4 justify-center flex-wrap">
@@ -287,11 +287,11 @@ export default function AboutPage() {
                 <span>Intelligence Infrastructure</span>
               </div>
               <h2 className="text-4xl sm:text-5xl md:text-6xl font-light leading-tight text-white/95 mb-6">
-                Four autonomous intelligence services
+                How the Think Tank operates
               </h2>
               <p className="text-xl text-white/50 leading-relaxed max-w-3xl">
-                Each service delivers institutional-grade analysis through 
-                specialized agent pipelines. Real-time delivery, full transparency.
+                An autonomous research institution with full editorial independence. 
+                Monitors, evaluates, and publishes—or chooses strategic silence over noise.
               </p>
             </div>
 
@@ -418,11 +418,11 @@ export default function AboutPage() {
                 <span>Agent Pipeline</span>
               </div>
               <h2 className="text-4xl sm:text-5xl md:text-6xl font-light leading-tight text-white/95 mb-6">
-                How it works
+                The agent pipeline
               </h2>
               <p className="text-xl text-white/50 leading-relaxed max-w-3xl">
-                Five specialized agents working in sequence to deliver 
-                institutional-grade analysis in under 60 seconds.
+                Five specialized agents orchestrate the research cycle, from signal detection 
+                to publication. Autonomous, transparent, and institutional-grade.
               </p>
             </div>
 

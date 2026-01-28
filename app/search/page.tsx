@@ -47,10 +47,10 @@ export default function SearchPage() {
   // Sort
   const [sortMode, setSortMode] = useState<SortMode>("relevance");
 
-  function handleGenerateBrief() {
-    // Génère brief avec la requête actuelle
+  function handleProposeToThinkTank() {
+    // Propose le sujet au Think Tank via Studio
     const question = `Analyse approfondie sur : ${q}`;
-    router.push(`/brief?q=${encodeURIComponent(question)}`);
+    router.push(`/studio?q=${encodeURIComponent(question)}`);
   }
 
   async function run() {
@@ -186,11 +186,11 @@ export default function SearchPage() {
           <Button
             variant="ai"
             size="sm"
-            onClick={handleGenerateBrief}
+            onClick={handleProposeToThinkTank}
             disabled={filteredAndSorted.length === 0}
           >
             <Sparkles size={16} />
-            Générer Brief avec ces sources
+            Proposer au Think Tank
           </Button>
         </div>
       )}

@@ -274,13 +274,14 @@ function StudioPageContent() {
             </div>
             <div>
               <div className="text-xs text-cyan-400/60 tracking-[0.25em] uppercase mb-1">
-                Human-Initiated Entry
+                Propose to Think Tank
               </div>
               <h1 className="text-4xl font-light tracking-tight text-white/95">Publication Studio</h1>
             </div>
           </div>
           <p className="text-base text-white/50 leading-relaxed max-w-3xl ml-[4.5rem]">
-            Express what deserves analysis. The output is not the draft — it's a Publication decision by the Editorial Gate.
+            Propose topics to the autonomous Think Tank. Your proposal will be evaluated by the Editorial Gate. 
+            The Think Tank may publish, hold for review, or choose strategic silence.
           </p>
         </div>
 

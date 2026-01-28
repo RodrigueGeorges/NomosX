@@ -1,8 +1,8 @@
 "use client";
 
 /**
- * Library Page — Redirect to Publications
- * Legacy route maintained for backwards compatibility
+ * Redirect /library to /publications
+ * Legacy route from old "Library" model
  */
 
 import { useEffect } from "react";
