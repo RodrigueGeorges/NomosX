@@ -20,11 +20,8 @@ import {
   Target,
   ArrowRight,
   FileText,
-  MessagesSquare,
-  Radar as RadarIcon,
-  Library
+  Layers
 } from "lucide-react";
-import AgenticNode from "@/components/AgenticNode";
 
 export default function AboutPage() {
   const router = useRouter();
@@ -167,7 +164,7 @@ export default function AboutPage() {
       step: "5",
       agent: "ANALYST",
       title: "Synthesis & Delivery",
-      description: "Generate dialectical brief or multi-perspective council. Citation verification, streaming delivery, export to PDF."
+      description: "Generate structured analysis with dialectical synthesis. Citation verification, quality scoring, and editorial gate evaluation before publication."
     }
   ];
 

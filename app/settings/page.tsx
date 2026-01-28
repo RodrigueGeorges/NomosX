@@ -226,12 +226,12 @@ export default function SettingsPage() {
                         <span>Générer</span>
                       </div>
                       <div className="flex items-center gap-2 text-white/40">
-                        <kbd className="px-2 py-1 bg-white/5 border border-white/10 rounded text-white/60">⌘1</kbd>
-                        <span>Mode Brief</span>
+                        <kbd className="px-2 py-1 bg-white/5 border border-white/10 rounded text-white/60">⌘K</kbd>
+                        <span>Focus Studio</span>
                       </div>
                       <div className="flex items-center gap-2 text-white/40">
-                        <kbd className="px-2 py-1 bg-white/5 border border-white/10 rounded text-white/60">⌘2</kbd>
-                        <span>Mode Council</span>
+                        <kbd className="px-2 py-1 bg-white/5 border border-white/10 rounded text-white/60">⌘Enter</kbd>
+                        <span>Submit Proposal</span>
                       </div>
                     </div>
                   </div>

@@ -1,18 +1,18 @@
 "use client";
 
 /**
- * Redirect /briefs to /publications
- * Legacy route from old "Brief" model
+ * Redirect /methodology to /about
+ * Methodology is explained in the About page (agent pipeline section)
  */
 
 import { useEffect } from "react";
 import { useRouter } from "next/navigation";
 
-export default function BriefsRedirect() {
+export default function MethodologyRedirect() {
   const router = useRouter();
 
   useEffect(() => {
-    router.replace("/publications");
+    router.replace("/about");
   }, [router]);
 
   return (
@@ -20,7 +20,7 @@ export default function BriefsRedirect() {
       <div className="text-center">
         <div className="text-cyan-400 mb-4">Redirection...</div>
         <p className="text-white/50 text-sm">
-          La page Briefs a été remplacée par Publications
+          La méthodologie est expliquée dans la page About
         </p>
       </div>
     </div>
