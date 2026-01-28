@@ -39,21 +39,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   async function checkAuth() {
     try {
-      // Check if token exists
-      const token = localStorage.getItem("auth_token");
-      if (!token) {
-        setLoading(false);
-        return;
-      }
+      // Call API to check session (cookie-based)
+      const response = await fetch("/api/auth/me", {
+        method: "GET",
+        credentials: "include", // Important for cookies
+      });
 
-      // TODO: Validate token with API
-      // For now, just check if exists
-      const storedUser = localStorage.getItem("auth_user");
-      if (storedUser) {
-        setUser(JSON.parse(storedUser));
+      if (response.ok) {
+        const data = await response.json();
+        setUser(data.user);
+      } else {
+        setUser(null);
       }
     } catch (error) {
       console.error("Auth check failed:", error);
+      setUser(null);
     } finally {
       setLoading(false);
     }
@@ -61,26 +61,20 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   async function login(email: string, password: string) {
     try {
-      // TODO: Replace with real API call
-      // const res = await fetch("/api/auth/login", {
-      //   method: "POST",
-      //   headers: { "Content-Type": "application/json" },
-      //   body: JSON.stringify({ email, password })
-      // });
-      // const data = await res.json();
+      const response = await fetch("/api/auth/login", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ email, password })
+      });
 
-      // Mock login for now
-      const mockUser: User = {
-        id: "user_" + Date.now(),
-        email,
-        name: email.split("@")[0]
-      };
+      const data = await response.json();
 
-      // Save to localStorage (temporary, should be httpOnly cookie)
-      localStorage.setItem("auth_token", "mock_token_" + Date.now());
-      localStorage.setItem("auth_user", JSON.stringify(mockUser));
+      if (!response.ok) {
+        throw new Error(data.error || "Login failed");
+      }
 
-      setUser(mockUser);
+      setUser(data.user);
     } catch (error) {
       console.error("Login failed:", error);
       throw error;
@@ -89,28 +83,38 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
   async function register(email: string, password: string, name?: string) {
     try {
-      // TODO: Replace with real API call
-      const mockUser: User = {
-        id: "user_" + Date.now(),
-        email,
-        name: name || email.split("@")[0]
-      };
+      const response = await fetch("/api/auth/register", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        credentials: "include",
+        body: JSON.stringify({ email, password, name })
+      });
 
-      localStorage.setItem("auth_token", "mock_token_" + Date.now());
-      localStorage.setItem("auth_user", JSON.stringify(mockUser));
+      const data = await response.json();
 
-      setUser(mockUser);
+      if (!response.ok) {
+        throw new Error(data.error || "Registration failed");
+      }
+
+      setUser(data.user);
     } catch (error) {
       console.error("Register failed:", error);
       throw error;
     }
   }
 
-  function logout() {
-    localStorage.removeItem("auth_token");
-    localStorage.removeItem("auth_user");
-    setUser(null);
-    window.location.href = "/";
+  async function logout() {
+    try {
+      await fetch("/api/auth/logout", {
+        method: "POST",
+        credentials: "include",
+      });
+    } catch (error) {
+      console.error("Logout error:", error);
+    } finally {
+      setUser(null);
+      window.location.href = "/";
+    }
   }
 
   return (

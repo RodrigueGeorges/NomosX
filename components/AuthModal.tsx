@@ -15,52 +15,61 @@ interface AuthModalProps {
 
 export default function AuthModal({ isOpen, onClose, initialQuestion }: AuthModalProps) {
   const router = useRouter();
-  const [mode, setMode] = useState<"oauth" | "email">("oauth");
+  const [mode, setMode] = useState<"oauth" | "email" | "login">("oauth");
   const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
+  const [error, setError] = useState("");
+  const [isSignup, setIsSignup] = useState(true);
 
   const handleOAuth = async (provider: "google" | "github") => {
     setLoading(true);
-    // TODO: Implémenter OAuth réel
-    // Pour l'instant, simulation
-    setTimeout(() => {
-      // Sauvegarder le token et l'utilisateur
-      const fakeUser = {
-        id: "user_" + Math.random().toString(36).substr(2, 9),
-        email: `user@${provider}.com`,
-        name: `User ${provider}`,
-      };
-      localStorage.setItem("auth_token", "fake_token_" + Date.now());
-      localStorage.setItem("auth_user", JSON.stringify(fakeUser));
-      
-      const redirectUrl = initialQuestion 
-        ? `/dashboard?q=${encodeURIComponent(initialQuestion)}`
-        : "/dashboard";
-      router.push(redirectUrl);
-      onClose();
-    }, 1000);
+    setError("");
+    // TODO: Implémenter OAuth réel avec NextAuth ou similaire
+    // Pour l'instant, redirection vers email signup
+    setMode("email");
+    setLoading(false);
   };
 
-  const handleEmailSignup = async (e: React.FormEvent) => {
+  const handleEmailAuth = async (e: React.FormEvent) => {
     e.preventDefault();
     setLoading(true);
-    // TODO: Implémenter signup email réel
-    setTimeout(() => {
-      // Sauvegarder le token et l'utilisateur
-      const fakeUser = {
-        id: "user_" + Math.random().toString(36).substr(2, 9),
-        email: email,
-        name: email.split("@")[0],
-      };
-      localStorage.setItem("auth_token", "fake_token_" + Date.now());
-      localStorage.setItem("auth_user", JSON.stringify(fakeUser));
-      
+    setError("");
+
+    try {
+      const endpoint = isSignup ? "/api/auth/register" : "/api/auth/login";
+      const body = isSignup 
+        ? { email, password, name: name || undefined }
+        : { email, password };
+
+      const response = await fetch(endpoint, {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify(body),
+      });
+
+      const data = await response.json();
+
+      if (!response.ok) {
+        setError(data.error || "Une erreur est survenue");
+        setLoading(false);
+        return;
+      }
+
+      // Success - session cookie is set by the API
       const redirectUrl = initialQuestion 
         ? `/dashboard?q=${encodeURIComponent(initialQuestion)}`
         : "/dashboard";
+      
       router.push(redirectUrl);
+      router.refresh(); // Refresh to update auth state
       onClose();
-    }, 1000);
+    } catch (err: any) {
+      console.error("Auth error:", err);
+      setError("Erreur de connexion. Veuillez réessayer.");
+      setLoading(false);
+    }
   };
 
   return (
@@ -180,7 +189,29 @@ export default function AuthModal({ isOpen, onClose, initialQuestion }: AuthModa
             </button>
           </div>
         ) : (
-          <form onSubmit={handleEmailSignup} className="relative space-y-6">
+          <form onSubmit={handleEmailAuth} className="relative space-y-6">
+            {error && (
+              <div className="p-3 rounded-lg bg-red-500/10 border border-red-500/20 text-red-400 text-sm">
+                {error}
+              </div>
+            )}
+
+            {isSignup && (
+              <div>
+                <label htmlFor="name" className="block text-sm font-medium mb-3 text-white/70">
+                  Name (optional)
+                </label>
+                <Input
+                  id="name"
+                  type="text"
+                  value={name}
+                  onChange={(e) => setName(e.target.value)}
+                  placeholder="Your name"
+                  className="bg-white/[0.03] border-white/10 focus:border-cyan-500/50 text-base h-12"
+                />
+              </div>
+            )}
+
             <div>
               <label htmlFor="email" className="block text-sm font-medium mb-3 text-white/70">
                 Email address
@@ -193,32 +224,60 @@ export default function AuthModal({ isOpen, onClose, initialQuestion }: AuthModa
                   onChange={(e) => setEmail(e.target.value)}
                   placeholder="you@company.com"
                   required
-                  autoFocus
+                  autoFocus={!isSignup}
                   className="bg-white/[0.03] border-white/10 focus:border-cyan-500/50 text-base h-12 pl-11"
                 />
                 <Mail size={18} className="absolute left-4 top-1/2 -translate-y-1/2 text-cyan-400/60" />
               </div>
             </div>
 
+            <div>
+              <label htmlFor="password" className="block text-sm font-medium mb-3 text-white/70">
+                Password
+              </label>
+              <Input
+                id="password"
+                type="password"
+                value={password}
+                onChange={(e) => setPassword(e.target.value)}
+                placeholder={isSignup ? "At least 8 characters" : "Your password"}
+                required
+                minLength={isSignup ? 8 : undefined}
+                className="bg-white/[0.03] border-white/10 focus:border-cyan-500/50 text-base h-12"
+              />
+            </div>
+
             <button
               type="submit"
-              disabled={loading || !email}
+              disabled={loading || !email || !password}
               className="group relative w-full p-4 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-medium shadow-[0_0_30px_rgba(0,212,255,0.3)] hover:shadow-[0_0_50px_rgba(0,212,255,0.5)] transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-500 opacity-0 group-hover:opacity-100 blur-sm transition-opacity" />
               <span className="relative">
-                {loading ? "Connecting..." : "Continue"}
+                {loading ? "Connecting..." : (isSignup ? "Create Account" : "Sign In")}
               </span>
             </button>
 
-            <button
-              type="button"
-              onClick={() => setMode("oauth")}
-              className="text-sm text-white/50 hover:text-white/80 transition-colors w-full text-center flex items-center justify-center gap-2"
-            >
-              <span>←</span>
-              <span>Back to other options</span>
-            </button>
+            <div className="flex items-center justify-between text-sm">
+              <button
+                type="button"
+                onClick={() => setMode("oauth")}
+                className="text-white/50 hover:text-white/80 transition-colors flex items-center gap-2"
+              >
+                <span>←</span>
+                <span>Back</span>
+              </button>
+              <button
+                type="button"
+                onClick={() => {
+                  setIsSignup(!isSignup);
+                  setError("");
+                }}
+                className="text-cyan-400/70 hover:text-cyan-400 transition-colors"
+              >
+                {isSignup ? "Already have an account?" : "Create an account"}
+              </button>
+            </div>
           </form>
         )}
 

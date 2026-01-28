@@ -22,15 +22,23 @@ export default function HomePage() {
   const [mounted, setMounted] = useState(false);
 
   useEffect(() => {
-    const authToken = localStorage.getItem("auth_token");
-    if (authToken) {
-      setIsAuthenticated(true);
-      router.replace("/dashboard");
-    } else {
-      setIsAuthenticated(false);
-      setIsLoading(false);
-    }
-  }, []);
+    // Auth is now handled by useAuth hook in Shell
+    // Just check if we need to redirect based on session
+    fetch("/api/auth/me", { credentials: "include" })
+      .then(res => {
+        if (res.ok) {
+          setIsAuthenticated(true);
+          router.replace("/dashboard");
+        } else {
+          setIsAuthenticated(false);
+          setIsLoading(false);
+        }
+      })
+      .catch(() => {
+        setIsAuthenticated(false);
+        setIsLoading(false);
+      });
+  }, [router]);
 
   useEffect(() => {
     setMounted(true);
