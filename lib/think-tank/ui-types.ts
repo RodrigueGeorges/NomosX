@@ -136,26 +136,41 @@ export interface CadenceData {
 // ============================================================================
 
 export const SIGNAL_TYPE_LABELS: Record<string, string> = {
-  NEW_EVIDENCE: "Nouvelle évidence",
+  NEW_EVIDENCE: "New Evidence",
   CONTRADICTION: "Contradiction",
-  TREND_BREAK: "Rupture",
-  DATA_RELEASE: "Données",
-  POLICY_CHANGE: "Politique",
-  METHODOLOGY_SHIFT: "Méthodologie"
+  TREND_BREAK: "Trend Break",
+  DATA_RELEASE: "Data Release",
+  POLICY_CHANGE: "Policy Change",
+  METHODOLOGY_SHIFT: "Methodology Shift"
 };
 
 export const PUBLICATION_TYPE_LABELS: Record<string, string> = {
-  RESEARCH_BRIEF: "Research Brief",
+  // Primary formats
+  EXECUTIVE_BRIEF: "Executive Brief",
+  STRATEGIC_REPORT: "Strategic Report",
+  // Legacy formats (for backward compatibility)
+  RESEARCH_BRIEF: "Executive Brief",
   UPDATE_NOTE: "Update Note",
   DATA_NOTE: "Data Note",
   POLICY_NOTE: "Policy Note",
-  DOSSIER: "Dossier"
+  DOSSIER: "Strategic Report"
+};
+
+export const PUBLICATION_TYPE_META: Record<string, { pages: string; audience: string }> = {
+  EXECUTIVE_BRIEF: { pages: "2-3 pages", audience: "Free newsletter" },
+  STRATEGIC_REPORT: { pages: "10-15 pages", audience: "Paid subscribers" },
+  RESEARCH_BRIEF: { pages: "2-3 pages", audience: "Free newsletter" },
+  UPDATE_NOTE: { pages: "1-2 pages", audience: "Free newsletter" },
+  DATA_NOTE: { pages: "1-2 pages", audience: "Free newsletter" },
+  POLICY_NOTE: { pages: "2-3 pages", audience: "Free newsletter" },
+  DOSSIER: { pages: "10-15 pages", audience: "Paid subscribers" }
 };
 
 export const SIGNAL_STATUS_LABELS: Record<string, string> = {
-  NEW: "Nouveau",
-  HELD: "En attente",
-  PUBLISHED: "Publié",
-  REJECTED: "Rejeté",
-  EXPIRED: "Expiré"
+  NEW: "New",
+  HELD: "Held",
+  PUBLISHED: "Published",
+  REJECTED: "Rejected",
+  EXPIRED: "Expired",
+  SILENT: "Silent"
 };

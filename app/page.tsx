@@ -11,7 +11,9 @@ import {
   CheckCircle,
   Shield,
   TrendingUp,
-  GitBranch
+  GitBranch,
+  Mail,
+  Loader2
 } from "lucide-react";
 
 export default function HomePage() {
@@ -20,25 +22,59 @@ export default function HomePage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
+  
+  // Newsletter signup state
+  const [email, setEmail] = useState("");
+  const [newsletterLoading, setNewsletterLoading] = useState(false);
+  const [newsletterSuccess, setNewsletterSuccess] = useState(false);
+  const [newsletterError, setNewsletterError] = useState("");
 
   useEffect(() => {
-    // Auth is now handled by useAuth hook in Shell
-    // Just check if we need to redirect based on session
+    // Check auth status but DON'T auto-redirect
+    // Home page is now for newsletter capture, not login gate
     fetch("/api/auth/me", { credentials: "include" })
       .then(res => {
         if (res.ok) {
           setIsAuthenticated(true);
-          router.replace("/dashboard");
         } else {
           setIsAuthenticated(false);
-          setIsLoading(false);
         }
+        setIsLoading(false);
       })
       .catch(() => {
         setIsAuthenticated(false);
         setIsLoading(false);
       });
-  }, [router]);
+  }, []);
+  
+  async function handleNewsletterSubmit(e: React.FormEvent) {
+    e.preventDefault();
+    if (!email.trim() || newsletterLoading) return;
+    
+    setNewsletterLoading(true);
+    setNewsletterError("");
+    
+    try {
+      const res = await fetch("/api/newsletter/subscribe", {
+        method: "POST",
+        headers: { "Content-Type": "application/json" },
+        body: JSON.stringify({ email: email.trim(), source: "homepage" }),
+      });
+      
+      const data = await res.json();
+      
+      if (res.ok && data.success) {
+        setNewsletterSuccess(true);
+        setEmail("");
+      } else {
+        setNewsletterError(data.error || "Something went wrong. Please try again.");
+      }
+    } catch (error) {
+      setNewsletterError("Network error. Please try again.");
+    } finally {
+      setNewsletterLoading(false);
+    }
+  }
 
   useEffect(() => {
     setMounted(true);
@@ -172,8 +208,8 @@ export default function HomePage() {
               <div className="flex items-center justify-center gap-4 mb-12 animate-fade-in" style={{ animationDelay: '0.1s' }}>
                 <div className="relative group">
                   <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/20 via-blue-500/20 to-purple-500/20 rounded-2xl blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                  <div className="relative w-16 h-16 sm:w-20 sm:h-20 rounded-2xl bg-gradient-to-br from-[#12121A] to-[#1A1A28] border border-white/10 flex items-center justify-center shadow-2xl group-hover:scale-105 transition-transform duration-500">
-                    <svg width="48" height="48" viewBox="0 0 120 120" fill="none" className="sm:w-14 sm:h-14">
+                  <div className="relative w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-2xl bg-gradient-to-br from-[#12121A] to-[#1A1A28] border border-white/10 flex items-center justify-center shadow-2xl group-hover:scale-105 transition-transform duration-500">
+                    <svg width="40" height="40" viewBox="0 0 120 120" fill="none" className="sm:w-12 sm:h-12 md:w-14 md:h-14">
                       <defs>
                         <linearGradient id="heroGradient" x1="30%" y1="0%" x2="70%" y2="100%">
                           <stop offset="0%" style={{stopColor: '#00D4FF', stopOpacity: 1}} />
@@ -215,24 +251,91 @@ export default function HomePage() {
                 </span>
               </h2>
 
-              {/* CTA Principal */}
-              <div className="flex justify-center mb-20 animate-fade-in" style={{ animationDelay: '0.3s' }}>
+              {/* Primary CTA: Newsletter Signup */}
+              <div className="max-w-xl mx-auto mb-8 animate-fade-in" style={{ animationDelay: '0.3s' }}>
+                {newsletterSuccess ? (
+                  <div className="p-6 rounded-2xl bg-gradient-to-br from-emerald-500/10 to-cyan-500/5 border border-emerald-500/20 text-center">
+                    <div className="w-14 h-14 rounded-full bg-emerald-500/20 flex items-center justify-center mx-auto mb-4">
+                      <CheckCircle className="w-7 h-7 text-emerald-400" />
+                    </div>
+                    <h3 className="text-xl font-medium text-white mb-2">You're in!</h3>
+                    <p className="text-white/60 text-sm mb-4">
+                      Welcome to NomosX. You'll receive our Executive Briefs every week.
+                    </p>
+                    <button
+                      onClick={() => isAuthenticated ? router.push("/dashboard") : setShowAuthModal(true)}
+                      className="text-sm text-cyan-400 hover:text-cyan-300 transition-colors"
+                    >
+                      Want full access? Start your 15-day trial →
+                    </button>
+                  </div>
+                ) : (
+                  <div className="p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-white/[0.03] to-white/[0.01] border border-white/10 backdrop-blur-sm">
+                    <div className="flex items-center justify-center gap-2 mb-4">
+                      <Mail className="w-5 h-5 text-cyan-400" />
+                      <span className="text-sm text-cyan-400/80 font-medium">Free Weekly Newsletter</span>
+                    </div>
+                    <h3 className="text-xl sm:text-2xl font-light text-white text-center mb-2">
+                      Get Executive Briefs delivered weekly
+                    </h3>
+                    <p className="text-sm text-white/50 text-center mb-6">
+                      Decision-ready insights from an autonomous think tank. No noise, no fluff.
+                    </p>
+                    
+                    <form onSubmit={handleNewsletterSubmit} className="space-y-3">
+                      <div className="flex flex-col sm:flex-row gap-3">
+                        <input
+                          type="email"
+                          value={email}
+                          onChange={(e) => setEmail(e.target.value)}
+                          placeholder="Enter your email"
+                          className="flex-1 px-4 py-3.5 rounded-xl bg-white/[0.05] border border-white/10 text-white placeholder-white/30 focus:outline-none focus:border-cyan-500/50 focus:ring-2 focus:ring-cyan-500/20 transition-all"
+                          disabled={newsletterLoading}
+                          required
+                        />
+                        <button
+                          type="submit"
+                          disabled={newsletterLoading || !email.trim()}
+                          className="px-6 py-3.5 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-medium shadow-[0_0_20px_rgba(0,212,255,0.3)] hover:shadow-[0_0_30px_rgba(0,212,255,0.5)] disabled:opacity-50 disabled:cursor-not-allowed transition-all flex items-center justify-center gap-2 min-w-[140px]"
+                        >
+                          {newsletterLoading ? (
+                            <Loader2 className="w-5 h-5 animate-spin" />
+                          ) : (
+                            <>
+                              Subscribe
+                              <ArrowRight className="w-4 h-4" />
+                            </>
+                          )}
+                        </button>
+                      </div>
+                      
+                      {newsletterError && (
+                        <p className="text-sm text-red-400 text-center">{newsletterError}</p>
+                      )}
+                      
+                      <p className="text-xs text-white/30 text-center">
+                        Free forever. Unsubscribe anytime. No spam.
+                      </p>
+                    </form>
+                  </div>
+                )}
+              </div>
+
+              {/* Secondary CTA: Full Access */}
+              <div className="text-center animate-fade-in" style={{ animationDelay: '0.4s' }}>
                 <button
-                  onClick={() => !isAuthenticated ? setShowAuthModal(true) : router.push("/dashboard")}
-                  className="group relative px-12 py-6 rounded-xl bg-gradient-to-r from-cyan-500 to-blue-600 text-white font-medium text-xl shadow-[0_0_40px_rgba(0,212,255,0.4)] hover:shadow-[0_0_60px_rgba(0,212,255,0.6)] transition-all duration-300"
+                  onClick={() => isAuthenticated ? router.push("/dashboard") : setShowAuthModal(true)}
+                  className="text-sm text-white/50 hover:text-white transition-colors inline-flex items-center gap-2"
                 >
-                  <span className="relative z-10 flex items-center gap-3">
-                    Enter the Think Tank
-                    <ArrowRight size={24} className="transition-transform group-hover:translate-x-1" />
-                  </span>
-                  <div className="absolute inset-0 bg-gradient-to-r from-cyan-400 to-blue-500 rounded-xl opacity-0 group-hover:opacity-100 blur-sm transition-opacity" />
+                  {isAuthenticated ? "Go to Command Center" : "Want full access? Start your 15-day trial"}
+                  <ArrowRight className="w-4 h-4" />
                 </button>
               </div>
             </div>
           </section>
 
           {/* What NomosX Does */}
-          <section className="max-w-7xl mx-auto px-4 sm:px-6 py-24 sm:py-32 border-t border-white/[0.08]">
+          <section className="max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-24 md:py-32 border-t border-white/[0.08]">
             <div className="max-w-4xl mb-20">
               <div className="text-xs text-cyan-400/60 tracking-[0.25em] uppercase mb-6 flex items-center gap-3">
                 <div className="w-8 h-px bg-gradient-to-r from-cyan-400/60 to-transparent" />
@@ -248,9 +351,9 @@ export default function HomePage() {
             </div>
 
             {/* Grid 4 piliers */}
-            <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
+            <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-4 sm:gap-6 md:gap-8">
               {/* Continuous Signal Detection */}
-              <div className="group relative p-8 rounded-2xl bg-gradient-to-br from-white/[0.03] to-white/[0.01] border border-white/[0.08] hover:border-cyan-500/30 transition-all duration-500 overflow-hidden">
+              <div className="group relative p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-white/[0.03] to-white/[0.01] border border-white/[0.08] hover:border-cyan-500/30 transition-all duration-500 overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 via-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl" />
                 <div className="relative z-10">
                   <div className="w-14 h-14 rounded-xl mb-6 bg-gradient-to-br from-cyan-500/10 to-cyan-500/5 border border-cyan-500/20 flex items-center justify-center">
@@ -266,7 +369,7 @@ export default function HomePage() {
               </div>
 
               {/* Evidence-based Evaluation */}
-              <div className="group relative p-8 rounded-2xl bg-gradient-to-br from-white/[0.03] to-white/[0.01] border border-white/[0.08] hover:border-emerald-500/30 transition-all duration-500 overflow-hidden">
+              <div className="group relative p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-white/[0.03] to-white/[0.01] border border-white/[0.08] hover:border-emerald-500/30 transition-all duration-500 overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 via-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl" />
                 <div className="relative z-10">
                   <div className="w-14 h-14 rounded-xl mb-6 bg-gradient-to-br from-emerald-500/10 to-emerald-500/5 border border-emerald-500/20 flex items-center justify-center">
@@ -282,7 +385,7 @@ export default function HomePage() {
               </div>
 
               {/* Editorial Decision Gate */}
-              <div className="group relative p-8 rounded-2xl bg-gradient-to-br from-white/[0.03] to-white/[0.01] border border-white/[0.08] hover:border-blue-500/30 transition-all duration-500 overflow-hidden">
+              <div className="group relative p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-white/[0.03] to-white/[0.01] border border-white/[0.08] hover:border-blue-500/30 transition-all duration-500 overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl" />
                 <div className="relative z-10">
                   <div className="w-14 h-14 rounded-xl mb-6 bg-gradient-to-br from-blue-500/10 to-blue-500/5 border border-blue-500/20 flex items-center justify-center">
@@ -298,7 +401,7 @@ export default function HomePage() {
               </div>
 
               {/* Controlled Publication Cadence */}
-              <div className="group relative p-8 rounded-2xl bg-gradient-to-br from-white/[0.03] to-white/[0.01] border border-white/[0.08] hover:border-purple-500/30 transition-all duration-500 overflow-hidden">
+              <div className="group relative p-6 sm:p-8 rounded-2xl bg-gradient-to-br from-white/[0.03] to-white/[0.01] border border-white/[0.08] hover:border-purple-500/30 transition-all duration-500 overflow-hidden">
                 <div className="absolute inset-0 bg-gradient-to-br from-purple-500/10 via-purple-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl" />
                 <div className="relative z-10">
                   <div className="w-14 h-14 rounded-xl mb-6 bg-gradient-to-br from-purple-500/10 to-purple-500/5 border border-purple-500/20 flex items-center justify-center">
@@ -316,7 +419,7 @@ export default function HomePage() {
           </section>
 
           {/* How It Works */}
-          <section className="relative py-24 sm:py-32 border-t border-white/[0.08] overflow-hidden">
+          <section className="relative py-16 sm:py-24 md:py-32 border-t border-white/[0.08] overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-500/5 to-transparent" />
             
             <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6">
@@ -334,7 +437,7 @@ export default function HomePage() {
                 </p>
               </div>
 
-              <div className="grid md:grid-cols-3 gap-8 max-w-5xl mx-auto">
+              <div className="grid sm:grid-cols-2 md:grid-cols-3 gap-6 sm:gap-8 max-w-5xl mx-auto">
                 {/* Autonomous Research Pipeline */}
                 <div className="text-center">
                   <div className="relative mx-auto w-20 h-20 mb-6">

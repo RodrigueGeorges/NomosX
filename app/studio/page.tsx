@@ -40,14 +40,25 @@ import { useStreamingCouncil } from "@/hooks/useStreamingCouncil";
 import ProgressBar from "@/components/ProgressBar";
 import { toast } from "@/components/ui/Toast";
 
-type PublicationType = "RESEARCH_BRIEF" | "UPDATE_NOTE" | "DATA_NOTE" | "POLICY_NOTE" | "DOSSIER";
+type PublicationType = "EXECUTIVE_BRIEF" | "STRATEGIC_REPORT";
 
-const PUBLICATION_TYPES: { value: PublicationType; label: string; description: string; icon: React.ElementType }[] = [
-  { value: "RESEARCH_BRIEF", label: "Research Brief", description: "Analyse structurée avec consensus et débat", icon: FileText },
-  { value: "UPDATE_NOTE", label: "Update Note", description: "Mise à jour sur un sujet existant", icon: Zap },
-  { value: "DATA_NOTE", label: "Data Note", description: "Focus sur nouvelles données", icon: Cpu },
-  { value: "POLICY_NOTE", label: "Policy Note", description: "Implications politiques", icon: Users },
-  { value: "DOSSIER", label: "Dossier", description: "Analyse approfondie multi-sections", icon: MessagesSquare },
+const PUBLICATION_TYPES: { value: PublicationType; label: string; description: string; icon: React.ElementType; pages: string; audience: string }[] = [
+  { 
+    value: "EXECUTIVE_BRIEF", 
+    label: "Executive Brief", 
+    description: "Decision-ready synthesis with key findings", 
+    icon: FileText,
+    pages: "2-3 pages",
+    audience: "Free newsletter"
+  },
+  { 
+    value: "STRATEGIC_REPORT", 
+    label: "Strategic Report", 
+    description: "Deep analysis with scenarios and recommendations", 
+    icon: Layers,
+    pages: "10-15 pages",
+    audience: "Paid subscribers"
+  },
 ];
 
 type BriefResult = {
@@ -71,7 +82,7 @@ function StudioPageContent() {
   const router = useRouter();
   
   const [question, setQuestion] = useState("");
-  const [publicationType, setPublicationType] = useState<PublicationType>("RESEARCH_BRIEF");
+  const [publicationType, setPublicationType] = useState<PublicationType>("EXECUTIVE_BRIEF");
   const [selectedVertical, setSelectedVertical] = useState<string>("");
   const [verticals, setVerticals] = useState<{ id: string; name: string; slug: string }[]>([]);
   const [detectedIntent, setDetectedIntent] = useState<IntentResult | null>(null);
@@ -196,7 +207,7 @@ function StudioPageContent() {
 
   async function handleCreateDraft() {
     if (!question.trim() || !selectedVertical) {
-      toast({ type: "error", title: "Erreur", message: "Question et verticale requises" });
+      toast({ type: "error", title: "Error", message: "Question and vertical required" });
       return;
     }
 
@@ -218,10 +229,10 @@ function StudioPageContent() {
       const data = await res.json();
       setDraftId(data.draft.id);
       setDraftStatus("DRAFT");
-      toast({ type: "success", title: "Draft créé", message: "Vous pouvez maintenant le soumettre à l'Editorial Gate" });
+      toast({ type: "success", title: "Draft created", message: "You can now submit it to the Editorial Gate" });
     } catch (error) {
       console.error("Create draft error:", error);
-      toast({ type: "error", title: "Erreur", message: "Impossible de créer le draft" });
+      toast({ type: "error", title: "Error", message: "Unable to create draft" });
     }
   }
 
@@ -245,17 +256,17 @@ function StudioPageContent() {
       setDraftStatus(data.decision === "PUBLISH" ? "APPROVED" : data.decision === "HOLD" ? "UNDER_REVIEW" : "REJECTED");
       
       const decisionMessages: Record<string, { type: "success" | "info" | "warning" | "error"; title: string; message: string }> = {
-        PUBLISH: { type: "success", title: "Publication approuvée", message: "Le draft sera publié" },
-        HOLD: { type: "warning", title: "En attente", message: "Revue humaine requise" },
-        REJECT: { type: "error", title: "Rejeté", message: data.reasons?.[0] || "Ne répond pas aux critères" },
-        SILENCE: { type: "info", title: "Silence", message: "Le sujet ne justifie pas de publication" },
+        PUBLISH: { type: "success", title: "Publication approved", message: "The draft will be published" },
+        HOLD: { type: "warning", title: "Held", message: "Human review required" },
+        REJECT: { type: "error", title: "Rejected", message: data.reasons?.[0] || "Does not meet criteria" },
+        SILENCE: { type: "info", title: "Silence", message: "Topic does not warrant publication" },
       };
       
       const msg = decisionMessages[data.decision] || { type: "info", title: data.decision, message: "" };
       toast(msg);
     } catch (error) {
       console.error("Submit to gate error:", error);
-      toast({ type: "error", title: "Erreur", message: "Impossible de soumettre à l'Editorial Gate" });
+      toast({ type: "error", title: "Error", message: "Unable to submit to Editorial Gate" });
     } finally {
       setSubmitting(false);
     }
@@ -268,18 +279,18 @@ function StudioPageContent() {
       <div className="max-w-5xl mx-auto">
         {/* Header */}
         <div className="mb-10">
-          <div className="flex items-center gap-4 mb-3">
-            <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-cyan-500/10 to-blue-500/5 border border-cyan-500/20 flex items-center justify-center shadow-[0_0_20px_rgba(0,212,255,0.2)]">
-              <PenTool size={28} className="text-cyan-400" />
+          <div className="flex items-center gap-3 sm:gap-4 mb-3">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br from-cyan-500/10 to-blue-500/5 border border-cyan-500/20 flex items-center justify-center shadow-[0_0_20px_rgba(0,212,255,0.2)]">
+              <PenTool size={24} className="sm:w-7 sm:h-7 text-cyan-400" />
             </div>
             <div>
               <div className="text-xs text-cyan-400/60 tracking-[0.25em] uppercase mb-1">
                 Propose to Think Tank
               </div>
-              <h1 className="text-4xl font-light tracking-tight text-white/95">Publication Studio</h1>
+              <h1 className="text-2xl sm:text-3xl md:text-4xl font-light tracking-tight text-white/95">Publication Studio</h1>
             </div>
           </div>
-          <p className="text-base text-white/50 leading-relaxed max-w-3xl ml-[4.5rem]">
+          <p className="text-sm sm:text-base text-white/50 leading-relaxed max-w-3xl sm:ml-[4.5rem]">
             Propose topics to the autonomous Think Tank. Your proposal will be evaluated by the Editorial Gate. 
             The Think Tank may publish, hold for review, or choose strategic silence.
           </p>
@@ -292,11 +303,11 @@ function StudioPageContent() {
               <div className="flex items-center gap-3">
                 <Zap size={18} className="text-amber-400" />
                 <div className="flex-1">
-                  <p className="text-sm text-white/70">Basé sur le signal détecté:</p>
+                  <p className="text-sm text-white/70">Based on detected signal:</p>
                   <p className="text-white font-medium">{signalContext.title}</p>
                 </div>
                 <Button variant="ghost" size="sm" onClick={() => setSignalContext(null)}>
-                  Détacher
+                  Detach
                 </Button>
               </div>
             </CardContent>
@@ -306,28 +317,43 @@ function StudioPageContent() {
         {/* Main Input */}
         <Card variant="default" className="border-white/10 bg-white/[0.02] backdrop-blur-xl mb-8">
           <CardContent className="pt-6">
-            {/* Publication Type Selection */}
+            {/* Publication Type Selection - Simplified to 2 formats */}
             <div className="mb-6">
-              <label className="text-xs text-white/40 uppercase tracking-wider mb-3 block">Type de publication</label>
-              <div className="flex flex-wrap gap-2">
+              <label className="text-xs text-white/40 uppercase tracking-wider mb-3 block">Publication Format</label>
+              <div className="grid grid-cols-2 gap-3">
                 {PUBLICATION_TYPES.map(type => {
                   const Icon = type.icon;
+                  const isSelected = publicationType === type.value;
                   return (
                     <button
                       key={type.value}
                       onClick={() => setPublicationType(type.value)}
                       disabled={isLoading}
                       className={`
-                        px-4 py-2 rounded-xl text-sm font-medium transition-all flex items-center gap-2
-                        ${publicationType === type.value 
-                          ? 'bg-cyan-500/20 text-cyan-400 border border-cyan-500/30' 
-                          : 'text-white/50 hover:text-white/70 hover:bg-white/[0.03] border border-transparent'
+                        p-4 rounded-xl text-left transition-all
+                        ${isSelected 
+                          ? 'bg-cyan-500/10 border-2 border-cyan-500/40 shadow-[0_0_20px_rgba(0,212,255,0.1)]' 
+                          : 'bg-white/[0.02] border border-white/10 hover:border-white/20'
                         }
                       `}
-                      title={type.description}
                     >
-                      <Icon size={16} />
-                      {type.label}
+                      <div className="flex items-center gap-3 mb-2">
+                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${isSelected ? 'bg-cyan-500/20' : 'bg-white/5'}`}>
+                          <Icon size={20} className={isSelected ? 'text-cyan-400' : 'text-white/40'} />
+                        </div>
+                        <div>
+                          <div className={`font-medium ${isSelected ? 'text-white' : 'text-white/70'}`}>{type.label}</div>
+                          <div className="text-xs text-white/40">{type.pages}</div>
+                        </div>
+                      </div>
+                      <p className="text-xs text-white/50 mb-2">{type.description}</p>
+                      <div className={`text-xs px-2 py-1 rounded-full inline-block ${
+                        type.value === "EXECUTIVE_BRIEF" 
+                          ? 'bg-emerald-500/10 text-emerald-400' 
+                          : 'bg-amber-500/10 text-amber-400'
+                      }`}>
+                        {type.audience}
+                      </div>
                     </button>
                   );
                 })}
@@ -337,7 +363,7 @@ function StudioPageContent() {
             {/* Vertical Selection */}
             {verticals.length > 0 && (
               <div className="mb-6">
-                <label className="text-xs text-white/40 uppercase tracking-wider mb-3 block">Verticale</label>
+                <label className="text-xs text-white/40 uppercase tracking-wider mb-3 block">Vertical</label>
                 <div className="flex flex-wrap gap-2">
                   {verticals.map(v => (
                     <button
@@ -364,7 +390,7 @@ function StudioPageContent() {
             <Textarea
               value={question}
               onChange={(e) => setQuestion(e.target.value)}
-              placeholder="Quelle question mérite une publication institutionnelle ?"
+              placeholder="What question deserves institutional publication?"
               rows={4}
               className="mb-4 bg-white/[0.03] border-white/10 focus:border-cyan-500/50 text-base resize-none"
               disabled={isLoading}
@@ -380,7 +406,7 @@ function StudioPageContent() {
             {detectedIntent && detectedIntent.confidence > 0.6 && (
               <div className="mb-4 text-xs text-cyan-400/70 flex items-center gap-1.5">
                 <Sparkles size={12} />
-                Format suggéré: {detectedIntent.type === "brief" ? "Research Brief" : "Council Deliberation"} ({Math.round(detectedIntent.confidence * 100)}%)
+                Suggested format: {detectedIntent.type === "brief" ? "Executive Brief" : "Strategic Report"} ({Math.round(detectedIntent.confidence * 100)}%)
               </div>
             )}
 
@@ -390,18 +416,10 @@ function StudioPageContent() {
                 <span>focus</span>
                 <span className="text-white/10">•</span>
                 <Kbd>⌘↵</Kbd>
-                <span>générer</span>
+                <span>generate</span>
               </div>
               
               <div className="flex gap-2">
-                <Button
-                  variant="ghost"
-                  onClick={handleDeliberate}
-                  disabled={!question.trim() || isLoading}
-                >
-                  <MessagesSquare size={18} className="mr-2" />
-                  Délibérer
-                </Button>
                 <Button
                   variant="ai"
                   onClick={handleGenerate}
@@ -411,12 +429,12 @@ function StudioPageContent() {
                   {isLoading ? (
                     <>
                       <Zap size={18} className="mr-2 animate-pulse" />
-                      Génération...
+                      Generating...
                     </>
                   ) : (
                     <>
                       <Sparkles size={18} className="mr-2 group-hover:rotate-12 transition-transform" />
-                      Générer Draft
+                      Generate {publicationType === "EXECUTIVE_BRIEF" ? "Brief" : "Report"}
                     </>
                   )}
                 </Button>
@@ -446,21 +464,15 @@ function StudioPageContent() {
                 <div>
                   <div className="flex items-center gap-2">
                     <h2 className="text-xl font-semibold text-white">Draft</h2>
-                    <Badge variant="warning" className="text-xs">En attente de décision</Badge>
+                    <Badge variant="warning" className="text-xs">Pending decision</Badge>
                   </div>
                   <p className="text-sm text-white/50">{briefResult.sources.length} sources • {PUBLICATION_TYPES.find(t => t.value === publicationType)?.label}</p>
                 </div>
               </div>
-              <div className="flex gap-2">
-                <Button variant="ghost" size="sm" onClick={handleDeliberate}>
-                  <MessagesSquare size={16} className="mr-2" />
-                  Délibérer
-                </Button>
-                <Button variant="ai" size="sm" onClick={handleSubmitToEditorialGate}>
-                  <CheckCircle size={16} className="mr-2" />
-                  Soumettre à l'Editorial Gate
-                </Button>
-              </div>
+              <Button variant="ai" size="sm" onClick={handleSubmitToEditorialGate}>
+                <CheckCircle size={16} className="mr-2" />
+                Submit to Editorial Gate
+              </Button>
             </div>
 
             <Card variant="default" className="border-white/10 bg-white/[0.02]">
@@ -482,17 +494,17 @@ function StudioPageContent() {
                 <MessagesSquare size={20} className="text-white" />
               </div>
               <div>
-                <h2 className="text-xl font-semibold text-white">Délibération</h2>
-                <p className="text-sm text-white/50">4 perspectives pour éclairer la décision</p>
+                <h2 className="text-xl font-semibold text-white">Deliberation</h2>
+                <p className="text-sm text-white/50">4 perspectives to inform the decision</p>
               </div>
             </div>
 
-            <div className="grid md:grid-cols-2 gap-4">
+            <div className="grid sm:grid-cols-2 gap-3 sm:gap-4">
               <Card variant="default" className="border-l-4 border-l-cyan-500/50 bg-white/[0.02]">
                 <CardHeader>
                   <div className="flex items-center gap-2">
                     <DollarSign size={16} className="text-cyan-400" />
-                    <h3 className="text-base font-semibold text-white">Économique</h3>
+                    <h3 className="text-base font-semibold text-white">Economic</h3>
                   </div>
                 </CardHeader>
                 <CardContent>
@@ -504,7 +516,7 @@ function StudioPageContent() {
                 <CardHeader>
                   <div className="flex items-center gap-2">
                     <Cpu size={16} className="text-blue-400" />
-                    <h3 className="text-base font-semibold text-white">Technique</h3>
+                    <h3 className="text-base font-semibold text-white">Technical</h3>
                   </div>
                 </CardHeader>
                 <CardContent>
@@ -516,7 +528,7 @@ function StudioPageContent() {
                 <CardHeader>
                   <div className="flex items-center gap-2">
                     <Heart size={16} className="text-rose-400" />
-                    <h3 className="text-base font-semibold text-white">Éthique</h3>
+                    <h3 className="text-base font-semibold text-white">Ethical</h3>
                   </div>
                 </CardHeader>
                 <CardContent>
@@ -528,7 +540,7 @@ function StudioPageContent() {
                 <CardHeader>
                   <div className="flex items-center gap-2">
                     <Users size={16} className="text-purple-400" />
-                    <h3 className="text-base font-semibold text-white">Politique</h3>
+                    <h3 className="text-base font-semibold text-white">Political</h3>
                   </div>
                 </CardHeader>
                 <CardContent>
@@ -541,7 +553,7 @@ function StudioPageContent() {
               <CardHeader>
                 <div className="flex items-center gap-2">
                   <Sparkles size={18} className="text-cyan-400" />
-                  <h3 className="text-lg font-semibold text-white">Synthèse</h3>
+                  <h3 className="text-lg font-semibold text-white">Synthesis</h3>
                 </div>
               </CardHeader>
               <CardContent>
@@ -558,10 +570,10 @@ function StudioPageContent() {
               <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center mx-auto mb-4">
                 <PenTool size={32} className="text-white" />
               </div>
-              <h3 className="text-xl font-semibold text-white mb-2">Créez une publication</h3>
+              <h3 className="text-xl font-semibold text-white mb-2">Create a publication</h3>
               <p className="text-white/50 text-sm max-w-md mx-auto">
-                Sélectionnez un type, une verticale, et posez votre question. 
-                Le système générera un draft soumis à l'Editorial Gate.
+                Select a format, a vertical, and ask your question. 
+                The system will generate a draft submitted to the Editorial Gate.
               </p>
             </div>
             

@@ -193,7 +193,7 @@ export default function ThinkTankCommandCenter() {
                   <div className="text-2xl font-light text-white">
                     {subscription?.activeVerticals || 1} / {subscription?.activeVerticalsMax || 1}
                   </div>
-                  <div className="text-xs text-white/40">Verticales</div>
+                  <div className="text-xs text-white/40">Verticals</div>
                 </div>
               </div>
               <div className="text-xs text-white/30">Primary research focus</div>
@@ -221,7 +221,7 @@ export default function ThinkTankCommandCenter() {
                   <div className="text-2xl font-light text-white">
                     {subscription?.weeklyPublicationCount || 0} / {subscription?.weeklyPublicationMax || 3}
                   </div>
-                  <div className="text-xs text-white/40">Cette semaine</div>
+                  <div className="text-xs text-white/40">This week</div>
                 </div>
               </div>
               <div className="w-full bg-white/5 rounded-full h-1.5 overflow-hidden">
@@ -245,11 +245,11 @@ export default function ThinkTankCommandCenter() {
                 </div>
                 <div className="flex-1">
                   <div className="text-2xl font-light text-amber-400">{totalPendingSignals}</div>
-                  <div className="text-xs text-amber-400/60">En attente</div>
+                  <div className="text-xs text-amber-400/60">Pending</div>
                 </div>
               </div>
               <div className="flex items-center justify-between text-xs">
-                <span className="text-white/30">Retenus: {heldSignals}</span>
+                <span className="text-white/30">Held: {heldSignals}</span>
               </div>
               <Button 
                 variant="ghost" 

@@ -1022,6 +1022,34 @@ model AuditLog {
 }
 
 // ============================================================================
+// AGENT GOVERNANCE LAYER - INTERNAL AUDIT
+// ============================================================================
+
+model AgentAuditLog {
+  id String @id @default(cuid())
+
+  // Agent
+  agent String // scout, index, reader, analyst, editor, publisher, etc.
+
+  // Action
+  action String // PUBLISH, HOLD, SILENT, PERMISSION_DENIED, CADENCE_EXCEEDED, GOVERNANCE_VIOLATION
+
+  // Resource
+  resource String? // publication_id, source_id, etc.
+
+  // Metadata
+  metadata String? @db.Text // JSON string with additional context
+
+  // Timestamp
+  timestamp DateTime @default(now())
+
+  @@index([agent])
+  @@index([action])
+  @@index([timestamp])
+  @@index([agent, action])
+}
+
+// ============================================================================
 // SYSTEM HEALTH & OBSERVABILITY
 // ============================================================================
 
@@ -1067,6 +1095,83 @@ model FeatureFlag {
 
   @@index([key])
   @@index([isEnabled])
+}
+
+// ============================================================================
+// NEWSLETTER SUBSCRIBERS - Top of Funnel
+// ============================================================================
+
+model NewsletterSubscriber {
+  id             String    @id @default(cuid())
+  email          String    @unique
+  
+  // Status
+  status         String    @default("pending") // pending, active, unsubscribed, bounced
+  
+  // Source tracking
+  source         String?   // homepage, publication, referral, organic
+  referrer       String?   // URL or campaign ID
+  
+  // Confirmation (double opt-in)
+  confirmToken   String?   @unique
+  confirmedAt    DateTime?
+  
+  // Unsubscribe
+  unsubscribedAt DateTime?
+  unsubscribeReason String?
+  
+  // Engagement
+  lastEmailSentAt DateTime?
+  emailsSent     Int       @default(0)
+  emailsOpened   Int       @default(0)
+  emailsClicked  Int       @default(0)
+  
+  // Conversion tracking
+  convertedToTrial Boolean @default(false)
+  convertedAt      DateTime?
+  
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  
+  @@index([email])
+  @@index([status])
+  @@index([source])
+  @@index([createdAt])
+}
+
+// ============================================================================
+// NEWSLETTER EDITIONS - Weekly Compilations
+// ============================================================================
+
+model NewsletterEdition {
+  id             String    @id @default(cuid())
+  
+  // Edition info
+  editionNumber  Int       @unique
+  subject        String
+  preheader      String?   // Email preview text
+  
+  // Content
+  html           String    @db.Text
+  briefIds       String[]  // IDs of included Executive Briefs
+  
+  // Status
+  status         String    @default("draft") // draft, scheduled, sending, sent
+  scheduledFor   DateTime?
+  sentAt         DateTime?
+  
+  // Stats
+  recipientCount Int       @default(0)
+  openCount      Int       @default(0)
+  clickCount     Int       @default(0)
+  unsubscribeCount Int     @default(0)
+  
+  createdAt      DateTime  @default(now())
+  updatedAt      DateTime  @updatedAt
+  
+  @@index([status])
+  @@index([scheduledFor])
+  @@index([sentAt])
 }
 
 // ============================================================================
