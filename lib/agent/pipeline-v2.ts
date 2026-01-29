@@ -3,10 +3,11 @@
  * SCOUT → INDEX → RANK → READER → ANALYST → EDITOR → GUARD → PUBLISHER
  */
 
-import { prisma } from "../db";
-import { scoreSource, scoreNovelty } from "../score";
-import { clamp } from "../text";
+import { prisma } from "../db.ts";
+import { scoreSource, scoreNovelty } from "../score.ts";
+import { clamp } from "../text.ts";
 import crypto from "crypto";
+import { AgentRole, assertPermission } from "../governance/index.ts";
 
 // P0 FIX #3: Redis caching for SCOUT
 // P2 FIX: Enhanced Redis with reconnection strategy
@@ -124,19 +125,21 @@ export async function getCacheStatus(): Promise<{
   }
 }
 
-import { searchOpenAlex } from "../providers/openalex";
-import { searchThesesFr } from "../providers/thesesfr";
-import { enrichManyThesesWithHAL } from "../providers/thesesfr-hal-bridge";
-import { searchCrossref } from "../providers/crossref";
-import { searchSemanticScholar } from "../providers/semanticscholar";
-import { searchArxiv } from "../providers/arxiv";
-import { searchHAL } from "../providers/hal";
-import { searchPubMed } from "../providers/pubmed";
-import { searchBASE } from "../providers/base";
-import { unpaywallByDoi } from "../providers/unpaywall";
-import { indexAgent, deduplicateSources } from "./index-agent";
-import { readerAgent } from "./reader-agent";
-import { analystAgent } from "./analyst-agent";
+import { searchOpenAlex } from "../providers/openalex.ts";
+import { searchThesesFr } from "../providers/thesesfr.ts";
+import { enrichManyThesesWithHAL } from "../providers/thesesfr-hal-bridge.ts";
+import { searchCrossref } from "../providers/crossref.ts";
+import { searchSemanticScholar } from "../providers/semanticscholar.ts";
+import { searchArxiv } from "../providers/arxiv.ts";
+import { searchHAL } from "../providers/hal.ts";
+import { searchPubMed } from "../providers/pubmed.ts";
+import { searchBASE } from "../providers/base.ts";
+import { unpaywallByDoi } from "../providers/unpaywall.ts";
+import { indexAgent, deduplicateSources } from "./index-agent.ts";
+import { readerAgent } from "./reader-agent.ts";
+import { analystAgent } from "./analyst-agent.ts";
+import { strategicAnalystAgent, StrategicAnalysisOutput } from "./strategic-analyst-agent.ts";
+import { renderStrategicReportHTML } from "./strategic-report-renderer.ts";
 
 // NOUVEAUX IMPORTS - Providers institutionnels
 import {
@@ -155,13 +158,33 @@ import {
   searchNIST,
   searchCISA,
   searchENISA,
+  searchLawZeroViaGoogle,
+  searchGovAIViaGoogle,
+  searchIAPSViaGoogle,
+  searchCAIPViaGoogle,
+  searchAIPIViaGoogle,
+  searchCSETViaGoogle,
+  searchAINowViaGoogle,
+  searchDataSocietyViaGoogle,
+  searchAbundanceViaGoogle,
+  searchCAIDPViaGoogle,
+  searchSCSPViaGoogle,
+  searchIFPViaGoogle,
+  searchCDTViaGoogle,
+  searchBrookingsViaGoogle,
+  searchFAIViaGoogle,
+  searchCNASViaGoogle,
+  searchRANDViaGoogle,
+  searchNewAmericaViaGoogle,
+  searchAspenDigitalViaGoogle,
+  searchRStreetViaGoogle,
   searchUN,
   searchUNDP,
   searchUNCTAD,
   searchNARA,
   searchUKArchives,
   searchArchivesNationalesFR,
-} from "../providers/institutional";
+} from "../providers/institutional/index.ts";
 
 // Providers supportés par le pipeline
 export type Providers = Array<
@@ -180,6 +203,11 @@ export type Providers = Array<
   | "un" | "undp" | "unctad"
   // Institutionnels - Archives
   | "nara" | "uk-archives" | "archives-fr"
+  // Institutionnels - Think tanks innovants
+  | "lawzero" | "govai" | "iaps" | "caip" | "aipi"
+  | "cset" | "ainow" | "datasociety" | "abundance" | "caidp"
+  | "scsp" | "ifp" | "cdt" | "brookings" | "fai"
+  | "cnas" | "rand" | "newamerica" | "aspen-digital" | "rstreet"
 >;
 
 // ================================
@@ -193,6 +221,9 @@ export type Providers = Array<
  * Cost savings: $100/day → $50/day
  */
 export async function scout(query: string, providers: Providers, perProvider = 50) {
+  // Governance: Assert SCOUT permissions
+  assertPermission(AgentRole.SCOUT, "write:sources");
+  
   // P0 FIX #3: Check Redis cache first
   const cacheKey = `scout:${hashQuery(query, providers as string[])}`;
   const cacheTTL = 86400; // 24 hours
@@ -268,9 +299,31 @@ async function scoutV2(query: string, providers: Providers, perProvider = 50) {
   if (providers.includes("bis")) promises.push(searchBIS(query, Math.min(15, perProvider)));
   
   // INSTITUTIONNELS - CYBER
-  if (providers.includes("nist")) promises.push(searchNIST(query, Math.min(15, perProvider)));
+  if (providers.includes("nist")) promises.push(searchNIST(query, Math.min(10, perProvider)));
   if (providers.includes("cisa")) promises.push(searchCISA(query, Math.min(15, perProvider)));
-  if (providers.includes("enisa")) promises.push(searchENISA(query, Math.min(15, perProvider)));
+  if (providers.includes("enisa")) promises.push(searchENISA(query, Math.min(10, perProvider)));
+
+  // INSTITUTIONNELS - THINK TANKS (innovants)
+  if (providers.includes("lawzero")) promises.push(searchLawZeroViaGoogle(query, Math.min(10, perProvider)));
+  if (providers.includes("govai")) promises.push(searchGovAIViaGoogle(query, Math.min(10, perProvider)));
+  if (providers.includes("iaps")) promises.push(searchIAPSViaGoogle(query, Math.min(10, perProvider)));
+  if (providers.includes("caip")) promises.push(searchCAIPViaGoogle(query, Math.min(10, perProvider)));
+  if (providers.includes("aipi")) promises.push(searchAIPIViaGoogle(query, Math.min(10, perProvider)));
+  if (providers.includes("cset")) promises.push(searchCSETViaGoogle(query, Math.min(10, perProvider)));
+  if (providers.includes("ainow")) promises.push(searchAINowViaGoogle(query, Math.min(10, perProvider)));
+  if (providers.includes("datasociety")) promises.push(searchDataSocietyViaGoogle(query, Math.min(10, perProvider)));
+  if (providers.includes("abundance")) promises.push(searchAbundanceViaGoogle(query, Math.min(10, perProvider)));
+  if (providers.includes("caidp")) promises.push(searchCAIDPViaGoogle(query, Math.min(10, perProvider)));
+  if (providers.includes("scsp")) promises.push(searchSCSPViaGoogle(query, Math.min(10, perProvider)));
+  if (providers.includes("ifp")) promises.push(searchIFPViaGoogle(query, Math.min(10, perProvider)));
+  if (providers.includes("cdt")) promises.push(searchCDTViaGoogle(query, Math.min(10, perProvider)));
+  if (providers.includes("brookings")) promises.push(searchBrookingsViaGoogle(query, Math.min(10, perProvider)));
+  if (providers.includes("fai")) promises.push(searchFAIViaGoogle(query, Math.min(10, perProvider)));
+  if (providers.includes("cnas")) promises.push(searchCNASViaGoogle(query, Math.min(10, perProvider)));
+  if (providers.includes("rand")) promises.push(searchRANDViaGoogle(query, Math.min(10, perProvider)));
+  if (providers.includes("newamerica")) promises.push(searchNewAmericaViaGoogle(query, Math.min(10, perProvider)));
+  if (providers.includes("aspen-digital")) promises.push(searchAspenDigitalViaGoogle(query, Math.min(10, perProvider)));
+  if (providers.includes("rstreet")) promises.push(searchRStreetViaGoogle(query, Math.min(10, perProvider)));
   
   // INSTITUTIONNELS - MULTILATÉRAL
   if (providers.includes("un")) promises.push(searchUN(query, Math.min(15, perProvider)));
@@ -426,50 +479,179 @@ export async function index(sourceIds: string[]) {
 }
 
 // ================================
-// RANK AGENT V2 - Sélection diversifiée et intelligente
+// RANK AGENT V3 - Enhanced with relevance/date filtering
 // ================================
 
-export async function rank(query: string, limit = 12, mode: "quality" | "novelty" | "balanced" = "balanced") {
-  console.log(`[RANK V2] Selecting top ${limit} sources (mode: ${mode})`);
-  
-  // 1. Récupérer TOUTES les sources avec qualité minimale
-  const allSources = await prisma.source.findMany({
-    where: { 
-      qualityScore: { gte: 70 }  // Plancher qualité
-    },
+export interface RankOptions {
+  limit?: number;
+  mode?: "quality" | "novelty" | "balanced";
+  // NEW: Date filtering
+  minYear?: number;
+  maxYear?: number;
+  recentOnly?: boolean; // Only sources from last 3 years
+  // NEW: Relevance filtering
+  minQuality?: number;
+  excludeProviders?: string[];
+  includeProviders?: string[];
+  // NEW: Content filtering
+  requireAbstract?: boolean;
+  minAbstractLength?: number;
+  // Diversity controls
+  maxPerProvider?: number;
+  maxPerYear?: number;
+  minProviderDiversity?: number;
+}
+
+export async function rank(
+  query: string,
+  limitOrOptions: number | RankOptions = 12,
+  mode: "quality" | "novelty" | "balanced" = "balanced"
+) {
+  // Support both old signature (limit, mode) and new signature (options)
+  const options: RankOptions = typeof limitOrOptions === 'number'
+    ? { limit: limitOrOptions, mode }
+    : limitOrOptions;
+
+  const limit = options.limit ?? 12;
+  const rankMode = options.mode ?? mode;
+  const currentYear = new Date().getFullYear();
+
+  console.log(`[RANK V3] Selecting top ${limit} sources (mode: ${rankMode})`);
+  if (options.minYear || options.maxYear || options.recentOnly) {
+    console.log(`[RANK V3] Date filter: ${options.recentOnly ? 'recent only (3 years)' : `${options.minYear || 'any'}-${options.maxYear || 'any'}`}`);
+  }
+
+  // Build dynamic WHERE clause
+  const whereClause: any = {
+    qualityScore: { gte: options.minQuality ?? 70 }
+  };
+
+  // Date filtering
+  if (options.recentOnly) {
+    whereClause.year = { gte: currentYear - 3 };
+  } else {
+    if (options.minYear) {
+      whereClause.year = { ...whereClause.year, gte: options.minYear };
+    }
+    if (options.maxYear) {
+      whereClause.year = { ...whereClause.year, lte: options.maxYear };
+    }
+  }
+
+  // Provider filtering
+  if (options.excludeProviders?.length) {
+    whereClause.provider = { notIn: options.excludeProviders };
+  }
+  if (options.includeProviders?.length) {
+    whereClause.provider = { in: options.includeProviders };
+  }
+
+  // Content filtering
+  if (options.requireAbstract) {
+    whereClause.abstract = { not: null };
+  }
+  if (options.minAbstractLength) {
+    // Note: Prisma doesn't support string length in where, we'll filter post-query
+  }
+
+  // 1. Récupérer sources avec filtres
+  let allSources = await prisma.source.findMany({
+    where: whereClause,
     include: {
       authors: { include: { author: true } },
       institutions: { include: { institution: true } }
     }
   });
-  
-  console.log(`[RANK V2] Pool: ${allSources.length} sources (quality ≥70)`);
-  
+
+  // Post-query filtering for abstract length
+  if (options.minAbstractLength) {
+    allSources = allSources.filter(s => 
+      (s.abstract?.length || 0) >= (options.minAbstractLength || 0)
+    );
+  }
+
+  console.log(`[RANK V3] Pool: ${allSources.length} sources after filtering`);
+
   if (allSources.length === 0) {
-    console.warn(`[RANK V2] No sources with quality ≥70`);
+    console.warn(`[RANK V3] No sources matching filters. Relaxing constraints...`);
+    // Fallback: relax quality constraint
+    const relaxedSources = await prisma.source.findMany({
+      where: { qualityScore: { gte: 50 } },
+      include: {
+        authors: { include: { author: true } },
+        institutions: { include: { institution: true } }
+      },
+      take: limit * 2
+    });
+    allSources = relaxedSources;
+    console.log(`[RANK V3] Relaxed pool: ${allSources.length} sources (quality ≥50)`);
+  }
+
+  if (allSources.length === 0) {
     return [];
   }
-  
-  // 2. Scoring composite
+
+  // 2. Scoring composite with relevance boost
   const scored = allSources.map(s => ({
     ...s,
-    compositeScore: calculateCompositeScore(s, mode)
+    compositeScore: calculateCompositeScore(s, rankMode),
+    relevanceScore: calculateRelevanceScore(s, query)
   }));
-  
+
   // 3. Sélection diversifiée
   const selected = selectDiverseSources(scored, {
     limit,
-    maxPerProvider: 4,           // Max 4 sources/provider
-    maxPerYear: 3,               // Max 3 sources/année
-    preferRecent: 0.8,           // 80% sources récentes (≤3 ans)
-    ensureFrench: Math.min(2, Math.floor(limit * 0.2)),  // Au moins 20% françaises
-    minProviderDiversity: 3      // Au moins 3 providers différents
+    maxPerProvider: options.maxPerProvider ?? 4,
+    maxPerYear: options.maxPerYear ?? 3,
+    preferRecent: 0.8,
+    ensureFrench: Math.min(2, Math.floor(limit * 0.2)),
+    minProviderDiversity: options.minProviderDiversity ?? 3
   });
-  
-  console.log(`[RANK V2] Selected ${selected.length} diverse sources`);
+
+  console.log(`[RANK V3] Selected ${selected.length} diverse sources`);
   logDiversityStats(selected);
-  
+
   return selected;
+}
+
+/**
+ * Calculate relevance score based on query matching
+ * Simple keyword matching for now - can be enhanced with embeddings later
+ */
+function calculateRelevanceScore(source: any, query: string): number {
+  if (!query) return 50;
+  
+  const queryTerms = query.toLowerCase().split(/\s+/).filter(t => t.length > 2);
+  const title = (source.title || '').toLowerCase();
+  const abstract = (source.abstract || '').toLowerCase();
+  const topics = (source.topics || []).join(' ').toLowerCase();
+  
+  let score = 0;
+  let matchedTerms = 0;
+  
+  for (const term of queryTerms) {
+    // Title matches worth more
+    if (title.includes(term)) {
+      score += 15;
+      matchedTerms++;
+    }
+    // Abstract matches
+    if (abstract.includes(term)) {
+      score += 8;
+      matchedTerms++;
+    }
+    // Topic matches
+    if (topics.includes(term)) {
+      score += 10;
+      matchedTerms++;
+    }
+  }
+  
+  // Coverage bonus (what % of query terms matched)
+  const coverage = queryTerms.length > 0 ? matchedTerms / queryTerms.length : 0;
+  score += coverage * 20;
+  
+  return Math.min(100, score);
 }
 
 /**
@@ -715,6 +897,9 @@ export function citationGuard(json: any, sourceCount: number) {
 // ================================
 
 export function renderBriefHTML(out: any, sources: any[]) {
+  // Governance: Assert EDITOR permissions
+  assertPermission(AgentRole.EDITOR, "write:draft");
+  
   const esc = (s: string) => 
     String(s || "").replace(/[&<>"']/g, (m) => 
       ({ "&": "&amp;", "<": "&lt;", ">": "&gt;", '"': "&quot;", "'": "&#039;" }[m] as string)
@@ -913,4 +1098,173 @@ export async function runFullPipeline(query: string, providers: Providers = ["op
   console.log(`[Pipeline] DONE: brief ${brief.id}`);
   
   return { briefId: brief.id, stats };
+}
+
+// ================================
+// STRATEGIC REPORT PIPELINE (10-15 pages)
+// ================================
+
+export type ReportFormat = "brief" | "strategic" | "dossier";
+
+export interface StrategicPipelineOptions {
+  providers?: Providers;
+  perProvider?: number;
+  rankOptions?: RankOptions;
+  focusAreas?: string[];
+  targetAudience?: string;
+  urgencyContext?: string;
+}
+
+/**
+ * Strategic Report Pipeline
+ * Produces comprehensive 10-15 page reports with:
+ * - More sources (up to 25)
+ * - Deeper analysis
+ * - Stakeholder impact
+ * - Scenario planning
+ * - Implementation roadmap
+ */
+export async function runStrategicPipeline(
+  query: string,
+  options: StrategicPipelineOptions = {}
+) {
+  const {
+    providers = ["openalex", "semanticscholar", "crossref", "hal"] as Providers,
+    perProvider = 30,
+    rankOptions = {},
+    focusAreas,
+    targetAudience,
+    urgencyContext
+  } = options;
+
+  const stats: any = {};
+  const briefId = `strategic-${Date.now()}`;
+  const lineage = createLineageTracker(briefId, query);
+
+  console.log(`\n${"═".repeat(60)}`);
+  console.log(`  STRATEGIC REPORT PIPELINE`);
+  console.log(`  Query: "${query}"`);
+  console.log(`${"═".repeat(60)}\n`);
+
+  // 1. SCOUT (more sources)
+  console.log(`[Strategic] SCOUT: query="${query}" (${perProvider}/provider)`);
+  const scoutStart = Date.now();
+  const scoutResult = await scout(query, providers, perProvider);
+  recordTransformation(lineage, "scout", 1, scoutResult.sourceIds.length, Date.now() - scoutStart, {
+    sourceIds: scoutResult.sourceIds,
+    filters: { providers }
+  });
+  stats.scout = scoutResult;
+
+  // 2. INDEX
+  console.log(`[Strategic] INDEX: ${scoutResult.sourceIds.length} sources`);
+  const indexResult = await index(scoutResult.sourceIds);
+  stats.index = indexResult;
+
+  // 3. Deduplicate
+  console.log(`[Strategic] DEDUPLICATE`);
+  const dedupeResult = await deduplicateSources();
+  stats.dedupe = dedupeResult;
+
+  // 4. RANK (more sources, with enhanced filtering)
+  const enhancedRankOptions: RankOptions = {
+    limit: 25, // More sources for strategic report
+    mode: "balanced",
+    recentOnly: true, // Focus on recent research
+    requireAbstract: true,
+    minAbstractLength: 200, // Need substantial abstracts
+    minQuality: 65,
+    maxPerProvider: 6,
+    minProviderDiversity: 4,
+    ...rankOptions
+  };
+
+  console.log(`[Strategic] RANK: top ${enhancedRankOptions.limit} with filters`);
+  const topSources = await rank(query, enhancedRankOptions);
+  stats.rank = { count: topSources.length };
+
+  if (topSources.length < 5) {
+    console.warn(`[Strategic] Only ${topSources.length} sources - report may be limited`);
+  }
+
+  // 5. READER (extract claims/methods/results)
+  console.log(`[Strategic] READER: extract intelligence from ${topSources.length} sources`);
+  const readings = await read(topSources);
+  stats.reader = { count: readings.length };
+
+  // 6. STRATEGIC ANALYST (comprehensive analysis)
+  console.log(`[Strategic] STRATEGIC ANALYST: synthesize comprehensive report`);
+  const analysis = await strategicAnalystAgent(query, topSources, readings, {
+    focusAreas,
+    targetAudience,
+    urgencyContext
+  });
+  stats.analyst = { 
+    hasDebate: !!analysis.debate,
+    keyFindingsCount: analysis.keyFindings?.length || 0,
+    scenariosCount: analysis.scenarios?.length || 0
+  };
+
+  // 7. CITATION GUARD
+  console.log(`[Strategic] GUARD: validate citations`);
+  const guard = citationGuard(analysis, topSources.length);
+  stats.guard = guard;
+
+  if (!guard.ok) {
+    console.warn(`[Strategic] Citation guard warning: ${guard.usedCount} citations, ${guard.invalid.length} invalid`);
+    // Don't throw for strategic reports - they're more complex
+  }
+
+  // 8. STRATEGIC EDITOR (render comprehensive HTML)
+  console.log(`[Strategic] EDITOR: render strategic report HTML`);
+  const html = renderStrategicReportHTML(analysis, topSources);
+  stats.htmlLength = html.length;
+
+  // Estimate page count (rough: ~3000 chars per page)
+  const estimatedPages = Math.round(html.length / 3000);
+  console.log(`[Strategic] Estimated report length: ~${estimatedPages} pages`);
+
+  // 9. PUBLISHER
+  console.log(`[Strategic] PUBLISHER: save strategic report`);
+  const brief = await prisma.brief.create({
+    data: {
+      kind: "strategic", // New kind for strategic reports
+      question: query,
+      html,
+      sources: topSources.map((s) => s.id),
+      publicId: null,
+    },
+  });
+
+  stats.brief = { id: brief.id, estimatedPages };
+
+  console.log(`\n${"═".repeat(60)}`);
+  console.log(`  ✅ STRATEGIC REPORT COMPLETE`);
+  console.log(`  Brief ID: ${brief.id}`);
+  console.log(`  Sources: ${topSources.length}`);
+  console.log(`  Estimated pages: ~${estimatedPages}`);
+  console.log(`${"═".repeat(60)}\n`);
+
+  return { briefId: brief.id, stats, format: "strategic" as ReportFormat };
+}
+
+/**
+ * Universal pipeline runner - choose format
+ */
+export async function runPipeline(
+  query: string,
+  format: ReportFormat = "brief",
+  options: StrategicPipelineOptions = {}
+) {
+  switch (format) {
+    case "strategic":
+      return runStrategicPipeline(query, options);
+    case "dossier":
+      // TODO: Implement Research Dossier (30-50 pages)
+      console.warn("[Pipeline] Dossier format not yet implemented, falling back to strategic");
+      return runStrategicPipeline(query, options);
+    case "brief":
+    default:
+      return runFullPipeline(query, options.providers || ["openalex"] as Providers);
+  }
 }
