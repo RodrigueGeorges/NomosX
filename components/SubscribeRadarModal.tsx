@@ -20,7 +20,7 @@ export default function SubscribeRadarModal({ isOpen, onClose }: Props) {
 
   async function handleSubscribe() {
     if (!email || !email.includes("@")) {
-      setError("Email invalide");
+      setError("Invalid email");
       return;
     }
 
@@ -36,7 +36,7 @@ export default function SubscribeRadarModal({ isOpen, onClose }: Props) {
 
       if (!res.ok) {
         const data = await res.json();
-        throw new Error(data.error || "Erreur lors de l'abonnement");
+        throw new Error(data.error || "Subscription error");
       }
 
       setSuccess(true);
@@ -61,9 +61,9 @@ export default function SubscribeRadarModal({ isOpen, onClose }: Props) {
             <Bell size={24} className="text-accent" strokeWidth={1.5} />
           </div>
           <div>
-            <h2 className="text-2xl font-bold">S'abonner au Radar</h2>
+            <h2 className="text-2xl font-bold">Subscribe to Radar</h2>
             <p className="text-sm text-muted">
-              Recevez les signaux faibles directement par email
+              Receive weak signals directly by email
             </p>
           </div>
         </div>
@@ -73,10 +73,10 @@ export default function SubscribeRadarModal({ isOpen, onClose }: Props) {
           <div className="mb-6 p-4 rounded-xl bg-green-500/10 border border-green-500/30 text-green-600">
             <div className="flex items-center gap-2">
               <Check size={20} strokeWidth={1.5} />
-              <p className="font-semibold">Abonnement confirmé !</p>
+              <p className="font-semibold">Subscription confirmed!</p>
             </div>
             <p className="text-sm mt-1 opacity-80">
-              Vous recevrez les signaux faibles {frequency === "daily" ? "chaque jour" : frequency === "weekly" ? "chaque semaine" : "chaque mois"}
+              You will receive weak signals {frequency === "daily" ? "daily" : frequency === "weekly" ? "weekly" : "monthly"}
             </p>
           </div>
         )}
@@ -93,11 +93,11 @@ export default function SubscribeRadarModal({ isOpen, onClose }: Props) {
             {/* Email input */}
             <div className="mb-6">
               <label className="block text-sm font-semibold mb-2">
-                Adresse email
+                Email address
               </label>
               <Input
                 type="email"
-                placeholder="votre@email.com"
+                placeholder="you@company.com"
                 value={email}
                 onChange={(e) => setEmail(e.target.value)}
               />
@@ -106,7 +106,7 @@ export default function SubscribeRadarModal({ isOpen, onClose }: Props) {
             {/* Frequency selector */}
             <div className="mb-6">
               <label className="block text-sm font-semibold mb-3">
-                Fréquence des alertes
+                Alert frequency
               </label>
               <div className="flex gap-3">
                 <button
@@ -117,8 +117,8 @@ export default function SubscribeRadarModal({ isOpen, onClose }: Props) {
                       : "border-border bg-panel hover:border-accent/50"
                   }`}
                 >
-                  <p className="font-semibold text-sm mb-1">Quotidien</p>
-                  <p className="text-xs text-muted">Chaque jour</p>
+                  <p className="font-semibold text-sm mb-1">Daily</p>
+                  <p className="text-xs text-muted">Every day</p>
                 </button>
 
                 <button
@@ -129,9 +129,9 @@ export default function SubscribeRadarModal({ isOpen, onClose }: Props) {
                       : "border-border bg-panel hover:border-accent/50"
                   }`}
                 >
-                  <p className="font-semibold text-sm mb-1">Hebdomadaire</p>
-                  <p className="text-xs text-muted">Chaque semaine</p>
-                  <Badge variant="ai" className="mt-2 text-xs">Recommandé</Badge>
+                  <p className="font-semibold text-sm mb-1">Weekly</p>
+                  <p className="text-xs text-muted">Every week</p>
+                  <Badge variant="ai" className="mt-2 text-xs">Recommended</Badge>
                 </button>
 
                 <button
@@ -142,8 +142,8 @@ export default function SubscribeRadarModal({ isOpen, onClose }: Props) {
                       : "border-border bg-panel hover:border-accent/50"
                   }`}
                 >
-                  <p className="font-semibold text-sm mb-1">Mensuel</p>
-                  <p className="text-xs text-muted">Chaque mois</p>
+                  <p className="font-semibold text-sm mb-1">Monthly</p>
+                  <p className="text-xs text-muted">Every month</p>
                 </button>
               </div>
             </div>
@@ -151,9 +151,9 @@ export default function SubscribeRadarModal({ isOpen, onClose }: Props) {
             {/* Info box */}
             <div className="mb-6 p-4 rounded-xl bg-blue-500/5 border border-blue-500/20">
               <p className="text-xs text-blue-400 leading-relaxed">
-                💡 <strong>Comment ça marche ?</strong> Le Radar Agent détecte automatiquement 
-                les signaux faibles (Novelty Score ≥ 60) et vous envoie un digest 
-                à la fréquence choisie avec les tendances stratégiquement pertinentes.
+                💡 <strong>How does it work?</strong> The Radar Agent automatically detects 
+                weak signals (Novelty Score ≥ 60) and sends you a digest 
+                at your chosen frequency with strategically relevant trends.
               </p>
             </div>
 
@@ -165,7 +165,7 @@ export default function SubscribeRadarModal({ isOpen, onClose }: Props) {
                 disabled={loading}
                 className="flex-1"
               >
-                Annuler
+                Cancel
               </Button>
               <Button
                 variant="ai"
@@ -175,7 +175,7 @@ export default function SubscribeRadarModal({ isOpen, onClose }: Props) {
                 className="flex-1"
               >
                 <Bell size={18} strokeWidth={1.5} />
-                S'abonner
+                Subscribe
               </Button>
             </div>
           </>

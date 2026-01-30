@@ -75,7 +75,7 @@ export function useStreamingBrief() {
       });
 
       eventSource.addEventListener('error', (event) => {
-        let errorMessage = 'Une erreur est survenue';
+        let errorMessage = 'An error occurred';
         try {
           const eventData = (event as MessageEvent).data;
           if (eventData && eventData !== 'undefined') {
@@ -99,7 +99,7 @@ export function useStreamingBrief() {
           loading: false,
           progress: null,
           result: null,
-          error: 'Connexion perdue avec le serveur'
+          error: 'Connection lost with server'
         });
         eventSource.close();
       };
@@ -109,7 +109,7 @@ export function useStreamingBrief() {
         loading: false,
         progress: null,
         result: null,
-        error: error.message || 'Une erreur est survenue'
+        error: error.message || 'An error occurred'
       });
     }
   }, []);

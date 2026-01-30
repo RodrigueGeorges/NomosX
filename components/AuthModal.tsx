@@ -52,7 +52,7 @@ export default function AuthModal({ isOpen, onClose, initialQuestion }: AuthModa
       const data = await response.json();
 
       if (!response.ok) {
-        setError(data.error || "Une erreur est survenue");
+        setError(data.error || "An error occurred");
         setLoading(false);
         return;
       }
@@ -67,7 +67,7 @@ export default function AuthModal({ isOpen, onClose, initialQuestion }: AuthModa
       onClose();
     } catch (err: any) {
       console.error("Auth error:", err);
-      setError("Erreur de connexion. Veuillez réessayer.");
+      setError("Connection error. Please try again.");
       setLoading(false);
     }
   };
