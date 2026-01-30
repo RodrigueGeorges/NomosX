@@ -45,6 +45,7 @@ export async function sendEmail(payload: EmailPayload): Promise<{ success: boole
  * https://resend.com
  */
 async function sendViaResend(payload: EmailPayload) {
+  const { Resend } = await import('resend');
   const apiKey = process.env.RESEND_API_KEY;
   if (!apiKey) {
     throw new Error('RESEND_API_KEY not configured');
