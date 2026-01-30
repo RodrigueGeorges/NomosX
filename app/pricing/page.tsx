@@ -3,9 +3,9 @@
 /**
  * NomosX Pricing Page
  * 
- * Offre unique: NomosX Access - 149€/mois
- * Trial 15 jours sans CB
- * Sobre, institutionnel, bankable
+ * Single offer: NomosX Access - 149€/month
+ * 15-day trial without credit card
+ * Clean, institutional, bankable
  */
 
 import { useState } from "react";

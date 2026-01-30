@@ -113,7 +113,7 @@ export default function Shell({ children }: { children: React.ReactNode }) {
       )}
 
       {/* Main Content - Always rendered */}
-      <div className="flex min-h-screen bg-bg text-text overflow-x-hidden">
+      <div className="min-h-screen bg-bg text-text overflow-x-hidden">
       {/* Background Futuriste - Identique à Home */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         {/* Mesh gradient principal */}
@@ -246,7 +246,7 @@ export default function Shell({ children }: { children: React.ReactNode }) {
                 <button
                   onClick={logout}
                   className="hidden lg:flex items-center gap-2 px-3 py-1.5 rounded-lg text-white/50 hover:text-red-400 hover:bg-red-500/10 transition-all duration-200"
-                  title="Se déconnecter"
+                  title="Sign out"
                 >
                   <LogOut size={16} strokeWidth={2} />
                 </button>
@@ -264,51 +264,6 @@ export default function Shell({ children }: { children: React.ReactNode }) {
         </div>
       </header>
 
-      {/* Sidebar - Hidden on mobile, visible on md+ */}
-      <aside className="hidden md:flex w-64 bg-panel border-r border-border flex-col">
-        <nav className="space-y-1 mb-6">
-          {[...mainNav, { href: "/pricing", label: "Pricing", icon: DollarSign }, { href: "/settings", label: "Settings", icon: Settings }].map((item) => (
-            <Link
-              key={item.href}
-              href={item.href}
-              className={`
-                flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
-                transition-all duration-200
-                ${isActive(item.href)
-                  ? 'text-white bg-white/[0.08]'
-                  : 'text-white/60 hover:text-white/90 hover:bg-white/[0.04]'
-                }
-              `}
-            >
-              <item.icon size={18} strokeWidth={2} />
-              <span>{item.label}</span>
-            </Link>
-          ))}
-        </nav>
-
-        {/* User Menu (Sidebar) */}
-        {user && (
-          <div className="pt-4 border-t border-white/[0.08] space-y-2">
-            <div className="px-3 py-2 bg-white/[0.03] rounded-lg">
-              <div className="flex items-center gap-2 mb-1">
-                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center">
-                  <UserIcon size={14} className="text-white" strokeWidth={2.5} />
-                </div>
-                <span className="text-sm font-medium text-white/80">{user.name || user.email}</span>
-              </div>
-            </div>
-            <button
-              onClick={() => {
-                logout();
-              }}
-              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-white/60 hover:text-red-400 hover:bg-red-500/10 transition-all"
-            >
-              <LogOut size={18} strokeWidth={2} />
-              <span>Logout</span>
-            </button>
-          </div>
-        )}
-      </aside>
 
       {/* Mobile Menu */}
       {mobileMenuOpen && (
@@ -367,9 +322,9 @@ export default function Shell({ children }: { children: React.ReactNode }) {
       )}
 
       {/* Main Content */}
-      <main className="flex-1 overflow-auto w-full">{children}</main>
+      <main className="w-full">{children}</main>
 
-      {/* Footer - Minimaliste */}
+      {/* Footer */}
       <footer className="px-6 lg:px-8 py-8 border-t border-white/[0.08] mt-16 relative z-10">
         <div className="max-w-[1400px] mx-auto">
           <div className="flex items-center justify-between flex-wrap gap-6">

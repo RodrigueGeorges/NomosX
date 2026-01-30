@@ -3,9 +3,9 @@
 /**
  * NomosX Think Tank Command Center
  * 
- * Dashboard institutionnel montrant:
+ * Institutional dashboard showing:
  * - System status
- * - Core metrics (verticales, cadence, signaux, trial/plan)
+ * - Core metrics (verticals, cadence, signals, trial/plan)
  * - Signals queue
  * - Publications snapshot
  * - Cadence & limits
@@ -182,7 +182,7 @@ export default function ThinkTankCommandCenter() {
 
         {/* Core Metrics - 4 Cards */}
         <div className="grid grid-cols-4 gap-4 mb-8">
-          {/* Card 1 - Verticales */}
+          {/* Card 1 - Verticals */}
           <Card variant="default" className="bg-white/[0.02] border-white/10 hover:border-blue-500/30 transition-all">
             <CardContent className="pt-5 pb-5">
               <div className="flex items-center gap-3 mb-3">
@@ -210,7 +210,7 @@ export default function ThinkTankCommandCenter() {
             </CardContent>
           </Card>
 
-          {/* Card 2 - Cadence éditoriale */}
+          {/* Card 2 - Editorial Cadence */}
           <Card variant="default" className="bg-white/[0.02] border-white/10">
             <CardContent className="pt-5 pb-5">
               <div className="flex items-center gap-3 mb-3">
@@ -236,7 +236,7 @@ export default function ThinkTankCommandCenter() {
             </CardContent>
           </Card>
 
-          {/* Card 3 - Signaux */}
+          {/* Card 3 - Signals */}
           <Card variant="default" className="bg-amber-500/5 border-amber-500/20">
             <CardContent className="pt-5 pb-5">
               <div className="flex items-center gap-3 mb-3">
