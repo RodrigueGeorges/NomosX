@@ -1,8 +1,8 @@
 /**
- * About Page — Présentation NomosX
+ * About Page — Story, Mission & Vision
  * 
- * Utilité : Explain value prop, how it works, why trust us
- * UX : Storytelling, visual, convert curiosity → signup
+ * Purpose: Who we are, why NomosX exists, our vision for autonomous research
+ * UX: Storytelling, institutional credibility, convert curiosity → trust
  */
 
 "use client";
@@ -10,17 +10,17 @@
 import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Button from "@/components/ui/Button";
-import { Card, CardContent } from "@/components/ui/Card";
 import AuthModal from "@/components/AuthModal";
 import {
   Sparkles,
   Brain,
   Shield,
-  Zap,
   Target,
   ArrowRight,
-  FileText,
-  Layers
+  Globe,
+  Users,
+  Lightbulb,
+  BookOpen
 } from "lucide-react";
 
 export default function AboutPage() {
@@ -81,90 +81,63 @@ export default function AboutPage() {
     );
   }
 
-  const features = [
+  const vision = [
     {
-      icon: Layers,
-      color: "cyan",
-      title: "Verticals",
-      subtitle: "Research Domains",
-      description: "Active research verticals with independent editorial lines. Each vertical monitors its domain, maintains publication cadence, and enforces quality thresholds autonomously."
-    },
-    {
-      icon: Zap,
-      color: "blue",
-      title: "Signal Detection",
-      subtitle: "Autonomous Monitoring",
-      description: "Continuous scanning of 200K+ publications for weak signals, contradictions, and emerging trends. Novelty scoring (≥60) identifies topics that may deserve analysis."
-    },
-    {
-      icon: Target,
-      color: "emerald",
-      title: "Editorial Gate",
-      subtitle: "Quality Threshold",
-      description: "Autonomous editorial board evaluating every proposal. Enforces trust score thresholds, cadence limits, and strategic silence. Publication is earned, not guaranteed."
-    },
-    {
-      icon: FileText,
-      color: "purple",
-      title: "Publications",
-      subtitle: "Institutional Output",
-      description: "The only durable artifact of the Think Tank. Research briefs, policy notes, and dossiers published under strict editorial discipline. Silence is a success state."
-    }
-  ];
-
-  const principles = [
-    {
-      icon: Shield,
-      title: "Editorial Autonomy",
-      description: "The Think Tank decides what to publish. Enforces cadence limits (3 publications/week), quality thresholds (trust score ≥75), and strategic silence. You propose, it decides."
+      icon: Globe,
+      title: "Democratize Strategic Intelligence",
+      description: "World-class research analysis shouldn't be reserved for Fortune 500 companies and governments. We're building the infrastructure to make institutional-grade intelligence accessible to everyone."
     },
     {
       icon: Brain,
-      title: "Agent-Governed Institution",
-      description: "Autonomous agent pipelines manage the entire research cycle: signal detection, source evaluation, synthesis, editorial gate, and publication. No human in the loop."
+      title: "AI as Institutional Partner",
+      description: "Not a chatbot. Not a search engine. An autonomous research institution with editorial judgment, quality standards, and the discipline to stay silent when there's nothing worth saying."
     },
     {
-      icon: Sparkles,
-      title: "Silence is Success",
-      description: "The Think Tank may choose not to publish. Strategic silence over noise. Quiet hours (22h-6h UTC), publish windows (9h, 14h, 18h), and editorial discipline."
+      icon: Shield,
+      title: "Trust Through Transparency",
+      description: "Every claim is cited. Every source is traceable. Every decision is logged. We believe trust is earned through radical transparency, not marketing promises."
     },
     {
-      icon: Target,
-      title: "Institutional-Grade Output",
-      description: "Every publication is sourced ([SRC-*] citations), fact-checked, and quality-scored. Trust score, citation coverage, and claim verification ensure decision-ready intelligence."
+      icon: Lightbulb,
+      title: "Signal Over Noise",
+      description: "In a world drowning in information, the most valuable service is knowing what matters. Our editorial gate exists to protect your attention, not capture it."
     }
   ];
 
-  const howItWorks = [
+  const timeline = [
     {
-      step: "1",
-      agent: "SCOUT",
-      title: "Source Discovery",
-      description: "Query 200K+ publications across OpenAlex, Crossref, Semantic Scholar, arXiv, PubMed. Parallel provider execution with quality scoring."
+      year: "2024",
+      title: "The Problem",
+      description: "Traditional think tanks take months to publish. AI tools produce shallow summaries. Decision-makers need something in between: fast, rigorous, and trustworthy."
     },
     {
-      step: "2",
-      agent: "INDEX",
-      title: "Identity Enrichment",
-      description: "Normalize metadata, resolve author identities (ORCID), institutional affiliations (ROR). Deduplication and novelty detection."
+      year: "2025",
+      title: "The Experiment",
+      description: "We built the first autonomous research pipeline. Multi-agent orchestration. Editorial gates. Quality thresholds. The system that publishes—or stays silent."
     },
     {
-      step: "3",
-      agent: "RANK",
-      title: "Source Selection",
-      description: "Select top sources by quality score (citations, recency, open access). Diversity optimization across years, providers, and geographies."
+      year: "2026",
+      title: "The Institution",
+      description: "NomosX operates as a fully autonomous think tank. 200K+ sources monitored. Institutional-grade publications. Strategic silence as a feature, not a bug."
+    }
+  ];
+
+  const values = [
+    {
+      title: "Rigor Over Speed",
+      description: "We'd rather be slow and right than fast and wrong. Every publication passes through multiple validation layers."
     },
     {
-      step: "4",
-      agent: "READER",
-      title: "Content Extraction",
-      description: "Parallel PDF extraction, abstract analysis, claims/methods/results identification. Structured output for downstream synthesis."
+      title: "Silence Over Noise",
+      description: "Publishing nothing is better than publishing something mediocre. Our editorial gate enforces this discipline."
     },
     {
-      step: "5",
-      agent: "ANALYST",
-      title: "Synthesis & Delivery",
-      description: "Generate structured analysis with dialectical synthesis. Citation verification, quality scoring, and editorial gate evaluation before publication."
+      title: "Transparency Over Trust",
+      description: "We don't ask you to trust us. We show you our sources, our reasoning, and our confidence levels."
+    },
+    {
+      title: "Autonomy Over Control",
+      description: "The system decides what to publish. Humans can propose, but the editorial gate has final say."
     }
   ];
 
@@ -233,10 +206,16 @@ export default function AboutPage() {
                 onClick={() => router.push("/")}
                 className="text-sm text-white/60 hover:text-white transition-colors"
               >
-                Accueil
+                Home
+              </button>
+              <button 
+                onClick={() => router.push("/methodology")}
+                className="text-sm text-white/60 hover:text-white transition-colors"
+              >
+                Methodology
               </button>
               <Button variant="primary" size="sm" onClick={() => setShowAuthModal(true)}>
-                Connexion
+                Sign In
               </Button>
             </div>
           </div>
@@ -267,139 +246,45 @@ export default function AboutPage() {
 
             <div className="flex gap-4 justify-center flex-wrap">
               <Button variant="ai" size="lg" onClick={() => setShowAuthModal(true)}>
-                Commencer gratuitement
+                Start for free
                 <ArrowRight size={18} className="ml-2" />
               </Button>
-              <Button variant="ghost" size="lg" onClick={() => router.push("/")}>
-                Retour à l'accueil
+              <Button variant="ghost" size="lg" onClick={() => router.push("/methodology")}>
+                View Methodology
               </Button>
             </div>
           </div>
 
-          {/* Features */}
+          {/* Our Vision */}
           <div className="mb-20">
             <div className="max-w-4xl mb-12">
               <div className="text-xs text-cyan-400/60 tracking-[0.25em] uppercase mb-6 flex items-center gap-3">
                 <div className="w-8 h-px bg-gradient-to-r from-cyan-400/60 to-transparent" />
-                <span>Intelligence Infrastructure</span>
+                <span>Our Vision</span>
               </div>
               <h2 className="text-4xl sm:text-5xl md:text-6xl font-light leading-tight text-white/95 mb-6">
-                How the Think Tank operates
+                Why we built NomosX
               </h2>
               <p className="text-xl text-white/50 leading-relaxed max-w-3xl">
-                An autonomous research institution with full editorial independence. 
-                Monitors, evaluates, and publishes—or chooses strategic silence over noise.
+                We believe the future of strategic intelligence is autonomous, transparent, 
+                and accessible to everyone—not just those who can afford traditional consulting.
               </p>
             </div>
 
             <div className="grid md:grid-cols-2 gap-6">
-              {features.map((feature, i) => {
-                const colorMap = {
-                  cyan: { 
-                    bg: "bg-cyan-500/10", 
-                    border: "border-cyan-500/20", 
-                    text: "text-cyan-400",
-                    hover: "hover:border-cyan-500/30",
-                    glow: "group-hover:shadow-[0_0_30px_rgba(0,212,255,0.3)]",
-                    glowBg: "from-cyan-500/10 via-cyan-500/5"
-                  },
-                  blue: { 
-                    bg: "bg-blue-500/10", 
-                    border: "border-blue-500/20", 
-                    text: "text-blue-400",
-                    hover: "hover:border-blue-500/30",
-                    glow: "group-hover:shadow-[0_0_30px_rgba(74,127,224,0.3)]",
-                    glowBg: "from-blue-500/10 via-blue-500/5"
-                  },
-                  emerald: { 
-                    bg: "bg-emerald-500/10", 
-                    border: "border-emerald-500/20", 
-                    text: "text-emerald-400",
-                    hover: "hover:border-emerald-500/30",
-                    glow: "group-hover:shadow-[0_0_30px_rgba(16,185,129,0.3)]",
-                    glowBg: "from-emerald-500/10 via-emerald-500/5"
-                  },
-                  purple: { 
-                    bg: "bg-purple-500/10", 
-                    border: "border-purple-500/20", 
-                    text: "text-purple-400",
-                    hover: "hover:border-purple-500/30",
-                    glow: "group-hover:shadow-[0_0_30px_rgba(139,92,246,0.3)]",
-                    glowBg: "from-purple-500/10 via-purple-500/5"
-                  }
-                };
-                const colors = colorMap[feature.color as keyof typeof colorMap];
-                
-                return (
-                  <div key={i} className={`group relative p-8 rounded-2xl border border-white/[0.08] bg-gradient-to-br from-white/[0.03] to-white/[0.01] ${colors.hover} transition-all duration-500 overflow-hidden`}>
-                    {/* Glow effect on hover */}
-                    <div className={`absolute inset-0 bg-gradient-to-br ${colors.glowBg} to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl`} />
-                    
-                    {/* Decorative corner */}
-                    <div className={`absolute top-0 right-0 w-40 h-40 bg-gradient-to-br ${colors.glowBg} to-transparent rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700`} />
-                    
-                    <div className="relative z-10">
-                      {/* Icon */}
-                      <div className={`w-16 h-16 rounded-xl mb-6 ${colors.bg} border ${colors.border} flex items-center justify-center ${colors.glow} transition-shadow duration-500`}>
-                        <feature.icon size={32} className={colors.text} />
-                      </div>
-                      
-                      {/* Title */}
-                      <h3 className="text-3xl font-light mb-2 text-white/95">{feature.title}</h3>
-                      
-                      {/* Subtitle */}
-                      <div className={`text-sm ${colors.text} tracking-[0.2em] uppercase mb-6 opacity-60`}>
-                        {feature.subtitle}
-                      </div>
-                      
-                      {/* Description */}
-                      <p className="text-base text-white/50 leading-relaxed">
-                        {feature.description}
-                      </p>
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          </div>
-
-          {/* Principles */}
-          <div className="mb-20">
-            <div className="max-w-4xl mb-12">
-              <div className="text-xs text-blue-400/60 tracking-[0.25em] uppercase mb-6 flex items-center gap-3">
-                <div className="w-8 h-px bg-gradient-to-r from-blue-400/60 to-transparent" />
-                <span>Core Principles</span>
-              </div>
-              <h2 className="text-4xl sm:text-5xl md:text-6xl font-light leading-tight text-white/95 mb-6">
-                What makes us different
-              </h2>
-              <p className="text-xl text-white/50 leading-relaxed max-w-3xl">
-                Built on transparency, speed, and decision-ready intelligence. 
-                No black boxes, no shallow summaries.
-              </p>
-            </div>
-
-            <div className="grid md:grid-cols-2 gap-6">
-              {principles.map((principle, i) => (
-                <div key={i} className="group relative p-8 rounded-2xl border border-white/[0.08] bg-gradient-to-br from-white/[0.03] to-white/[0.01] hover:border-blue-500/30 transition-all duration-500 overflow-hidden">
-                  {/* Glow effect on hover */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl" />
-                  
-                  {/* Decorative corner */}
-                  <div className="absolute top-0 right-0 w-40 h-40 bg-gradient-to-br from-blue-500/10 via-blue-500/5 to-transparent rounded-full blur-3xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+              {vision.map((item, i) => (
+                <div key={i} className="group relative p-8 rounded-2xl border border-white/[0.08] bg-gradient-to-br from-white/[0.03] to-white/[0.01] hover:border-cyan-500/30 transition-all duration-500 overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/10 via-cyan-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl" />
                   
                   <div className="relative z-10">
-                    {/* Icon */}
-                    <div className="w-16 h-16 rounded-xl mb-6 bg-blue-500/10 border border-blue-500/20 flex items-center justify-center group-hover:shadow-[0_0_30px_rgba(74,127,224,0.3)] transition-shadow duration-500">
-                      <principle.icon size={32} className="text-blue-400" />
+                    <div className="w-16 h-16 rounded-xl mb-6 bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center group-hover:shadow-[0_0_30px_rgba(0,212,255,0.3)] transition-shadow duration-500">
+                      <item.icon size={32} className="text-cyan-400" />
                     </div>
                     
-                    {/* Title */}
-                    <h3 className="text-2xl font-light mb-4 text-white/95">{principle.title}</h3>
+                    <h3 className="text-2xl font-light mb-4 text-white/95">{item.title}</h3>
                     
-                    {/* Description */}
                     <p className="text-base text-white/50 leading-relaxed">
-                      {principle.description}
+                      {item.description}
                     </p>
                   </div>
                 </div>
@@ -407,44 +292,34 @@ export default function AboutPage() {
             </div>
           </div>
 
-          {/* How It Works */}
+          {/* Our Story - Timeline */}
           <div className="mb-20">
             <div className="max-w-4xl mb-12">
-              <div className="text-xs text-emerald-400/60 tracking-[0.25em] uppercase mb-6 flex items-center gap-3">
-                <div className="w-8 h-px bg-gradient-to-r from-emerald-400/60 to-transparent" />
-                <span>Agent Pipeline</span>
+              <div className="text-xs text-blue-400/60 tracking-[0.25em] uppercase mb-6 flex items-center gap-3">
+                <div className="w-8 h-px bg-gradient-to-r from-blue-400/60 to-transparent" />
+                <span>Our Story</span>
               </div>
               <h2 className="text-4xl sm:text-5xl md:text-6xl font-light leading-tight text-white/95 mb-6">
-                The agent pipeline
+                From idea to institution
               </h2>
               <p className="text-xl text-white/50 leading-relaxed max-w-3xl">
-                Five specialized agents orchestrate the research cycle, from signal detection 
-                to publication. Autonomous, transparent, and institutional-grade.
+                The journey from recognizing a problem to building an autonomous research institution.
               </p>
             </div>
 
-            <div className="space-y-4">
-              {howItWorks.map((item, i) => (
-                <div key={i} className="group relative p-8 rounded-2xl border border-white/[0.08] bg-gradient-to-br from-white/[0.03] to-white/[0.01] hover:border-emerald-500/30 transition-all duration-500 overflow-hidden">
-                  {/* Glow effect on hover */}
-                  <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 via-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl" />
+            <div className="space-y-6">
+              {timeline.map((item, i) => (
+                <div key={i} className="group relative p-8 rounded-2xl border border-white/[0.08] bg-gradient-to-br from-white/[0.03] to-white/[0.01] hover:border-blue-500/30 transition-all duration-500 overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-blue-500/10 via-blue-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl" />
                   
                   <div className="relative flex items-start gap-8">
                     <div className="flex-shrink-0">
-                      <div className="w-16 h-16 rounded-full bg-gradient-to-br from-emerald-500/10 to-emerald-500/5 border border-emerald-500/20 flex items-center justify-center group-hover:shadow-[0_0_30px_rgba(16,185,129,0.3)] transition-shadow duration-500">
-                        <span className="text-2xl font-light text-emerald-400">{item.step}</span>
+                      <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-blue-500/10 to-blue-500/5 border border-blue-500/20 flex items-center justify-center group-hover:shadow-[0_0_30px_rgba(74,127,224,0.3)] transition-shadow duration-500">
+                        <span className="text-2xl font-light text-blue-400">{item.year}</span>
                       </div>
                     </div>
                     <div className="flex-1">
-                      {/* Agent tag */}
-                      <div className="text-xs text-emerald-400/60 tracking-[0.25em] uppercase mb-2">
-                        {item.agent}
-                      </div>
-                      
-                      {/* Title */}
                       <h3 className="text-2xl font-light mb-3 text-white/95">{item.title}</h3>
-                      
-                      {/* Description */}
                       <p className="text-base text-white/50 leading-relaxed">{item.description}</p>
                     </div>
                   </div>
@@ -453,54 +328,32 @@ export default function AboutPage() {
             </div>
           </div>
 
-          {/* Stats - Identiques à Home */}
-          <div className="grid md:grid-cols-3 gap-6 mb-20">
-            <div className="group relative p-4 sm:p-6 rounded-2xl bg-white/[0.02] border border-white/[0.06] hover:border-cyan-500/30 transition-all duration-500 backdrop-blur-sm text-center">
-              <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="relative">
-                <div className="text-4xl sm:text-6xl font-light bg-gradient-to-br from-white to-cyan-200 bg-clip-text text-transparent mb-2">
-                  200K+
-                </div>
-                <div className="text-xs text-white/40 tracking-[0.15em] uppercase">
-                  Publications
-                </div>
-                <div className="mt-3 text-xs text-cyan-400/60 flex items-center justify-center gap-1">
-                  <div className="w-1 h-1 rounded-full bg-cyan-400 animate-pulse" />
-                  <span>Live updated</span>
-                </div>
+          {/* Our Values */}
+          <div className="mb-20">
+            <div className="max-w-4xl mb-12">
+              <div className="text-xs text-emerald-400/60 tracking-[0.25em] uppercase mb-6 flex items-center gap-3">
+                <div className="w-8 h-px bg-gradient-to-r from-emerald-400/60 to-transparent" />
+                <span>Our Values</span>
               </div>
+              <h2 className="text-4xl sm:text-5xl md:text-6xl font-light leading-tight text-white/95 mb-6">
+                What we stand for
+              </h2>
+              <p className="text-xl text-white/50 leading-relaxed max-w-3xl">
+                Four principles that guide every decision we make.
+              </p>
             </div>
 
-            <div className="group relative p-4 sm:p-6 rounded-2xl bg-white/[0.02] border border-white/[0.06] hover:border-emerald-500/30 transition-all duration-500 backdrop-blur-sm text-center">
-              <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="relative">
-                <div className="text-4xl sm:text-6xl font-light bg-gradient-to-br from-white to-emerald-200 bg-clip-text text-transparent mb-2">
-                  98.7%
+            <div className="grid md:grid-cols-2 gap-6">
+              {values.map((item, i) => (
+                <div key={i} className="group relative p-8 rounded-2xl border border-white/[0.08] bg-gradient-to-br from-white/[0.03] to-white/[0.01] hover:border-emerald-500/30 transition-all duration-500 overflow-hidden">
+                  <div className="absolute inset-0 bg-gradient-to-br from-emerald-500/10 via-emerald-500/5 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-500 rounded-2xl" />
+                  
+                  <div className="relative z-10">
+                    <h3 className="text-2xl font-light mb-4 text-white/95">{item.title}</h3>
+                    <p className="text-base text-white/50 leading-relaxed">{item.description}</p>
+                  </div>
                 </div>
-                <div className="text-xs text-white/40 tracking-[0.15em] uppercase">
-                  Accuracy
-                </div>
-                <div className="mt-3 text-xs text-emerald-400/60 flex items-center justify-center gap-1">
-                  <div className="w-1 h-1 rounded-full bg-emerald-400 animate-pulse" />
-                  <span>Verified</span>
-                </div>
-              </div>
-            </div>
-
-            <div className="group relative p-4 sm:p-6 rounded-2xl bg-white/[0.02] border border-white/[0.06] hover:border-blue-500/30 transition-all duration-500 backdrop-blur-sm text-center">
-              <div className="absolute inset-0 bg-gradient-to-br from-blue-500/5 to-transparent rounded-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-500" />
-              <div className="relative">
-                <div className="text-4xl sm:text-6xl font-light bg-gradient-to-br from-white to-blue-200 bg-clip-text text-transparent mb-2">
-                  &lt;60s
-                </div>
-                <div className="text-xs text-white/40 tracking-[0.15em] uppercase">
-                  Analysis
-                </div>
-                <div className="mt-3 text-xs text-blue-400/60 flex items-center justify-center gap-1">
-                  <div className="w-1 h-1 rounded-full bg-blue-400 animate-pulse" />
-                  <span>Real-time</span>
-                </div>
-              </div>
+              ))}
             </div>
           </div>
 
@@ -572,11 +425,14 @@ export default function AboutPage() {
               <span className="text-sm font-semibold text-white/50">
                 Nomos<span className="text-cyan-400/60">X</span>
               </span>
-              <span className="text-xs text-white/30">Think Tank Agentique</span>
+              <span className="text-xs text-white/30">The Autonomous Think Tank</span>
             </div>
             <div className="flex items-center gap-4 sm:gap-6 text-xs sm:text-sm text-white/40">
               <button onClick={() => router.push("/")} className="hover:text-white transition-colors">
-                Accueil
+                Home
+              </button>
+              <button onClick={() => router.push("/methodology")} className="hover:text-white transition-colors">
+                Methodology
               </button>
               <span>© 2026 NomosX</span>
             </div>
