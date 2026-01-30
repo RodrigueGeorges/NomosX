@@ -1,6 +1,7 @@
 "use client";
 
-import { useEffect, useRef } from "react";
+import { useEffect, useRef, useState } from "react";
+import Image from "next/image";
 
 interface Provider {
   id: string;
@@ -122,11 +123,25 @@ export default function ProviderShowcase() {
             className="flex-shrink-0 group"
           >
             <div className="h-16 px-6 flex items-center justify-center rounded-xl bg-white/[0.03] border border-white/[0.08] hover:border-cyan-500/30 transition-all duration-300 backdrop-blur-sm group-hover:bg-white/[0.05]">
-              <img 
-                src={`/providers/${provider.id}.svg`} 
-                alt={provider.name}
-                className="h-8 w-auto opacity-80 group-hover:opacity-100 transition-opacity"
-              />
+              <div className="relative h-8 w-auto">
+                <img 
+                  src={`/providers/${provider.id}.svg`} 
+                  alt={provider.name}
+                  className="h-8 w-auto opacity-80 group-hover:opacity-100 transition-opacity"
+                  onError={(e) => {
+                    // Fallback to text if SVG fails to load
+                    const target = e.target as HTMLImageElement;
+                    target.style.display = 'none';
+                    const parent = target.parentElement;
+                    if (parent) {
+                      const textSpan = document.createElement('span');
+                      textSpan.className = 'text-white/70 font-medium text-sm whitespace-nowrap group-hover:text-white/90 transition-colors';
+                      textSpan.textContent = provider.name;
+                      parent.appendChild(textSpan);
+                    }
+                  }}
+                />
+              </div>
             </div>
           </div>
         ))}
