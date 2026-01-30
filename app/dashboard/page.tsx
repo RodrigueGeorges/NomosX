@@ -283,7 +283,7 @@ export default function UserDashboard() {
                           <TrustScoreBadge score={report.trustScore} size="sm" />
                         )}
                         <div className="flex-1 min-w-0">
-                          <Badge variant={isLocked ? "default" : "primary"} className="text-xs mb-2">
+                          <Badge variant={isLocked ? "default" : "premium"} className="text-xs mb-2">
                             {isLocked ? "PREMIUM" : "UNLOCKED"}
                           </Badge>
                           <h3 className={`text-base font-medium ${isLocked ? 'text-white/60' : 'text-white group-hover:text-purple-400'} transition-colors line-clamp-2`}>

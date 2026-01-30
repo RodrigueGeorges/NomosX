@@ -549,6 +549,7 @@ export default function HomePage() {
             </div>
           </footer>
         </div>
+      </div>
       {/* Auth Modal */}
       <AuthModal 
         isOpen={showAuthModal} 

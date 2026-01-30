@@ -133,7 +133,7 @@ export async function POST(req: NextRequest) {
           briefsByVertical[verticalName].push({
             id: brief.id,
             title: brief.title,
-            summary: brief.summary || brief.content?.substring(0, 200) + "..." || "",
+            summary: brief.html.substring(0, 200).replace(/<[^>]*>/g, "") + "...",
             trustScore: brief.trustScore || 85,
             createdAt: brief.publishedAt?.toISOString() || brief.createdAt.toISOString(),
             verticalName: verticalName,
@@ -230,23 +230,47 @@ export async function POST(req: NextRequest) {
           continue;
         }
 
+        // Group all briefs by vertical for newsletter
+        const newsletterBriefsByVertical: Record<string, any[]> = {};
+        allBriefs.forEach(brief => {
+          const verticalName = brief.vertical?.name || "General";
+          if (!newsletterBriefsByVertical[verticalName]) {
+            newsletterBriefsByVertical[verticalName] = [];
+          }
+          newsletterBriefsByVertical[verticalName].push({
+            id: brief.id,
+            title: brief.title,
+            summary: brief.html.substring(0, 200).replace(/<[^>]*>/g, "") + "...",
+            trustScore: brief.trustScore || 85,
+            createdAt: brief.publishedAt?.toISOString() || brief.createdAt.toISOString(),
+            verticalName: verticalName,
+            verticalColor: brief.vertical?.color,
+          });
+        });
+
+        // Generate URLs for newsletter subscriber
+        const unsubscribeUrl = `${process.env.NEXT_PUBLIC_APP_URL}/api/unsubscribe?email=${encodeURIComponent(subscriber.email)}`;
+        const preferencesUrl = `${process.env.NEXT_PUBLIC_APP_URL}`;
+
         // Use same premium template for everyone
         const htmlContent = renderWeeklyBriefEmail({
           userName: null, // No personalization for newsletter
-          briefs: allBriefs,
+          selectedVerticals: allBriefs.map(b => b.vertical?.name).filter(Boolean),
+          briefsByVertical: newsletterBriefsByVertical,
           weekStart: weekStartStr,
           weekEnd: weekEndStr,
-          totalBriefs: allBriefs.length,
-          selectedVerticals: allBriefs.map(b => b.vertical?.name).filter(Boolean),
+          unsubscribeUrl,
+          preferencesUrl,
         });
 
         const textContent = renderWeeklyBriefPlainText({
           userName: null,
-          briefs: allBriefs,
+          selectedVerticals: allBriefs.map(b => b.vertical?.name).filter(Boolean),
+          briefsByVertical: newsletterBriefsByVertical,
           weekStart: weekStartStr,
           weekEnd: weekEndStr,
-          totalBriefs: allBriefs.length,
-          selectedVerticals: allBriefs.map(b => b.vertical?.name).filter(Boolean),
+          unsubscribeUrl,
+          preferencesUrl,
         });
 
         // Send email
