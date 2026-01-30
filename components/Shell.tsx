@@ -333,20 +333,20 @@ export default function Shell({ children }: { children: React.ReactNode }) {
         <div className="max-w-[1400px] mx-auto">
           <div className="flex items-center justify-between flex-wrap gap-6">
             <div className="flex items-center gap-2.5">
-              <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center opacity-60">
-                <svg width="14" height="14" viewBox="0 0 24 24" fill="none">
-                  <circle cx="12" cy="12" r="3" fill="white"/>
-                  <circle cx="12" cy="4" r="2" fill="white" opacity="0.7"/>
-                  <circle cx="20" cy="12" r="2" fill="white" opacity="0.7"/>
-                  <circle cx="12" cy="20" r="2" fill="white" opacity="0.7"/>
-                  <circle cx="4" cy="12" r="2" fill="white" opacity="0.7"/>
-                </svg>
+              <div className="w-7 h-7 rounded-full bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 flex items-center justify-center opacity-80 relative">
+                <span className="text-slate-100 font-serif text-xs font-bold tracking-tight">N</span>
+                {/* Orbital elements */}
+                <div className="absolute inset-0 rounded-full border border-slate-600/30"></div>
+                <div className="absolute top-0.5 left-1/2 -translate-x-1/2 w-0.5 h-0.5 bg-cyan-400 rounded-full opacity-60"></div>
+                <div className="absolute right-0.5 top-1/2 -translate-y-1/2 w-0.5 h-0.5 bg-slate-400 rounded-full opacity-40"></div>
+                <div className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-0.5 h-0.5 bg-slate-400 rounded-full opacity-40"></div>
+                <div className="absolute left-0.5 top-1/2 -translate-y-1/2 w-0.5 h-0.5 bg-slate-400 rounded-full opacity-40"></div>
               </div>
               <div>
-                <span className="text-sm font-semibold text-white/60">
-                  Nomos<span className="text-cyan-400/60">X</span>
+                <span className="text-sm font-serif font-bold tracking-tight text-white/60">
+                  Nomos<span className="text-slate-400">X</span>
                 </span>
-                <p className="text-xs text-white/30">The Autonomous Think Tank</p>
+                <p className="text-xs text-slate-500">Institutional Research Platform</p>
               </div>
             </div>
             <div className="flex items-center gap-6 text-xs text-white/30">
