@@ -126,14 +126,29 @@ export default function OnboardingModal({ isOpen, onClose }: OnboardingModalProp
         {/* Header */}
         <div className="relative mb-8 text-center">
           <div className="flex justify-center mb-4">
-            <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-cyan-500/10 to-blue-500/5 border border-cyan-500/20 flex items-center justify-center shadow-[0_0_20px_rgba(0,212,255,0.15)]">
-              <Sparkles size={32} className="text-cyan-400" />
+            <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-[#12121A] to-[#1A1A28] border border-white/10 flex items-center justify-center shadow-[0_0_20px_rgba(0,212,255,0.15)]">
+              <svg width="40" height="40" viewBox="0 0 120 120" fill="none">
+                <defs>
+                  <linearGradient id="onboardingGradient" x1="30%" y1="0%" x2="70%" y2="100%">
+                    <stop offset="0%" style={{stopColor: '#00D4FF', stopOpacity: 1}} />
+                    <stop offset="100%" style={{stopColor: '#4A7FE0', stopOpacity: 1}} />
+                  </linearGradient>
+                </defs>
+                <path d="M 25 30 L 25 90 L 33 90 L 33 30 Z" fill="url(#onboardingGradient)"/>
+                <path d="M 33 35 L 60 60 L 87 85 L 93 80 L 60 53 L 33 28 Z" fill="url(#onboardingGradient)"/>
+                <path d="M 87 35 L 60 60 L 33 85 L 27 80 L 60 53 L 87 28 Z" fill="url(#onboardingGradient)" opacity="0.9"/>
+                <path d="M 87 30 L 87 90 L 95 90 L 95 30 Z" fill="url(#onboardingGradient)"/>
+                <circle cx="60" cy="60" r="6" fill="white"/>
+                <circle cx="60" cy="60" r="3" fill="#00D4FF"/>
+              </svg>
             </div>
           </div>
           <h2 className="text-3xl font-light tracking-tight text-white/95 mb-2">
-            Personalize Your Intelligence
+            <span className="bg-gradient-to-r from-white via-cyan-200 to-white bg-clip-text text-transparent">
+              Personalize Your Intelligence
+            </span>
           </h2>
-          <p className="text-white/60 text-sm">
+          <p className="text-white/60 text-sm leading-relaxed">
             Select the research areas you want to follow. You'll receive weekly briefs tailored to your interests.
           </p>
         </div>

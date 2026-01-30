@@ -63,11 +63,30 @@ export function renderWeeklyBriefEmail({
       border-bottom: 1px solid rgba(255, 255, 255, 0.1);
     }
     .logo {
-      font-size: 24px;
-      font-weight: 300;
-      letter-spacing: 0.1em;
-      color: #00D4FF;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
       margin-bottom: 10px;
+    }
+    .logo-icon {
+      width: 32px;
+      height: 32px;
+      border-radius: 8px;
+      background: linear-gradient(135deg, #12121A 0%, #1A1A28 100%);
+      border: 1px solid rgba(255, 255, 255, 0.1);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+    .logo-text {
+      font-size: 24px;
+      font-weight: 600;
+      letter-spacing: -0.02em;
+      color: #ffffff;
+    }
+    .logo-text-accent {
+      color: #00D4FF;
     }
     .date-range {
       font-size: 12px;
@@ -203,7 +222,25 @@ export function renderWeeklyBriefEmail({
   <div class="container">
     <!-- Header -->
     <div class="header">
-      <div class="logo">NOMOSX</div>
+      <div class="logo">
+        <div class="logo-icon">
+          <svg width="20" height="20" viewBox="0 0 120 120" fill="none">
+            <defs>
+              <linearGradient id="emailLogoGradient" x1="30%" y1="0%" x2="70%" y2="100%">
+                <stop offset="0%" style="stop-color:#00D4FF;stop-opacity:1" />
+                <stop offset="100%" style="stop-color:#4A7FE0;stop-opacity:1" />
+              </linearGradient>
+            </defs>
+            <path d="M 25 30 L 25 90 L 33 90 L 33 30 Z" fill="url(#emailLogoGradient)"/>
+            <path d="M 33 35 L 60 60 L 87 85 L 93 80 L 60 53 L 33 28 Z" fill="url(#emailLogoGradient)"/>
+            <path d="M 87 35 L 60 60 L 33 85 L 27 80 L 60 53 L 87 28 Z" fill="url(#emailLogoGradient)" opacity="0.9"/>
+            <path d="M 87 30 L 87 90 L 95 90 L 95 30 Z" fill="url(#emailLogoGradient)"/>
+            <circle cx="60" cy="60" r="6" fill="white"/>
+            <circle cx="60" cy="60" r="3" fill="#00D4FF"/>
+          </svg>
+        </div>
+        <span class="logo-text">Nomos<span class="logo-text-accent">X</span></span>
+      </div>
       <div class="date-range">Week of ${weekStart} – ${weekEnd}</div>
     </div>
 

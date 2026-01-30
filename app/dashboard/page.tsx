@@ -42,7 +42,8 @@ import {
   ArrowRight,
   Clock,
   Shield,
-  Layers
+  Layers,
+  Settings
 } from "lucide-react";
 
 type Vertical = {
@@ -152,9 +153,20 @@ export default function UserDashboard() {
                 <div className="text-xs text-cyan-400/60 tracking-[0.25em] uppercase mb-1">
                   Your Intelligence Desk
                 </div>
-                <h1 className="text-4xl font-light tracking-tight text-white/95">Dashboard</h1>
+                <h1 className="text-4xl font-light tracking-tight text-white/95">
+                  Dashboard
+                </h1>
               </div>
             </div>
+            <Button 
+              variant="ghost" 
+              size="sm"
+              onClick={() => router.push('/dashboard/preferences')}
+              className="flex items-center gap-2"
+            >
+              <Settings size={16} />
+              Manage Preferences
+            </Button>
           </div>
         </div>
 
