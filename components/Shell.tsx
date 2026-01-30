@@ -18,13 +18,19 @@ import {
 } from "lucide-react";
 import { useAuth } from "@/hooks/useAuth";
 
-// Navigation principale - Unified Think Tank model
-const mainNav = [
-  { href: "/dashboard", label: "Control Center", icon: LayoutDashboard },
-  { href: "/studio", label: "Publication Studio", icon: PenTool },
-  { href: "/signals", label: "Signals", icon: Zap },
+// USER Navigation - Reading focused
+const userNav = [
+  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/publications", label: "Publications", icon: Archive },
   { href: "/search", label: "Explorer", icon: Search },
+];
+
+// ADMIN Navigation - Editorial control
+const adminNav = [
+  { href: "/admin", label: "Command Center", icon: LayoutDashboard },
+  { href: "/studio", label: "Studio", icon: PenTool },
+  { href: "/signals", label: "Signals", icon: Zap },
+  { href: "/publications", label: "Publications", icon: Archive },
 ];
 
 // Secondary navigation
@@ -41,6 +47,13 @@ export default function Shell({ children }: { children: React.ReactNode }) {
   const [mounted, setMounted] = useState(false);
 
   const isActive = (href: string) => pathname === href;
+  
+  // Determine if user is admin (role-based or simple check)
+  const isAdmin = user?.role === "ADMIN" || user?.email?.includes("admin");
+  
+  // Determine which nav to show
+  const isAdminRoute = pathname?.startsWith("/admin") || pathname?.startsWith("/studio") || pathname?.startsWith("/signals");
+  const mainNav = isAdminRoute && isAdmin ? adminNav : userNav;
 
   // Mount particles on client only to avoid hydration mismatch
   useEffect(() => {
