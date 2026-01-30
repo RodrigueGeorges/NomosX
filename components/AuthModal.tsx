@@ -58,13 +58,19 @@ export default function AuthModal({ isOpen, onClose, initialQuestion }: AuthModa
       }
 
       // Success - session cookie is set by the API
+      console.log("[AuthModal] Login successful, redirecting to dashboard");
+      
+      onClose();
+      
+      // Use window.location for hard navigation to ensure auth state is fresh
       const redirectUrl = initialQuestion 
         ? `/dashboard?q=${encodeURIComponent(initialQuestion)}`
         : "/dashboard";
       
-      router.push(redirectUrl);
-      router.refresh(); // Refresh to update auth state
-      onClose();
+      // Small delay to ensure modal closes and cookie is set
+      setTimeout(() => {
+        window.location.href = redirectUrl;
+      }, 100);
     } catch (err: any) {
       console.error("Auth error:", err);
       setError("Connection error. Please try again.");
