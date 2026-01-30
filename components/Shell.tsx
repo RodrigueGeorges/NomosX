@@ -96,32 +96,26 @@ export default function Shell({ children }: { children: React.ReactNode }) {
         
         <div className="text-center relative z-10">
           <div className="mb-8">
-            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#12121A] to-[#1A1A28] border border-white/10 flex items-center justify-center mx-auto mb-4 shadow-2xl shadow-cyan-500/20">
-              <svg width="56" height="56" viewBox="0 0 120 120" fill="none">
-                <defs>
-                  <linearGradient id="shellLoadingGradient" x1="30%" y1="0%" x2="70%" y2="100%">
-                    <stop offset="0%" style={{stopColor: '#00D4FF', stopOpacity: 1}} />
-                    <stop offset="100%" style={{stopColor: '#4A7FE0', stopOpacity: 1}} />
-                  </linearGradient>
-                </defs>
-                <path d="M 25 30 L 25 90 L 33 90 L 33 30 Z" fill="url(#shellLoadingGradient)"/>
-                <path d="M 33 35 L 60 60 L 87 85 L 93 80 L 60 53 L 33 28 Z" fill="url(#shellLoadingGradient)"/>
-                <path d="M 87 35 L 60 60 L 33 85 L 27 80 L 60 53 L 87 28 Z" fill="url(#shellLoadingGradient)" opacity="0.9"/>
-                <path d="M 87 30 L 87 90 L 95 90 L 95 30 Z" fill="url(#shellLoadingGradient)"/>
-                <circle cx="60" cy="60" r="6" fill="white"/>
-                <circle cx="60" cy="60" r="3" fill="#00D4FF"/>
-              </svg>
+            <div className="flex items-center gap-4">
+              {/* Institutional Logo */}
+              <div className="w-12 h-12 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-lg bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 flex items-center justify-center shadow-lg">
+                  <span className="text-slate-100 font-serif text-xl font-bold tracking-tight">N</span>
+                </div>
+              </div>
+              <div>
+                <h1 className="text-3xl font-serif font-bold text-white/95 mb-1 tracking-tight">
+                  NomosX
+                </h1>
+                <p className="text-xs text-slate-400 tracking-wide uppercase">Institutional Research</p>
+              </div>
             </div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-white via-cyan-200 to-white bg-clip-text text-transparent mb-2">
-              NomosX
-            </h1>
-            <p className="text-sm text-white/50">The Autonomous Think Tank</p>
-          </div>
           <div className="relative w-12 h-12 mx-auto">
             <div className="absolute inset-0 border-2 border-cyan-500/20 rounded-full"></div>
             <div className="absolute inset-0 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin"></div>
           </div>
         </div>
+      </div>
         </div>
       )}
 
@@ -163,24 +157,11 @@ export default function Shell({ children }: { children: React.ReactNode }) {
           
           {/* Logo */}
           <Link href="/dashboard" className="flex items-center gap-2.5 hover:opacity-80 transition-opacity group">
-            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-[#12121A] to-[#1A1A28] border border-white/10 flex items-center justify-center group-hover:scale-105 transition-transform">
-              <svg width="20" height="20" viewBox="0 0 120 120" fill="none">
-                <defs>
-                  <linearGradient id="shellGradient" x1="30%" y1="0%" x2="70%" y2="100%">
-                    <stop offset="0%" style={{stopColor: '#00D4FF', stopOpacity: 1}} />
-                    <stop offset="100%" style={{stopColor: '#4A7FE0', stopOpacity: 1}} />
-                  </linearGradient>
-                </defs>
-                <path d="M 25 30 L 25 90 L 33 90 L 33 30 Z" fill="url(#shellGradient)"/>
-                <path d="M 33 35 L 60 60 L 87 85 L 93 80 L 60 53 L 33 28 Z" fill="url(#shellGradient)"/>
-                <path d="M 87 35 L 60 60 L 33 85 L 27 80 L 60 53 L 87 28 Z" fill="url(#shellGradient)" opacity="0.9"/>
-                <path d="M 87 30 L 87 90 L 95 90 L 95 30 Z" fill="url(#shellGradient)"/>
-                <circle cx="60" cy="60" r="6" fill="white"/>
-                <circle cx="60" cy="60" r="3" fill="#00D4FF"/>
-              </svg>
+            <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 flex items-center justify-center group-hover:scale-105 transition-transform shadow-lg">
+              <span className="text-slate-100 font-serif text-sm font-bold tracking-tight">N</span>
             </div>
-            <span className="text-lg font-semibold tracking-tight text-white">
-              Nomos<span className="text-cyan-400">X</span>
+            <span className="text-lg font-serif font-bold tracking-tight text-white">
+              Nomos<span className="text-slate-400">X</span>
             </span>
           </Link>
 

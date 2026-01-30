@@ -194,35 +194,19 @@ export default function HomePage() {
             <div className="max-w-6xl mx-auto text-center">
               {/* Logo */}
               <div className="flex items-center justify-center gap-4 mb-12 animate-fade-in" style={{ animationDelay: '0.1s' }}>
-                <div className="relative group">
-                  <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/20 via-blue-500/20 to-purple-500/20 rounded-2xl blur-2xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                  <div className="relative w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-2xl bg-gradient-to-br from-[#12121A] to-[#1A1A28] border border-white/10 flex items-center justify-center shadow-2xl group-hover:scale-105 transition-transform duration-500">
-                    <svg width="40" height="40" viewBox="0 0 120 120" fill="none" className="sm:w-12 sm:h-12 md:w-14 md:h-14">
-                      <defs>
-                        <linearGradient id="heroGradient" x1="30%" y1="0%" x2="70%" y2="100%">
-                          <stop offset="0%" style={{stopColor: '#00D4FF', stopOpacity: 1}} />
-                          <stop offset="100%" style={{stopColor: '#4A7FE0', stopOpacity: 1}} />
-                        </linearGradient>
-                      </defs>
-                      <path d="M 25 30 L 25 90 L 33 90 L 33 30 Z" fill="url(#heroGradient)"/>
-                      <path d="M 33 35 L 60 60 L 87 85 L 93 80 L 60 53 L 33 28 Z" fill="url(#heroGradient)"/>
-                      <path d="M 87 35 L 60 60 L 33 85 L 27 80 L 60 53 L 87 28 Z" fill="url(#heroGradient)" opacity="0.9"/>
-                      <path d="M 87 30 L 87 90 L 95 90 L 95 30 Z" fill="url(#heroGradient)"/>
-                      <circle cx="60" cy="60" r="6" fill="white"/>
-                      <circle cx="60" cy="60" r="3" fill="#00D4FF"/>
-                      <circle cx="29" cy="30" r="1.5" fill="white" opacity="0.7"/>
-                      <circle cx="91" cy="30" r="1.5" fill="white" opacity="0.7"/>
-                      <circle cx="29" cy="90" r="1.5" fill="white" opacity="0.7"/>
-                      <circle cx="91" cy="90" r="1.5" fill="white" opacity="0.7"/>
-                    </svg>
+                <div className="flex items-center gap-4">
+                  <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 flex items-center justify-center">
+                    <div className="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-xl bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 flex items-center justify-center shadow-2xl">
+                      <span className="text-slate-100 font-serif text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">N</span>
+                    </div>
                   </div>
                 </div>
                 <div>
-                  <h1 className="text-5xl sm:text-6xl md:text-7xl font-bold tracking-tight text-white/95">
-                    Nomos<span className="text-cyan-400">X</span>
+                  <h1 className="text-5xl sm:text-6xl md:text-7xl font-serif font-bold tracking-tight text-white/95">
+                    Nomos<span className="text-slate-400">X</span>
                   </h1>
-                  <div className="text-xs text-cyan-400/60 tracking-[0.3em] uppercase mt-2">
-                    The Autonomous Think Tank
+                  <div className="text-xs text-slate-500 tracking-[0.3em] uppercase mt-2">
+                    Institutional Research Platform
                   </div>
                 </div>
               </div>
