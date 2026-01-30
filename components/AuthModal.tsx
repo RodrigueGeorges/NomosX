@@ -98,29 +98,27 @@ export default function AuthModal({ isOpen, onClose, initialQuestion, onSignupSu
           <div className="flex justify-center mb-6">
             <div className="flex items-center gap-3">
               <div className="relative group">
-                <div className="absolute inset-0 bg-gradient-to-br from-cyan-500/20 via-blue-500/20 to-purple-500/20 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                <div className="relative w-14 h-14 rounded-xl bg-gradient-to-br from-[#12121A] to-[#1A1A28] border border-white/10 flex items-center justify-center shadow-2xl">
-                  <svg width="36" height="36" viewBox="0 0 120 120" fill="none">
-                    <defs>
-                      <linearGradient id="authGradient" x1="30%" y1="0%" x2="70%" y2="100%">
-                        <stop offset="0%" style={{stopColor: '#00D4FF', stopOpacity: 1}} />
-                        <stop offset="100%" style={{stopColor: '#4A7FE0', stopOpacity: 1}} />
-                      </linearGradient>
-                    </defs>
-                    <path d="M 25 30 L 25 90 L 33 90 L 33 30 Z" fill="url(#authGradient)"/>
-                    <path d="M 33 35 L 60 60 L 87 85 L 93 80 L 60 53 L 33 28 Z" fill="url(#authGradient)"/>
-                    <path d="M 87 35 L 60 60 L 33 85 L 27 80 L 60 53 L 87 28 Z" fill="url(#authGradient)" opacity="0.9"/>
-                    <path d="M 87 30 L 87 90 L 95 90 L 95 30 Z" fill="url(#authGradient)"/>
-                    <circle cx="60" cy="60" r="6" fill="white"/>
-                    <circle cx="60" cy="60" r="3" fill="#00D4FF"/>
-                  </svg>
+                <div className="absolute inset-0 bg-gradient-to-br from-slate-700/20 to-slate-800/20 rounded-full blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
+                <div className="relative w-14 h-14 rounded-full bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 flex items-center justify-center shadow-2xl">
+                  <span className="text-slate-100 font-serif text-xl font-bold tracking-tight">N</span>
+                  {/* Orbital elements */}
+                  <div className="absolute inset-0 rounded-full border border-slate-600/30"></div>
+                  <div className="absolute top-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-cyan-400 rounded-full opacity-60"></div>
+                  <div className="absolute right-1 top-1/2 -translate-y-1/2 w-1 h-1 bg-slate-400 rounded-full opacity-40"></div>
+                  <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-slate-400 rounded-full opacity-40"></div>
+                  <div className="absolute left-1 top-1/2 -translate-y-1/2 w-1 h-1 bg-slate-400 rounded-full opacity-40"></div>
                 </div>
               </div>
-              <span className="text-3xl font-bold tracking-tight">
-                Nomos<span className="text-cyan-400">X</span>
-              </span>
+              <div>
+                <h2 className="text-2xl font-serif font-bold text-white mb-1">
+                  Nomos<span className="text-slate-400">X</span>
+                </h2>
+                <p className="text-xs text-slate-500 tracking-wide uppercase">Institutional Research</p>
+              </div>
             </div>
           </div>
+
+          {/* Title */}
 
           {/* Small caps */}
           <div className="text-xs text-cyan-400/60 tracking-[0.25em] uppercase mb-4">
