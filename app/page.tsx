@@ -5,6 +5,7 @@ import { useRouter } from "next/navigation";
 import Button from "@/components/ui/Button";
 import { Card, CardContent } from "@/components/ui/Card";
 import AuthModal from "@/components/AuthModal";
+import OnboardingModal from "@/components/OnboardingModal";
 import PublicNav from "@/components/PublicNav";
 import ProviderShowcase from "@/components/ProviderShowcase";
 import { 
@@ -21,6 +22,7 @@ import {
 export default function HomePage() {
   const router = useRouter();
   const [showAuthModal, setShowAuthModal] = useState(false);
+  const [showOnboardingModal, setShowOnboardingModal] = useState(false);
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
@@ -542,16 +544,25 @@ export default function HomePage() {
                 <button onClick={() => router.push("/methodology")} className="hover:text-white transition-colors">
                   Methodology
                 </button>
-                <span>© 2026 NomosX</span>
+                <span> 2026 NomosX</span>
               </div>
             </div>
           </footer>
         </div>
-      </div>
-
+      {/* Auth Modal */}
       <AuthModal 
-        isOpen={showAuthModal}
+        isOpen={showAuthModal} 
         onClose={() => setShowAuthModal(false)}
+        onSignupSuccess={() => {
+          setShowAuthModal(false);
+          setShowOnboardingModal(true);
+        }}
+      />
+
+      {/* Onboarding Modal */}
+      <OnboardingModal
+        isOpen={showOnboardingModal}
+        onClose={() => setShowOnboardingModal(false)}
       />
     </>
   );

@@ -925,12 +925,18 @@ model User {
 
   // Preferences
   preferences Json? // UI preferences, notification settings
+  
+  // Email preferences
+  emailFrequency    String  @default("WEEKLY") // DAILY, WEEKLY, MONTHLY, NEVER
+  emailEnabled      Boolean @default(true)
+  lastEmailSentAt   DateTime?
 
   createdAt DateTime @default(now())
   updatedAt DateTime @updatedAt
 
   // Relations
   subscription Subscription?
+  verticalPreferences UserVerticalPreference[]
 
   @@index([email])
   @@index([role])
@@ -1175,6 +1181,27 @@ model NewsletterEdition {
 }
 
 // ============================================================================
+// USER VERTICAL PREFERENCES - Personalized Intelligence
+// ============================================================================
+
+model UserVerticalPreference {
+  id         String   @id @default(cuid())
+  userId     String
+  verticalId String
+  enabled    Boolean  @default(true)
+  createdAt  DateTime @default(now())
+  updatedAt  DateTime @updatedAt
+  
+  user     User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+  vertical Vertical @relation(fields: [verticalId], references: [id], onDelete: Cascade)
+  
+  @@unique([userId, verticalId])
+  @@index([userId])
+  @@index([verticalId])
+  @@index([enabled])
+}
+
+// ============================================================================
 // INSTITUTIONAL THINK TANK - VERTICALS
 // ============================================================================
 
@@ -1201,6 +1228,7 @@ model Vertical {
   publications       ThinkTankPublication[]
   editorialDecisions EditorialDecision[]
   cadenceCounters    CadenceCounter[]
+  userPreferences    UserVerticalPreference[]
   
   createdAt   DateTime @default(now())
   updatedAt   DateTime @updatedAt

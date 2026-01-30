@@ -11,9 +11,10 @@ interface AuthModalProps {
   isOpen: boolean;
   onClose: () => void;
   initialQuestion?: string;
+  onSignupSuccess?: () => void;
 }
 
-export default function AuthModal({ isOpen, onClose, initialQuestion }: AuthModalProps) {
+export default function AuthModal({ isOpen, onClose, initialQuestion, onSignupSuccess }: AuthModalProps) {
   const router = useRouter();
   const [mode, setMode] = useState<"oauth" | "email" | "login">("oauth");
   const [email, setEmail] = useState("");
@@ -58,19 +59,23 @@ export default function AuthModal({ isOpen, onClose, initialQuestion }: AuthModa
       }
 
       // Success - session cookie is set by the API
-      console.log("[AuthModal] Login successful, redirecting to dashboard");
+      console.log("[AuthModal] Auth successful");
       
       onClose();
       
-      // Use window.location for hard navigation to ensure auth state is fresh
-      const redirectUrl = initialQuestion 
-        ? `/dashboard?q=${encodeURIComponent(initialQuestion)}`
-        : "/dashboard";
-      
-      // Small delay to ensure modal closes and cookie is set
-      setTimeout(() => {
-        window.location.href = redirectUrl;
-      }, 100);
+      // If signup, trigger onboarding
+      if (isSignup && onSignupSuccess) {
+        onSignupSuccess();
+      } else {
+        // Login - redirect to dashboard
+        const redirectUrl = initialQuestion 
+          ? `/dashboard?q=${encodeURIComponent(initialQuestion)}`
+          : "/dashboard";
+        
+        setTimeout(() => {
+          window.location.href = redirectUrl;
+        }, 100);
+      }
     } catch (err: any) {
       console.error("Auth error:", err);
       setError("Connection error. Please try again.");
