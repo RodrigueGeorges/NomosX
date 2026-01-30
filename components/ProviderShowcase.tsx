@@ -110,7 +110,7 @@ export default function ProviderShowcase() {
       {/* Infinite scrolling logos */}
       <div 
         ref={scrollRef}
-        className="flex gap-8 overflow-x-hidden"
+        className="flex gap-6 overflow-x-hidden"
         style={{ 
           scrollBehavior: 'auto',
           WebkitOverflowScrolling: 'touch',

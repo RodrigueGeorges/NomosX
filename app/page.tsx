@@ -188,7 +188,7 @@ export default function HomePage() {
           )}
 
           {/* Hero Institutionnel */}
-          <section className="px-4 sm:px-6 pt-20 sm:pt-24 pb-20 sm:pb-28">
+          <section className="px-6 sm:px-8 pt-20 sm:pt-24 pb-16 sm:pb-20 md:pb-24">
             <div className="max-w-6xl mx-auto text-center">
               {/* Logo */}
               <div className="flex items-center justify-center gap-4 mb-12 animate-fade-in" style={{ animationDelay: '0.1s' }}>
@@ -324,7 +324,7 @@ export default function HomePage() {
           <ProviderShowcase />
 
           {/* What NomosX Does */}
-          <section className="max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-24 md:py-32 border-t border-white/[0.08]">
+          <section className="max-w-7xl mx-auto px-6 sm:px-8 py-16 sm:py-20 md:py-24 border-t border-white/[0.08]">
             <div className="max-w-4xl mb-20">
               <div className="text-xs text-cyan-400/60 tracking-[0.25em] uppercase mb-6 flex items-center gap-3">
                 <div className="w-8 h-px bg-gradient-to-r from-cyan-400/60 to-transparent" />
@@ -408,10 +408,10 @@ export default function HomePage() {
           </section>
 
           {/* How It Works */}
-          <section className="relative py-16 sm:py-24 md:py-32 border-t border-white/[0.08] overflow-hidden">
+          <section className="relative py-16 sm:py-20 md:py-24 border-t border-white/[0.08] overflow-hidden">
             <div className="absolute inset-0 bg-gradient-to-b from-transparent via-cyan-500/5 to-transparent" />
             
-            <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6">
+            <div className="relative z-10 max-w-6xl mx-auto px-6 sm:px-8">
               <div className="text-center mb-16">
                 <div className="text-xs text-cyan-400/60 tracking-[0.25em] uppercase mb-6 flex items-center justify-center gap-3">
                   <div className="w-8 h-px bg-gradient-to-r from-transparent via-cyan-400/60 to-transparent" />
