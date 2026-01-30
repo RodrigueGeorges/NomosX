@@ -1,13 +1,12 @@
 "use client";
 
-import { useEffect } from "react";
+import { Suspense, useEffect } from "react";
 import { useRouter, useSearchParams } from "next/navigation";
 
 /**
- * Redirect /council to /studio
- * Legacy route from old "Council" model
+ * Inner component that uses useSearchParams
  */
-export default function CouncilRedirect() {
+function CouncilRedirectInner() {
   const router = useRouter();
   const searchParams = useSearchParams();
 
@@ -18,13 +17,29 @@ export default function CouncilRedirect() {
   }, [router, searchParams]);
 
   return (
+    <div className="text-center">
+      <div className="text-cyan-400 mb-4">Redirecting...</div>
+      <p className="text-white/50 text-sm">
+        The Council page has been replaced by Studio
+      </p>
+    </div>
+  );
+}
+
+/**
+ * Redirect /council to /studio
+ * Legacy route from old "Council" model
+ */
+export default function CouncilRedirect() {
+  return (
     <div className="min-h-screen bg-[#0A0A0B] flex items-center justify-center">
-      <div className="text-center">
-        <div className="text-cyan-400 mb-4">Redirection...</div>
-        <p className="text-white/50 text-sm">
-          La page Council a été remplacée par le Studio
-        </p>
-      </div>
+      <Suspense fallback={
+        <div className="text-center">
+          <div className="text-cyan-400 mb-4">Loading...</div>
+        </div>
+      }>
+        <CouncilRedirectInner />
+      </Suspense>
     </div>
   );
 }
