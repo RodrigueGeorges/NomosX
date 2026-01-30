@@ -45,6 +45,10 @@ const envSchema = z.object({
     z.string().url().optional()
   ),
   
+  // Upstash Redis (alternative to REDIS_URL)
+  UPSTASH_REDIS_REST_URL: z.string().url().optional(),
+  UPSTASH_REDIS_REST_TOKEN: z.string().optional(),
+  
   // Sentry (error tracking)
   SENTRY_DSN: z.preprocess(
     (val) => (val === "" ? undefined : val),
@@ -52,6 +56,14 @@ const envSchema = z.object({
   ),
   SENTRY_ORG: z.string().optional(),
   SENTRY_PROJECT: z.string().optional(),
+  
+  // Email
+  RESEND_API_KEY: z.string().optional(),
+  EMAIL_FROM: z.string().email().optional(),
+  EMAIL_PROVIDER: z.string().optional().default("resend"),
+  
+  // Cron security
+  CRON_SECRET: z.string().optional(),
   
   // Next.js
   NEXT_PUBLIC_APP_URL: z.string().url().optional().default("http://localhost:3000"),

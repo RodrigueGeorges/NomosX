@@ -58,10 +58,26 @@ export async function POST(req: NextRequest) {
 
     console.log(`[Weekly Briefs Cron] Found ${users.length} users with weekly email enabled`);
 
+    // Also get newsletter subscribers
+    const newsletterSubscribers = await prisma.newsletterSubscriber.findMany({
+      where: {
+        status: "active",
+      },
+      select: {
+        id: true,
+        email: true,
+        lastEmailSentAt: true,
+        emailsSent: true,
+      },
+    });
+
+    console.log(`[Weekly Briefs Cron] Found ${newsletterSubscribers.length} active newsletter subscribers`);
+
     let sent = 0;
     let skipped = 0;
     let failed = 0;
 
+    // Send to registered users (personalized)
     for (const user of users) {
       try {
         // Skip if no vertical preferences
@@ -159,25 +175,102 @@ export async function POST(req: NextRequest) {
         });
 
         if (result.success) {
-          // Update last email sent timestamp
+          // Update user email stats
           await prisma.user.update({
             where: { id: user.id },
-            data: { lastEmailSentAt: now },
+            data: {
+              lastEmailSentAt: new Date(),
+            },
           });
 
           sent++;
-          console.log(`[Weekly Briefs Cron] Sent to ${user.email} (${briefs.length} briefs)`);
+          console.log(`[Weekly Briefs Cron] Sent to ${user.email}`);
         } else {
-          failed++;
           console.error(`[Weekly Briefs Cron] Failed to send to ${user.email}:`, result.error);
+          failed++;
         }
 
         // Rate limiting: small delay between emails
         await new Promise(resolve => setTimeout(resolve, 200));
-
       } catch (userError: any) {
         failed++;
         console.error(`[Weekly Briefs Cron] Error processing user ${user.email}:`, userError);
+      }
+    }
+
+    // Send to newsletter subscribers (all briefs, no filtering)
+    for (const subscriber of newsletterSubscribers) {
+      try {
+        // Get ALL executive briefs (no filtering for newsletter)
+        const allBriefs = await prisma.thinkTankPublication.findMany({
+          where: {
+            type: "EXECUTIVE_BRIEF",
+            status: "PUBLISHED",
+            publishedAt: {
+              gte: weekStart,
+              lte: now,
+            },
+          },
+          include: {
+            vertical: {
+              select: {
+                name: true,
+                color: true,
+              },
+            },
+          },
+          orderBy: {
+            publishedAt: "desc",
+          },
+        });
+
+        if (allBriefs.length === 0) {
+          console.log(`[Weekly Briefs Cron] No briefs to send to ${subscriber.email}`);
+          skipped++;
+          continue;
+        }
+
+        // Use same premium template for everyone
+        const htmlContent = renderWeeklyBriefEmail({
+          userName: null, // No personalization for newsletter
+          briefs: allBriefs,
+          weekStart: weekStartStr,
+          weekEnd: weekEndStr,
+          totalBriefs: allBriefs.length,
+          selectedVerticals: allBriefs.map(b => b.vertical?.name).filter(Boolean),
+        });
+
+        const textContent = renderWeeklyBriefPlainText({
+          userName: null,
+          briefs: allBriefs,
+          weekStart: weekStartStr,
+          weekEnd: weekEndStr,
+          totalBriefs: allBriefs.length,
+          selectedVerticals: allBriefs.map(b => b.vertical?.name).filter(Boolean),
+        });
+
+        // Send email
+        await sendEmail({
+          to: subscriber.email,
+          subject: `Your Weekly Intelligence Brief · ${weekStartStr} – ${weekEndStr}`,
+          html: htmlContent,
+          text: textContent,
+        });
+
+        // Update subscriber stats
+        await prisma.newsletterSubscriber.update({
+          where: { id: subscriber.id },
+          data: {
+            lastEmailSentAt: new Date(),
+            emailsSent: subscriber.emailsSent + 1,
+          },
+        });
+
+        sent++;
+        console.log(`[Weekly Briefs Cron] Sent to newsletter subscriber ${subscriber.email}`);
+      } catch (error) {
+        console.error(`[Weekly Briefs Cron] Failed to send to ${subscriber.email}:`, error);
+        failed++;
       }
     }
 
@@ -185,11 +278,14 @@ export async function POST(req: NextRequest) {
 
     return NextResponse.json({
       success: true,
-      stats: {
-        totalUsers: users.length,
-        sent,
-        skipped,
+      message: "Weekly briefs delivered successfully",
+      stats: { 
+        sent, 
+        skipped, 
         failed,
+        users: users.length,
+        newsletterSubscribers: newsletterSubscribers.length,
+        totalRecipients: users.length + newsletterSubscribers.length
       },
     });
 

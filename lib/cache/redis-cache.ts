@@ -11,31 +11,55 @@ import { createHash } from "crypto";
 let redis: Redis | null = null;
 
 function getRedisClient(): Redis | null {
-  if (!env.REDIS_URL) {
-    console.warn("⚠️ Redis not configured. Caching disabled.");
-    return null;
+  // Try Upstash first (preferred for serverless)
+  if (env.UPSTASH_REDIS_REST_URL && env.UPSTASH_REDIS_REST_TOKEN) {
+    if (!redis) {
+      redis = new Redis(env.UPSTASH_REDIS_REST_URL, {
+        password: env.UPSTASH_REDIS_REST_TOKEN,
+        maxRetriesPerRequest: 3,
+        retryStrategy: (times) => {
+          if (times > 3) return null; // Stop retrying
+          return Math.min(times * 200, 2000); // Exponential backoff
+        },
+        lazyConnect: true,
+      });
+      
+      redis.on("error", (err) => {
+        console.error("❌ Upstash Redis error:", err);
+      });
+      
+      redis.on("connect", () => {
+        console.log("✅ Upstash Redis connected");
+      });
+    }
+    return redis;
   }
   
-  if (!redis) {
-    redis = new Redis(env.REDIS_URL, {
-      maxRetriesPerRequest: 3,
-      retryStrategy: (times) => {
-        if (times > 3) return null; // Stop retrying
-        return Math.min(times * 200, 2000); // Exponential backoff
-      },
-      lazyConnect: true,
-    });
-    
-    redis.on("error", (err) => {
-      console.error("❌ Redis error:", err);
-    });
-    
-    redis.on("connect", () => {
-      console.log("✅ Redis connected");
-    });
+  // Fallback to traditional Redis URL
+  if (env.REDIS_URL) {
+    if (!redis) {
+      redis = new Redis(env.REDIS_URL, {
+        maxRetriesPerRequest: 3,
+        retryStrategy: (times) => {
+          if (times > 3) return null; // Stop retrying
+          return Math.min(times * 200, 2000); // Exponential backoff
+        },
+        lazyConnect: true,
+      });
+      
+      redis.on("error", (err) => {
+        console.error("❌ Redis error:", err);
+      });
+      
+      redis.on("connect", () => {
+        console.log("✅ Redis connected");
+      });
+    }
+    return redis;
   }
   
-  return redis;
+  console.warn("⚠️ Redis not configured. Caching disabled.");
+  return null;
 }
 
 /**
