@@ -7,6 +7,7 @@ import { prisma } from "../db";
 import { searchROR } from "../providers/ror";
 import { getORCIDById } from "../providers/orcid";
 import { classifyBatchSources } from "./domain-classifier";
+import { assertPermission, AgentRole } from "../governance";
 
 interface NormalizedSource {
   id: string;
