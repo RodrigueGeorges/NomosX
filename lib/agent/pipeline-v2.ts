@@ -140,6 +140,9 @@ import { readerAgent } from "./reader-agent.ts";
 import { analystAgent } from "./analyst-agent.ts";
 import { strategicAnalystAgent, StrategicAnalysisOutput } from "./strategic-analyst-agent.ts";
 import { renderStrategicReportHTML } from "./strategic-report-renderer.ts";
+import { contradictionDetector, detectContradictionsInRecent } from "./contradiction-detector.ts";
+import { trendAnalyzer, runWeeklyTrendAnalysis } from "./trend-analyzer.ts";
+import { signalDetector } from "./signal-detector.ts";
 
 // NOUVEAUX IMPORTS - Providers institutionnels
 import {
@@ -1267,4 +1270,88 @@ export async function runPipeline(
     default:
       return runFullPipeline(query, options.providers || ["openalex"] as Providers);
   }
+}
+
+// ================================
+// INTELLIGENCE AGENTS EXPORTS
+// ================================
+
+// Re-export intelligence agents for easy access
+export {
+  // Contradiction Detection
+  contradictionDetector,
+  detectContradictionsInRecent,
+  
+  // Trend Analysis
+  trendAnalyzer,
+  runWeeklyTrendAnalysis,
+  
+  // Signal Detection
+  signalDetector
+};
+
+// ================================
+// FULL INTELLIGENCE SWEEP
+// ================================
+
+/**
+ * Run complete intelligence sweep on recent sources
+ * Combines: Signal Detection + Contradiction Detection + Trend Analysis
+ */
+export async function runIntelligenceSweep(options?: {
+  days?: number;
+  verticalSlug?: string;
+}): Promise<{
+  signals: Awaited<ReturnType<typeof signalDetector>>;
+  contradictions: Awaited<ReturnType<typeof contradictionDetector>>;
+  trends: Awaited<ReturnType<typeof trendAnalyzer>>;
+}> {
+  const days = options?.days ?? 7;
+  
+  console.log(`\n${"═".repeat(60)}`);
+  console.log(`  INTELLIGENCE SWEEP (last ${days} days)`);
+  console.log(`${"═".repeat(60)}\n`);
+  
+  // 1. Get recent sources
+  const since = new Date();
+  since.setDate(since.getDate() - days);
+  
+  const recentSources = await prisma.source.findMany({
+    where: {
+      createdAt: { gte: since },
+      qualityScore: { gte: 60 }
+    },
+    select: { id: true },
+    take: 200
+  });
+  
+  const sourceIds = recentSources.map(s => s.id);
+  console.log(`[Intelligence] Found ${sourceIds.length} recent sources`);
+  
+  // 2. Run Signal Detection
+  console.log(`\n[Intelligence] Running Signal Detection...`);
+  const signals = await signalDetector({ 
+    sourceIds, 
+    verticalSlug: options?.verticalSlug 
+  });
+  
+  // 3. Run Contradiction Detection
+  console.log(`\n[Intelligence] Running Contradiction Detection...`);
+  const contradictions = await contradictionDetector(sourceIds);
+  
+  // 4. Run Trend Analysis
+  console.log(`\n[Intelligence] Running Trend Analysis...`);
+  const trends = await trendAnalyzer({
+    verticalSlug: options?.verticalSlug,
+    lookbackMonths: Math.max(3, Math.ceil(days / 30) * 2)
+  });
+  
+  console.log(`\n${"═".repeat(60)}`);
+  console.log(`  ✅ INTELLIGENCE SWEEP COMPLETE`);
+  console.log(`  Signals: ${signals.detected}`);
+  console.log(`  Contradictions: ${contradictions.contradictionsFound}`);
+  console.log(`  Trends: ${trends.trendsDetected}`);
+  console.log(`${"═".repeat(60)}\n`);
+  
+  return { signals, contradictions, trends };
 }
