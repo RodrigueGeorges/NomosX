@@ -53,21 +53,21 @@ type Signal = {
 };
 
 const STATUS_CONFIG: Record<SignalStatus, { label: string; icon: React.ElementType; color: string; bg: string }> = {
-  NEW: { label: "En attente", icon: Clock, color: "text-amber-400", bg: "bg-amber-500/10 border-amber-500/20" },
-  HELD: { label: "Retenu", icon: Pause, color: "text-blue-400", bg: "bg-blue-500/10 border-blue-500/20" },
-  PUBLISHED: { label: "Publié", icon: CheckCircle, color: "text-emerald-400", bg: "bg-emerald-500/10 border-emerald-500/20" },
-  REJECTED: { label: "Rejeté", icon: XCircle, color: "text-red-400", bg: "bg-red-500/10 border-red-500/20" },
-  EXPIRED: { label: "Expiré", icon: AlertCircle, color: "text-white/40", bg: "bg-white/5 border-white/10" },
-  SILENT: { label: "Silence", icon: Pause, color: "text-slate-400", bg: "bg-slate-500/10 border-slate-500/20" },
+  NEW: { label: "Pending", icon: Clock, color: "text-amber-400", bg: "bg-amber-500/10 border-amber-500/20" },
+  HELD: { label: "Held", icon: Pause, color: "text-blue-400", bg: "bg-blue-500/10 border-blue-500/20" },
+  PUBLISHED: { label: "Published", icon: CheckCircle, color: "text-emerald-400", bg: "bg-emerald-500/10 border-emerald-500/20" },
+  REJECTED: { label: "Rejected", icon: XCircle, color: "text-red-400", bg: "bg-red-500/10 border-red-500/20" },
+  EXPIRED: { label: "Expired", icon: AlertCircle, color: "text-white/40", bg: "bg-white/5 border-white/10" },
+  SILENT: { label: "Silent", icon: Pause, color: "text-slate-400", bg: "bg-slate-500/10 border-slate-500/20" },
 };
 
 const SIGNAL_TYPE_LABELS: Record<string, string> = {
-  NEW_EVIDENCE: "Nouvelle évidence",
+  NEW_EVIDENCE: "New Evidence",
   CONTRADICTION: "Contradiction",
-  TREND_BREAK: "Rupture",
-  DATA_RELEASE: "Données",
-  POLICY_CHANGE: "Politique",
-  METHODOLOGY_SHIFT: "Méthodologie"
+  TREND_BREAK: "Trend Break",
+  DATA_RELEASE: "Data Release",
+  POLICY_CHANGE: "Policy Change",
+  METHODOLOGY_SHIFT: "Methodology Shift"
 };
 
 export default function SignalsPage() {
@@ -142,7 +142,7 @@ export default function SignalsPage() {
             size="sm"
             onClick={() => setStatusFilter("ALL")}
           >
-            Tous ({statusCounts.ALL})
+            All ({statusCounts.ALL})
           </Button>
           {(Object.keys(STATUS_CONFIG) as SignalStatus[]).map(status => {
             const config = STATUS_CONFIG[status];
@@ -180,10 +180,10 @@ export default function SignalsPage() {
                 <Zap size={32} className="text-amber-400/50" />
               </div>
               <h3 className="text-xl font-semibold text-white mb-2">
-                {statusFilter === "ALL" ? "Aucun signal détecté" : `Aucun signal ${STATUS_CONFIG[statusFilter as SignalStatus]?.label.toLowerCase()}`}
+                {statusFilter === "ALL" ? "No signals detected" : `No ${STATUS_CONFIG[statusFilter as SignalStatus]?.label.toLowerCase()} signals`}
               </h3>
               <p className="text-white/50 text-sm">
-                Les signaux sont détectés automatiquement par le système de veille.
+                Signals are automatically detected by the monitoring system.
               </p>
             </CardContent>
           </Card>
@@ -246,7 +246,7 @@ export default function SignalsPage() {
                             })}
                           </span>
                           <span className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity text-cyan-400 flex items-center gap-1">
-                            Ouvrir dans Studio <ArrowRight size={12} />
+                            Open in Studio <ArrowRight size={12} />
                           </span>
                         </div>
                       </div>

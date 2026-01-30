@@ -68,18 +68,20 @@ type Publication = {
 };
 
 const TYPE_LABELS: Record<string, string> = {
-  RESEARCH_BRIEF: "Research Brief",
+  EXECUTIVE_BRIEF: "Executive Brief",
+  STRATEGIC_REPORT: "Strategic Report",
+  RESEARCH_BRIEF: "Executive Brief",
   UPDATE_NOTE: "Update Note",
   DATA_NOTE: "Data Note",
   POLICY_NOTE: "Policy Note",
-  DOSSIER: "Dossier",
+  DOSSIER: "Strategic Report",
 };
 
 const STATUS_CONFIG: Record<string, { label: string; icon: React.ElementType; color: string }> = {
-  PUBLISHED: { label: "Publié", icon: CheckCircle, color: "text-emerald-400" },
-  HELD: { label: "Retenu", icon: Pause, color: "text-amber-400" },
-  SILENT: { label: "Silence", icon: VolumeX, color: "text-white/40" },
-  DRAFT: { label: "Brouillon", icon: FileText, color: "text-blue-400" },
+  PUBLISHED: { label: "Published", icon: CheckCircle, color: "text-emerald-400" },
+  HELD: { label: "Held", icon: Pause, color: "text-amber-400" },
+  SILENT: { label: "Silent", icon: VolumeX, color: "text-white/40" },
+  DRAFT: { label: "Draft", icon: FileText, color: "text-blue-400" },
 };
 
 export default function PublicationDetailPage() {
@@ -126,9 +128,9 @@ export default function PublicationDetailPage() {
         <Card variant="default" className="bg-white/[0.02] border-white/10">
           <CardContent className="pt-12 pb-12 text-center">
             <FileText size={32} className="text-white/20 mx-auto mb-3" />
-            <p className="text-white/50">Publication non trouvée</p>
+            <p className="text-white/50">Publication not found</p>
             <Button variant="ghost" className="mt-4" onClick={() => router.back()}>
-              <ArrowLeft size={16} className="mr-2" /> Retour
+              <ArrowLeft size={16} className="mr-2" /> Back
             </Button>
           </CardContent>
         </Card>
@@ -147,7 +149,7 @@ export default function PublicationDetailPage() {
           onClick={() => router.back()}
           className="flex items-center gap-1 text-sm text-white/50 hover:text-white/80 mb-6 transition-colors"
         >
-          <ArrowLeft size={14} /> Retour aux publications
+          <ArrowLeft size={14} /> Back to publications
         </button>
 
         {/* Header */}
@@ -170,11 +172,11 @@ export default function PublicationDetailPage() {
             </div>
             <h1 className="text-2xl font-semibold text-white mb-2">{publication.title}</h1>
             <div className="flex items-center gap-4 text-sm text-white/40">
-              <span>{publication.wordCount} mots</span>
+              <span>{publication.wordCount} words</span>
               <span>{publication.sourceCount} sources</span>
               <span className="flex items-center gap-1">
                 <Eye size={14} />
-                {publication.viewCount} vues
+                {publication.viewCount} views
               </span>
               <span className="flex items-center gap-1">
                 <Clock size={14} />
@@ -201,7 +203,7 @@ export default function PublicationDetailPage() {
             active={activeTab === "content"} 
             onClick={() => setActiveTab("content")}
             icon={<FileText size={16} />}
-            label="Contenu"
+            label="Content"
           />
           <TabButton 
             active={activeTab === "sources"} 
@@ -276,7 +278,7 @@ export default function PublicationDetailPage() {
             {/* Quality Metrics */}
             <Card variant="default" className="bg-white/[0.02] border-white/10">
               <CardHeader>
-                <h3 className="text-base font-semibold text-white">Métriques de qualité</h3>
+                <h3 className="text-base font-semibold text-white">Quality Metrics</h3>
               </CardHeader>
               <CardContent>
                 <div className="grid grid-cols-4 gap-4">
@@ -304,7 +306,7 @@ export default function PublicationDetailPage() {
             {publication.qualityChecks.length > 0 && (
               <Card variant="default" className="bg-white/[0.02] border-white/10">
                 <CardHeader>
-                  <h3 className="text-base font-semibold text-white">Contrôles qualité</h3>
+                  <h3 className="text-base font-semibold text-white">Quality Checks</h3>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2">
@@ -335,7 +337,7 @@ export default function PublicationDetailPage() {
             {publication.claims.length > 0 && (
               <Card variant="default" className="bg-white/[0.02] border-white/10">
                 <CardHeader>
-                  <h3 className="text-base font-semibold text-white">Claims extraites ({publication.claims.length})</h3>
+                  <h3 className="text-base font-semibold text-white">Extracted Claims ({publication.claims.length})</h3>
                 </CardHeader>
                 <CardContent>
                   <div className="space-y-2">
@@ -349,7 +351,7 @@ export default function PublicationDetailPage() {
                           <Badge variant="default" className="text-xs">{claim.claimType}</Badge>
                           <span>Confidence: {Math.round(claim.confidence * 100)}%</span>
                           {claim.hasContradiction && (
-                            <span className="text-red-400">⚠ Contradiction détectée</span>
+                            <span className="text-red-400">⚠ Contradiction detected</span>
                           )}
                         </div>
                       </div>

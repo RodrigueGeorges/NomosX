@@ -47,18 +47,22 @@ type Publication = {
   viewCount: number;
 };
 
-const TYPE_LABELS: Record<string, { label: string; color: string }> = {
-  RESEARCH_BRIEF: { label: "Research Brief", color: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20" },
-  UPDATE_NOTE: { label: "Update Note", color: "bg-blue-500/10 text-blue-400 border-blue-500/20" },
-  DATA_NOTE: { label: "Data Note", color: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20" },
-  POLICY_NOTE: { label: "Policy Note", color: "bg-purple-500/10 text-purple-400 border-purple-500/20" },
-  DOSSIER: { label: "Dossier", color: "bg-amber-500/10 text-amber-400 border-amber-500/20" },
+const TYPE_LABELS: Record<string, { label: string; color: string; isPremium?: boolean }> = {
+  // Primary formats
+  EXECUTIVE_BRIEF: { label: "Executive Brief", color: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20", isPremium: false },
+  STRATEGIC_REPORT: { label: "Strategic Report", color: "bg-amber-500/10 text-amber-400 border-amber-500/20", isPremium: true },
+  // Legacy formats (map to primary)
+  RESEARCH_BRIEF: { label: "Executive Brief", color: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20", isPremium: false },
+  UPDATE_NOTE: { label: "Update Note", color: "bg-blue-500/10 text-blue-400 border-blue-500/20", isPremium: false },
+  DATA_NOTE: { label: "Data Note", color: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20", isPremium: false },
+  POLICY_NOTE: { label: "Policy Note", color: "bg-purple-500/10 text-purple-400 border-purple-500/20", isPremium: false },
+  DOSSIER: { label: "Strategic Report", color: "bg-amber-500/10 text-amber-400 border-amber-500/20", isPremium: true },
 };
 
 const STATUS_CONFIG: Record<EditorialStatus, { label: string; icon: React.ElementType; color: string }> = {
-  PUBLISHED: { label: "Publié", icon: CheckCircle, color: "text-emerald-400" },
-  HELD: { label: "Retenu", icon: Pause, color: "text-amber-400" },
-  SILENT: { label: "Silence", icon: VolumeX, color: "text-white/40" },
+  PUBLISHED: { label: "Published", icon: CheckCircle, color: "text-emerald-400" },
+  HELD: { label: "Held", icon: Pause, color: "text-amber-400" },
+  SILENT: { label: "Silent", icon: VolumeX, color: "text-white/40" },
 };
 
 export default function PublicationsPage() {
@@ -142,13 +146,13 @@ export default function PublicationsPage() {
           <Card variant="default" className="bg-emerald-500/5 border-emerald-500/20">
             <CardContent className="pt-4 pb-4">
               <div className="text-2xl font-light text-emerald-400">{publishedCount}</div>
-              <div className="text-xs text-emerald-400/60">Publiés</div>
+              <div className="text-xs text-emerald-400/60">Published</div>
             </CardContent>
           </Card>
           <Card variant="default" className="bg-amber-500/5 border-amber-500/20">
             <CardContent className="pt-4 pb-4">
               <div className="text-2xl font-light text-amber-400">{heldCount}</div>
-              <div className="text-xs text-amber-400/60">Retenus</div>
+              <div className="text-xs text-amber-400/60">Held</div>
             </CardContent>
           </Card>
           <Card variant="default" className="bg-white/[0.02] border-white/10">
@@ -168,7 +172,7 @@ export default function PublicationsPage() {
               <Input
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
-                placeholder="Rechercher une publication..."
+                placeholder="Search publications..."
                 className="pl-10 bg-white/[0.03] border-white/10 focus:border-cyan-500/50"
               />
             </div>
@@ -180,7 +184,7 @@ export default function PublicationsPage() {
             onChange={(e) => setTypeFilter(e.target.value)}
             className="px-4 py-2 rounded-lg bg-white/[0.03] border border-white/10 text-sm text-white/80 focus:outline-none focus:border-cyan-500/50"
           >
-            <option value="ALL" className="bg-[#111113]">Tous les types</option>
+            <option value="ALL" className="bg-[#111113]">All types</option>
             {Object.entries(TYPE_LABELS).map(([key, { label }]) => (
               <option key={key} value={key} className="bg-[#111113]">{label}</option>
             ))}
@@ -192,10 +196,10 @@ export default function PublicationsPage() {
             onChange={(e) => setStatusFilter(e.target.value as EditorialStatus | "ALL")}
             className="px-4 py-2 rounded-lg bg-white/[0.03] border border-white/10 text-sm text-white/80 focus:outline-none focus:border-cyan-500/50"
           >
-            <option value="ALL" className="bg-[#111113]">Tous les statuts</option>
-            <option value="PUBLISHED" className="bg-[#111113]">Publiés</option>
-            <option value="HELD" className="bg-[#111113]">Retenus</option>
-            <option value="SILENT" className="bg-[#111113]">Silences</option>
+            <option value="ALL" className="bg-[#111113]">All statuses</option>
+            <option value="PUBLISHED" className="bg-[#111113]">Published</option>
+            <option value="HELD" className="bg-[#111113]">Held</option>
+            <option value="SILENT" className="bg-[#111113]">Silent</option>
           </select>
 
           {/* Sort */}
@@ -206,7 +210,7 @@ export default function PublicationsPage() {
             className="text-white/50"
           >
             <ArrowUpDown size={14} className="mr-2" />
-            {sortBy === "date" ? "Date" : sortBy === "trust" ? "Trust" : "Vues"}
+            {sortBy === "date" ? "Date" : sortBy === "trust" ? "Trust" : "Views"}
           </Button>
         </div>
 
@@ -223,12 +227,12 @@ export default function PublicationsPage() {
               <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 flex items-center justify-center mx-auto mb-4">
                 <Archive size={32} className="text-emerald-400/50" />
               </div>
-              <h3 className="text-xl font-semibold text-white mb-2">Aucune publication</h3>
+              <h3 className="text-xl font-semibold text-white mb-2">No publications yet</h3>
               <p className="text-white/50 text-sm">
-                Les publications sont créées via le Publication Studio.
+                Publications are created via the Publication Studio.
               </p>
               <Button variant="ai" className="mt-6" onClick={() => router.push("/studio")}>
-                Ouvrir le Studio
+                Open Studio
               </Button>
             </CardContent>
           </Card>
@@ -277,7 +281,7 @@ export default function PublicationsPage() {
                         </div>
 
                         <div className="flex items-center gap-4 text-xs text-white/40">
-                          <span>{pub.wordCount} mots</span>
+                          <span>{pub.wordCount} words</span>
                           <span>{pub.sourceCount} sources</span>
                           <span className="flex items-center gap-1">
                             <Eye size={12} />

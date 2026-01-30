@@ -48,8 +48,8 @@ export default function SearchPage() {
   const [sortMode, setSortMode] = useState<SortMode>("relevance");
 
   function handleProposeToThinkTank() {
-    // Propose le sujet au Think Tank via Studio
-    const question = `Analyse approfondie sur : ${q}`;
+    // Propose the topic to Think Tank via Studio
+    const question = `Deep analysis on: ${q}`;
     router.push(`/studio?q=${encodeURIComponent(question)}`);
   }
 
@@ -106,24 +106,24 @@ export default function SearchPage() {
                   <Search size={32} className="text-accent" strokeWidth={1.5} />
                 </div>
               </div>
-              <h1 className="text-7xl font-bold tracking-tight">Recherche</h1>
+              <h1 className="text-7xl font-bold tracking-tight">Search</h1>
             </div>
             <p className="text-xl text-muted leading-relaxed max-w-3xl mb-4">
-              Recherche hybride (lexicale + sémantique) sur 28M+ sources académiques avec filtres avancés par domaine
+              Hybrid search (lexical + semantic) across 28M+ academic sources with advanced domain filters
             </p>
           </div>
           <div className="flex gap-2 flex-wrap">
             <Badge variant="ai" className="px-3 py-1">
               <Layers size={14} className="mr-1" strokeWidth={1.5} />
-              Hybride
+              Hybrid
             </Badge>
             <Badge variant="default" className="px-3 py-1">
               <Filter size={14} className="mr-1" strokeWidth={1.5} />
-              8 domaines
+              8 domains
             </Badge>
             <Badge variant="default" className="px-3 py-1">
               <ArrowUpDown size={14} className="mr-1" strokeWidth={1.5} />
-              4 tris
+              4 sorts
             </Badge>
           </div>
         </div>
@@ -138,7 +138,7 @@ export default function SearchPage() {
           onKeyDown={(e) => e.key === "Enter" && q && !loading && run()}
         />
         <Button onClick={run} disabled={!q || loading} variant="ai">
-          {loading ? "Recherche…" : "Rechercher"}
+          {loading ? "Searching…" : "Search"}
         </Button>
       </div>
 
@@ -146,7 +146,7 @@ export default function SearchPage() {
       <div className="mb-6">
         <div className="flex items-center gap-2 mb-3">
           <Layers size={16} className="text-muted" />
-          <span className="text-sm text-muted">Filtrer par domaine (optionnel)</span>
+          <span className="text-sm text-muted">Filter by domain (optional)</span>
         </div>
         <DomainSelector
           selected={selectedDomains}
@@ -156,7 +156,7 @@ export default function SearchPage() {
         />
         {selectedDomains.length > 0 && (
           <div className="mt-3 flex items-center gap-2">
-            <span className="text-xs text-muted">Sélectionnés :</span>
+            <span className="text-xs text-muted">Selected:</span>
             {getDomainsBySlugs(selectedDomains).map((domain) => {
               const Icon = domain.icon;
               return (
@@ -170,7 +170,7 @@ export default function SearchPage() {
               onClick={() => setSelectedDomains([])}
               className="text-xs text-muted hover:text-text ml-2"
             >
-              Effacer
+              Clear
             </button>
           </div>
         )}
@@ -180,7 +180,7 @@ export default function SearchPage() {
       {results.length > 0 && (
         <div className="mb-6 flex items-center justify-between flex-wrap gap-4">
           <Badge variant="ai">
-            {filteredAndSorted.length} résultat{filteredAndSorted.length > 1 ? "s" : ""}
+            {filteredAndSorted.length} result{filteredAndSorted.length > 1 ? "s" : ""}
           </Badge>
           
           <Button
@@ -190,7 +190,7 @@ export default function SearchPage() {
             disabled={filteredAndSorted.length === 0}
           >
             <Sparkles size={16} />
-            Proposer au Think Tank
+            Propose to Think Tank
           </Button>
         </div>
       )}
@@ -202,13 +202,13 @@ export default function SearchPage() {
           <div>
             <div className="flex items-center gap-2 mb-3">
               <ArrowUpDown size={16} className="text-muted" />
-              <span className="text-sm text-muted">Trier par</span>
+              <span className="text-sm text-muted">Sort by</span>
             </div>
             <div className="flex gap-2 flex-wrap">
               {[
-                { id: "relevance", label: "Pertinence", icon: Search },
-                { id: "quality", label: "Qualité", icon: Award },
-                { id: "novelty", label: "Nouveauté", icon: TrendingUp },
+                { id: "relevance", label: "Relevance", icon: Search },
+                { id: "quality", label: "Quality", icon: Award },
+                { id: "novelty", label: "Novelty", icon: TrendingUp },
                 { id: "date", label: "Date", icon: Clock },
               ].map((sort) => (
                 <button
@@ -379,7 +379,7 @@ export default function SearchPage() {
                 size="sm" 
                 onClick={() => (window.location.href = `/sources/${encodeURIComponent(r.id)}`)}
               >
-                Ouvrir la source
+                Open source
               </Button>
             </CardContent>
           </Card>
@@ -389,7 +389,7 @@ export default function SearchPage() {
           <div className="col-span-full">
             <Card>
               <CardContent className="py-8 text-center">
-                <p className="text-muted">Aucun résultat avec ces filtres</p>
+                <p className="text-muted">No results with these filters</p>
               </CardContent>
             </Card>
           </div>
@@ -401,9 +401,9 @@ export default function SearchPage() {
         <Card>
           <CardContent className="py-12 text-center">
             <Search size={48} className="mx-auto mb-4 text-muted opacity-50" />
-            <h3 className="text-lg font-semibold mb-2">Aucun résultat</h3>
+            <h3 className="text-lg font-semibold mb-2">No results</h3>
             <p className="text-sm text-muted">
-              Essayez une autre requête ou lancez une ingestion pour alimenter la base.
+              Try a different query or run an ingestion to populate the database.
             </p>
           </CardContent>
         </Card>

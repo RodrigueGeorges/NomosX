@@ -70,7 +70,7 @@ export default function AboutPage() {
             <h1 className="text-3xl font-bold bg-gradient-to-r from-white via-cyan-200 to-white bg-clip-text text-transparent mb-2">
               NomosX
             </h1>
-            <p className="text-sm text-white/50">Think Tank Agentique</p>
+            <p className="text-sm text-white/50">The Autonomous Think Tank</p>
           </div>
           <div className="relative w-12 h-12 mx-auto">
             <div className="absolute inset-0 border-2 border-cyan-500/20 rounded-full"></div>
