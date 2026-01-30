@@ -21,7 +21,7 @@ export default function AuthModal({ isOpen, onClose, initialQuestion }: AuthModa
   const [name, setName] = useState("");
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState("");
-  const [isSignup, setIsSignup] = useState(true);
+  const [isSignup, setIsSignup] = useState(false);
 
   const handleOAuth = async (provider: "google" | "github") => {
     setLoading(true);

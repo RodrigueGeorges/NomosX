@@ -27,60 +27,11 @@ import {
 export default function AboutPage() {
   const router = useRouter();
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    const authToken = localStorage.getItem("auth_token");
-    if (authToken) {
-      router.push("/dashboard");
-      return;
-    }
-    setIsLoading(false);
-  }, [router]);
 
   useEffect(() => {
     setMounted(true);
   }, []);
-
-  // Loading screen
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-[#0A0A0B] flex items-center justify-center relative">
-        <div className="fixed inset-0 pointer-events-none">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-b from-cyan-500/10 via-blue-500/5 to-transparent rounded-full blur-3xl" />
-        </div>
-        <div className="text-center relative z-10">
-          <div className="mb-8">
-            <div className="w-20 h-20 rounded-2xl bg-gradient-to-br from-[#12121A] to-[#1A1A28] border border-white/10 flex items-center justify-center mx-auto mb-4 shadow-2xl shadow-cyan-500/20">
-              <svg width="56" height="56" viewBox="0 0 120 120" fill="none">
-                <defs>
-                  <linearGradient id="aboutLoadingGradient" x1="30%" y1="0%" x2="70%" y2="100%">
-                    <stop offset="0%" style={{stopColor: '#00D4FF', stopOpacity: 1}} />
-                    <stop offset="100%" style={{stopColor: '#4A7FE0', stopOpacity: 1}} />
-                  </linearGradient>
-                </defs>
-                <path d="M 25 30 L 25 90 L 33 90 L 33 30 Z" fill="url(#aboutLoadingGradient)"/>
-                <path d="M 33 35 L 60 60 L 87 85 L 93 80 L 60 53 L 33 28 Z" fill="url(#aboutLoadingGradient)"/>
-                <path d="M 87 35 L 60 60 L 33 85 L 27 80 L 60 53 L 87 28 Z" fill="url(#aboutLoadingGradient)" opacity="0.9"/>
-                <path d="M 87 30 L 87 90 L 95 90 L 95 30 Z" fill="url(#aboutLoadingGradient)"/>
-                <circle cx="60" cy="60" r="6" fill="white"/>
-                <circle cx="60" cy="60" r="3" fill="#00D4FF"/>
-              </svg>
-            </div>
-            <h1 className="text-3xl font-bold bg-gradient-to-r from-white via-cyan-200 to-white bg-clip-text text-transparent mb-2">
-              NomosX
-            </h1>
-            <p className="text-sm text-white/50">The Autonomous Think Tank</p>
-          </div>
-          <div className="relative w-12 h-12 mx-auto">
-            <div className="absolute inset-0 border-2 border-cyan-500/20 rounded-full"></div>
-            <div className="absolute inset-0 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin"></div>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   const vision = [
     {

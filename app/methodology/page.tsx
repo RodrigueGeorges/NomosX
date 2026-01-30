@@ -30,17 +30,7 @@ import {
 export default function MethodologyPage() {
   const router = useRouter();
   const [showAuthModal, setShowAuthModal] = useState(false);
-  const [isLoading, setIsLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
-
-  useEffect(() => {
-    const authToken = localStorage.getItem("auth_token");
-    if (authToken) {
-      router.push("/dashboard");
-      return;
-    }
-    setIsLoading(false);
-  }, [router]);
 
   useEffect(() => {
     setMounted(true);
@@ -126,22 +116,6 @@ export default function MethodologyPage() {
     { metric: "Citation Coverage", range: "0-100%", threshold: "≥80% claims cited", description: "Percentage of claims backed by [SRC-*] citations" },
     { metric: "Quality Score", range: "0-100", threshold: "≥70 for ranking", description: "Source quality based on citations, recency, open access status" }
   ];
-
-  if (isLoading) {
-    return (
-      <div className="min-h-screen bg-[#0A0A0B] flex items-center justify-center relative">
-        <div className="fixed inset-0 pointer-events-none">
-          <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[800px] h-[800px] bg-gradient-to-b from-cyan-500/10 via-blue-500/5 to-transparent rounded-full blur-3xl" />
-        </div>
-        <div className="text-center relative z-10">
-          <div className="relative w-12 h-12 mx-auto">
-            <div className="absolute inset-0 border-2 border-cyan-500/20 rounded-full"></div>
-            <div className="absolute inset-0 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin"></div>
-          </div>
-        </div>
-      </div>
-    );
-  }
 
   const colorMap: Record<string, { bg: string; border: string; text: string; hover: string }> = {
     cyan: { bg: "bg-cyan-500/10", border: "border-cyan-500/20", text: "text-cyan-400", hover: "hover:border-cyan-500/30" },
