@@ -196,6 +196,53 @@ export async function sendDigestEmail(
 }
 
 /**
+ * Send bulk newsletter to multiple subscribers
+ * Used by cron job for weekly newsletter distribution
+ */
+export async function sendBulkNewsletter(
+  subscribers: Array<{ id: string; email: string }>,
+  subject: string,
+  html: string,
+  options: { batchSize?: number; delayMs?: number } = {}
+): Promise<{ sent: number; failed: number }> {
+  const { batchSize = 50, delayMs = 200 } = options;
+  
+  let sent = 0;
+  let failed = 0;
+
+  // Process in batches
+  for (let i = 0; i < subscribers.length; i += batchSize) {
+    const batch = subscribers.slice(i, i + batchSize);
+    
+    const batchPromises = batch.map(async (subscriber) => {
+      const result = await sendEmail({
+        to: subscriber.email,
+        subject,
+        html,
+      });
+
+      if (result.success) {
+        sent++;
+      } else {
+        failed++;
+        console.error(`[Email] Failed to send newsletter to ${subscriber.email}:`, result.error);
+      }
+    });
+
+    await Promise.all(batchPromises);
+
+    // Delay between batches (rate limiting)
+    if (i + batchSize < subscribers.length) {
+      await new Promise(resolve => setTimeout(resolve, delayMs));
+    }
+  }
+
+  console.log(`[Email] Bulk newsletter: ${sent} sent, ${failed} failed out of ${subscribers.length}`);
+  
+  return { sent, failed };
+}
+
+/**
  * Send welcome email to new subscriber
  */
 export async function sendWelcomeEmail(email: string, topicName: string) {
