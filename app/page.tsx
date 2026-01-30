@@ -6,6 +6,7 @@ import Button from "@/components/ui/Button";
 import { Card, CardContent } from "@/components/ui/Card";
 import AuthModal from "@/components/AuthModal";
 import PublicNav from "@/components/PublicNav";
+import ProviderShowcase from "@/components/ProviderShowcase";
 import { 
   ArrowRight,
   Zap,
@@ -318,6 +319,9 @@ export default function HomePage() {
               </div>
             </div>
           </section>
+
+          {/* Provider Showcase */}
+          <ProviderShowcase />
 
           {/* What NomosX Does */}
           <section className="max-w-7xl mx-auto px-4 sm:px-6 py-16 sm:py-24 md:py-32 border-t border-white/[0.08]">
