@@ -502,10 +502,10 @@ export default function HomePage() {
 
               <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
                 {[
-                  { title: 'Research Briefs', desc: 'Dialectical analysis with full source verification', color: 'cyan' },
-                  { title: 'Policy Notes', desc: 'Strategic implications for decision-makers', color: 'blue' },
-                  { title: 'Data Notes', desc: 'Evidence-based insights from quantitative research', color: 'emerald' },
-                  { title: 'Institutional Publications', desc: 'Long-form dossiers on complex topics', color: 'purple' }
+                  { title: 'Executive Briefs', desc: '2-3 page decision-ready analyses delivered weekly via newsletter', color: 'cyan' },
+                  { title: 'Strategic Reports', desc: '10-15 page deep dives with scenario planning and recommendations', color: 'amber' },
+                  { title: 'Signal Detection', desc: 'Continuous monitoring of 200K+ sources for weak signals', color: 'blue' },
+                  { title: 'Editorial Discipline', desc: 'Quality over quantity — silence is a success state', color: 'purple' }
                 ].map((item, i) => (
                   <div key={i} className="group relative p-6 rounded-xl bg-white/[0.02] border border-white/[0.08] hover:border-white/20 transition-all duration-300">
                     <div className="relative z-10">

@@ -102,7 +102,7 @@ export default function Shell({ children }: { children: React.ReactNode }) {
             <h1 className="text-3xl font-bold bg-gradient-to-r from-white via-cyan-200 to-white bg-clip-text text-transparent mb-2">
               NomosX
             </h1>
-            <p className="text-sm text-white/50">Think Tank Agentique</p>
+            <p className="text-sm text-white/50">The Autonomous Think Tank</p>
           </div>
           <div className="relative w-12 h-12 mx-auto">
             <div className="absolute inset-0 border-2 border-cyan-500/20 rounded-full"></div>
@@ -113,7 +113,7 @@ export default function Shell({ children }: { children: React.ReactNode }) {
       )}
 
       {/* Main Content - Always rendered */}
-      <div className="min-h-screen relative bg-[#0B0B0D]">
+      <div className="flex min-h-screen bg-bg text-text overflow-x-hidden">
       {/* Background Futuriste - Identique à Home */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         {/* Mesh gradient principal */}
@@ -226,7 +226,7 @@ export default function Shell({ children }: { children: React.ReactNode }) {
               `}
             >
               <Settings size={16} strokeWidth={2} />
-              <span>Paramètres</span>
+              <span>Settings</span>
             </Link>
           </nav>
 
@@ -264,6 +264,52 @@ export default function Shell({ children }: { children: React.ReactNode }) {
         </div>
       </header>
 
+      {/* Sidebar - Hidden on mobile, visible on md+ */}
+      <aside className="hidden md:flex w-64 bg-panel border-r border-border flex-col">
+        <nav className="space-y-1 mb-6">
+          {[...mainNav, { href: "/pricing", label: "Pricing", icon: DollarSign }, { href: "/settings", label: "Settings", icon: Settings }].map((item) => (
+            <Link
+              key={item.href}
+              href={item.href}
+              className={`
+                flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium
+                transition-all duration-200
+                ${isActive(item.href)
+                  ? 'text-white bg-white/[0.08]'
+                  : 'text-white/60 hover:text-white/90 hover:bg-white/[0.04]'
+                }
+              `}
+            >
+              <item.icon size={18} strokeWidth={2} />
+              <span>{item.label}</span>
+            </Link>
+          ))}
+        </nav>
+
+        {/* User Menu (Sidebar) */}
+        {user && (
+          <div className="pt-4 border-t border-white/[0.08] space-y-2">
+            <div className="px-3 py-2 bg-white/[0.03] rounded-lg">
+              <div className="flex items-center gap-2 mb-1">
+                <div className="w-6 h-6 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center">
+                  <UserIcon size={14} className="text-white" strokeWidth={2.5} />
+                </div>
+                <span className="text-sm font-medium text-white/80">{user.name || user.email}</span>
+              </div>
+            </div>
+            <button
+              onClick={() => {
+                logout();
+              }}
+              className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-white/60 hover:text-red-400 hover:bg-red-500/10 transition-all"
+            >
+              <LogOut size={18} strokeWidth={2} />
+              <span>Logout</span>
+            </button>
+          </div>
+        )}
+      </aside>
+
       {/* Mobile Menu */}
       {mobileMenuOpen && (
         <div className="lg:hidden fixed inset-0 z-40 top-[65px]">
@@ -273,7 +319,7 @@ export default function Shell({ children }: { children: React.ReactNode }) {
           />
           <nav className="relative bg-[#111113] border-r border-white/[0.08] h-full w-64 p-4 overflow-y-auto">
             <div className="space-y-1 mb-6">
-              {[...mainNav, { href: "/pricing", label: "Pricing", icon: DollarSign }, { href: "/settings", label: "Paramètres", icon: Settings }].map((item) => (
+              {[...mainNav, { href: "/pricing", label: "Pricing", icon: DollarSign }, { href: "/settings", label: "Settings", icon: Settings }].map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
@@ -312,7 +358,7 @@ export default function Shell({ children }: { children: React.ReactNode }) {
                   className="w-full flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-white/60 hover:text-red-400 hover:bg-red-500/10 transition-all"
                 >
                   <LogOut size={18} strokeWidth={2} />
-                  <span>Déconnexion</span>
+                  <span>Logout</span>
                 </button>
               </div>
             )}
@@ -321,7 +367,7 @@ export default function Shell({ children }: { children: React.ReactNode }) {
       )}
 
       {/* Main Content */}
-      <main className="px-6 lg:px-8 py-12 max-w-[1400px] mx-auto relative z-10">{children}</main>
+      <main className="flex-1 overflow-auto w-full">{children}</main>
 
       {/* Footer - Minimaliste */}
       <footer className="px-6 lg:px-8 py-8 border-t border-white/[0.08] mt-16 relative z-10">
@@ -341,12 +387,12 @@ export default function Shell({ children }: { children: React.ReactNode }) {
                 <span className="text-sm font-semibold text-white/60">
                   Nomos<span className="text-cyan-400/60">X</span>
                 </span>
-                <p className="text-xs text-white/30">Think Tank Agentique</p>
+                <p className="text-xs text-white/30">The Autonomous Think Tank</p>
               </div>
             </div>
             <div className="flex items-center gap-6 text-xs text-white/30">
-              <Link href="/radar" className="hover:text-white/60 transition-colors">Radar</Link>
-              <Link href="/library" className="hover:text-white/60 transition-colors">Bibliothèque</Link>
+              <Link href="/publications" className="hover:text-white/60 transition-colors">Publications</Link>
+              <Link href="/about" className="hover:text-white/60 transition-colors">About</Link>
               <span>© 2026 NomosX</span>
             </div>
           </div>

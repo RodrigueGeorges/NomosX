@@ -58,17 +58,17 @@ export default function SettingsPage() {
       localStorage.setItem("auth_user", JSON.stringify(updatedUser));
     }
     
-    toast({ type: "success", title: "Préférences sauvegardées" });
+    toast({ type: "success", title: "Preferences saved" });
   }
 
   function clearHistory() {
-    if (!confirm("Supprimer tout l'historique des conversations ?")) return;
+    if (!confirm("Delete all conversation history?")) return;
     localStorage.removeItem("nomosx_conversation_history");
-    toast({ type: "success", title: "Historique effacé" });
+    toast({ type: "success", title: "History cleared" });
   }
 
   function handleLogout() {
-    if (confirm("Se déconnecter ?")) {
+    if (confirm("Log out?")) {
       logout();
     }
   }
@@ -102,18 +102,18 @@ export default function SettingsPage() {
             <CardContent className="pt-6">
               <div className="flex items-center gap-2 mb-6">
                 <User size={18} className="text-cyan-400" />
-                <h2 className="text-lg font-semibold text-white">Profil</h2>
+                <h2 className="text-lg font-semibold text-white">Profile</h2>
               </div>
 
               <div className="space-y-4">
                 <div>
                   <label className="block text-sm font-medium text-white/70 mb-2">
-                    Nom d'affichage
+                    Display name
                   </label>
                   <Input
                     value={name}
                     onChange={(e) => setName(e.target.value)}
-                    placeholder="Votre nom"
+                    placeholder="Your name"
                     className="bg-white/[0.03] border-white/10 focus:border-cyan-500/50"
                   />
                 </div>
@@ -128,7 +128,7 @@ export default function SettingsPage() {
                     className="bg-white/[0.02] border-white/10 text-white/40 cursor-not-allowed"
                   />
                   <p className="text-xs text-white/40 mt-1.5">
-                    L'email ne peut pas être modifié
+                    Email cannot be modified
                   </p>
                 </div>
 
@@ -138,7 +138,7 @@ export default function SettingsPage() {
                   className="w-full sm:w-auto"
                 >
                   <Save size={16} className="mr-2" />
-                  Sauvegarder les modifications
+                  Save changes
                 </Button>
               </div>
             </CardContent>
@@ -154,9 +154,9 @@ export default function SettingsPage() {
 
               <div className="flex items-center justify-between">
                 <div className="flex-1">
-                  <p className="text-sm font-medium text-white/80">Notifications de progression</p>
+                  <p className="text-sm font-medium text-white/80">Progress notifications</p>
                   <p className="text-xs text-white/40 mt-0.5">
-                    Recevoir des alertes sur l'avancement des analyses
+                    Receive alerts about analysis progress
                   </p>
                 </div>
                 <button
@@ -184,15 +184,15 @@ export default function SettingsPage() {
             <CardContent className="pt-6">
               <div className="flex items-center gap-2 mb-6">
                 <Keyboard size={18} className="text-purple-400" />
-                <h2 className="text-lg font-semibold text-white">Raccourcis Clavier</h2>
+                <h2 className="text-lg font-semibold text-white">Keyboard Shortcuts</h2>
               </div>
 
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div className="flex-1">
-                    <p className="text-sm font-medium text-white/80">Activer les raccourcis</p>
+                    <p className="text-sm font-medium text-white/80">Enable shortcuts</p>
                     <p className="text-xs text-white/40 mt-0.5">
-                      ⌘K pour focus, ⌘↵ pour générer, etc.
+                      ⌘K to focus, ⌘↵ to generate, etc.
                     </p>
                   </div>
                   <button
@@ -215,7 +215,7 @@ export default function SettingsPage() {
 
                 {shortcutsEnabled && (
                   <div className="pt-3 border-t border-white/10">
-                    <p className="text-xs font-medium text-white/50 mb-2">Raccourcis disponibles</p>
+                    <p className="text-xs font-medium text-white/50 mb-2">Available shortcuts</p>
                     <div className="grid grid-cols-2 gap-2 text-xs">
                       <div className="flex items-center gap-2 text-white/40">
                         <kbd className="px-2 py-1 bg-white/5 border border-white/10 rounded text-white/60">⌘K</kbd>
@@ -223,7 +223,7 @@ export default function SettingsPage() {
                       </div>
                       <div className="flex items-center gap-2 text-white/40">
                         <kbd className="px-2 py-1 bg-white/5 border border-white/10 rounded text-white/60">⌘↵</kbd>
-                        <span>Générer</span>
+                        <span>Generate</span>
                       </div>
                       <div className="flex items-center gap-2 text-white/40">
                         <kbd className="px-2 py-1 bg-white/5 border border-white/10 rounded text-white/60">⌘K</kbd>
@@ -245,14 +245,14 @@ export default function SettingsPage() {
             <CardContent className="pt-6">
               <div className="flex items-center gap-2 mb-6">
                 <Database size={18} className="text-amber-400" />
-                <h2 className="text-lg font-semibold text-white">Gestion des données</h2>
+                <h2 className="text-lg font-semibold text-white">Data Management</h2>
               </div>
 
               <div className="space-y-3">
                 <div className="p-4 bg-amber-500/5 border border-amber-500/20 rounded-lg">
-                  <p className="text-sm font-medium text-amber-400 mb-1">Effacer l'historique</p>
+                  <p className="text-sm font-medium text-amber-400 mb-1">Clear history</p>
                   <p className="text-xs text-white/40 mb-3">
-                    Supprimer toutes vos conversations et analyses sauvegardées
+                    Delete all your saved conversations and analyses
                   </p>
                   <Button 
                     variant="ghost" 
@@ -261,7 +261,7 @@ export default function SettingsPage() {
                     className="text-amber-400 hover:text-amber-300 hover:bg-amber-500/10"
                   >
                     <Trash2 size={14} className="mr-2" />
-                    Effacer l'historique
+                    Clear history
                   </Button>
                 </div>
               </div>
@@ -273,14 +273,14 @@ export default function SettingsPage() {
             <CardContent className="pt-6">
               <div className="flex items-center gap-2 mb-6">
                 <LogOut size={18} className="text-red-400" />
-                <h2 className="text-lg font-semibold text-red-400">Zone de danger</h2>
+                <h2 className="text-lg font-semibold text-red-400">Danger Zone</h2>
               </div>
 
               <div className="space-y-3">
                 <div>
-                  <p className="text-sm font-medium text-white/80 mb-1">Déconnexion</p>
+                  <p className="text-sm font-medium text-white/80 mb-1">Log out</p>
                   <p className="text-xs text-white/40 mb-3">
-                    Vous serez redirigé vers la page d'accueil
+                    You will be redirected to the home page
                   </p>
                   <Button 
                     variant="ghost"
@@ -289,7 +289,7 @@ export default function SettingsPage() {
                     className="text-red-400 hover:text-red-300 hover:bg-red-500/10"
                   >
                     <LogOut size={14} className="mr-2" />
-                    Se déconnecter
+                    Log out
                   </Button>
                 </div>
               </div>
