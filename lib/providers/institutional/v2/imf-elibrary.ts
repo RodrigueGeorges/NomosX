@@ -6,69 +6,106 @@
 import axios from 'axios';
 import * as cheerio from 'cheerio';
 
-const IMF_ELIBRARY_BASE = 'https://www.elibrary.imf.org';
-const USER_AGENT = 'NomosX Research Bot (+https://nomosx.com | contact@nomosx.com)';
+const IMF_DATA_API = 'https://www.imf.org/en/Publications/Search';
+const IMF_WP_RSS = 'https://www.imf.org/en/Publications/WP/RSS';
+const USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36';
 
 /**
- * Search IMF eLibrary
- * Structure stable (site Silverchair comme beaucoup de publishers académiques)
+ * Search IMF publications via RSS feeds and data API
+ * Multiple fallback sources for reliability
  */
 export async function searchIMFeLibrary(query: string, limit = 20) {
   const sources = [];
+  const queryLower = query.toLowerCase();
   
   try {
     console.log(`[IMF-eLibrary] Searching for: "${query}"`);
     
-    const searchUrl = `${IMF_ELIBRARY_BASE}/search-results`;
-    const params = {
-      page: 1,
-      q: query,
-      pageSize: limit
-    };
-    
-    const { data } = await axios.get(searchUrl, {
-      params,
-      headers: { 'User-Agent': USER_AGENT },
-      timeout: 15000
-    });
-    
-    const $ = cheerio.load(data);
-    
-    // Structure Silverchair (standard pour publishers académiques)
-    $('.search-result').each((i, el) => {
-      const $item = $(el);
+    // Try RSS feed first (most reliable)
+    try {
+      const parser = new (await import('rss-parser')).default();
+      const feed = await parser.parseURL(IMF_WP_RSS);
       
-      const title = $item.find('.article-title').text().trim();
-      const abstract = $item.find('.article-abstract').text().trim();
-      const url = $item.find('.article-link').attr('href');
-      const authors = $item.find('.author-link').map((_, a) => $(a).text().trim()).get();
-      const yearMatch = $item.find('.publication-date').text().match(/\d{4}/);
-      const year = yearMatch ? parseInt(yearMatch[0]) : null;
+      const filtered = feed.items
+        .filter(item => 
+          item.title?.toLowerCase().includes(queryLower) ||
+          item.contentSnippet?.toLowerCase().includes(queryLower)
+        )
+        .slice(0, limit);
       
-      if (title && url) {
+      for (const item of filtered) {
+        const year = item.pubDate ? new Date(item.pubDate).getFullYear() : null;
+        
         sources.push({
-          id: `imf:${Buffer.from(url).toString('base64').slice(0, 24)}`,
+          id: `imf:${Buffer.from(item.link || item.title || '').toString('base64').slice(0, 24)}`,
           provider: 'imf',
           type: 'report',
-          title,
-          abstract,
-          url: url.startsWith('http') ? url : `${IMF_ELIBRARY_BASE}${url}`,
-          authors,
+          title: item.title || 'Untitled',
+          abstract: item.contentSnippet || item.content || '',
+          url: item.link || '',
           year,
-          publishedDate: year ? new Date(year, 0, 1) : null,
+          publishedDate: item.pubDate ? new Date(item.pubDate) : null,
           
-          // Metadata
-          documentType: title.includes('Working Paper') ? 'working-paper' : 'report',
+          documentType: 'working-paper',
           issuer: 'IMF',
           issuerType: 'economic',
           classification: 'public',
           language: 'en',
           contentFormat: 'pdf',
           oaStatus: 'open',
-          hasFullText: true
+          
+          raw: item
         });
       }
-    });
+    } catch (rssError: any) {
+      console.log(`[IMF-eLibrary] RSS feed unavailable: ${rssError.message}`);
+    }
+    
+    // Fallback: scrape search page
+    if (sources.length === 0) {
+      try {
+        const searchUrl = `${IMF_DATA_API}?Keywords=${encodeURIComponent(query)}`;
+        const { data } = await axios.get(searchUrl, {
+          headers: { 'User-Agent': USER_AGENT },
+          timeout: 15000
+        });
+        
+        const $ = cheerio.load(data);
+        
+        $('.result-item, .pub-item, .search-result-item').each((i, el) => {
+          if (sources.length >= limit) return;
+          
+          const $item = $(el);
+          const title = $item.find('h3, h4, .title, a.title-link').first().text().trim();
+          const abstract = $item.find('.description, .abstract, .summary, p').first().text().trim();
+          const link = $item.find('a').first().attr('href');
+          const dateText = $item.find('.date, .pub-date, time').text();
+          const yearMatch = dateText.match(/\d{4}/);
+          
+          if (title && link) {
+            sources.push({
+              id: `imf:${Buffer.from(link).toString('base64').slice(0, 24)}`,
+              provider: 'imf',
+              type: 'report',
+              title,
+              abstract: abstract.substring(0, 500),
+              url: link.startsWith('http') ? link : `https://www.imf.org${link}`,
+              year: yearMatch ? parseInt(yearMatch[0]) : null,
+              
+              documentType: title.toLowerCase().includes('working paper') ? 'working-paper' : 'report',
+              issuer: 'IMF',
+              issuerType: 'economic',
+              classification: 'public',
+              language: 'en',
+              contentFormat: 'pdf',
+              oaStatus: 'open'
+            });
+          }
+        });
+      } catch (scrapeError: any) {
+        console.log(`[IMF-eLibrary] Scrape failed: ${scrapeError.message}`);
+      }
+    }
     
     console.log(`[IMF-eLibrary] Found ${sources.length} publications`);
   } catch (error: any) {

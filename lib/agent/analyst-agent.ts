@@ -9,6 +9,7 @@
 
 import { callLLM } from "../llm/unified-llm";
 import * as Sentry from "@sentry/nextjs";
+import { AgentRole, assertPermission } from "../governance/index";
 
 export interface AnalysisOutput {
   title: string;
@@ -32,6 +33,9 @@ export async function analystAgent(
   sources: any[],
   readings?: any[]
 ): Promise<AnalysisOutput> {
+  // Governance: Assert ANALYST permissions
+  assertPermission(AgentRole.ANALYST, "write:analysis");
+  
   // Build ULTRA-STRUCTURED context from sources + readings
   const avgQuality = Math.round(sources.reduce((sum, s) => sum + (s.qualityScore || 0), 0) / sources.length);
   

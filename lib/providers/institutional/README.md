@@ -6,7 +6,7 @@
 
 ## 📊 Vue d'Ensemble
 
-**Total providers** : 21 sources institutionnelles
+**Total providers** : 41 sources institutionnelles
 
 | Catégorie | Providers | Priorité | Use Cases |
 |-----------|-----------|----------|-----------|
@@ -16,6 +16,7 @@
 | 🟢 **Cyber & Risques** | NIST, CISA, ENISA | MEDIUM | Cybersécurité, infrastructure critique, vulnérabilités |
 | 🔵 **Multilatéral** | UN, UNDP, UNCTAD | MEDIUM | Gouvernance mondiale, développement durable, commerce |
 | ⚪ **Archives** | NARA, UK Archives, Archives FR | LOW | Contexte historique, documents déclassifiés |
+| 🟣 **Think Tanks (innovants)** | LawZero, GovAI, IAPS, CAIP, AIPI, CSET, AI Now, Data & Society, Abundance, CAIDP, SCSP, IFP, CDT, Brookings, FAI, CNAS, RAND, New America, Aspen Digital, R Street | MEDIUM | IA safety, gouvernance, policy innovation |
 
 ---
 

@@ -144,7 +144,7 @@ import { contradictionDetector, detectContradictionsInRecent } from "./contradic
 import { trendAnalyzer, runWeeklyTrendAnalysis } from "./trend-analyzer.ts";
 import { signalDetector } from "./signal-detector.ts";
 
-// NOUVEAUX IMPORTS - Providers institutionnels
+// Institutional providers imports
 import {
   searchODNI,
   searchCIAFOIA,
@@ -799,7 +799,7 @@ function selectDiverseSources(sources: any[], options: any): any[] {
     yearCounts.set(source.year, yearCount + 1);
   }
   
-  // Garantir diversité minimale de providers
+  // Ensure minimum provider diversity
   const uniqueProviders = new Set(selected.map(s => s.provider));
   if (uniqueProviders.size < options.minProviderDiversity) {
     // Essayer d'ajouter des sources de providers manquants
@@ -820,7 +820,7 @@ function selectDiverseSources(sources: any[], options: any): any[] {
     }
   }
   
-  // Garantir sources françaises minimum
+  // Ensure minimum French sources
   const frenchCount = selected.filter((s: any) => 
     s.provider === 'thesesfr' || s.provider === 'hal'
   ).length;

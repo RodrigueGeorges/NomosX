@@ -10,6 +10,7 @@
 
 import { callLLM } from "../llm/unified-llm";
 import * as Sentry from "@sentry/nextjs";
+import { AgentRole, assertPermission } from "../governance/index";
 
 /**
  * P2 FIX #2: Error categorization for READER agent
@@ -119,6 +120,9 @@ export interface ReadingResult {
  * READER Agent V2 - Extraction parallèle optimisée
  */
 export async function readerAgent(sources: any[]): Promise<ReadingResult[]> {
+  // Governance: Assert READER permissions
+  assertPermission(AgentRole.READER, "write:claims");
+  
   console.log(`[READER V2] Processing ${sources.length} sources in parallel`);
   
   // Filtrer sources trop courtes (Content-First)

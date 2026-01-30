@@ -3,25 +3,49 @@
  * Vérifie régulièrement les nouvelles publications
  */
 
-// @ts-ignore - ESM/CJS interop issue with Prisma v5
-import { PrismaClient } from '@prisma/client';
+import { PrismaClient } from '../generated/prisma-client';
 import { setTimeout as sleep } from 'timers/promises';
 
-// Import tous les providers
-import { searchWorldBankAPI } from '@/lib/providers/institutional/stable/worldbank-api';
-import { searchCISAAdvisories } from '@/lib/providers/institutional/stable/cisa-advisories';
-import { searchNARA } from '@/lib/providers/institutional/v2/nara-api';
-import { searchUKArchives } from '@/lib/providers/institutional/v2/uk-archives-api';
-import { searchUNDigitalLibrary, searchUNDP, searchUNCTAD } from '@/lib/providers/institutional/v2/un-digital-library';
-import { searchODNIViaGoogle, searchNATOViaGoogle, searchNSAViaGoogle, searchENISAViaGoogle } from '@/lib/providers/institutional/v2/google-cse';
-import { searchCIAFOIAViaArchive } from '@/lib/providers/institutional/v2/archive-org';
-import { searchEEAS, searchEDA } from '@/lib/providers/institutional/v2/eu-open-data';
-import { searchMinistereArmees, searchSGDSN, searchArchivesNationales } from '@/lib/providers/institutional/v2/france-gov';
-import { searchIMFeLibrary } from '@/lib/providers/institutional/v2/imf-elibrary';
-import { searchOECDiLibrary } from '@/lib/providers/institutional/v2/oecd-ilibrary';
-import { searchBIS } from '@/lib/providers/institutional/v2/bis-papers';
-import { searchNIST } from '@/lib/providers/institutional/v2/nist-publications';
-import { scoreSource } from '@/lib/score';
+// Import tous les providers (chemins relatifs pour compatibilité runtime)
+import { searchWorldBankAPI } from './providers/institutional/stable/worldbank-api';
+import { searchCISAAdvisories } from './providers/institutional/stable/cisa-advisories';
+import { searchNARA } from './providers/institutional/v2/nara-api';
+import { searchUKArchives } from './providers/institutional/v2/uk-archives-api';
+import { searchUNDigitalLibrary, searchUNDP, searchUNCTAD } from './providers/institutional/v2/un-digital-library';
+import {
+  searchODNIViaGoogle,
+  searchNATOViaGoogle,
+  searchNSAViaGoogle,
+  searchENISAViaGoogle,
+  searchLawZeroViaGoogle,
+  searchGovAIViaGoogle,
+  searchIAPSViaGoogle,
+  searchCAIPViaGoogle,
+  searchAIPIViaGoogle,
+  searchCSETViaGoogle,
+  searchAINowViaGoogle,
+  searchDataSocietyViaGoogle,
+  searchAbundanceViaGoogle,
+  searchCAIDPViaGoogle,
+  searchSCSPViaGoogle,
+  searchIFPViaGoogle,
+  searchCDTViaGoogle,
+  searchBrookingsViaGoogle,
+  searchFAIViaGoogle,
+  searchCNASViaGoogle,
+  searchRANDViaGoogle,
+  searchNewAmericaViaGoogle,
+  searchAspenDigitalViaGoogle,
+  searchRStreetViaGoogle
+} from './providers/institutional/v2/google-cse';
+import { searchCIAFOIAViaArchive } from './providers/institutional/v2/archive-org';
+import { searchEEAS, searchEDA } from './providers/institutional/v2/eu-open-data';
+import { searchMinistereArmees, searchSGDSN, searchArchivesNationales } from './providers/institutional/v2/france-gov';
+import { searchIMFeLibrary } from './providers/institutional/v2/imf-elibrary';
+import { searchOECDiLibrary } from './providers/institutional/v2/oecd-ilibrary';
+import { searchBIS } from './providers/institutional/v2/bis-papers';
+import { searchNIST } from './providers/institutional/v2/nist-publications';
+import { scoreSource } from './score';
 
 const prisma = new PrismaClient();
 
@@ -66,7 +90,29 @@ const PROVIDER_FUNCTIONS: Record<string, (query: string, limit: number) => Promi
   'imf': searchIMFeLibrary,
   'oecd': searchOECDiLibrary,
   'bis': searchBIS,
-  'nist': searchNIST
+  'nist': searchNIST,
+
+  // Think Tanks (innovants)
+  'lawzero': searchLawZeroViaGoogle,
+  'govai': searchGovAIViaGoogle,
+  'iaps': searchIAPSViaGoogle,
+  'caip': searchCAIPViaGoogle,
+  'aipi': searchAIPIViaGoogle,
+  'cset': searchCSETViaGoogle,
+  'ainow': searchAINowViaGoogle,
+  'datasociety': searchDataSocietyViaGoogle,
+  'abundance': searchAbundanceViaGoogle,
+  'caidp': searchCAIDPViaGoogle,
+  'scsp': searchSCSPViaGoogle,
+  'ifp': searchIFPViaGoogle,
+  'cdt': searchCDTViaGoogle,
+  'brookings': searchBrookingsViaGoogle,
+  'fai': searchFAIViaGoogle,
+  'cnas': searchCNASViaGoogle,
+  'rand': searchRANDViaGoogle,
+  'newamerica': searchNewAmericaViaGoogle,
+  'aspen-digital': searchAspenDigitalViaGoogle,
+  'rstreet': searchRStreetViaGoogle
 };
 
 /**
@@ -87,7 +133,6 @@ async function upsertSource(source: any): Promise<boolean> {
       citationCount: 0,
       year: source.year,
       oaStatus: source.oaStatus,
-      hasFullText: source.hasFullText,
       provider: source.provider,
       type: source.type,
       issuerType: source.issuerType,
@@ -109,7 +154,6 @@ async function upsertSource(source: any): Promise<boolean> {
         authors: source.authors || [],
         citationCount: 0,
         oaStatus: source.oaStatus || 'unknown',
-        hasFullText: source.hasFullText || false,
         qualityScore,
         noveltyScore: 100, // Nouveau = haute novelty
         
@@ -169,7 +213,6 @@ async function monitorProvider(
         citationCount: 0,
         year: source.year,
         oaStatus: source.oaStatus,
-        hasFullText: source.hasFullText,
         provider: source.provider,
         type: source.type,
         issuerType: source.issuerType,

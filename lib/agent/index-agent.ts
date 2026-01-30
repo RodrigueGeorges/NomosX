@@ -68,6 +68,9 @@ async function enrichAuthorsBatch(
 }
 
 export async function indexAgent(sourceIds: string[]): Promise<{ enriched: number; errors: string[] }> {
+  // Governance: Assert INDEX permissions
+  assertPermission(AgentRole.INDEX, "write:enriched_sources");
+  
   const errors: string[] = [];
   let enriched = 0;
 

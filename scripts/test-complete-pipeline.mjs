@@ -15,7 +15,8 @@
  *   node scripts/test-complete-pipeline.mjs "custom query"
  */
 
-import { PrismaClient } from '@prisma/client';
+import pkg from '../generated/prisma-client/index.js';
+const { PrismaClient } = pkg;
 
 const prisma = new PrismaClient();
 
@@ -284,11 +285,8 @@ async function saveBrief(html, sources) {
       data: {
         question: QUERY,
         html,
-        status: 'done',
         publicId: `test-${Date.now()}`,
-        sources: {
-          connect: sources.slice(0, 12).map(s => ({ id: s.id }))
-        }
+        sources: sources.slice(0, 12).map(s => s.id)
       }
     });
     

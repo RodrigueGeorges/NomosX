@@ -6,11 +6,12 @@
 
 import axios from 'axios';
 
-const UN_API_BASE = 'https://digitallibrary.un.org/api/v1/search';
-const USER_AGENT = 'NomosX Research Bot (+https://nomosx.com | contact@nomosx.com)';
+const UN_ODS_API = 'https://documents.un.org/api/search';
+const UN_LIBRARY_SEARCH = 'https://digitallibrary.un.org/search';
+const USER_AGENT = 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/120.0.0.0 Safari/537.36';
 
 /**
- * Search UN Digital Library via official API
+ * Search UN Digital Library via ODS API (Official Document System)
  * Couvre toutes les agences UN (UNDP, UNCTAD, etc.)
  */
 export async function searchUNDigitalLibrary(query: string, limit = 20, agency?: string) {
@@ -19,61 +20,60 @@ export async function searchUNDigitalLibrary(query: string, limit = 20, agency?:
   try {
     console.log(`[UN-API] Searching for: "${query}"${agency ? ` in ${agency}` : ''}`);
     
-    let fullQuery = query;
-    if (agency) {
-      fullQuery += ` AND corporateAuthor:"${agency}"`;
-    }
-    
+    // Try ODS API first (more reliable)
     const params = {
-      q: fullQuery,
-      rows: limit,
-      sort: 'score desc',
-      wt: 'json'
+      q: query,
+      limit: limit,
+      offset: 0,
+      sort: 'relevance'
     };
     
-    const { data } = await axios.get(UN_API_BASE, {
+    const { data } = await axios.get(UN_ODS_API, {
       params,
-      headers: { 'User-Agent': USER_AGENT },
+      headers: { 
+        'User-Agent': USER_AGENT,
+        'Accept': 'application/json'
+      },
       timeout: 20000
     });
     
-    if (data.response?.docs) {
-      for (const doc of data.response.docs) {
-        const year = doc.dateIssued ? parseInt(doc.dateIssued.substring(0, 4)) : null;
+    const docs = data.results || data.documents || data.items || [];
+    
+    for (const doc of docs) {
+      const year = doc.date ? parseInt(doc.date.substring(0, 4)) : 
+                   doc.dateIssued ? parseInt(doc.dateIssued.substring(0, 4)) : null;
+      
+      sources.push({
+        id: `un:${doc.id || doc.symbol || Buffer.from(doc.title || '').toString('base64').slice(0, 16)}`,
+        provider: agency?.toLowerCase() || 'un',
+        type: 'report',
+        title: doc.title || doc.name || 'Untitled Document',
+        abstract: doc.description || doc.summary || '',
+        url: doc.url || `https://documents.un.org/doc/undoc/gen/${doc.symbol?.replace(/\//g, '/')}`,
+        pdfUrl: doc.pdfUrl || doc.pdf || null,
+        year,
+        publishedDate: doc.date ? new Date(doc.date) : null,
         
-        sources.push({
-          id: `un:${doc.id}`,
-          provider: agency?.toLowerCase() || 'un',
-          type: 'report',
-          title: doc.title || 'Untitled Document',
-          abstract: doc.description || '',
-          url: `https://digitallibrary.un.org/record/${doc.id}`,
-          pdfUrl: doc.url || null,
-          year,
-          publishedDate: doc.dateIssued ? new Date(doc.dateIssued) : null,
-          
-          // Institutional metadata
-          documentType: doc.type || 'report',
-          issuer: doc.corporateAuthor || 'United Nations',
-          issuerType: 'multilateral',
-          classification: 'public',
-          language: doc.language?.[0] || 'en',
-          contentFormat: doc.format || 'pdf',
-          oaStatus: 'cc-by-sa',
-          hasFullText: Boolean(doc.url),
-          
-          // UN-specific
-          symbol: doc.symbol,
-          agenda: doc.agenda,
-          
-          raw: doc
-        });
-      }
+        // Institutional metadata
+        documentType: doc.type || 'report',
+        issuer: doc.author || doc.corporateAuthor || 'United Nations',
+        issuerType: 'multilateral',
+        classification: 'public',
+        language: doc.language || 'en',
+        contentFormat: 'pdf',
+        oaStatus: 'cc-by-sa',
+        
+        // UN-specific
+        symbol: doc.symbol,
+        
+        raw: doc
+      });
     }
     
     console.log(`[UN-API] Found ${sources.length} documents`);
   } catch (error: any) {
     console.error(`[UN-API] Search failed: ${error.message}`);
+    // Fallback: return empty but don't crash
   }
   
   return sources;

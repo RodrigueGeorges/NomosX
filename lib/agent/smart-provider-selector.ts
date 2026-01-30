@@ -1,13 +1,13 @@
 /**
  * Smart Provider Selector
  * 
- * Sélectionne intelligemment les meilleurs providers et quantités
- * selon le domaine et la complexité de la question
+ * Intelligently selects the best providers and quantities
+ * based on domain and question complexity
  * 
  * Best Practices 2026: Context-aware, intelligent defaults
  */
 
-// Providers réellement implémentés dans le pipeline
+// Providers actually implemented in the pipeline
 export type Provider = "openalex" | "crossref" | "semanticscholar" | "thesesfr";
 
 export interface SmartSelection {
@@ -19,48 +19,48 @@ export interface SmartSelection {
 }
 
 /**
- * Mapping domaines → meilleurs providers IMPLÉMENTÉS
- * OpenAlex : Meilleure couverture générale (200M+ works)
- * Crossref : DOI metadata, bonne couverture
- * Semantic Scholar : AI-focused, citations
- * ThesesFr : Thèses françaises
+ * Domain → best IMPLEMENTED providers mapping
+ * OpenAlex: Best general coverage (200M+ works)
+ * Crossref: DOI metadata, good coverage
+ * Semantic Scholar: AI-focused, citations
+ * ThesesFr: French theses
  */
 const DOMAIN_PROVIDER_MAP: Record<string, Provider[]> = {
-  // Santé & Médecine
+  // Health & Medicine
   health: ["openalex", "crossref", "semanticscholar"],
   medical: ["openalex", "crossref", "semanticscholar"],
   
-  // Sciences exactes
+  // Exact sciences
   physics: ["openalex", "semanticscholar"],
   mathematics: ["openalex", "semanticscholar"],
   computer_science: ["semanticscholar", "openalex"],
   
-  // Sciences sociales & Économie
+  // Social sciences & Economics
   economics: ["openalex", "crossref"],
   finance: ["openalex", "crossref"],
   social_sciences: ["openalex", "crossref"],
   
-  // Environnement & Climat
+  // Environment & Climate
   climate: ["openalex", "crossref"],
   environment: ["openalex", "crossref"],
   
-  // Politique & Droit
+  // Politics & Law
   politics: ["openalex", "crossref"],
   law: ["openalex", "crossref"],
   
-  // Technologie & Innovation
+  // Technology & Innovation
   technology: ["semanticscholar", "openalex"],
   ai: ["semanticscholar", "openalex"],
   
-  // France spécifique
+  // France specific
   france: ["openalex", "thesesfr", "crossref"],
   
-  // Défaut (multi-disciplinaire) - Priorité OpenAlex car meilleure couverture
+  // Default (multi-disciplinary) - OpenAlex priority for best coverage
   default: ["openalex", "crossref", "semanticscholar"],
 };
 
 /**
- * Mots-clés par domaine (français + anglais)
+ * Keywords by domain (French + English)
  */
 const DOMAIN_KEYWORDS: Record<string, string[]> = {
   health: ["santé", "médical", "maladie", "thérapie", "patient", "health", "medical", "disease", "therapy", "clinical"],
@@ -79,12 +79,12 @@ const DOMAIN_KEYWORDS: Record<string, string[]> = {
 };
 
 /**
- * Détecte le domaine principal de la question
+ * Detects the main domain of the question
  */
 export function detectDomain(question: string): string {
   const q = question.toLowerCase();
   
-  // Score par domaine
+  // Score per domain
   const scores: Record<string, number> = {};
   
   for (const [domain, keywords] of Object.entries(DOMAIN_KEYWORDS)) {
@@ -96,7 +96,7 @@ export function detectDomain(question: string): string {
     }
   }
   
-  // Trouver domaine avec score max
+  // Find domain with max score
   let maxScore = 0;
   let bestDomain = "default";
   
@@ -111,7 +111,7 @@ export function detectDomain(question: string): string {
 }
 
 /**
- * Estime la complexité de la question
+ * Estimates question complexity
  */
 export function estimateComplexity(question: string): "simple" | "moderate" | "complex" {
   const length = question.length;
@@ -129,19 +129,19 @@ export function estimateComplexity(question: string): "simple" | "moderate" | "c
 }
 
 /**
- * Sélectionne intelligemment providers et quantités
+ * Intelligently selects providers and quantities
  */
 export function selectSmartProviders(question: string): SmartSelection {
-  // 1. Détecter domaine
+  // 1. Detect domain
   const domain = detectDomain(question);
   
-  // 2. Sélectionner providers
+  // 2. Select providers
   const providers = DOMAIN_PROVIDER_MAP[domain] || DOMAIN_PROVIDER_MAP.default;
   
-  // 3. Estimer complexité
+  // 3. Estimate complexity
   const complexity = estimateComplexity(question);
   
-  // 4. Ajuster quantité selon complexité
+  // 4. Adjust quantity based on complexity
   const baseQuantity = {
     simple: 12,
     moderate: 18,
@@ -150,7 +150,7 @@ export function selectSmartProviders(question: string): SmartSelection {
   
   const quantityPerProvider = Math.ceil(baseQuantity / providers.length);
   
-  // 5. Estimer temps et sources
+  // 5. Estimate time and sources
   const estimatedTime = {
     simple: "30-45s",
     moderate: "45-60s",
@@ -159,7 +159,7 @@ export function selectSmartProviders(question: string): SmartSelection {
   
   const estimatedSources = baseQuantity;
   
-  // 6. Générer reasoning
+  // 6. Generate reasoning
   const domainLabel = {
     health: "Santé & Médecine",
     medical: "Médecine",
@@ -185,7 +185,7 @@ export function selectSmartProviders(question: string): SmartSelection {
     thesesfr: "Thèses.fr",
   };
   
-  // Utiliser max 3 providers pour de meilleurs résultats
+  // Use max 3 providers for better results
   const selectedProviders = providers.slice(0, 3) as Provider[];
   const providerNames = selectedProviders.map(p => providerLabels[p]).join(" + ");
   
@@ -201,6 +201,6 @@ export function selectSmartProviders(question: string): SmartSelection {
 }
 
 /**
- * Validation : exporter les types et fonctions
+ * Export types and functions
  */
 export default selectSmartProviders;

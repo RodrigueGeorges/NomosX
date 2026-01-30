@@ -32,29 +32,37 @@ export async function searchWorldBankAPI(query: string, limit = 15) {
     });
     
     if (data.documents) {
-      for (const doc of data.documents) {
+      // L'API retourne un objet {D123: {...}, D456: {...}}, pas un array
+      const docs = typeof data.documents === 'object' && !Array.isArray(data.documents)
+        ? Object.values(data.documents)
+        : data.documents;
+      
+      for (const doc of docs) {
+        // Skip facets or non-document entries
+        if (!doc || typeof doc !== 'object' || !doc.id) continue;
+        
         const year = doc.docdt ? parseInt(doc.docdt.substring(0, 4)) : new Date().getFullYear();
+        const abstractText = doc.abstracts?.['cdata!'] || doc.abstracts || '';
         
         sources.push({
           id: `worldbank:${doc.id}`,
           provider: 'worldbank',
           type: 'report',
-          title: doc.display_title || 'Untitled',
-          abstract: doc.abstracts || '',
-          url: doc.url || `https://documents.worldbank.org/en/publication/documents-reports/documentdetail/${doc.id}`,
+          title: doc.display_title || doc.repnme?.repnme || 'Untitled',
+          abstract: typeof abstractText === 'string' ? abstractText : '',
+          url: doc.url || `https://documents.worldbank.org/en/publication/documents-reports/documentdetail/${doc.guid || doc.id}`,
           pdfUrl: doc.pdfurl || null,
           year,
           publishedDate: doc.docdt ? new Date(doc.docdt) : null,
           
           // Institutional metadata
-          documentType: doc.docty === 'Working Paper' ? 'working-paper' : 'report',
+          documentType: doc.docty === 'Working Paper' ? 'working-paper' : (doc.docty?.toLowerCase() || 'report'),
           issuer: 'World Bank',
           issuerType: 'economic',
           classification: 'public',
-          language: 'en',
+          language: doc.lang || 'en',
           contentFormat: doc.pdfurl ? 'pdf' : 'html',
           oaStatus: 'cc-by',
-          hasFullText: Boolean(doc.pdfurl),
           
           raw: doc
         });

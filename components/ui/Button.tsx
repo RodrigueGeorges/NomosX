@@ -20,9 +20,9 @@ export default function Button({
   const base = "inline-flex items-center justify-center gap-2 rounded-2xl font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent/50 disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden group";
   
   const sizes = { 
-    sm: "h-9 px-3 text-sm", 
-    md: "h-11 px-4 text-sm", 
-    lg: "h-12 px-5 text-base" 
+    sm: "h-8 px-2.5 text-xs sm:h-9 sm:px-3 sm:text-sm", 
+    md: "h-10 px-3 text-sm sm:h-11 sm:px-4", 
+    lg: "h-11 px-4 text-sm sm:h-12 sm:px-5 sm:text-base" 
   }[size];
   
   const variants = {

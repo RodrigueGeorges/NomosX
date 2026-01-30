@@ -26,6 +26,30 @@ export { searchNIST } from './cyber/nist';
 export { searchCISA } from './cyber/cisa';
 export { searchENISA } from './cyber/enisa';
 
+// THINK TANKS (Innovative - via Google CSE)
+export {
+  searchLawZeroViaGoogle,
+  searchGovAIViaGoogle,
+  searchIAPSViaGoogle,
+  searchCAIPViaGoogle,
+  searchAIPIViaGoogle,
+  searchCSETViaGoogle,
+  searchAINowViaGoogle,
+  searchDataSocietyViaGoogle,
+  searchAbundanceViaGoogle,
+  searchCAIDPViaGoogle,
+  searchSCSPViaGoogle,
+  searchIFPViaGoogle,
+  searchCDTViaGoogle,
+  searchBrookingsViaGoogle,
+  searchFAIViaGoogle,
+  searchCNASViaGoogle,
+  searchRANDViaGoogle,
+  searchNewAmericaViaGoogle,
+  searchAspenDigitalViaGoogle,
+  searchRStreetViaGoogle
+} from './v2/google-cse';
+
 // MULTILATERAL
 export { searchUN } from './multilateral/un';
 export { searchUNDP } from './multilateral/undp';
@@ -72,6 +96,28 @@ export const INSTITUTIONAL_PROVIDERS = {
   'nara': { category: 'archives', priority: 4, rateLimit: 2000 },
   'uk-archives': { category: 'archives', priority: 4, rateLimit: 1500 },
   'archives-fr': { category: 'archives', priority: 4, rateLimit: 1500 },
+
+  // Think Tanks (Priority: MEDIUM - innovative)
+  'lawzero': { category: 'think-tank', priority: 7, rateLimit: 1500 },
+  'govai': { category: 'think-tank', priority: 7, rateLimit: 1500 },
+  'iaps': { category: 'think-tank', priority: 7, rateLimit: 1500 },
+  'caip': { category: 'think-tank', priority: 6, rateLimit: 1500 },
+  'aipi': { category: 'think-tank', priority: 6, rateLimit: 1500 },
+  'cset': { category: 'think-tank', priority: 7, rateLimit: 1500 },
+  'ainow': { category: 'think-tank', priority: 6, rateLimit: 1500 },
+  'datasociety': { category: 'think-tank', priority: 6, rateLimit: 1500 },
+  'abundance': { category: 'think-tank', priority: 6, rateLimit: 1500 },
+  'caidp': { category: 'think-tank', priority: 6, rateLimit: 1500 },
+  'scsp': { category: 'think-tank', priority: 6, rateLimit: 1500 },
+  'ifp': { category: 'think-tank', priority: 6, rateLimit: 1500 },
+  'cdt': { category: 'think-tank', priority: 6, rateLimit: 1500 },
+  'brookings': { category: 'think-tank', priority: 6, rateLimit: 1500 },
+  'fai': { category: 'think-tank', priority: 6, rateLimit: 1500 },
+  'cnas': { category: 'think-tank', priority: 6, rateLimit: 1500 },
+  'rand': { category: 'think-tank', priority: 6, rateLimit: 1500 },
+  'newamerica': { category: 'think-tank', priority: 6, rateLimit: 1500 },
+  'aspen-digital': { category: 'think-tank', priority: 6, rateLimit: 1500 },
+  'rstreet': { category: 'think-tank', priority: 6, rateLimit: 1500 },
 } as const;
 
 export type InstitutionalProvider = keyof typeof INSTITUTIONAL_PROVIDERS;

@@ -60,6 +60,13 @@ export function detectPreset(question: string): ProviderPreset {
   ) {
     return PRESETS.technology;
   }
+
+  // DISRUPTIF / FRONTIER POLICY
+  if (
+    q.match(/disrupt|frontier|ai safety|alignment|governance ai|compute policy|frontier model/i)
+  ) {
+    return PRESETS.disruptive;
+  }
   
   // HISTORIQUE / DÉCLASSIFIÉ
   if (
@@ -171,6 +178,23 @@ export const PRESETS: Record<string, ProviderPreset> = {
     academicRatio: 0.6,
     useCase: 'IA, cybersécurité, innovation technologique'
   },
+
+  // DISRUPTIF / FRONTIER POLICY
+  disruptive: {
+    name: 'Disruptif & Frontier Policy',
+    description: 'Think tanks innovants, gouvernance IA avancée',
+    providers: [
+      // Think tanks innovants
+      'lawzero', 'govai', 'iaps', 'caip', 'aipi',
+      'cset', 'ainow', 'datasociety', 'abundance', 'caidp',
+      'scsp', 'ifp', 'cdt', 'brookings', 'fai',
+      'cnas', 'rand', 'newamerica', 'aspen-digital', 'rstreet',
+      // Académique (ancrage scientifique)
+      'openalex', 'semanticscholar', 'arxiv'
+    ],
+    academicRatio: 0.4,
+    useCase: 'AI safety, compute governance, policy innovation'
+  },
   
   // HISTORIQUE
   historical: {
@@ -274,6 +298,11 @@ export const PRESET_EXAMPLES = {
     "What are the main AI safety challenges?",
     "How should governments regulate large language models?",
     "What are the cybersecurity implications of quantum computing?"
+  ],
+  disruptive: [
+    "What are the governance options for frontier AI models?",
+    "How should compute access be regulated for advanced AI?",
+    "What policy levers reduce catastrophic AI risks?"
   ],
   historical: [
     "What did US intelligence know about Soviet nuclear program in 1980s?",
