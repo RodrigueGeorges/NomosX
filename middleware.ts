@@ -45,6 +45,9 @@ export async function middleware(request: NextRequest) {
     return NextResponse.next();
   }
   
+  // Get session token
+  const token = request.cookies.get(SESSION_COOKIE_NAME)?.value;
+
   // Protected API routes (Think Tank, Subscription, etc.)
   const isProtectedApiRoute = 
     pathname.startsWith("/api/think-tank") ||
@@ -57,8 +60,6 @@ export async function middleware(request: NextRequest) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
   }
 
-  // Get session token
-  const token = request.cookies.get(SESSION_COOKIE_NAME)?.value;
   let isAuthenticated = false;
 
   if (token) {

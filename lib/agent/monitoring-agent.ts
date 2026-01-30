@@ -3,15 +3,15 @@
  * Vérifie régulièrement les nouvelles publications
  */
 
-import { PrismaClient } from '../generated/prisma-client';
+import { prisma } from '../db';
 import { setTimeout as sleep } from 'timers/promises';
 
 // Import tous les providers (chemins relatifs pour compatibilité runtime)
-import { searchWorldBankAPI } from './providers/institutional/stable/worldbank-api';
-import { searchCISAAdvisories } from './providers/institutional/stable/cisa-advisories';
-import { searchNARA } from './providers/institutional/v2/nara-api';
-import { searchUKArchives } from './providers/institutional/v2/uk-archives-api';
-import { searchUNDigitalLibrary, searchUNDP, searchUNCTAD } from './providers/institutional/v2/un-digital-library';
+import { searchWorldBankAPI } from '../providers/institutional/stable/worldbank-api';
+import { searchCISAAdvisories } from '../providers/institutional/stable/cisa-advisories';
+import { searchNARA } from '../providers/institutional/v2/nara-api';
+import { searchUKArchives } from '../providers/institutional/v2/uk-archives-api';
+import { searchUNDigitalLibrary, searchUNDP, searchUNCTAD } from '../providers/institutional/v2/un-digital-library';
 import {
   searchODNIViaGoogle,
   searchNATOViaGoogle,
@@ -37,17 +37,17 @@ import {
   searchNewAmericaViaGoogle,
   searchAspenDigitalViaGoogle,
   searchRStreetViaGoogle
-} from './providers/institutional/v2/google-cse';
-import { searchCIAFOIAViaArchive } from './providers/institutional/v2/archive-org';
-import { searchEEAS, searchEDA } from './providers/institutional/v2/eu-open-data';
-import { searchMinistereArmees, searchSGDSN, searchArchivesNationales } from './providers/institutional/v2/france-gov';
-import { searchIMFeLibrary } from './providers/institutional/v2/imf-elibrary';
-import { searchOECDiLibrary } from './providers/institutional/v2/oecd-ilibrary';
-import { searchBIS } from './providers/institutional/v2/bis-papers';
-import { searchNIST } from './providers/institutional/v2/nist-publications';
-import { scoreSource } from './score';
+} from '../providers/institutional/v2/google-cse';
+import { searchCIAFOIAViaArchive } from '../providers/institutional/v2/archive-org';
+import { searchEEAS, searchEDA } from '../providers/institutional/v2/eu-open-data';
+import { searchMinistereArmees, searchSGDSN, searchArchivesNationales } from '../providers/institutional/v2/france-gov';
+import { searchIMFeLibrary } from '../providers/institutional/v2/imf-elibrary';
+import { searchOECDiLibrary } from '../providers/institutional/v2/oecd-ilibrary';
+import { searchBIS } from '../providers/institutional/v2/bis-papers';
+import { searchNIST } from '../providers/institutional/v2/nist-publications';
+import { scoreSource } from '../score';
 
-const prisma = new PrismaClient();
+// Using shared prisma singleton from db.ts
 
 interface MonitoringConfig {
   providers: string[];
@@ -324,11 +324,13 @@ export async function startContinuousMonitoring(config: MonitoringConfig) {
   console.log('🚀 CONTINUOUS MONITORING STARTED');
   console.log(`  Interval: ${config.interval} minutes\n`);
   
-  // Log monitoring config dans DB
+  // Log monitoring config in DB
+  const monitoringCorrelationId = `monitoring-${Date.now()}`;
   await prisma.job.create({
     data: {
       type: 'MONITORING',
       status: 'RUNNING',
+      correlationId: monitoringCorrelationId,
       payload: config as any
     }
   });
@@ -344,11 +346,12 @@ export async function startContinuousMonitoring(config: MonitoringConfig) {
     try {
       const results = await runMonitoringCycle(config);
       
-      // Log results dans DB
+      // Log results in DB
       await prisma.job.create({
         data: {
           type: 'MONITORING_CYCLE',
-          status: 'DONE',
+          status: 'COMPLETED',
+          correlationId: `${monitoringCorrelationId}-cycle-${cycleCount}`,
           payload: config as any,
           result: results as any
         }
@@ -361,8 +364,9 @@ export async function startContinuousMonitoring(config: MonitoringConfig) {
         data: {
           type: 'MONITORING_CYCLE',
           status: 'FAILED',
+          correlationId: `${monitoringCorrelationId}-cycle-${cycleCount}`,
           payload: config as any,
-          error: error.message
+          lastError: error.message
         }
       });
     }

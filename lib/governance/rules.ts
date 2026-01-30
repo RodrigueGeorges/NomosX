@@ -44,13 +44,13 @@ async function getPublicationCount(
   startDate: Date,
   endDate: Date
 ): Promise<number> {
-  return await prisma.publication.count({
+  return await prisma.draft.count({
     where: {
-      publishedAt: {
+      createdAt: {
         gte: startDate,
         lte: endDate
       },
-      status: "published"
+      status: "PUBLISHED"
     }
   });
 }

@@ -3,11 +3,11 @@
  * SCOUT → INDEX → RANK → READER → ANALYST → EDITOR → GUARD → PUBLISHER
  */
 
-import { prisma } from "../db.ts";
-import { scoreSource, scoreNovelty } from "../score.ts";
-import { clamp } from "../text.ts";
+import { prisma } from "../db";
+import { scoreSource, scoreNovelty } from "../score";
+import { clamp } from "../text";
 import crypto from "crypto";
-import { AgentRole, assertPermission } from "../governance/index.ts";
+import { AgentRole, assertPermission } from "../governance";
 
 // P0 FIX #3: Redis caching for SCOUT
 // P2 FIX: Enhanced Redis with reconnection strategy
@@ -125,24 +125,24 @@ export async function getCacheStatus(): Promise<{
   }
 }
 
-import { searchOpenAlex } from "../providers/openalex.ts";
-import { searchThesesFr } from "../providers/thesesfr.ts";
-import { enrichManyThesesWithHAL } from "../providers/thesesfr-hal-bridge.ts";
-import { searchCrossref } from "../providers/crossref.ts";
-import { searchSemanticScholar } from "../providers/semanticscholar.ts";
-import { searchArxiv } from "../providers/arxiv.ts";
-import { searchHAL } from "../providers/hal.ts";
-import { searchPubMed } from "../providers/pubmed.ts";
-import { searchBASE } from "../providers/base.ts";
-import { unpaywallByDoi } from "../providers/unpaywall.ts";
-import { indexAgent, deduplicateSources } from "./index-agent.ts";
-import { readerAgent } from "./reader-agent.ts";
-import { analystAgent } from "./analyst-agent.ts";
-import { strategicAnalystAgent, StrategicAnalysisOutput } from "./strategic-analyst-agent.ts";
-import { renderStrategicReportHTML } from "./strategic-report-renderer.ts";
-import { contradictionDetector, detectContradictionsInRecent } from "./contradiction-detector.ts";
-import { trendAnalyzer, runWeeklyTrendAnalysis } from "./trend-analyzer.ts";
-import { signalDetector } from "./signal-detector.ts";
+import { searchOpenAlex } from "../providers/openalex";
+import { searchThesesFr } from "../providers/thesesfr";
+import { enrichManyThesesWithHAL } from "../providers/thesesfr-hal-bridge";
+import { searchCrossref } from "../providers/crossref";
+import { searchSemanticScholar } from "../providers/semanticscholar";
+import { searchArxiv } from "../providers/arxiv";
+import { searchHAL } from "../providers/hal";
+import { searchPubMed } from "../providers/pubmed";
+import { searchBASE } from "../providers/base";
+import { unpaywallByDoi } from "../providers/unpaywall";
+import { indexAgent, deduplicateSources } from "./index-agent";
+import { readerAgent } from "./reader-agent";
+import { analystAgent } from "./analyst-agent";
+import { strategicAnalystAgent, StrategicAnalysisOutput } from "./strategic-analyst-agent";
+import { renderStrategicReportHTML } from "./strategic-report-renderer";
+import { contradictionDetector, detectContradictionsInRecent } from "./contradiction-detector";
+import { trendAnalyzer, runWeeklyTrendAnalysis } from "./trend-analyzer";
+import { signalDetector } from "./signal-detector";
 
 // Institutional providers imports
 import {
@@ -187,7 +187,7 @@ import {
   searchNARA,
   searchUKArchives,
   searchArchivesNationalesFR,
-} from "../providers/institutional/index.ts";
+} from "../providers/institutional";
 
 // Providers supportés par le pipeline
 export type Providers = Array<

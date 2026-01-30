@@ -69,7 +69,7 @@ export function assertPermission(
  * @throws {GovernanceViolationError} if any permission is denied
  */
 export function assertPermissions(
-  role: string,
+  role: AgentRole,
   permissions: Permission[],
   context?: string
 ): void {
