@@ -3,52 +3,58 @@
 import { useEffect, useRef } from "react";
 
 interface Provider {
+  id: string;
   name: string;
-  displayName: string;
   category: "academic" | "institutional" | "thinktank";
 }
 
 const PROVIDERS: Provider[] = [
   // Academic (8)
-  { name: "openalex", displayName: "OpenAlex", category: "academic" },
-  { name: "semanticscholar", displayName: "Semantic Scholar", category: "academic" },
-  { name: "crossref", displayName: "Crossref", category: "academic" },
-  { name: "pubmed", displayName: "PubMed", category: "academic" },
-  { name: "arxiv", displayName: "arXiv", category: "academic" },
-  { name: "hal", displayName: "HAL", category: "academic" },
-  { name: "thesesfr", displayName: "theses.fr", category: "academic" },
-  { name: "base", displayName: "BASE", category: "academic" },
+  { id: "openalex", name: "OpenAlex", category: "academic" },
+  { id: "semanticscholar", name: "Semantic Scholar", category: "academic" },
+  { id: "crossref", name: "Crossref", category: "academic" },
+  { id: "pubmed", name: "PubMed", category: "academic" },
+  { id: "arxiv", name: "arXiv", category: "academic" },
+  { id: "hal", name: "HAL", category: "academic" },
+  { id: "thesesfr", name: "theses.fr", category: "academic" },
+  { id: "base", name: "BASE", category: "academic" },
   
   // Institutional (15)
-  { name: "worldbank", displayName: "World Bank", category: "institutional" },
-  { name: "imf", displayName: "IMF", category: "institutional" },
-  { name: "oecd", displayName: "OECD", category: "institutional" },
-  { name: "nato", displayName: "NATO", category: "institutional" },
-  { name: "un", displayName: "United Nations", category: "institutional" },
-  { name: "odni", displayName: "ODNI", category: "institutional" },
-  { name: "nist", displayName: "NIST", category: "institutional" },
-  { name: "cisa", displayName: "CISA", category: "institutional" },
-  { name: "enisa", displayName: "ENISA", category: "institutional" },
-  { name: "sgdsn", displayName: "SGDSN", category: "institutional" },
-  { name: "eeas", displayName: "EEAS", category: "institutional" },
-  { name: "bis", displayName: "BIS", category: "institutional" },
-  { name: "undp", displayName: "UNDP", category: "institutional" },
-  { name: "oecd", displayName: "OECD", category: "institutional" },
-  { name: "nsa", displayName: "NSA", category: "institutional" },
+  { id: "worldbank", name: "World Bank", category: "institutional" },
+  { id: "imf", name: "IMF", category: "institutional" },
+  { id: "oecd", name: "OECD", category: "institutional" },
+  { id: "nato", name: "NATO", category: "institutional" },
+  { id: "un", name: "United Nations", category: "institutional" },
+  { id: "odni", name: "ODNI", category: "institutional" },
+  { id: "nist", name: "NIST", category: "institutional" },
+  { id: "cisa", name: "CISA", category: "institutional" },
+  { id: "enisa", name: "ENISA", category: "institutional" },
+  { id: "sgdsn", name: "SGDSN", category: "institutional" },
+  { id: "eeas", name: "EEAS", category: "institutional" },
+  { id: "bis", name: "BIS", category: "institutional" },
+  { id: "undp", name: "UNDP", category: "institutional" },
+  { id: "unctad", name: "UNCTAD", category: "institutional" },
+  { id: "nsa", name: "NSA", category: "institutional" },
   
-  // Think Tanks (12)
-  { name: "brookings", displayName: "Brookings", category: "thinktank" },
-  { name: "rand", displayName: "RAND", category: "thinktank" },
-  { name: "cset", displayName: "CSET", category: "thinktank" },
-  { name: "govai", displayName: "GovAI", category: "thinktank" },
-  { name: "cnas", displayName: "CNAS", category: "thinktank" },
-  { name: "newamerica", displayName: "New America", category: "thinktank" },
-  { name: "ainow", displayName: "AI Now Institute", category: "thinktank" },
-  { name: "datasociety", displayName: "Data & Society", category: "thinktank" },
-  { name: "cdt", displayName: "CDT", category: "thinktank" },
-  { name: "iaps", displayName: "IAPS", category: "thinktank" },
-  { name: "scsp", displayName: "SCSP", category: "thinktank" },
-  { name: "rstreet", displayName: "R Street", category: "thinktank" },
+  // Think Tanks (18)
+  { id: "brookings", name: "Brookings", category: "thinktank" },
+  { id: "rand", name: "RAND", category: "thinktank" },
+  { id: "cset", name: "CSET", category: "thinktank" },
+  { id: "govai", name: "GovAI", category: "thinktank" },
+  { id: "cnas", name: "CNAS", category: "thinktank" },
+  { id: "newamerica", name: "New America", category: "thinktank" },
+  { id: "ainow", name: "AI Now Institute", category: "thinktank" },
+  { id: "datasociety", name: "Data & Society", category: "thinktank" },
+  { id: "cdt", name: "CDT", category: "thinktank" },
+  { id: "iaps", name: "IAPS", category: "thinktank" },
+  { id: "scsp", name: "SCSP", category: "thinktank" },
+  { id: "rstreet", name: "R Street", category: "thinktank" },
+  { id: "lawzero", name: "LawZero", category: "thinktank" },
+  { id: "caip", name: "CAIP", category: "thinktank" },
+  { id: "aipi", name: "AIPI", category: "thinktank" },
+  { id: "caidp", name: "CAIDP", category: "thinktank" },
+  { id: "ifp", name: "IFP", category: "thinktank" },
+  { id: "abundance", name: "Abundance", category: "thinktank" },
 ];
 
 export default function ProviderShowcase() {
@@ -112,13 +118,15 @@ export default function ProviderShowcase() {
       >
         {duplicatedProviders.map((provider, index) => (
           <div
-            key={`${provider.name}-${index}`}
+            key={`${provider.id}-${index}`}
             className="flex-shrink-0 group"
           >
-            <div className="h-16 px-8 flex items-center justify-center rounded-xl bg-white/[0.03] border border-white/[0.08] hover:border-cyan-500/30 transition-all duration-300 backdrop-blur-sm group-hover:bg-white/[0.05]">
-              <span className="text-white/70 font-medium text-sm whitespace-nowrap group-hover:text-white/90 transition-colors">
-                {provider.displayName}
-              </span>
+            <div className="h-16 px-6 flex items-center justify-center rounded-xl bg-white/[0.03] border border-white/[0.08] hover:border-cyan-500/30 transition-all duration-300 backdrop-blur-sm group-hover:bg-white/[0.05]">
+              <img 
+                src={`/providers/${provider.id}.svg`} 
+                alt={provider.name}
+                className="h-8 w-auto opacity-80 group-hover:opacity-100 transition-opacity"
+              />
             </div>
           </div>
         ))}
