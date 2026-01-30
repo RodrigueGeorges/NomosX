@@ -12,6 +12,7 @@ import {
   SIGNAL_THRESHOLDS 
 } from "@/lib/think-tank/types";
 import { VERTICALS } from "@/lib/think-tank/verticals";
+import { callLLM } from "@/lib/llm/unified-llm";
 
 // ============================================================================
 // TYPES
@@ -45,28 +46,86 @@ interface SignalDetectorOutput {
 const INSTITUTIONAL_PROVIDERS = ["imf", "worldbank", "oecd", "eurostat", "bis", "ecb"];
 const POLICY_PROVIDERS = ["eeas", "un", "nato", "eu_commission", "legifrance"];
 
-function detectSignalType(source: any): SignalType {
+/**
+ * P0 FIX: LLM-based signal classification
+ * More intelligent than keyword matching
+ */
+async function detectSignalTypeLLM(source: any): Promise<SignalType> {
   const provider = source.provider?.toLowerCase() || "";
   
-  // DATA_RELEASE: Institutional data providers
+  // Fast path for known institutional providers
   if (INSTITUTIONAL_PROVIDERS.includes(provider)) {
     return "DATA_RELEASE";
   }
-  
-  // POLICY_CHANGE: Policy/regulatory providers
   if (POLICY_PROVIDERS.includes(provider)) {
     return "POLICY_CHANGE";
   }
   
-  // METHODOLOGY_SHIFT: High novelty with method-related keywords
+  // LLM classification for ambiguous cases
+  const abstract = (source.abstract || "").slice(0, 1000);
+  if (!abstract || abstract.length < 100) {
+    return "NEW_EVIDENCE"; // Default for short abstracts
+  }
+  
+  try {
+    const response = await callLLM({
+      messages: [{
+        role: "user",
+        content: `Classify this research into ONE signal type.
+
+Title: ${source.title}
+Abstract: ${abstract}
+Year: ${source.year || "N/A"}
+Novelty Score: ${source.noveltyScore || "N/A"}/100
+
+Signal Types:
+- NEW_EVIDENCE: New research findings on existing topic
+- DATA_RELEASE: New dataset, statistics, or quantitative data
+- POLICY_CHANGE: Regulatory, legal, or policy developments
+- METHODOLOGY_SHIFT: Novel research method or paradigm change
+- CONTRADICTION: Findings that contradict established consensus
+- TREND_BREAK: Significant shift from historical patterns
+
+Return JSON: {"signalType": "TYPE", "confidence": 0-100, "reason": "brief explanation"}`
+      }],
+      temperature: 0.1,
+      jsonMode: true,
+      maxTokens: 200,
+      enableCache: true
+    });
+    
+    const result = JSON.parse(response.content);
+    const validTypes: SignalType[] = ["NEW_EVIDENCE", "DATA_RELEASE", "POLICY_CHANGE", "METHODOLOGY_SHIFT", "CONTRADICTION", "TREND_BREAK"];
+    
+    if (validTypes.includes(result.signalType) && result.confidence >= 60) {
+      console.log(`[SIGNAL_DETECTOR] LLM classified as ${result.signalType} (${result.confidence}%): ${result.reason}`);
+      return result.signalType;
+    }
+  } catch (error) {
+    console.warn(`[SIGNAL_DETECTOR] LLM classification failed, using fallback:`, error);
+  }
+  
+  // Fallback to rule-based for errors
+  return detectSignalTypeFallback(source);
+}
+
+/**
+ * Fallback rule-based classification (original logic)
+ */
+function detectSignalTypeFallback(source: any): SignalType {
   const abstract = (source.abstract || "").toLowerCase();
   const methodKeywords = ["novel method", "new approach", "innovative technique", "breakthrough", "first study"];
+  
   if ((source.noveltyScore || 0) >= 80 && methodKeywords.some(k => abstract.includes(k))) {
     return "METHODOLOGY_SHIFT";
   }
   
-  // Default: NEW_EVIDENCE
   return "NEW_EVIDENCE";
+}
+
+// Legacy sync function for backward compatibility
+function detectSignalType(source: any): SignalType {
+  return detectSignalTypeFallback(source);
 }
 
 // ============================================================================
@@ -223,7 +282,7 @@ export async function signalDetector(input: SignalDetectorInput): Promise<Signal
     // Group by signal type
     const sourcesByType = new Map<SignalType, any[]>();
     for (const source of verticalSources) {
-      const signalType = detectSignalType(source);
+      const signalType = await detectSignalTypeLLM(source);
       if (!sourcesByType.has(signalType)) {
         sourcesByType.set(signalType, []);
       }
@@ -301,17 +360,17 @@ function generateSignalTitle(signalType: SignalType, topSource: any, verticalSlu
   
   switch (signalType) {
     case "NEW_EVIDENCE":
-      return `Nouvelle évidence: ${truncate(topSource.title, 60)}`;
+      return `New Evidence: ${truncate(topSource.title, 60)}`;
     case "DATA_RELEASE":
-      return `Données: ${topSource.provider?.toUpperCase()} - ${truncate(topSource.title, 50)}`;
+      return `Data Release: ${topSource.provider?.toUpperCase()} - ${truncate(topSource.title, 50)}`;
     case "POLICY_CHANGE":
-      return `Politique: ${truncate(topSource.title, 60)}`;
+      return `Policy Change: ${truncate(topSource.title, 60)}`;
     case "METHODOLOGY_SHIFT":
-      return `Méthodologie: ${truncate(topSource.title, 60)}`;
+      return `Methodology Shift: ${truncate(topSource.title, 60)}`;
     case "CONTRADICTION":
-      return `Contradiction détectée - ${verticalName}`;
+      return `Contradiction Detected - ${verticalName}`;
     case "TREND_BREAK":
-      return `Rupture de tendance - ${verticalName}`;
+      return `Trend Break - ${verticalName}`;
     default:
       return truncate(topSource.title, 80);
   }
@@ -325,7 +384,7 @@ function generateSignalSummary(signalType: SignalType, sources: any[]): string {
   const abstract = topSource.abstract || "";
   const preview = truncate(abstract, 300);
   
-  return `${sourceCount} source(s) détectée(s) (qualité moyenne: ${avgQuality}/100). ${preview}`;
+  return `${sourceCount} source(s) detected (avg quality: ${avgQuality}/100). ${preview}`;
 }
 
 function truncate(text: string, maxLength: number): string {

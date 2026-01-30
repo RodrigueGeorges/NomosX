@@ -1627,3 +1627,40 @@ model CouncilSession {
   @@index([status])
   @@index([userId])
 }
+
+// ============================================================================
+// INSTITUTIONAL THINK TANK - CONTRADICTION DETECTION
+// ============================================================================
+
+model Contradiction {
+  id               String   @id @default(cuid())
+  
+  // Sources involved
+  sourceId1        String
+  sourceId2        String
+  
+  // Claims that contradict
+  claim1           String   @db.Text
+  claim2           String   @db.Text
+  
+  // Classification
+  contradictionType String  // "direct", "methodological", "contextual"
+  confidence       Int      // 0-100
+  explanation      String   @db.Text
+  
+  // Status
+  status           String   @default("NEW") // NEW, VERIFIED, DISMISSED, SIGNAL_CREATED
+  
+  // Optional: linked to a signal if one was created
+  signalId         String?
+  
+  // Metadata
+  createdAt        DateTime @default(now())
+  updatedAt        DateTime @updatedAt
+  
+  @@index([sourceId1])
+  @@index([sourceId2])
+  @@index([status])
+  @@index([contradictionType])
+  @@index([confidence])
+}

@@ -107,24 +107,96 @@ function checkForbiddenPatterns(draftHtml?: string): { passed: boolean; matches:
   };
 }
 
+/**
+ * P0 FIX: Dynamic methodology scoring
+ * Evaluates source methodology quality based on multiple factors
+ */
 function checkMethodology(context: any): { passed: boolean; score: number; flagged: boolean } {
-  const score = context.confidenceScore || context.qualityScore || 50;
+  let score = 50; // Base score
+  
+  // Boost for high quality sources
+  if (context.qualityScore >= 80) score += 20;
+  else if (context.qualityScore >= 60) score += 10;
+  
+  // Boost for confidence
+  if (context.confidenceScore >= 80) score += 15;
+  else if (context.confidenceScore >= 60) score += 8;
+  
+  // Boost for institutional sources
+  const institutionalProviders = ["imf", "worldbank", "oecd", "nist", "nato", "un"];
+  if (institutionalProviders.includes(context.provider?.toLowerCase())) {
+    score += 15;
+  }
+  
+  // Penalty for very recent (unverified) sources
+  const currentYear = new Date().getFullYear();
+  if (context.year === currentYear) score -= 5;
+  
+  score = Math.max(0, Math.min(100, score));
   const passed = score >= 60;
   const flagged = score < 60;
   
   return { passed, score, flagged };
 }
 
+/**
+ * P0 FIX: Dynamic adversarial scoring
+ * Evaluates robustness against adversarial/biased sources
+ */
 function checkAdversarial(context: any): { passed: boolean; score: number; flagged: boolean } {
-  const score = 70;
+  let score = 60; // Base score
+  
+  // High citation count = more vetted
+  if ((context.citationCount || 0) > 100) score += 20;
+  else if ((context.citationCount || 0) > 20) score += 10;
+  
+  // Multiple sources = harder to manipulate
+  if ((context.sourceCount || 1) >= 5) score += 15;
+  else if ((context.sourceCount || 1) >= 3) score += 8;
+  
+  // Open access = more transparent
+  if (context.oaStatus === "gold" || context.oaStatus === "green") score += 5;
+  
+  // Peer-reviewed providers
+  const peerReviewedProviders = ["openalex", "pubmed", "crossref", "semanticscholar"];
+  if (peerReviewedProviders.includes(context.provider?.toLowerCase())) {
+    score += 10;
+  }
+  
+  score = Math.max(0, Math.min(100, score));
   const passed = score >= 55;
   const flagged = score < 55;
   
   return { passed, score, flagged };
 }
 
+/**
+ * P0 FIX: Dynamic calibration scoring
+ * Evaluates confidence calibration (are claims appropriately hedged?)
+ */
 function checkCalibration(context: any): { passed: boolean; score: number; flagged: boolean } {
-  const score = 65;
+  let score = 55; // Base score
+  
+  // Trust score correlation
+  if (context.trustScore >= 80) score += 20;
+  else if (context.trustScore >= 60) score += 10;
+  
+  // Novelty vs confidence balance
+  // High novelty + high confidence = potentially overconfident
+  const novelty = context.noveltyScore || 50;
+  const confidence = context.confidenceScore || 50;
+  
+  if (novelty > 80 && confidence > 80) {
+    score -= 10; // Penalty for overconfidence on novel claims
+  }
+  
+  // Quality score contribution
+  if (context.qualityScore >= 70) score += 10;
+  
+  // Multiple sources improve calibration
+  if ((context.sourceCount || 1) >= 3) score += 10;
+  
+  score = Math.max(0, Math.min(100, score));
   const passed = score >= 50;
   const flagged = score < 50;
   
