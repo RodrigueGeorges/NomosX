@@ -196,8 +196,14 @@ export default function HomePage() {
               <div className="flex items-center justify-center gap-4 mb-12 animate-fade-in" style={{ animationDelay: '0.1s' }}>
                 <div className="flex items-center gap-4">
                   <div className="w-16 h-16 sm:w-20 sm:h-20 md:w-24 md:h-24 flex items-center justify-center">
-                    <div className="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-xl bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 flex items-center justify-center shadow-2xl">
+                    <div className="w-14 h-14 sm:w-16 sm:h-16 md:w-20 md:h-20 rounded-full bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 flex items-center justify-center shadow-2xl relative">
                       <span className="text-slate-100 font-serif text-2xl sm:text-3xl md:text-4xl font-bold tracking-tight">N</span>
+                      {/* Orbital elements */}
+                      <div className="absolute inset-0 rounded-full border border-slate-600/30"></div>
+                      <div className="absolute top-1 left-1/2 -translate-x-1/2 w-1.5 h-1.5 bg-cyan-400 rounded-full opacity-60"></div>
+                      <div className="absolute right-1 top-1/2 -translate-y-1/2 w-1 h-1 bg-slate-400 rounded-full opacity-40"></div>
+                      <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-slate-400 rounded-full opacity-40"></div>
+                      <div className="absolute left-1 top-1/2 -translate-y-1/2 w-1 h-1 bg-slate-400 rounded-full opacity-40"></div>
                     </div>
                   </div>
                 </div>
