@@ -403,28 +403,23 @@ export default function MethodologyPage() {
         <footer className="border-t border-white/10 relative z-10">
           <div className="max-w-6xl mx-auto px-4 sm:px-6 py-6 sm:py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
             <div className="flex items-center gap-3">
-              <div className="w-7 h-7 rounded-md bg-gradient-to-br from-[#12121A] to-[#1A1A28] border border-white/10 flex items-center justify-center">
-                <svg width="16" height="16" viewBox="0 0 120 120" fill="none">
-                  <defs>
-                    <linearGradient id="methodFooterGradient" x1="30%" y1="0%" x2="70%" y2="100%">
-                      <stop offset="0%" style={{stopColor: '#00D4FF', stopOpacity: 1}} />
-                      <stop offset="100%" style={{stopColor: '#4A7FE0', stopOpacity: 1}} />
-                    </linearGradient>
-                  </defs>
-                  <path d="M 25 30 L 25 90 L 33 90 L 33 30 Z" fill="url(#methodFooterGradient)"/>
-                  <path d="M 33 35 L 60 60 L 87 85 L 93 80 L 60 53 L 33 28 Z" fill="url(#methodFooterGradient)"/>
-                  <path d="M 87 35 L 60 60 L 33 85 L 27 80 L 60 53 L 87 28 Z" fill="url(#methodFooterGradient)" opacity="0.9"/>
-                  <path d="M 87 30 L 87 90 L 95 90 L 95 30 Z" fill="url(#methodFooterGradient)"/>
-                  <circle cx="60" cy="60" r="6" fill="white"/>
-                  <circle cx="60" cy="60" r="3" fill="#00D4FF"/>
-                </svg>
+              <div className="w-7 h-7 rounded-full bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 flex items-center justify-center opacity-80 relative">
+                <span className="text-slate-100 font-serif text-xs font-bold tracking-tight">N</span>
+                {/* Orbital elements */}
+                <div className="absolute inset-0 rounded-full border border-slate-600/30"></div>
+                <div className="absolute top-0.5 left-1/2 -translate-x-1/2 w-0.5 h-0.5 bg-cyan-400 rounded-full opacity-60"></div>
+                <div className="absolute right-0.5 top-1/2 -translate-y-1/2 w-0.5 h-0.5 bg-slate-400 rounded-full opacity-40"></div>
+                <div className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-0.5 h-0.5 bg-slate-400 rounded-full opacity-40"></div>
+                <div className="absolute left-0.5 top-1/2 -translate-y-1/2 w-0.5 h-0.5 bg-slate-400 rounded-full opacity-40"></div>
               </div>
-              <span className="text-sm font-semibold text-white/50">
-                Nomos<span className="text-cyan-400/60">X</span>
-              </span>
-              <span className="text-xs text-white/30">The Autonomous Think Tank</span>
+              <div>
+                <span className="text-sm font-serif font-bold tracking-tight text-white/60">
+                  Nomos<span className="text-slate-400">X</span>
+                </span>
+                <p className="text-xs text-slate-500">Institutional Research Platform</p>
+              </div>
             </div>
-            <div className="flex items-center gap-4 sm:gap-6 text-xs sm:text-sm text-white/40">
+            <div className="flex items-center gap-6 text-xs text-white/30">
               <button onClick={() => router.push("/")} className="hover:text-white transition-colors">
                 Home
               </button>
