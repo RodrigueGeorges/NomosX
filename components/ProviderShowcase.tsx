@@ -99,7 +99,7 @@ export default function ProviderShowcase() {
             Trusted Sources
           </p>
           <h3 className="text-2xl sm:text-3xl font-light text-white/90 mb-2">
-            Research powered by <span className="text-cyan-400 font-medium">54 providers</span>
+            Built on <span className="text-cyan-400 font-medium">institutional-grade research</span>
           </h3>
           <p className="text-sm text-white/50 max-w-2xl mx-auto">
             Academic journals • Institutional databases • Leading think tanks
@@ -137,15 +137,15 @@ export default function ProviderShowcase() {
         <div className="flex items-center justify-center gap-6 text-xs text-white/40">
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-cyan-500/50"></div>
-            <span>8 Academic</span>
+            <span>Academic</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-blue-500/50"></div>
-            <span>19 Institutional</span>
+            <span>Institutional</span>
           </div>
           <div className="flex items-center gap-2">
             <div className="w-2 h-2 rounded-full bg-purple-500/50"></div>
-            <span>27 Think Tanks</span>
+            <span>Think Tanks</span>
           </div>
         </div>
       </div>
