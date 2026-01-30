@@ -29,7 +29,7 @@ const userNav = [
 const adminNav = [
   { href: "/admin", label: "Command Center", icon: LayoutDashboard },
   { href: "/studio", label: "Studio", icon: PenTool },
-  { href: "/signals", label: "Signals", icon: Zap },
+  { href: "/signals", label: "Signals", icon: Zap }, // Admin only
   { href: "/publications", label: "Publications", icon: Archive },
 ];
 

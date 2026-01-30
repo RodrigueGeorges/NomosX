@@ -3,8 +3,8 @@
 /**
  * NomosX Pricing Page
  * 
- * Single offer: NomosX Access - 149€/month
- * 15-day trial without credit card
+ * Two tiers: Executive (€15/mois) + Strategy (€39/mois)
+ * 30-day trial without credit card
  * Clean, institutional, bankable
  */
 
@@ -42,70 +42,110 @@ export default function PricingPage() {
             Pricing
           </div>
           <h1 className="text-5xl font-light tracking-tight text-white/95 mb-4">
-            One access. One institution.
+            Think Tank Access
           </h1>
           <p className="text-lg text-white/50 max-w-2xl mx-auto">
-            NomosX is not a tool. It's an autonomous think tank that decides when to publish.
+            Subscribe to an autonomous research institution that decides when to publish.
           </p>
         </div>
 
-        {/* Offre Unique - Carte Centrale */}
-        <div className="max-w-xl mx-auto mb-20">
+        {/* Two Pricing Tiers */}
+        <div className="grid md:grid-cols-2 gap-8 max-w-4xl mx-auto mb-20">
+          
+          {/* Executive Plan */}
+          <Card variant="default" className="bg-white/[0.03] border-white/10">
+            <CardContent className="pt-10 pb-10">
+              <div className="text-center mb-8">
+                <div className="w-14 h-14 rounded-xl bg-slate-500/10 border border-slate-500/20 flex items-center justify-center mx-auto mb-4">
+                  <FileText size={28} className="text-slate-400" />
+                </div>
+                <h2 className="text-2xl font-light text-white mb-2">NomosX Executive</h2>
+                <div className="flex items-baseline justify-center gap-2 mb-4">
+                  <span className="text-4xl font-light text-white">15€</span>
+                  <span className="text-lg text-white/40">/month</span>
+                </div>
+                <div className="inline-block px-3 py-1 rounded-lg bg-slate-500/10 border border-slate-500/20">
+                  <p className="text-xs text-slate-400">30-day free trial</p>
+                </div>
+              </div>
+
+              <div className="space-y-3 mb-8">
+                <div className="flex items-start gap-3">
+                  <Check size={16} className="text-emerald-400 mt-0.5 flex-shrink-0" />
+                  <span className="text-sm text-white/80">Executive Briefs (2-3 pages)</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Check size={16} className="text-emerald-400 mt-0.5 flex-shrink-0" />
+                  <span className="text-sm text-white/80">Weekly newsletter</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Check size={16} className="text-emerald-400 mt-0.5 flex-shrink-0" />
+                  <span className="text-sm text-white/80">Brief archives</span>
+                </div>
+                <div className="flex items-start gap-3">
+                  <Check size={16} className="text-emerald-400 mt-0.5 flex-shrink-0" />
+                  <span className="text-sm text-white/80">Decision-ready insights</span>
+                </div>
+              </div>
+
+              <Button 
+                variant="ghost" 
+                className="w-full text-base py-4 border border-white/20"
+                onClick={handleStartTrial}
+                disabled={loading}
+              >
+                {loading ? "Starting..." : "Start free trial"}
+              </Button>
+            </CardContent>
+          </Card>
+
+          {/* Strategy Plan */}
           <Card variant="default" className="bg-gradient-to-br from-cyan-500/5 to-blue-500/5 border-cyan-500/20 shadow-[0_0_40px_rgba(0,212,255,0.1)]">
             <CardContent className="pt-10 pb-10">
               <div className="text-center mb-8">
                 <div className="w-16 h-16 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center mx-auto mb-4 shadow-[0_0_20px_rgba(0,212,255,0.2)]">
-                  <Shield size={32} className="text-cyan-400" />
+                  <Briefcase size={32} className="text-cyan-400" />
                 </div>
-                <h2 className="text-3xl font-light text-white mb-2">NomosX Access</h2>
+                <h2 className="text-2xl font-light text-white mb-2">NomosX Strategy</h2>
                 <div className="flex items-baseline justify-center gap-2 mb-4">
-                  <span className="text-5xl font-light text-white">149€</span>
+                  <span className="text-4xl font-light text-white">39€</span>
                   <span className="text-lg text-white/40">/month</span>
                 </div>
-                <div className="inline-block px-4 py-2 rounded-lg bg-cyan-500/10 border border-cyan-500/20">
-                  <p className="text-sm text-cyan-400">15-day free trial · No credit card required</p>
+                <div className="inline-block px-3 py-1 rounded-lg bg-cyan-500/10 border border-cyan-500/20">
+                  <p className="text-xs text-cyan-400">Everything + Strategic Reports</p>
                 </div>
               </div>
 
-              {/* Inclus */}
               <div className="space-y-3 mb-8">
                 <div className="flex items-start gap-3">
-                  <Check size={18} className="text-emerald-400 mt-0.5 flex-shrink-0" />
-                  <span className="text-sm text-white/80">Autonomous signal detection</span>
+                  <Check size={16} className="text-emerald-400 mt-0.5 flex-shrink-0" />
+                  <span className="text-sm text-white/80">Everything in Executive</span>
                 </div>
                 <div className="flex items-start gap-3">
-                  <Check size={18} className="text-emerald-400 mt-0.5 flex-shrink-0" />
-                  <span className="text-sm text-white/80">Editorial gate & quality control</span>
+                  <Check size={16} className="text-emerald-400 mt-0.5 flex-shrink-0" />
+                  <span className="text-sm text-white/80">Strategic Reports (10-15 pages)</span>
                 </div>
                 <div className="flex items-start gap-3">
-                  <Check size={18} className="text-emerald-400 mt-0.5 flex-shrink-0" />
-                  <span className="text-sm text-white/80">Institutional publications</span>
+                  <Check size={16} className="text-emerald-400 mt-0.5 flex-shrink-0" />
+                  <span className="text-sm text-white/80">Methodology & debates</span>
                 </div>
                 <div className="flex items-start gap-3">
-                  <Check size={18} className="text-emerald-400 mt-0.5 flex-shrink-0" />
-                  <span className="text-sm text-white/80">Think Tank Command Center</span>
+                  <Check size={16} className="text-emerald-400 mt-0.5 flex-shrink-0" />
+                  <span className="text-sm text-white/80">Complete archives</span>
                 </div>
                 <div className="flex items-start gap-3">
-                  <Check size={18} className="text-emerald-400 mt-0.5 flex-shrink-0" />
-                  <span className="text-sm text-white/80">Studio access (editorial backstage)</span>
-                </div>
-                <div className="flex items-start gap-3">
-                  <Check size={18} className="text-emerald-400 mt-0.5 flex-shrink-0" />
-                  <span className="text-sm text-white/80">PDF exports</span>
-                </div>
-                <div className="flex items-start gap-3">
-                  <Check size={18} className="text-emerald-400 mt-0.5 flex-shrink-0" />
-                  <span className="text-sm text-white/80">Disciplined cadence (quality over quantity)</span>
+                  <Check size={16} className="text-emerald-400 mt-0.5 flex-shrink-0" />
+                  <span className="text-sm text-white/80">Long PDF exports</span>
                 </div>
               </div>
 
               <Button 
                 variant="ai" 
-                className="w-full text-base py-6"
+                className="w-full text-base py-4"
                 onClick={handleStartTrial}
                 disabled={loading}
               >
-                {loading ? "Starting..." : "Start your trial"}
+                {loading ? "Starting..." : "Start free trial"}
               </Button>
             </CardContent>
           </Card>

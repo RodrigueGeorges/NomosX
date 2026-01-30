@@ -1,27 +1,22 @@
 "use client";
 
 /**
- * USER Dashboard — Your Intelligence Desk
+ * USER Dashboard — Think Tank Command Center
  * 
- * Purpose: Reading hub, publication discovery, access overview
+ * Purpose: Monitor autonomous research institution, not generate content
  * Audience: Subscribers and free users
  * 
- * Answers:
- * - "What should I read?"
- * - "What is new?"
- * - "What do I have access to?"
- * 
- * Contains:
- * - Latest Executive Briefs (FREE)
- * - Latest Strategic Reports (PREMIUM - locked if not subscribed)
- * - Vertical coverage indicators
- * - Publications feed (chronological)
- * - Subscription status (calm, bottom)
+ * Shows:
+ * - Editorial cadence (publications per day/week)
+ * - Latest publications (output of the system)
+ * - Upcoming publications (signals that passed Editorial Gate)
+ * - Vertical coverage status
+ * - Subscription access level
  * 
  * Does NOT contain:
- * - Signals, priority scores, agent terminology
- * - Studio access, editorial controls
- * - System status, cadence limits
+ * - Generation buttons, prompts, or "ask AI" features
+ * - Signal detection interface (internal mechanism)
+ * - Editorial controls (admin-only)
  */
 
 import { useState, useEffect } from "react";
@@ -146,16 +141,19 @@ export default function UserDashboard() {
         <div className="mb-10">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-4">
-              <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-cyan-500/10 to-blue-500/5 border border-cyan-500/20 flex items-center justify-center shadow-[0_0_20px_rgba(0,212,255,0.15)]">
-                <BookOpen size={32} className="text-cyan-400" />
+              <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-slate-500/10 to-slate-500/5 border border-slate-500/20 flex items-center justify-center shadow-[0_0_20px_rgba(148,163,184,0.15)]">
+                <Layers size={32} className="text-slate-400" />
               </div>
               <div>
-                <div className="text-xs text-cyan-400/60 tracking-[0.25em] uppercase mb-1">
-                  Your Intelligence Desk
+                <div className="text-xs text-slate-400/60 tracking-[0.25em] uppercase mb-1">
+                  Think Tank Command Center
                 </div>
                 <h1 className="text-4xl font-light tracking-tight text-white/95">
-                  Dashboard
+                  NomosX Monitor
                 </h1>
+                <p className="text-sm text-white/50 mt-1">
+                  Autonomous research institution status
+                </p>
               </div>
             </div>
             <Button 

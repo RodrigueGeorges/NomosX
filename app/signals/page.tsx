@@ -1,14 +1,17 @@
 "use client";
 
 /**
- * NomosX Signals Page
+ * NomosX Signals Page - ADMIN ONLY
  * 
  * Signal Detection Layer - surfaces topics that MAY deserve a publication
  * Radar NEVER produces final output, only feeds the Editorial Gate
+ * 
+ * ACCESS: Admin/Editorial only - internal mechanism
  */
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
 import Shell from "@/components/Shell";
 import { Card, CardContent } from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
@@ -72,13 +75,21 @@ const SIGNAL_TYPE_LABELS: Record<string, string> = {
 
 export default function SignalsPage() {
   const router = useRouter();
+  const { user, isAuthenticated, loading } = useAuth();
   const [signals, setSignals] = useState<Signal[]>([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<SignalStatus | "ALL">("ALL");
 
+  // Check admin access
   useEffect(() => {
-    loadSignals();
-  }, []);
+    if (!loading) {
+      if (!isAuthenticated || !(user?.role === "ADMIN" || user?.email?.includes("admin"))) {
+        router.push("/dashboard"); // Redirect non-admin users
+        return;
+      }
+      loadSignals();
+    }
+  }, [loading, isAuthenticated, user, router]);
 
   async function loadSignals() {
     setLoading(true);
