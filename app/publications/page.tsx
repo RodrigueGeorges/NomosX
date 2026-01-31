@@ -9,6 +9,7 @@
 
 import { useEffect, useState } from "react";
 import { useRouter } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
 import Shell from "@/components/Shell";
 import { Card, CardContent } from "@/components/ui/Card";
 import Button from "@/components/ui/Button";
@@ -27,7 +28,8 @@ import {
   Layers,
   CheckCircle,
   Pause,
-  VolumeX
+  VolumeX,
+  Lock
 } from "lucide-react";
 
 type EditorialStatus = "PUBLISHED" | "HELD" | "SILENT";
@@ -48,15 +50,16 @@ type Publication = {
 };
 
 const TYPE_LABELS: Record<string, { label: string; color: string; isPremium?: boolean }> = {
-  // Primary formats
-  EXECUTIVE_BRIEF: { label: "Executive Brief", color: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20", isPremium: false },
-  STRATEGIC_REPORT: { label: "Strategic Report", color: "bg-amber-500/10 text-amber-400 border-amber-500/20", isPremium: true },
-  // Legacy formats (map to primary)
-  RESEARCH_BRIEF: { label: "Executive Brief", color: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20", isPremium: false },
-  UPDATE_NOTE: { label: "Update Note", color: "bg-blue-500/10 text-blue-400 border-blue-500/20", isPremium: false },
-  DATA_NOTE: { label: "Data Note", color: "bg-emerald-500/10 text-emerald-400 border-emerald-500/20", isPremium: false },
-  POLICY_NOTE: { label: "Policy Note", color: "bg-purple-500/10 text-purple-400 border-purple-500/20", isPremium: false },
-  DOSSIER: { label: "Strategic Report", color: "bg-amber-500/10 text-amber-400 border-amber-500/20", isPremium: true },
+  // Primary formats - EXECUTIVE (included in all plans)
+  EXECUTIVE_BRIEF: { label: "EXECUTIVE", color: "bg-slate-500/10 text-slate-400 border-slate-500/20", isPremium: false },
+  RESEARCH_BRIEF: { label: "EXECUTIVE", color: "bg-slate-500/10 text-slate-400 border-slate-500/20", isPremium: false },
+  UPDATE_NOTE: { label: "EXECUTIVE", color: "bg-slate-500/10 text-slate-400 border-slate-500/20", isPremium: false },
+  DATA_NOTE: { label: "EXECUTIVE", color: "bg-slate-500/10 text-slate-400 border-slate-500/20", isPremium: false },
+  POLICY_NOTE: { label: "EXECUTIVE", color: "bg-slate-500/10 text-slate-400 border-slate-500/20", isPremium: false },
+  
+  // Primary formats - STRATEGY (premium only)
+  STRATEGIC_REPORT: { label: "STRATEGY", color: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20", isPremium: true },
+  DOSSIER: { label: "STRATEGY", color: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20", isPremium: true },
 };
 
 const STATUS_CONFIG: Record<EditorialStatus, { label: string; icon: React.ElementType; color: string }> = {
@@ -67,8 +70,10 @@ const STATUS_CONFIG: Record<EditorialStatus, { label: string; icon: React.Elemen
 
 export default function PublicationsPage() {
   const router = useRouter();
+  const { user, isAuthenticated } = useAuth();
   const [publications, setPublications] = useState<Publication[]>([]);
   const [loading, setLoading] = useState(true);
+  const [subscription, setSubscription] = useState<any>(null);
   const [searchQuery, setSearchQuery] = useState("");
   const [typeFilter, setTypeFilter] = useState<string>("ALL");
   const [statusFilter, setStatusFilter] = useState<EditorialStatus | "ALL">("ALL");
@@ -81,10 +86,19 @@ export default function PublicationsPage() {
   async function loadPublications() {
     setLoading(true);
     try {
-      const res = await fetch("/api/think-tank/publications?limit=100");
-      if (res.ok) {
-        const data = await res.json();
+      const [pubsRes, subRes] = await Promise.all([
+        fetch("/api/think-tank/publications?limit=50"),
+        isAuthenticated ? fetch("/api/subscription") : Promise.resolve({ ok: false })
+      ]);
+      
+      if (pubsRes.ok) {
+        const data = await pubsRes.json();
         setPublications(data.publications || []);
+      }
+      
+      if (subRes.ok) {
+        const data = await subRes.json();
+        setSubscription(data);
       }
     } catch (error) {
       console.error("Failed to load publications:", error);
@@ -113,6 +127,23 @@ export default function PublicationsPage() {
   const publishedCount = publications.filter(p => p.status === "PUBLISHED").length;
   const heldCount = publications.filter(p => p.status === "HELD").length;
   const silentCount = publications.filter(p => p.status === "SILENT").length;
+
+  // Check if user has access to Strategy publications
+  const hasStrategyAccess = subscription?.plan === "STRATEGY" || subscription?.plan === "PREMIUM";
+
+  function handlePublicationClick(pub: Publication) {
+    const typeConfig = TYPE_LABELS[pub.type] || { label: pub.type, isPremium: false };
+    
+    // Block Strategy access for non-premium users
+    if (typeConfig.isPremium && !hasStrategyAccess) {
+      // Show upgrade modal or redirect to pricing
+      router.push("/pricing");
+      return;
+    }
+    
+    // Allow access to Executive publications
+    router.push(`/publications/${pub.id}`);
+  }
 
   return (
     <Shell>
@@ -247,8 +278,10 @@ export default function PublicationsPage() {
                 <Card 
                   key={pub.id}
                   variant="default"
-                  className="group hover:border-cyan-500/30 hover:bg-white/[0.04] transition-all duration-300 bg-white/[0.02] border-white/10 cursor-pointer"
-                  onClick={() => router.push(`/publications/${pub.id}`)}
+                  className={`group hover:border-cyan-500/30 hover:bg-white/[0.04] transition-all duration-300 bg-white/[0.02] border-white/10 cursor-pointer ${
+                    typeConfig.isPremium && !hasStrategyAccess ? "opacity-75" : ""
+                  }`}
+                  onClick={() => handlePublicationClick(pub)}
                 >
                   <CardContent className="pt-5 pb-5">
                     <div className="flex items-start gap-4">
@@ -273,6 +306,12 @@ export default function PublicationsPage() {
                             <Badge variant="default" className={`text-xs ${typeConfig.color}`}>
                               {typeConfig.label}
                             </Badge>
+                            {typeConfig.isPremium && !hasStrategyAccess && (
+                              <Badge variant="default" className="text-xs bg-amber-500/10 text-amber-400 border-amber-500/20">
+                                <Lock size={10} className="mr-1" />
+                                Upgrade
+                              </Badge>
+                            )}
                             <span className={`flex items-center gap-1 text-xs ${statusConfig.color}`}>
                               <StatusIcon size={12} />
                               {statusConfig.label}
