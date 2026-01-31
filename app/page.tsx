@@ -229,6 +229,9 @@ export default function HomePage() {
                 </span>
               </h2>
 
+              {/* Spacing before Newsletter */}
+              <div className="h-16 md:h-24"></div>
+
               {/* Primary CTA: Newsletter Signup */}
               <div className="max-w-xl mx-auto mb-8 animate-fade-in" style={{ animationDelay: '0.3s' }}>
                 {newsletterSuccess ? (
