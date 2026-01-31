@@ -157,9 +157,6 @@ export default function AboutPage() {
                 Start for free
                 <ArrowRight size={18} className="ml-2" />
               </Button>
-              <Button variant="ghost" size="lg" onClick={() => router.push("/methodology")}>
-                View Methodology
-              </Button>
             </div>
           </div>
 
@@ -333,9 +330,6 @@ export default function AboutPage() {
             <div className="flex items-center gap-6 text-xs text-white/30">
               <button onClick={() => router.push("/")} className="hover:text-white transition-colors">
                 Home
-              </button>
-              <button onClick={() => router.push("/methodology")} className="hover:text-white transition-colors">
-                Methodology
               </button>
               <span>© 2026 NomosX</span>
             </div>

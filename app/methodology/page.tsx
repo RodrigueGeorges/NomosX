@@ -423,9 +423,6 @@ export default function MethodologyPage() {
               <button onClick={() => router.push("/")} className="hover:text-white transition-colors">
                 Home
               </button>
-              <button onClick={() => router.push("/about")} className="hover:text-white transition-colors">
-                About
-              </button>
               <span>© 2026 NomosX</span>
             </div>
           </div>
