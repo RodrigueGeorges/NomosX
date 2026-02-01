@@ -49,7 +49,12 @@ export {
 export { searchIMFSDMX } from './imf-sdmx';
 // ⚠️ Legacy fallbacks (scraping / RSS) - keep for robustness
 export { searchIMFeLibrary } from './imf-elibrary';
+
+// ✅ OECD: SDMX (separate domain, not behind OECD website Cloudflare)
+export { searchOECDSDMX } from './oecd-sdmx';
+// ⚠️ Legacy fallback
 export { searchOECDiLibrary } from './oecd-ilibrary';
+
 export { searchBIS } from './bis-papers';
 export { searchNIST } from './nist-publications';
 
