@@ -41,11 +41,27 @@ import {
 import { searchCIAFOIAViaArchive } from '../providers/institutional/v2/archive-org';
 import { searchEEAS, searchEDA } from '../providers/institutional/v2/eu-open-data';
 import { searchMinistereArmees, searchSGDSN, searchArchivesNationales } from '../providers/institutional/v2/france-gov';
+
+// IMF (robust chaining): SDMX first, then fallback eLibrary scraping
+import { searchIMFSDMX } from '../providers/institutional/v2/imf-sdmx';
 import { searchIMFeLibrary } from '../providers/institutional/v2/imf-elibrary';
+
 import { searchOECDiLibrary } from '../providers/institutional/v2/oecd-ilibrary';
 import { searchBIS } from '../providers/institutional/v2/bis-papers';
 import { searchNIST } from '../providers/institutional/v2/nist-publications';
 import { scoreSource } from '../score';
+
+// NOUVEAUX PROVIDERS SOURCES VARIÉES
+import { searchCrossref } from '../providers/academic/crossref-api';
+import { searchOpenAlex } from '../providers/academic/openalex-api';
+import { searchArXiv } from '../providers/academic/arxiv-api';
+import { searchPubMed } from '../providers/academic/pubmed-api';
+import { searchTechCrunch } from '../providers/business/techcrunch-api.ts';
+import { searchCrunchbase } from '../providers/business/crunchbase-api.ts';
+import { searchReuters, searchBloomberg, searchFinancialTimes } from '../providers/business/reuters-api.ts';
+import { searchGooglePatents } from '../providers/patents/google-patents-api';
+import { searchFigshare } from '../providers/data/figshare-api';
+import { searchZenodo } from '../providers/data/zenodo-api';
 
 // Using shared prisma singleton from db.ts
 
@@ -67,9 +83,66 @@ interface MonitoringResult {
 }
 
 /**
+ * IMF chained provider:
+ * - SDMX first (official IMF dataservices)
+ * - Fallback to IMF eLibrary scraping if SDMX is unreachable or returns only curated fallback results
+ */
+async function searchIMFChained(query: string, limit: number): Promise<any[]> {
+  let sdmxResults: any[] = [];
+
+  try {
+    sdmxResults = await searchIMFSDMX(query, limit);
+  } catch (err: any) {
+    console.warn(`[Monitoring][IMF] SDMX failed: ${err?.message || String(err)}`);
+    sdmxResults = [];
+  }
+
+  const sdmxAllFallback =
+    sdmxResults.length > 0 &&
+    sdmxResults.every((s: any) => Boolean(s?.raw?.fallback));
+
+  // If SDMX gave us real catalog matches, prefer them (fast + stable)
+  if (sdmxResults.length > 0 && !sdmxAllFallback) {
+    return sdmxResults.slice(0, limit);
+  }
+
+  // Otherwise try eLibrary scraping (may be blocked, but when it works it provides richer publication content)
+  let elibResults: any[] = [];
+  try {
+    elibResults = await searchIMFeLibrary(query, limit);
+  } catch (err: any) {
+    console.warn(`[Monitoring][IMF] eLibrary fallback failed: ${err?.message || String(err)}`);
+    elibResults = [];
+  }
+
+  // Merge: prefer eLibrary, fill remaining with SDMX fallback
+  const merged: any[] = [];
+  const seen = new Set<string>();
+
+  for (const s of elibResults) {
+    if (!s?.id) continue;
+    if (seen.has(s.id)) continue;
+    seen.add(s.id);
+    merged.push(s);
+    if (merged.length >= limit) return merged;
+  }
+
+  for (const s of sdmxResults) {
+    if (!s?.id) continue;
+    if (seen.has(s.id)) continue;
+    seen.add(s.id);
+    merged.push(s);
+    if (merged.length >= limit) return merged;
+  }
+
+  return merged;
+}
+
+/**
  * Mapping des providers vers leurs fonctions de recherche
  */
 const PROVIDER_FUNCTIONS: Record<string, (query: string, limit: number) => Promise<any[]>> = {
+  // 🏛️ Institutionnels
   'worldbank': searchWorldBankAPI,
   'cisa': searchCISAAdvisories,
   'nara': searchNARA,
@@ -84,32 +157,52 @@ const PROVIDER_FUNCTIONS: Record<string, (query: string, limit: number) => Promi
   'cia-foia': searchCIAFOIAViaArchive,
   'eeas': searchEEAS,
   'eda': searchEDA,
-  'ministere-armees': searchMinistereArmees,
   'sgdsn': searchSGDSN,
   'archives-fr': searchArchivesNationales,
-  'imf': searchIMFeLibrary,
+  'imf': searchIMFChained,
   'oecd': searchOECDiLibrary,
   'bis': searchBIS,
   'nist': searchNIST,
+  'archives-nationales-fr': searchArchivesNationalesFR,
 
-  // Think Tanks (innovants)
+  // 🎓 Académiques
+  'crossref': searchCrossref,
+  'openalex': searchOpenAlex,
+  'arxiv': searchArXiv,
+  'pubmed': searchPubMed,
+
+  // 💼 Business
+  'techcrunch': searchTechCrunch,
+  'crunchbase': searchCrunchbase,
+  'reuters': searchReuters,
+  'bloomberg': searchBloomberg,
+  'financial-times': searchFinancialTimes,
+
+  // 🔬 Patents
+  'google-patents': searchGooglePatents,
+
+  // 📦 Data
+  'figshare': searchFigshare,
+  'zenodo': searchZenodo,
+
+  // 🧠 Think Tanks
+  'cset': searchCSETViaGoogle,
+  'ainow': searchAINowViaGoogle,
+  'datasociety': searchDataSocietyViaGoogle,
+  'brookings': searchBrookingsViaGoogle,
+  'rand': searchRANDViaGoogle,
   'lawzero': searchLawZeroViaGoogle,
   'govai': searchGovAIViaGoogle,
   'iaps': searchIAPSViaGoogle,
   'caip': searchCAIPViaGoogle,
   'aipi': searchAIPIViaGoogle,
-  'cset': searchCSETViaGoogle,
-  'ainow': searchAINowViaGoogle,
-  'datasociety': searchDataSocietyViaGoogle,
   'abundance': searchAbundanceViaGoogle,
   'caidp': searchCAIDPViaGoogle,
   'scsp': searchSCSPViaGoogle,
   'ifp': searchIFPViaGoogle,
   'cdt': searchCDTViaGoogle,
-  'brookings': searchBrookingsViaGoogle,
   'fai': searchFAIViaGoogle,
   'cnas': searchCNASViaGoogle,
-  'rand': searchRANDViaGoogle,
   'newamerica': searchNewAmericaViaGoogle,
   'aspen-digital': searchAspenDigitalViaGoogle,
   'rstreet': searchRStreetViaGoogle
@@ -427,7 +520,64 @@ export const REALTIME_CYBER_MONITORING: MonitoringConfig = {
     'supply chain security'
   ],
   interval: 60, // 1 heure
-  limit: 20,
-  minQualityScore: 80,
+  limit: 3, // Réduit pour plus de providers
+  minQualityScore: 60, // Baisser pour plus de sources
+  notifyOnNew: true
+};
+
+ /**
+ * Config pour monitoring sources variées (académique + business + innovation + data)
+ */
+export const VARIED_SOURCES_MONITORING: MonitoringConfig = {
+  providers: [
+    // 🎓 Académique Fondamental (15% poids)
+    'crossref', 'openalex', 'arxiv', 'pubmed',
+    
+    // 🏛️ Institutionnel & Politique (25% poids)
+    'worldbank', 'cisa', 'nist', 'imf', 'oecd', 'un', 'bis', 'enisa',
+    
+    // 🕵️ Intelligence & Défense (20% poids)
+    'odni', 'cia-foia', 'nsa', 'uk-jic', 'nato', 'eeas', 'sgdsn', 'eda',
+    
+    // 🌍 Multilatéral & Développement (10% poids)
+    'undp', 'unctad',
+    
+    // 📚 Archives & Historique (5% poids)
+    'archives-nationales-fr', 'nara', 'uk-archives',
+    
+    // 💼 Business & Innovation (15% poids)
+    'techcrunch', 'crunchbase', 'reuters', 'bloomberg', 'financial-times',
+    
+    // 🔬 Innovation & Patents (5% poids)
+    'google-patents',
+    
+    // 📦 Data & Repositories (5% poids)
+    'figshare', 'zenodo',
+    
+    // 🧠 Think Tanks (stratégique - 15% poids)
+    'cset', 'ainow', 'datasociety', 'brookings', 'rand',
+    'lawzero', 'govai', 'iaps', 'caip', 'aipi', 'abundance', 'caidp', 
+    'scsp', 'ifp', 'cdt', 'fai', 'cnas', 'newamerica', 'aspen-digital', 'rstreet'
+  ],
+  queries: [
+    'artificial intelligence',
+    'machine learning',
+    'cybersecurity',
+    'climate change',
+    'blockchain',
+    'quantum computing',
+    'biotechnology',
+    'renewable energy',
+    'digital transformation',
+    'geopolitical risk',
+    'startup funding',
+    'venture capital',
+    'patent innovation',
+    'research breakthrough',
+    'technology disruption'
+  ],
+  interval: 180, // 3 heures
+  limit: 8,
+  minQualityScore: 60,
   notifyOnNew: true
 };

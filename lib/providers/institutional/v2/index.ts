@@ -43,8 +43,11 @@ export {
 } from './france-gov';
 
 // ==========================================
-// ÉCONOMIE (eLibrary scraping intelligent)
+// ÉCONOMIE
 // ==========================================
+// ✅ IMF: SDMX (official IMF dataservices) with robust fallbacks
+export { searchIMFSDMX } from './imf-sdmx';
+// ⚠️ Legacy fallbacks (scraping / RSS) - keep for robustness
 export { searchIMFeLibrary } from './imf-elibrary';
 export { searchOECDiLibrary } from './oecd-ilibrary';
 export { searchBIS } from './bis-papers';
