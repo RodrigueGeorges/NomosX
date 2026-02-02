@@ -61,8 +61,9 @@ import { searchArXiv } from '../providers/academic/arxiv-api';
 import { searchPubMed } from '../providers/academic/pubmed-api';
 import { searchTechCrunch } from '../providers/business/techcrunch-api.ts';
 import { searchCrunchbase } from '../providers/business/crunchbase-api.ts';
-import { searchReuters, searchBloomberg, searchFinancialTimes } from '../providers/business/reuters-api.ts';
+import { searchReuters } from '../providers/business/reuters-api.ts';
 import { searchGooglePatents } from '../providers/patents/google-patents-api';
+import { searchPatentsView } from '../providers/patents/patentsview-api';
 import { searchFigshare } from '../providers/data/figshare-api';
 import { searchZenodo } from '../providers/data/zenodo-api';
 
@@ -198,6 +199,24 @@ export async function searchOECDChained(query: string, limit: number): Promise<a
 }
 
 /**
+ * Patents chained provider:
+ * - PatentsView first (stable, API key)
+ * - Fallback to legacy Google Patents implementation (scrape + fallbacks)
+ */
+async function searchPatentsChained(query: string, limit: number): Promise<any[]> {
+  // Try PatentsView
+  try {
+    const pv = await searchPatentsView(query, limit);
+    if (pv && pv.length > 0) return pv.slice(0, limit);
+  } catch (err: any) {
+    console.warn(`[Monitoring][Patents] PatentsView failed: ${err?.message || String(err)}`);
+  }
+
+  // Fallback to existing provider (already has its own fallback generation)
+  return searchGooglePatents(query, limit);
+}
+
+/**
  * Mapping des providers vers leurs fonctions de recherche
  */
 const PROVIDER_FUNCTIONS: Record<string, (query: string, limit: number) => Promise<any[]>> = {
@@ -234,11 +253,9 @@ const PROVIDER_FUNCTIONS: Record<string, (query: string, limit: number) => Promi
   'techcrunch': searchTechCrunch,
   'crunchbase': searchCrunchbase,
   'reuters': searchReuters,
-  'bloomberg': searchBloomberg,
-  'financial-times': searchFinancialTimes,
 
   // 🔬 Patents
-  'google-patents': searchGooglePatents,
+  'google-patents': searchPatentsChained,
 
   // 📦 Data
   'figshare': searchFigshare,
