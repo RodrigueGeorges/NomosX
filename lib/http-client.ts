@@ -331,13 +331,14 @@ export async function fetchFromProvider<T = any>(
   // Add provider-specific headers
   const headers = { ...options.headers };
   
-  // INSEE Melodi API requires authentication
-  if (provider === 'insee' || provider === 'melodi') {
-    const apiKey = process.env.INSEE_KEY;
-    if (apiKey) {
-      headers['Authorization'] = `Bearer ${apiKey}`;
+  // INSEE Melodi/BDM APIs require authentication (bearer token)
+  if (provider === "insee" || provider === "melodi") {
+    const token = env.INSEE_API_KEY || process.env.INSEE_API_KEY || process.env.INSEE_KEY;
+    if (token) {
+      headers["Authorization"] = `Bearer ${token}`;
     } else {
-      console.warn(`[${provider.toUpperCase()}] No INSEE_KEY found in environment`);
+      // Keep it as a warning (some endpoints may still work unauthenticated)
+      console.warn(`[${provider.toUpperCase()}] No INSEE_API_KEY found in environment`);
     }
   }
 

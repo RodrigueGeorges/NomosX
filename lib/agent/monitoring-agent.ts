@@ -67,6 +67,11 @@ import { searchPatentsView } from '../providers/patents/patentsview-api';
 import { searchFigshare } from '../providers/data/figshare-api';
 import { searchZenodo } from '../providers/data/zenodo-api';
 
+// 🏛️ Macro providers
+import { searchEurostat } from '../providers/macro/eurostat-api.js';
+import { searchECB } from '../providers/macro/ecb-api.js';
+import { searchINSEE } from '../providers/macro/insee-api.js';
+
 // Using shared prisma singleton from db.ts
 
 interface MonitoringConfig {
@@ -260,6 +265,11 @@ const PROVIDER_FUNCTIONS: Record<string, (query: string, limit: number) => Promi
   // 📦 Data
   'figshare': searchFigshare,
   'zenodo': searchZenodo,
+
+  // 🏛️ Macroéconomiques
+  'eurostat': searchEurostat,
+  'ecb': searchECB,
+  'insee': searchINSEE,
 
   // 🧠 Think Tanks
   'cset': searchCSETViaGoogle,

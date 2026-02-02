@@ -29,10 +29,12 @@ const envSchema = z.object({
   ROR_API: z.string().url().optional().default("https://api.ror.org/organizations"),
   ORCID_API: z.string().url().optional().default("https://pub.orcid.org/v3.0"),
   
-  // Macro data
+  // Macro data (official APIs)
   EUROSTAT_API: z.string().url().optional().default("https://ec.europa.eu/eurostat/api/dissemination/statistics/1.0/data"),
   ECB_API: z.string().url().optional().default("https://data-api.ecb.europa.eu/service/data"),
   INSEE_API: z.string().url().optional().default("https://api.insee.fr/series/BDM/V1/data"),
+  // Token for INSEE APIs (Melodi/BDM). Some INSEE endpoints require OAuth; we treat this as a bearer token.
+  INSEE_API_KEY: z.string().optional(),
   
   // Cohere (for reranking)
   COHERE_API_KEY: z.string().optional(),
