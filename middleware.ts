@@ -1,9 +1,8 @@
 import { NextRequest, NextResponse } from "next/server";
 import { jwtVerify } from "jose";
 
-const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || "nomosx-secret-key-change-in-production"
-);
+const JWT_SECRET_RAW = process.env.JWT_SECRET;
+const JWT_SECRET = new TextEncoder().encode(JWT_SECRET_RAW || "");
 
 const SESSION_COOKIE_NAME = "nomosx-session";
 
@@ -48,13 +47,36 @@ export async function middleware(request: NextRequest) {
   // Get session token
   const token = request.cookies.get(SESSION_COOKIE_NAME)?.value;
 
+  // Hard fail-safe: if JWT_SECRET is missing, treat all sessions as invalid.
+  // (Prevents accidentally deploying with a known default secret.)
+  if (!JWT_SECRET_RAW || JWT_SECRET_RAW.trim().length < 16) {
+    const isPublic = pathname === "/" || pathname.startsWith("/auth/");
+    if (isPublic) return NextResponse.next();
+
+    if (pathname.startsWith("/api/")) {
+      return NextResponse.json(
+        { error: "Server misconfigured: JWT_SECRET missing" },
+        { status: 503 }
+      );
+    }
+
+    return NextResponse.redirect(new URL("/auth/login", request.url));
+  }
+
   // Protected API routes (Think Tank, Subscription, etc.)
   const isProtectedApiRoute = 
     pathname.startsWith("/api/think-tank") ||
     pathname.startsWith("/api/subscription") ||
     pathname.startsWith("/api/drafts") ||
     pathname.startsWith("/api/editorial-gate") ||
-    pathname.startsWith("/api/council-sessions");
+    pathname.startsWith("/api/council-sessions") ||
+    // Costly endpoints
+    pathname.startsWith("/api/brief") ||
+    pathname.startsWith("/api/ingestion") ||
+    pathname.startsWith("/api/search") ||
+    pathname.startsWith("/api/radar") ||
+    pathname.startsWith("/api/council") ||
+    pathname.startsWith("/api/runs");
   
   if (isProtectedApiRoute && !token) {
     return NextResponse.json({ error: "Unauthorized" }, { status: 401 });

@@ -5,10 +5,22 @@
 
 import { SignJWT, jwtVerify } from "jose";
 import { cookies } from "next/headers";
+import bcrypt from "bcryptjs";
 
-const JWT_SECRET = new TextEncoder().encode(
-  process.env.JWT_SECRET || "nomosx-secret-key-change-in-production"
-);
+const JWT_SECRET_RAW = process.env.JWT_SECRET;
+const JWT_SECRET = new TextEncoder().encode(JWT_SECRET_RAW || "");
+
+// Legacy (pre-bcrypt) password hashing used in early versions.
+// We keep it for a smooth migration: if a user logs in with a legacy hash,
+// we can rehash to bcrypt.
+async function legacySha256(password: string): Promise<string> {
+  const encoder = new TextEncoder();
+  const salt = process.env.PASSWORD_SALT || "nomosx-salt";
+  const data = encoder.encode(`${password}${salt}`);
+  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
+  const hashArray = Array.from(new Uint8Array(hashBuffer));
+  return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+}
 
 const SESSION_COOKIE_NAME = "nomosx-session";
 const SESSION_DURATION = 7 * 24 * 60 * 60 * 1000; // 7 days
@@ -21,30 +33,49 @@ export type SessionUser = {
 };
 
 /**
- * Hash password using Web Crypto API
- * For production, use bcrypt: npm install bcryptjs
+ * Hash password (bcrypt)
  */
 export async function hashPassword(password: string): Promise<string> {
-  // Simple hash for development - REPLACE with bcrypt in production
-  const encoder = new TextEncoder();
-  const data = encoder.encode(password + process.env.PASSWORD_SALT || "nomosx-salt");
-  const hashBuffer = await crypto.subtle.digest("SHA-256", data);
-  const hashArray = Array.from(new Uint8Array(hashBuffer));
-  return hashArray.map((b) => b.toString(16).padStart(2, "0")).join("");
+  const rounds = 12;
+  return bcrypt.hash(password, rounds);
 }
 
 /**
- * Verify password
+ * Verify password.
+ *
+ * Supports:
+ * - bcrypt hashes (preferred)
+ * - legacy SHA-256 hashes (migration path)
  */
 export async function verifyPassword(password: string, hashedPassword: string): Promise<boolean> {
-  const hash = await hashPassword(password);
-  return hash === hashedPassword;
+  const hp = String(hashedPassword || "");
+
+  // bcrypt hashes start with $2a$, $2b$, $2y$
+  if (hp.startsWith("$2")) {
+    try {
+      return await bcrypt.compare(password, hp);
+    } catch {
+      return false;
+    }
+  }
+
+  // legacy
+  try {
+    const legacy = await legacySha256(password);
+    return legacy === hp;
+  } catch {
+    return false;
+  }
 }
 
 /**
  * Create JWT token
  */
 export async function createToken(user: SessionUser): Promise<string> {
+  if (!JWT_SECRET_RAW || JWT_SECRET_RAW.trim().length < 16) {
+    throw new Error("JWT_SECRET is not configured");
+  }
+
   const token = await new SignJWT({ user })
     .setProtectedHeader({ alg: "HS256" })
     .setIssuedAt()
@@ -58,10 +89,14 @@ export async function createToken(user: SessionUser): Promise<string> {
  * Verify JWT token
  */
 export async function verifyToken(token: string): Promise<SessionUser | null> {
+  if (!JWT_SECRET_RAW || JWT_SECRET_RAW.trim().length < 16) {
+    return null;
+  }
+
   try {
     const verified = await jwtVerify(token, JWT_SECRET);
     return verified.payload.user as SessionUser;
-  } catch (error) {
+  } catch {
     return null;
   }
 }

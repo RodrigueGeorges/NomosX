@@ -9,7 +9,11 @@ const envSchema = z.object({
   // Core
   NODE_ENV: z.enum(["development", "production", "test"]).default("development"),
   DATABASE_URL: z.string().url(),
-  
+
+  // Security / Auth
+  // Required in production (validated after parse)
+  JWT_SECRET: z.string().min(16).optional(),
+
   // OpenAI
   OPENAI_API_KEY: z.string().min(1),
   OPENAI_MODEL: z.string().default("gpt-4o"),
@@ -64,6 +68,9 @@ const envSchema = z.object({
   
   // Cron security
   CRON_SECRET: z.string().optional(),
+
+  // Patents (optional)
+  PATENTSVIEW_API_KEY: z.string().optional(),
   
   // Next.js
   NEXT_PUBLIC_APP_URL: z.string().url().optional().default("http://localhost:3000"),
@@ -73,10 +80,28 @@ export type Env = z.infer<typeof envSchema>;
 
 function validateEnv(): Env {
   try {
-    return envSchema.parse(process.env);
+    const parsed = envSchema.parse(process.env);
+
+    // Production hard requirements
+    if (parsed.NODE_ENV === "production") {
+      if (!parsed.JWT_SECRET || parsed.JWT_SECRET.trim().length < 32) {
+        throw new Error(
+          "❌ Missing/weak JWT_SECRET. In production you must set JWT_SECRET to a long random value (>= 32 chars)."
+        );
+      }
+      if (!parsed.ADMIN_KEY || parsed.ADMIN_KEY.trim().length < 16) {
+        throw new Error(
+          "❌ Missing/weak ADMIN_KEY. In production you must set ADMIN_KEY (>= 16 chars)."
+        );
+      }
+    }
+
+    return parsed;
   } catch (error) {
     if (error instanceof z.ZodError) {
-      const missing = error.errors.map((e) => `  - ${e.path.join(".")}: ${e.message}`).join("\n");
+      const missing = error.errors
+        .map((e) => `  - ${e.path.join(".")}: ${e.message}`)
+        .join("\n");
       throw new Error(`❌ Invalid environment variables:\n${missing}`);
     }
     throw error;

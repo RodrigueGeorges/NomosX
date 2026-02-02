@@ -19,6 +19,9 @@ import { readerAgent } from "@/lib/agent/reader-agent";
 import { analystAgent } from "@/lib/agent/analyst-agent";
 import { renderBriefHTML } from "@/lib/agent/pipeline-v2";
 import { enhanceQuestion } from "@/lib/ai/question-enhancer";
+import { getSession } from "@/lib/auth";
+import { assertRateLimit, RateLimitError } from "@/lib/security/rate-limit";
+import { assertAndConsumeRun, QuotaError } from "@/lib/security/quota";
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';
@@ -37,6 +40,35 @@ export async function GET(req: NextRequest) {
 
   if (!question) {
     return new Response('Missing question parameter', { status: 400 });
+  }
+
+  // Auth (P0): prevent public cost abuse
+  const user = await getSession();
+  if (!user) {
+    return new Response('Unauthorized', { status: 401 });
+  }
+
+  // Rate limit (P0): fixed window
+  try {
+    assertRateLimit(`brief-stream:user:${user.id}`, 12, 60_000);
+  } catch (err) {
+    if (err instanceof RateLimitError) {
+      return new Response('Rate limit exceeded', {
+        status: 429,
+        headers: { 'Retry-After': String(Math.ceil(err.retryAfterMs / 1000)) },
+      });
+    }
+    throw err;
+  }
+
+  // Quota (P0): enforce per-user limits
+  try {
+    await assertAndConsumeRun(user.id);
+  } catch (err) {
+    if (err instanceof QuotaError) {
+      return new Response(err.message, { status: 402 });
+    }
+    throw err;
   }
 
   // Create SSE stream

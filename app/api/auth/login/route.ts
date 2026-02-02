@@ -1,6 +1,6 @@
 import { NextRequest, NextResponse } from "next/server";
 import { prisma } from "@/lib/db";
-import { verifyPassword, createSession } from "@/lib/auth";
+import { verifyPassword, hashPassword, createSession } from "@/lib/auth";
 import { z } from "zod";
 
 const loginSchema = z.object({
@@ -41,12 +41,25 @@ export async function POST(req: NextRequest) {
 
     // Verify password
     const isValidPassword = await verifyPassword(password, user.password);
-    
+
     if (!isValidPassword) {
       return NextResponse.json(
         { error: "Email ou mot de passe incorrect" },
         { status: 401 }
       );
+    }
+
+    // Seamless migration: if password is legacy-hashed, upgrade to bcrypt on successful login
+    if (!String(user.password || "").startsWith("$2")) {
+      try {
+        const upgraded = await hashPassword(password);
+        await prisma.user.update({
+          where: { id: user.id },
+          data: { password: upgraded },
+        });
+      } catch (e) {
+        console.warn("[Login API] Failed to upgrade password hash:", (e as any)?.message || e);
+      }
     }
 
     // Update last login

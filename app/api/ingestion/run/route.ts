@@ -2,9 +2,41 @@ import { NextRequest, NextResponse } from "next/server";
 import { scout } from "@/lib/agent/pipeline-v2";
 import { indexAgent, deduplicateSources } from "@/lib/agent/index-agent";
 import { prisma } from "@/lib/db";
+import { getSession } from "@/lib/auth";
+import { assertRateLimit, RateLimitError } from "@/lib/security/rate-limit";
+import { assertAndConsumeRun, QuotaError } from "@/lib/security/quota";
 
 export async function POST(req: NextRequest) {
   try {
+    // Auth (P0)
+    const user = await getSession();
+    if (!user) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+    }
+
+    // Rate limit (P0)
+    try {
+      assertRateLimit(`ingestion-run:user:${user.id}`, 20, 60_000);
+    } catch (err) {
+      if (err instanceof RateLimitError) {
+        return NextResponse.json(
+          { error: "Rate limit exceeded" },
+          { status: 429, headers: { "Retry-After": String(Math.ceil(err.retryAfterMs / 1000)) } }
+        );
+      }
+      throw err;
+    }
+
+    // Quota (P0)
+    try {
+      await assertAndConsumeRun(user.id);
+    } catch (err) {
+      if (err instanceof QuotaError) {
+        return NextResponse.json({ error: err.message }, { status: 402 });
+      }
+      throw err;
+    }
+
     const body = await req.json();
     const { query, providers, perProvider } = body;
 
