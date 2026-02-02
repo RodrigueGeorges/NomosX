@@ -1,8 +1,27 @@
 
 import { NextResponse } from "next/server";
 import { hybridSearch } from "@/lib/embeddings";
+import { getSession } from "@/lib/auth";
+import { assertRateLimit, RateLimitError } from "@/lib/security/rate-limit";
 
 export async function GET(req: Request) {
+  // Auth (P0): prevent public embedding-cost abuse
+  const user = await getSession();
+  if (!user) return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
+
+  // Rate limit (P0)
+  try {
+    assertRateLimit(`search:user:${user.id}`, 60, 60_000);
+  } catch (err) {
+    if (err instanceof RateLimitError) {
+      return NextResponse.json(
+        { error: "Rate limit exceeded" },
+        { status: 429, headers: { "Retry-After": String(Math.ceil(err.retryAfterMs / 1000)) } }
+      );
+    }
+    throw err;
+  }
+
   const { searchParams } = new URL(req.url);
   const q = (searchParams.get("q") || "").trim();
   const provider = searchParams.get("provider");

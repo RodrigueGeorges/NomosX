@@ -11,8 +11,8 @@ const envSchema = z.object({
   DATABASE_URL: z.string().url(),
 
   // Security / Auth
-  // Required in production (validated after parse)
-  JWT_SECRET: z.string().min(16).optional(),
+  // Required (no default). Use >= 32 chars.
+  JWT_SECRET: z.string().min(32),
 
   // OpenAI
   OPENAI_API_KEY: z.string().min(1),
@@ -82,13 +82,13 @@ function validateEnv(): Env {
   try {
     const parsed = envSchema.parse(process.env);
 
+    // Hard requirements
+    if (parsed.ADMIN_KEY && parsed.ADMIN_KEY.trim().length > 0) {
+      // ok
+    }
+
     // Production hard requirements
     if (parsed.NODE_ENV === "production") {
-      if (!parsed.JWT_SECRET || parsed.JWT_SECRET.trim().length < 32) {
-        throw new Error(
-          "❌ Missing/weak JWT_SECRET. In production you must set JWT_SECRET to a long random value (>= 32 chars)."
-        );
-      }
       if (!parsed.ADMIN_KEY || parsed.ADMIN_KEY.trim().length < 16) {
         throw new Error(
           "❌ Missing/weak ADMIN_KEY. In production you must set ADMIN_KEY (>= 16 chars)."
