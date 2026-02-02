@@ -1,5 +1,8 @@
 /**
  * ECB (European Central Bank) client for monetary data
+ * Official endpoint: https://data-api.ecb.europa.eu/service/data
+ *
+ * We request SDMX-JSON (ECB supports it via Accept header) and parse TIME_PERIOD.
  */
 
 import { fetchFromProvider } from "../http-client";
@@ -20,47 +23,82 @@ export interface MacroSeries {
   points: MacroDataPoint[];
 }
 
-// Curated indicators for V1
-const ECB_INDICATORS = {
-  "FM.B.U2.EUR.4F.KR.MRR_FR.LEV": { name: "MRO Rate", unit: "%" },
-  "ICP.M.U2.N.000000.4.ANR": { name: "HICP Euro Area", unit: "Annual rate %" },
+// Curated indicators (ECB SDMX series keys)
+const ECB_INDICATORS: Record<string, { name: string; unit?: string; frequency?: string; startPeriod?: string }> = {
+  // ECB path is /{dataset}/{seriesKey}
+  "FM/B.U2.EUR.4F.KR.MRR_FR.LEV": { name: "ECB MRO rate", unit: "%", frequency: "monthly", startPeriod: "2010-01" },
+  "ICP/M.U2.N.000000.4.ANR": { name: "HICP Euro Area (annual rate)", unit: "%", frequency: "monthly", startPeriod: "2010-01" },
 };
 
+function parseSdmxTime(period: string): Date | null {
+  // ECB usually uses YYYY-MM for monthly or YYYY-Qx for quarterly
+  if (/^\d{4}-\d{2}$/.test(period)) {
+    const [y, m] = period.split("-");
+    return new Date(Number(y), Number(m) - 1, 1);
+  }
+  if (/^\d{4}-Q[1-4]$/.test(period)) {
+    const y = Number(period.slice(0, 4));
+    const q = Number(period.slice(6, 7));
+    return new Date(y, (q - 1) * 3, 1);
+  }
+  if (/^\d{4}$/.test(period)) {
+    return new Date(Number(period), 0, 1);
+  }
+  const d = new Date(period);
+  return Number.isNaN(d.getTime()) ? null : d;
+}
+
 export async function fetchECBSeries(code: string): Promise<MacroSeries | null> {
-  const base = env.ECB_API;
-  const url = `${base}/${code}`;
-  
+  const base = env.ECB_API.replace(/\/$/, "");
+  const indicator = ECB_INDICATORS[code];
+
+  const sp = new URLSearchParams();
+  if (indicator?.startPeriod) sp.set("startPeriod", indicator.startPeriod);
+
+  const url = `${base}/${code}${sp.toString() ? `?${sp.toString()}` : ""}`;
+
   try {
-    const data: any = await fetchFromProvider("ecb", url, { timeout: 20000, retries: 2 });
-    
-    // ECB SDMX format parsing (simplified for V1)
-    // Note: Real implementation would need proper SDMX parser
-    const observations = data?.dataSets?.[0]?.series?.["0:0"]?.observations || {};
-    
+    const data: any = await fetchFromProvider("ecb", url, {
+      timeout: 20000,
+      retries: 2,
+      headers: {
+        Accept: "application/vnd.sdmx.data+json;version=1.0.0-wd",
+      },
+    });
+
+    const ds = data?.dataSets?.[0];
+    const seriesObj = ds?.series || {};
+    const seriesKey = Object.keys(seriesObj)[0];
+    const observations: Record<string, any> = seriesKey ? seriesObj[seriesKey]?.observations || {} : {};
+
+    const obsDims = data?.structure?.dimensions?.observation || [];
+    const timeDim = obsDims.find((d: any) => String(d?.id || "").toLowerCase().includes("time"));
+    const timeValues: Array<{ id: string }> = timeDim?.values || [];
+
     const points: MacroDataPoint[] = Object.entries(observations)
-      .map(([key, value]: [string, any]) => {
-        const numValue = Array.isArray(value) ? value[0] : value;
+      .map(([obsIndex, obsValue]: [string, any]) => {
+        const numValue = Array.isArray(obsValue) ? obsValue[0] : obsValue;
         if (numValue == null) return null;
-        
-        // Simplified date parsing
-        const date = new Date();
-        date.setMonth(date.getMonth() - (Object.keys(observations).length - Number(key)));
-        
+
+        const period = timeValues[Number(obsIndex)]?.id;
+        if (!period) return null;
+
+        const date = parseSdmxTime(period);
+        if (!date) return null;
+
         return { date, value: Number(numValue) };
       })
-      .filter((p): p is MacroDataPoint => p !== null);
-    
-    const metadata = ECB_INDICATORS[code as keyof typeof ECB_INDICATORS] || {
-      name: code,
-      unit: "units",
-    };
-    
+      .filter((p): p is MacroDataPoint => p !== null)
+      .sort((a, b) => a.date.getTime() - b.date.getTime());
+
+    const name = indicator?.name || code;
+
     return {
       provider: "ecb",
       code,
-      name: metadata.name,
-      unit: metadata.unit,
-      frequency: "monthly",
+      name,
+      unit: indicator?.unit,
+      frequency: indicator?.frequency,
       points,
     };
   } catch (error: any) {
@@ -71,13 +109,13 @@ export async function fetchECBSeries(code: string): Promise<MacroSeries | null> 
 
 export async function ingestECBIndicators(): Promise<MacroSeries[]> {
   const series: MacroSeries[] = [];
-  
+
   for (const code of Object.keys(ECB_INDICATORS)) {
     const data = await fetchECBSeries(code);
-    if (data) {
+    if (data && data.points.length > 0) {
       series.push(data);
     }
   }
-  
+
   return series;
 }

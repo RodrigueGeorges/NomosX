@@ -8,7 +8,23 @@
  *   node scripts/start-monitoring.mjs --once             # Run once (test)
  */
 
-import { PrismaClient } from '../generated/prisma-client/index.js';
+import dotenv from "dotenv";
+import { fileURLToPath } from "url";
+import { dirname, join } from "path";
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = dirname(__filename);
+
+dotenv.config({ path: join(__dirname, "..", ".env") });
+
+if (!process.env.JWT_SECRET) {
+  process.env.JWT_SECRET = "dev-jwt-secret-please-change-32chars-min";
+}
+if (!process.env.OPENAI_API_KEY) {
+  process.env.OPENAI_API_KEY = "dev-openai-key";
+}
+
+import { PrismaClient } from "../generated/prisma-client/index.js";
 
 const prisma = new PrismaClient();
 
