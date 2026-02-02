@@ -46,7 +46,10 @@ import { searchMinistereArmees, searchSGDSN, searchArchivesNationales } from '..
 import { searchIMFSDMX } from '../providers/institutional/v2/imf-sdmx';
 import { searchIMFeLibrary } from '../providers/institutional/v2/imf-elibrary';
 
+// OECD (robust chaining): SDMX first (non-Cloudflare), then fallback iLibrary
+import { searchOECDSDMX } from '../providers/institutional/v2/oecd-sdmx';
 import { searchOECDiLibrary } from '../providers/institutional/v2/oecd-ilibrary';
+
 import { searchBIS } from '../providers/institutional/v2/bis-papers';
 import { searchNIST } from '../providers/institutional/v2/nist-publications';
 import { scoreSource } from '../score';
@@ -139,6 +142,62 @@ async function searchIMFChained(query: string, limit: number): Promise<any[]> {
 }
 
 /**
+ * OECD chained provider:
+ * - SDMX first (https://sdmx.oecd.org/public/rest) to avoid Cloudflare blocks on oecd.org
+ * - Fallback to OECD iLibrary scraping if SDMX is unreachable or returns curated fallback only
+ */
+export async function searchOECDChained(query: string, limit: number): Promise<any[]> {
+  let sdmxResults: any[] = [];
+
+  try {
+    sdmxResults = await searchOECDSDMX(query, limit);
+  } catch (err: any) {
+    console.warn(`[Monitoring][OECD] SDMX failed: ${err?.message || String(err)}`);
+    sdmxResults = [];
+  }
+
+  const sdmxAllFallback =
+    sdmxResults.length > 0 &&
+    sdmxResults.every((s: any) => Boolean(s?.raw?.fallback));
+
+  // If SDMX gave real catalog matches, prefer them
+  if (sdmxResults.length > 0 && !sdmxAllFallback) {
+    return sdmxResults.slice(0, limit);
+  }
+
+  // Otherwise try iLibrary (may be blocked, but can return richer publication metadata when it works)
+  let ilibResults: any[] = [];
+  try {
+    ilibResults = await searchOECDiLibrary(query, limit);
+  } catch (err: any) {
+    console.warn(`[Monitoring][OECD] iLibrary fallback failed: ${err?.message || String(err)}`);
+    ilibResults = [];
+  }
+
+  // Prefer iLibrary, fill remaining with SDMX fallback
+  const merged: any[] = [];
+  const seen = new Set<string>();
+
+  for (const s of ilibResults) {
+    if (!s?.id) continue;
+    if (seen.has(s.id)) continue;
+    seen.add(s.id);
+    merged.push(s);
+    if (merged.length >= limit) return merged;
+  }
+
+  for (const s of sdmxResults) {
+    if (!s?.id) continue;
+    if (seen.has(s.id)) continue;
+    seen.add(s.id);
+    merged.push(s);
+    if (merged.length >= limit) return merged;
+  }
+
+  return merged;
+}
+
+/**
  * Mapping des providers vers leurs fonctions de recherche
  */
 const PROVIDER_FUNCTIONS: Record<string, (query: string, limit: number) => Promise<any[]>> = {
@@ -160,10 +219,10 @@ const PROVIDER_FUNCTIONS: Record<string, (query: string, limit: number) => Promi
   'sgdsn': searchSGDSN,
   'archives-fr': searchArchivesNationales,
   'imf': searchIMFChained,
-  'oecd': searchOECDiLibrary,
+  'oecd': searchOECDChained,
   'bis': searchBIS,
   'nist': searchNIST,
-  'archives-nationales-fr': searchArchivesNationalesFR,
+  'archives-nationales-fr': searchArchivesNationales,
 
   // 🎓 Académiques
   'crossref': searchCrossref,
