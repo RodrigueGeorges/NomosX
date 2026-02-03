@@ -9,7 +9,7 @@ import { LinkupClient } from 'linkup-sdk';
 
 // ===== CONFIGURATION LINKUP =====
 const LINKUP_CONFIG = {
-  apiKey: "800bf484-ccbd-4b51-acdb-8a86d36f7a1e",
+  apiKey: process.env.LINKUP_API_KEY || "800bf484-ccbd-4b51-acdb-8a86d36f7a1e",
   defaultOptions: {
     depth: "standard",
     outputType: "searchResults",

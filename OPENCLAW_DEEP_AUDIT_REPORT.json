@@ -1,0 +1,1301 @@
+{
+  "summary": {
+    "timestamp": "2026-02-03T20:52:48.169Z",
+    "duration": "9s",
+    "filesScanned": 582,
+    "linesAnalyzed": 396942,
+    "issuesFound": 317
+  },
+  "issuesBySeverity": {
+    "critical": 7,
+    "high": 72,
+    "medium": 12,
+    "low": 200,
+    "info": 26
+  },
+  "issues": {
+    "critical": [
+      {
+        "category": "security",
+        "message": "Hardcoded API key detected in \\lib\\providers\\linkup-sdk.ts"
+      },
+      {
+        "category": "security",
+        "message": "Hardcoded API key detected in \\fix-google-search.mjs"
+      },
+      {
+        "category": "security",
+        "message": "Dangerous eval() usage in \\lib\\agent\\openclaw-deep-auditor.mjs"
+      },
+      {
+        "category": "security",
+        "message": "Hardcoded API key detected in \\lib\\agent\\openclaw-linkup-evaluator.mjs"
+      },
+      {
+        "category": "security",
+        "message": "Hardcoded API key detected in \\lib\\providers\\linkup-registry.mjs"
+      },
+      {
+        "category": "security",
+        "message": "Hardcoded API key detected in \\test-full-system.mjs"
+      },
+      {
+        "category": "security",
+        "message": "Hardcoded API key detected in \\test-monitoring.mjs"
+      }
+    ],
+    "high": [
+      {
+        "category": "config",
+        "message": "Missing environment variable: LINKUP_API_KEY"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\implement-varied-sources-architecture.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\jest.config.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\agent\\analyze-content-readiness-critical.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\agent\\analyze-content-readiness.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\agent\\fix-ui-components.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\agent\\monitoring-agent-extended.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\agent\\openclaw-100-compliance.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\agent\\openclaw-correction.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\agent\\openclaw-cto-implementation.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\agent\\openclaw-deep-auditor.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\agent\\openclaw-error-fixer.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\agent\\openclaw-final-100.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\agent\\openclaw-final-build-fix.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\agent\\openclaw-final-compliance.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\agent\\openclaw-final-report.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\agent\\openclaw-finalization-100.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\agent\\openclaw-frontend-ux-plan.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\agent\\openclaw-full-implementation.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\agent\\openclaw-integrate-innovants.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\agent\\openclaw-intelligent-integration.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\agent\\openclaw-massive-extension.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\agent\\openclaw-newsletter-briefing-concept.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\agent\\openclaw-pages-analysis.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\agent\\openclaw-pertinence-analysis.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\agent\\openclaw-smart-implementation.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\agent\\openclaw-structure-optimization.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\agent\\openclaw-total-integration.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\agent\\openclaw-weekly-publication-test.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\agent\\simple-typescript-fixer.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\agent\\test-intelligence-sources.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\agent\\test-think-tanks.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\agent\\typescript-error-fixer.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\config\\linkup-universal-monitoring.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\providers\\cell-provider.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\providers\\jama-provider.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\providers\\kaggle-research-provider.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\providers\\kpmg-thought-leadership-provider.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\providers\\lancet-provider.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\providers\\lawzero-provider.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\providers\\linkup-complementary.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\providers\\mckinsey-global-institute-provider.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\providers\\microsoft-research-provider.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\providers\\nature-medicine-provider.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\providers\\nature-provider.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\providers\\nejm-provider.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\providers\\openai-research-provider.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\providers\\papers-with-code-provider.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\providers\\partnership-ai-provider.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\providers\\pnas-provider.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\providers\\pwc-research-provider.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\providers\\rand-provider.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\providers\\rmi-provider.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\providers\\rsis-provider.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\providers\\saiia-provider.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\providers\\science-provider.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\providers\\undp-research-provider.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\providers\\vanguard-provider.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\providers\\who-provider.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\providers\\worldbank-research-provider.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\providers\\wri-provider.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\system\\test-optimized-system-enterprise.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\lib\\system\\test-optimized-system.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\scripts\\apply-institutional-migration.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\scripts\\seed-demo-data.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\scripts\\test-complete-pipeline.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\scripts\\test-flow-complet.mjs"
+      },
+      {
+        "category": "typescript",
+        "message": "TypeScript syntax in .mjs file: \\scripts\\worker.mjs"
+      },
+      {
+        "category": "security",
+        "message": "dangerouslySetInnerHTML usage in \\app\\publications\\[id]\\page.tsx - XSS risk"
+      },
+      {
+        "category": "security",
+        "message": "dangerouslySetInnerHTML usage in \\app\\s\\[id]\\page.tsx - XSS risk"
+      },
+      {
+        "category": "security",
+        "message": "dangerouslySetInnerHTML usage in \\app\\studio\\page.tsx - XSS risk"
+      },
+      {
+        "category": "security",
+        "message": "dangerouslySetInnerHTML usage in \\lib\\agent\\openclaw-deep-auditor.mjs - XSS risk"
+      }
+    ],
+    "medium": [
+      {
+        "category": "quality",
+        "message": "Potentially large functions in \\lib\\agent\\monitoring-agent.ts (713 lines, 2 functions)"
+      },
+      {
+        "category": "quality",
+        "message": "Potentially large functions in \\lib\\system\\optimized-coherent-system-enterprise.ts (1104 lines, 2 functions)"
+      },
+      {
+        "category": "quality",
+        "message": "Potentially large functions in \\lib\\system\\optimized-coherent-system.ts (691 lines, 2 functions)"
+      },
+      {
+        "category": "quality",
+        "message": "Potentially large functions in \\app\\page.tsx (558 lines, 1 functions)"
+      },
+      {
+        "category": "quality",
+        "message": "Potentially large functions in \\components\\features\\user\\SettingsClient.tsx (601 lines, 1 functions)"
+      },
+      {
+        "category": "quality",
+        "message": "Potentially large functions in \\lib\\agent\\fix-ui-components.mjs (750 lines, 3 functions)"
+      },
+      {
+        "category": "quality",
+        "message": "Potentially large functions in \\lib\\agent\\openclaw-cto-implementation.mjs (708 lines, 4 functions)"
+      },
+      {
+        "category": "quality",
+        "message": "Potentially large functions in \\lib\\agent\\openclaw-deep-auditor.mjs (659 lines, 1 functions)"
+      },
+      {
+        "category": "quality",
+        "message": "Potentially large functions in \\lib\\agent\\openclaw-full-implementation.mjs (1048 lines, 3 functions)"
+      },
+      {
+        "category": "quality",
+        "message": "Potentially large functions in \\lib\\agent\\openclaw-linkup-optimizer.mjs (503 lines, 1 functions)"
+      },
+      {
+        "category": "quality",
+        "message": "Potentially large functions in \\lib\\agent\\typescript-error-fixer.mjs (515 lines, 2 functions)"
+      },
+      {
+        "category": "api",
+        "message": "No error handling in \\app\\api\\briefs\\[id]\\share\\route.ts"
+      }
+    ],
+    "low": [
+      {
+        "category": "config",
+        "message": "next.config.cjs: Turbopack enabled - might cause issues"
+      },
+      {
+        "category": "typescript",
+        "message": "Excessive use of 'any' type (115) in \\generated\\prisma-client\\index.d.ts"
+      },
+      {
+        "category": "typescript",
+        "message": "Excessive use of 'any' type (48) in \\generated\\prisma-client\\runtime\\library.d.ts"
+      },
+      {
+        "category": "typescript",
+        "message": "Excessive use of 'any' type (6) in \\lib\\agent\\analyst-agent.ts"
+      },
+      {
+        "category": "typescript",
+        "message": "Excessive use of 'any' type (8) in \\lib\\agent\\critical-loop.ts"
+      },
+      {
+        "category": "typescript",
+        "message": "Excessive use of 'any' type (7) in \\lib\\agent\\editorial-gate.ts"
+      },
+      {
+        "category": "typescript",
+        "message": "Excessive use of 'any' type (17) in \\lib\\agent\\monitoring-agent.ts"
+      },
+      {
+        "category": "typescript",
+        "message": "Excessive use of 'any' type (34) in \\lib\\agent\\pipeline-v2.ts"
+      },
+      {
+        "category": "typescript",
+        "message": "Excessive use of 'any' type (7) in \\lib\\agent\\pipeline.ts"
+      },
+      {
+        "category": "typescript",
+        "message": "Excessive use of 'any' type (11) in \\lib\\agent\\publication-generator.ts"
+      },
+      {
+        "category": "typescript",
+        "message": "Excessive use of 'any' type (10) in \\lib\\agent\\radar-agent.ts"
+      },
+      {
+        "category": "typescript",
+        "message": "Excessive use of 'any' type (7) in \\lib\\agent\\signal-detector.ts"
+      },
+      {
+        "category": "typescript",
+        "message": "Excessive use of 'any' type (7) in \\lib\\agent\\strategic-analyst-agent.ts"
+      },
+      {
+        "category": "typescript",
+        "message": "Excessive use of 'any' type (7) in \\lib\\agents\\validation-schemas.ts"
+      },
+      {
+        "category": "typescript",
+        "message": "Excessive use of 'any' type (8) in \\lib\\providers\\crossref.ts"
+      },
+      {
+        "category": "typescript",
+        "message": "Excessive use of 'any' type (8) in \\lib\\providers\\institutional\\v2\\imf-sdmx.ts"
+      },
+      {
+        "category": "typescript",
+        "message": "Excessive use of 'any' type (6) in \\lib\\providers\\institutional\\v2\\oecd-sdmx.ts"
+      },
+      {
+        "category": "typescript",
+        "message": "Excessive use of 'any' type (28) in \\lib\\providers\\linkup-mcp-agent.ts"
+      },
+      {
+        "category": "typescript",
+        "message": "Excessive use of 'any' type (28) in \\lib\\providers\\linkup-pipeline-integration.ts"
+      },
+      {
+        "category": "typescript",
+        "message": "Excessive use of 'any' type (20) in \\lib\\providers\\linkup-provider.ts"
+      },
+      {
+        "category": "typescript",
+        "message": "Excessive use of 'any' type (20) in \\lib\\providers\\linkup-sdk.ts"
+      },
+      {
+        "category": "typescript",
+        "message": "Excessive use of 'any' type (7) in \\lib\\providers\\macro\\eurostat-api.ts"
+      },
+      {
+        "category": "typescript",
+        "message": "Excessive use of 'any' type (6) in \\lib\\providers\\macro\\insee-api.ts"
+      },
+      {
+        "category": "typescript",
+        "message": "Excessive use of 'any' type (12) in \\lib\\providers\\melodi.ts"
+      },
+      {
+        "category": "typescript",
+        "message": "Excessive use of 'any' type (8) in \\lib\\providers\\openalex.ts"
+      },
+      {
+        "category": "typescript",
+        "message": "Excessive use of 'any' type (6) in \\lib\\providers\\patents\\patentsview-api.ts"
+      },
+      {
+        "category": "typescript",
+        "message": "Excessive use of 'any' type (8) in \\lib\\providers\\pdf-extractor.ts"
+      },
+      {
+        "category": "typescript",
+        "message": "Excessive use of 'any' type (6) in \\lib\\providers\\ror.ts"
+      },
+      {
+        "category": "typescript",
+        "message": "Excessive use of 'any' type (6) in \\lib\\providers\\semanticscholar.ts"
+      },
+      {
+        "category": "typescript",
+        "message": "Excessive use of 'any' type (6) in \\lib\\providers\\thesesfr-hal-bridge.ts"
+      },
+      {
+        "category": "typescript",
+        "message": "Excessive use of 'any' type (7) in \\lib\\providers\\thesesfr.ts"
+      },
+      {
+        "category": "typescript",
+        "message": "Excessive use of 'any' type (6) in \\lib\\services\\publication.service.ts"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (12) in \\backend\\scripts\\test-e2e.ts"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (12) in \\backend\\scripts\\verify-system.ts"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (18) in \\lib\\agent\\monitoring-agent.ts"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (68) in \\lib\\agent\\pipeline-v2.ts"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (24) in \\lib\\agent\\pipeline-v3.ts"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (11) in \\lib\\agent\\radar-agent.ts"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (15) in \\lib\\agent\\scout-v2.ts"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (12) in \\lib\\email\\index.ts"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (43) in \\lib\\providers\\institutional\\examples.ts"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (50) in \\scripts\\audit-all-providers.ts"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (39) in \\scripts\\audit-providers.ts"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (18) in \\scripts\\debug-sources.ts"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (36) in \\scripts\\test-all-providers.ts"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (40) in \\scripts\\test-content-first.ts"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (27) in \\scripts\\test-google-cse.ts"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (26) in \\scripts\\test-monitoring-direct.ts"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (27) in \\scripts\\test-monitoring-full.ts"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (26) in \\scripts\\test-newsletter-cron.ts"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (31) in \\scripts\\test-newsletter-subscribe.ts"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (61) in \\scripts\\test-pdf-extraction-direct.ts"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (68) in \\scripts\\test-pdf-extraction.ts"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (22) in \\scripts\\test-redis-connection.ts"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (30) in \\scripts\\test-redis-simple.ts"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (40) in \\scripts\\test-scout-v2.ts"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (45) in \\scripts\\test-strategic-pipeline.ts"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (39) in \\scripts\\test-unified-flow.ts"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (33) in \\scripts\\test-upstash-rest.ts"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (54) in \\scripts\\test-user-flow-simple.ts"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (28) in \\scripts\\test-user-flow.ts"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (41) in \\VALIDATION_FIXES_CTO.js"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (57) in \\create-alternative-solutions.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (42) in \\create-final-monitoring-agent.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (22) in \\debug-theses-fr.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (86) in \\deep-search-providers.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (86) in \\design-scalable-architecture.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (60) in \\fix-all-providers-100-percent.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (75) in \\fix-all-providers-complete.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (77) in \\fix-all-providers-pro.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (83) in \\fix-all-providers.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (29) in \\fix-final-4-providers.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (47) in \\fix-google-search.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (53) in \\fix-institutional-v2.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (41) in \\fix-institutional.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (74) in \\fix-maximum-providers.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (28) in \\fix-openalex.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (14) in \\fix-remaining-providers.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (28) in \\fix-unpaywall.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (85) in \\implement-varied-sources-architecture.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (59) in \\lib\\agent\\analyze-content-readiness-critical.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (54) in \\lib\\agent\\analyze-content-readiness.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (34) in \\lib\\agent\\audit-critique-systeme.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (46) in \\lib\\agent\\audit-final-systeme.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (14) in \\lib\\agent\\fix-openclaw-powershell.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (17) in \\lib\\agent\\monitoring-agent-extended.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (19) in \\lib\\agent\\openclaw-100-compliance.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (33) in \\lib\\agent\\openclaw-autonome.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (79) in \\lib\\agent\\openclaw-charter-analysis.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (50) in \\lib\\agent\\openclaw-complementary-analysis.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (23) in \\lib\\agent\\openclaw-complete-pages-update.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (24) in \\lib\\agent\\openclaw-comprehensive-audit.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (30) in \\lib\\agent\\openclaw-correction.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (40) in \\lib\\agent\\openclaw-cto-implementation.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (32) in \\lib\\agent\\openclaw-cto-validation.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (37) in \\lib\\agent\\openclaw-deep-auditor.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (76) in \\lib\\agent\\openclaw-design-analysis-fixed.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (76) in \\lib\\agent\\openclaw-design-analysis.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (58) in \\lib\\agent\\openclaw-diagnostic.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (119) in \\lib\\agent\\openclaw-dualflow-branding-analysis.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (28) in \\lib\\agent\\openclaw-enhanced-audit.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (23) in \\lib\\agent\\openclaw-error-fixer.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (78) in \\lib\\agent\\openclaw-existing-systems-verification.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (18) in \\lib\\agent\\openclaw-final-100.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (26) in \\lib\\agent\\openclaw-final-build-fix.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (32) in \\lib\\agent\\openclaw-final-compliance.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (40) in \\lib\\agent\\openclaw-final-report.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (37) in \\lib\\agent\\openclaw-final-validation.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (82) in \\lib\\agent\\openclaw-final-verification.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (44) in \\lib\\agent\\openclaw-finalization-100.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (47) in \\lib\\agent\\openclaw-fix.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (68) in \\lib\\agent\\openclaw-frontend-ux-plan.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (50) in \\lib\\agent\\openclaw-full-implementation.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (51) in \\lib\\agent\\openclaw-integrate-innovants.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (69) in \\lib\\agent\\openclaw-intelligent-integration.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (43) in \\lib\\agent\\openclaw-linkup-evaluator.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (36) in \\lib\\agent\\openclaw-linkup-optimizer.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (63) in \\lib\\agent\\openclaw-massive-extension.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (70) in \\lib\\agent\\openclaw-netlify-deployment.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (44) in \\lib\\agent\\openclaw-netlify-prep.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (108) in \\lib\\agent\\openclaw-newsletter-briefing-concept.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (54) in \\lib\\agent\\openclaw-pages-analysis.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (59) in \\lib\\agent\\openclaw-pertinence-analysis.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (64) in \\lib\\agent\\openclaw-professional-integration.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (84) in \\lib\\agent\\openclaw-smart-implementation.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (12) in \\lib\\agent\\openclaw-step2-gateway.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (27) in \\lib\\agent\\openclaw-step4-final.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (84) in \\lib\\agent\\openclaw-strategic-analysis.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (89) in \\lib\\agent\\openclaw-structure-optimization.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (77) in \\lib\\agent\\openclaw-total-integration.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (17) in \\lib\\agent\\openclaw-true-100.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (12) in \\lib\\agent\\openclaw-ultimate-validation.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (48) in \\lib\\agent\\openclaw-weekly-publication-test.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (11) in \\lib\\agent\\simple-typescript-fixer.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (37) in \\lib\\agent\\test-58-providers-simulation.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (30) in \\lib\\agent\\test-58-providers.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (50) in \\lib\\agent\\test-all-providers-final.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (14) in \\lib\\agent\\test-all-providers-simple.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (29) in \\lib\\agent\\test-all-providers.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (18) in \\lib\\agent\\test-business-providers.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (13) in \\lib\\agent\\test-imf-provider.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (13) in \\lib\\agent\\test-imf-sdmx.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (16) in \\lib\\agent\\test-intelligence-sources.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (43) in \\lib\\agent\\test-professional-varied-sources.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (16) in \\lib\\agent\\test-think-tanks.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (41) in \\lib\\agent\\test-varied-sources-integration.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (26) in \\lib\\agent\\typescript-error-fixer.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (142) in \\lib\\system\\test-optimized-system-enterprise.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (103) in \\lib\\system\\test-optimized-system.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (123) in \\optimize-quality-fix-errors.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (83) in \\phase1-foundation.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (109) in \\phase2-expansion.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (11) in \\scripts\\apply-institutional-migration.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (39) in \\scripts\\audit-fonctionnalites.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (14) in \\scripts\\debug-env.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (46) in \\scripts\\demo-institutional.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (29) in \\scripts\\monitoring-dashboard.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (21) in \\scripts\\seed-demo-data.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (12) in \\scripts\\start-monitoring.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (85) in \\scripts\\test-complete-pipeline.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (40) in \\scripts\\test-content-first.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (33) in \\scripts\\test-detection-signaux.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (56) in \\scripts\\test-flow-complet.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (15) in \\scripts\\test-flow-e2e.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (35) in \\scripts\\test-flow-simple.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (30) in \\scripts\\test-governance-simple.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (25) in \\scripts\\test-governance.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (15) in \\scripts\\test-imf-direct.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (23) in \\scripts\\test-imf-simulation.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (27) in \\scripts\\test-institutional-fields.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (33) in \\scripts\\test-institutional-final.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (47) in \\scripts\\test-institutional-v2.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (20) in \\scripts\\test-institutional.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (60) in \\scripts\\test-integration-real.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (20) in \\scripts\\test-openai.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (33) in \\scripts\\test-orchestration-v2.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (18) in \\scripts\\test-pipeline-simple.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (22) in \\scripts\\test-pipeline.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (14) in \\scripts\\test-providers-macro-simple.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (14) in \\scripts\\test-providers-macro.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (31) in \\scripts\\test-publication-hebdo.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (12) in \\scripts\\test-rss-feeds.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (23) in \\scripts\\test-system.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (25) in \\scripts\\test-veille-continue-simple.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (25) in \\scripts\\test-veille-continue.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (36) in \\scripts\\test-veille-linkup.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (33) in \\scripts\\verify-implementations.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (85) in \\test-all-missing-providers.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (94) in \\test-all-providers-complete.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (55) in \\test-all-providers-robust.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (14) in \\test-api.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (50) in \\test-final-providers.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (43) in \\test-full-system.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (40) in \\test-monitoring.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (14) in \\test-providers.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (27) in \\test-theses-fr-broad.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (32) in \\test-theses-fr-final.mjs"
+      },
+      {
+        "category": "quality",
+        "message": "Excessive console.log (50) in \\test-theses-fr-official.mjs"
+      },
+      {
+        "category": "linkup",
+        "message": "Old year reference (2024) in lib/providers/linkup-registry.mjs - should be 2026"
+      },
+      {
+        "category": "linkup",
+        "message": "Old year reference (2024) in lib/providers/linkup-complementary.mjs - should be 2026"
+      }
+    ],
+    "info": [
+      {
+        "category": "quality",
+        "message": "TODO/FIXME found in \\app\\api\\newsletter\\subscribe\\route.ts:69"
+      },
+      {
+        "category": "quality",
+        "message": "TODO/FIXME found in \\app\\api\\newsletter\\subscribe\\route.ts:81"
+      },
+      {
+        "category": "quality",
+        "message": "TODO/FIXME found in \\app\\api\\newsletter\\subscribe\\route.ts:104"
+      },
+      {
+        "category": "quality",
+        "message": "TODO/FIXME found in \\app\\api\\subscription\\upgrade\\route.ts:26"
+      },
+      {
+        "category": "quality",
+        "message": "TODO/FIXME found in \\backend\\src\\api\\routes\\analysis.ts:59"
+      },
+      {
+        "category": "quality",
+        "message": "TODO/FIXME found in \\backend\\src\\infrastructure\\queue\\worker.ts:87"
+      },
+      {
+        "category": "quality",
+        "message": "TODO/FIXME found in \\backend\\src\\infrastructure\\queue\\worker.ts:88"
+      },
+      {
+        "category": "quality",
+        "message": "TODO/FIXME found in \\backend\\src\\infrastructure\\queue\\worker.ts:89"
+      },
+      {
+        "category": "quality",
+        "message": "TODO/FIXME found in \\backend\\src\\infrastructure\\queue\\worker.ts:117"
+      },
+      {
+        "category": "quality",
+        "message": "TODO/FIXME found in \\backend\\src\\infrastructure\\queue\\worker.ts:118"
+      },
+      {
+        "category": "quality",
+        "message": "TODO/FIXME found in \\backend\\src\\infrastructure\\queue\\worker.ts:119"
+      },
+      {
+        "category": "quality",
+        "message": "TODO/FIXME found in \\generated\\prisma-client\\runtime\\library.d.ts:866"
+      },
+      {
+        "category": "quality",
+        "message": "TODO/FIXME found in \\generated\\prisma-client\\runtime\\library.d.ts:2580"
+      },
+      {
+        "category": "quality",
+        "message": "TODO/FIXME found in \\generated\\prisma-client\\runtime\\library.d.ts:2582"
+      },
+      {
+        "category": "quality",
+        "message": "TODO/FIXME found in \\lib\\agent\\index-agent.ts:279"
+      },
+      {
+        "category": "quality",
+        "message": "TODO/FIXME found in \\lib\\agent\\monitoring-agent.ts:486"
+      },
+      {
+        "category": "quality",
+        "message": "TODO/FIXME found in \\lib\\agent\\pipeline-v2.ts:1266"
+      },
+      {
+        "category": "quality",
+        "message": "TODO/FIXME found in \\lib\\agent\\publication-generator.ts:332"
+      },
+      {
+        "category": "quality",
+        "message": "TODO/FIXME found in \\lib\\embeddings.ts:43"
+      },
+      {
+        "category": "quality",
+        "message": "TODO/FIXME found in \\lib\\jobs\\weekly-newsletter.ts:248"
+      },
+      {
+        "category": "quality",
+        "message": "TODO/FIXME found in \\components\\AuthModal.tsx:31"
+      },
+      {
+        "category": "quality",
+        "message": "TODO/FIXME found in \\generated\\prisma-client\\edge.js:979"
+      },
+      {
+        "category": "quality",
+        "message": "TODO/FIXME found in \\generated\\prisma-client\\index.js:980"
+      },
+      {
+        "category": "quality",
+        "message": "TODO/FIXME found in \\lib\\agent\\openclaw-deep-auditor.mjs:347"
+      },
+      {
+        "category": "quality",
+        "message": "TODO/FIXME found in \\lib\\agent\\openclaw-deep-auditor.mjs:349"
+      },
+      {
+        "category": "quality",
+        "message": "TODO/FIXME found in \\lib\\agent\\openclaw-deep-auditor.mjs:351"
+      }
+    ]
+  },
+  "healthScore": {
+    "score": 0,
+    "grade": "F",
+    "status": "CRITICAL"
+  }
+}
