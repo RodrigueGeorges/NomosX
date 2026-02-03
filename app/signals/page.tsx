@@ -14,8 +14,9 @@ import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
 import Shell from "@/components/Shell";
 import { Card, CardContent } from "@/components/ui/Card";
-import Button from "@/components/ui/Button";
-import Badge from "@/components/ui/Badge";
+import { Button } from "@/components/ui/Button";
+import { Badge } from "@/components/ui/Badge";
+import { cn } from "@/lib/utils"
 import { 
   Zap, 
   RefreshCw,
@@ -57,10 +58,10 @@ type Signal = {
 
 const STATUS_CONFIG: Record<SignalStatus, { label: string; icon: React.ElementType; color: string; bg: string }> = {
   NEW: { label: "Pending", icon: Clock, color: "text-amber-400", bg: "bg-amber-500/10 border-amber-500/20" },
-  HELD: { label: "Held", icon: Pause, color: "text-blue-400", bg: "bg-blue-500/10 border-blue-500/20" },
+  HELD: { label: "Held", icon: Pause, color: "text-primary", bg: "bg-primary/10 border-primary/20" },
   PUBLISHED: { label: "Published", icon: CheckCircle, color: "text-emerald-400", bg: "bg-emerald-500/10 border-emerald-500/20" },
   REJECTED: { label: "Rejected", icon: XCircle, color: "text-red-400", bg: "bg-red-500/10 border-red-500/20" },
-  EXPIRED: { label: "Expired", icon: AlertCircle, color: "text-white/40", bg: "bg-white/5 border-white/10" },
+  EXPIRED: { label: "Expired", icon: AlertCircle, color: "text-white/40", bg: "bg-background/5 border-white/10" },
   SILENT: { label: "Silent", icon: Pause, color: "text-slate-400", bg: "bg-slate-500/10 border-slate-500/20" },
 };
 
@@ -75,21 +76,21 @@ const SIGNAL_TYPE_LABELS: Record<string, string> = {
 
 export default function SignalsPage() {
   const router = useRouter();
-  const { user, isAuthenticated, loading } = useAuth();
+  const { user, isAuthenticated, loading: authLoading } = useAuth();
   const [signals, setSignals] = useState<Signal[]>([]);
   const [loading, setLoading] = useState(true);
   const [statusFilter, setStatusFilter] = useState<SignalStatus | "ALL">("ALL");
 
   // Check admin access
   useEffect(() => {
-    if (!loading) {
+    if (!authLoading) {
       if (!isAuthenticated || !(user?.role === "ADMIN" || user?.email?.includes("admin"))) {
         router.push("/dashboard"); // Redirect non-admin users
         return;
       }
       loadSignals();
     }
-  }, [loading, isAuthenticated, user, router]);
+  }, [authLoading, isAuthenticated, user, router]);
 
   async function loadSignals() {
     setLoading(true);
@@ -126,28 +127,28 @@ export default function SignalsPage() {
 
   return (
     <Shell>
-      <div className="max-w-6xl mx-auto">
+      <div className="max-w-6xl mx-auto transition-all duration-200 hover:opacity-80">
         {/* Header */}
-        <div className="mb-10">
-          <div className="flex items-center gap-4 mb-3">
-            <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-amber-500/10 to-orange-500/5 border border-amber-500/20 flex items-center justify-center shadow-[0_0_20px_rgba(245,158,11,0.2)]">
-              <Zap size={28} className="text-amber-400" />
+        <div className="mb-10 transition-all duration-200 hover:opacity-80">
+          <div className="flex items-center gap-4 mb-3 transition-all duration-200 hover:opacity-80">
+            <div className="w-14 h-14 rounded-xl bg-gradient-to-br from-amber-500/10 to-orange-500/5 border border-amber-500/20 flex items-center justify-center shadow-[0_0_20px_rgba(245,158,11,0.2)] transition-all duration-200 hover:opacity-80">
+              <Zap size={28} className="text-amber-400 transition-all duration-200 hover:opacity-80" />
             </div>
             <div>
-              <div className="text-xs text-amber-400/60 tracking-[0.25em] uppercase mb-1">
+              <div className="text-xs text-amber-400/60 tracking-[0.25em] uppercase mb-1 transition-all duration-200 hover:opacity-80">
                 Signal Detection
               </div>
-              <h1 className="text-4xl font-light tracking-tight text-white/95">Signals</h1>
+              <h1 className="text-4xl font-light tracking-tight text-white/95 transition-all duration-200 hover:opacity-80">Signals</h1>
             </div>
           </div>
-          <p className="text-base text-white/50 leading-relaxed max-w-3xl ml-[4.5rem]">
+          <p className="text-base text-white/50 leading-relaxed max-w-3xl ml-[4.5rem] transition-all duration-200 hover:opacity-80">
             Topics detected by the system that may deserve a publication. 
             Signals feed the Editorial Gate — they never produce final output directly.
           </p>
         </div>
 
         {/* Status Filters */}
-        <div className="flex items-center gap-2 mb-6 flex-wrap">
+        <div className="flex items-center gap-2 mb-6 flex-wrap transition-all duration-200 hover:opacity-80">
           <Button
             variant={statusFilter === "ALL" ? "primary" : "ghost"}
             size="sm"
@@ -166,12 +167,12 @@ export default function SignalsPage() {
                 onClick={() => setStatusFilter(status)}
                 className={statusFilter === status ? "" : config.color}
               >
-                <Icon size={14} className="mr-1.5" />
+                <Icon size={14} className="mr-1.5 transition-all duration-200 hover:opacity-80" />
                 {config.label} ({statusCounts[status]})
               </Button>
             );
           })}
-          <div className="flex-1" />
+          <div className="flex-1 transition-all duration-200 hover:opacity-80" />
           <Button variant="ghost" size="sm" onClick={loadSignals} disabled={loading}>
             <RefreshCw size={14} className={loading ? "animate-spin" : ""} />
           </Button>
@@ -179,27 +180,27 @@ export default function SignalsPage() {
 
         {/* Signals List */}
         {loading ? (
-          <div className="space-y-3">
+          <div className="space-y-3 transition-all duration-200 hover:opacity-80">
             {[...Array(5)].map((_, i) => (
-              <div key={i} className="h-24 bg-white/[0.02] border border-white/10 rounded-xl animate-pulse" />
+              <div key={i} className="h-24 bg-background/[0.02] border border-white/10 rounded-xl animate-pulse transition-all duration-200 hover:opacity-80" />
             ))}
           </div>
         ) : filteredSignals.length === 0 ? (
-          <Card variant="default" className="bg-white/[0.02] border-white/10">
-            <CardContent className="pt-16 pb-16 text-center">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 flex items-center justify-center mx-auto mb-4">
-                <Zap size={32} className="text-amber-400/50" />
+          <Card variant="default" className="bg-background/[0.02] border-white/10 transition-all duration-200 hover:opacity-80">
+            <CardContent className="pt-16 pb-16 text-center transition-all duration-200 hover:opacity-80">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-amber-500/20 to-orange-500/20 flex items-center justify-center mx-auto mb-4 transition-all duration-200 hover:opacity-80">
+                <Zap size={32} className="text-amber-400/50 transition-all duration-200 hover:opacity-80" />
               </div>
-              <h3 className="text-xl font-semibold text-white mb-2">
+              <h3 className="text-4xl font-semibold text-white mb-2 transition-all duration-200 hover:opacity-80">
                 {statusFilter === "ALL" ? "No signals detected" : `No ${STATUS_CONFIG[statusFilter as SignalStatus]?.label.toLowerCase()} signals`}
               </h3>
-              <p className="text-white/50 text-sm">
+              <p className="text-white/50 text-sm transition-all duration-200 hover:opacity-80">
                 Signals are automatically detected by the monitoring system.
               </p>
             </CardContent>
           </Card>
         ) : (
-          <div className="space-y-3">
+          <div className="space-y-3 transition-all duration-200 hover:opacity-80">
             {filteredSignals.map(signal => {
               const statusConfig = STATUS_CONFIG[signal.status];
               const StatusIcon = statusConfig.icon;
@@ -208,44 +209,44 @@ export default function SignalsPage() {
                 <Card 
                   key={signal.id}
                   variant="default"
-                  className="group hover:border-cyan-500/30 hover:bg-white/[0.04] transition-all duration-300 bg-white/[0.02] border-white/10 cursor-pointer"
+                  className="group hover:border-cyan-500/30 hover:bg-background/[0.04] transition-all duration-300 bg-background/[0.02] border-white/10 cursor-pointer"
                   onClick={() => handleSignalClick(signal)}
                 >
-                  <CardContent className="pt-5 pb-5">
-                    <div className="flex items-start gap-4">
+                  <CardContent className="pt-5 pb-5 transition-all duration-200 hover:opacity-80">
+                    <div className="flex items-start gap-4 transition-all duration-200 hover:opacity-80">
                       {/* Priority Score */}
-                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-500/10 border border-amber-500/20 flex items-center justify-center flex-shrink-0">
-                        <span className="text-lg font-bold text-amber-400">{signal.scores.priority}</span>
+                      <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-amber-500/20 to-orange-500/10 border border-amber-500/20 flex items-center justify-center flex-shrink-0 transition-all duration-200 hover:opacity-80">
+                        <span className="text-4xl font-bold text-amber-400 transition-all duration-200 hover:opacity-80">{signal.scores.priority}</span>
                       </div>
 
                       {/* Content */}
-                      <div className="flex-1 min-w-0">
-                        <div className="flex items-start justify-between gap-4 mb-2">
+                      <div className="flex-1 min-w-0 transition-all duration-200 hover:opacity-80">
+                        <div className="flex items-start justify-between gap-4 mb-2 transition-all duration-200 hover:opacity-80">
                           <h3 className="text-base font-medium text-white line-clamp-1 group-hover:text-cyan-400 transition-colors">
                             {signal.title}
                           </h3>
-                          <div className="flex items-center gap-2 flex-shrink-0">
+                          <div className="flex items-center gap-2 flex-shrink-0 transition-all duration-200 hover:opacity-80">
                             {signal.vertical && (
-                              <Badge variant="default" className="text-xs bg-white/5 border-white/10">
-                                <Layers size={10} className="mr-1" />
+                              <Badge variant="default" className="text-xs bg-background/5 border-white/10 transition-all duration-200 hover:opacity-80">
+                                <Layers size={10} className="mr-1 transition-all duration-200 hover:opacity-80" />
                                 {signal.vertical.name}
                               </Badge>
                             )}
                             <Badge variant="default" className={`text-xs ${statusConfig.bg}`}>
-                              <StatusIcon size={10} className="mr-1" />
+                              <StatusIcon size={10} className="mr-1 transition-all duration-200 hover:opacity-80" />
                               {statusConfig.label}
                             </Badge>
                           </div>
                         </div>
 
-                        <p className="text-sm text-white/50 line-clamp-2 mb-3">{signal.summary}</p>
+                        <p className="text-sm text-white/50 line-clamp-2 mb-3 transition-all duration-200 hover:opacity-80">{signal.summary}</p>
 
-                        <div className="flex items-center gap-4 text-xs text-white/40">
-                          <span className="flex items-center gap-1">
+                        <div className="flex items-center gap-4 text-xs text-white/40 transition-all duration-200 hover:opacity-80">
+                          <span className="flex items-center gap-1 transition-all duration-200 hover:opacity-80">
                             <TrendingUp size={12} />
                             Novelty: {signal.scores.novelty}
                           </span>
-                          <span className="flex items-center gap-1">
+                          <span className="flex items-center gap-1 transition-all duration-200 hover:opacity-80">
                             <Zap size={12} />
                             Impact: {signal.scores.impact}
                           </span>

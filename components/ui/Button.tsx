@@ -1,14 +1,14 @@
 
-import { cn } from "./cn";
-import LoadingSpinner from "./LoadingSpinner";
+import { cn } from "@/lib/utils";
+import { LoadingSpinner } from "./LoadingSpinner";
 
-type Props = React.ButtonHTMLAttributes<HTMLButtonElement> & {
+interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "primary" | "secondary" | "ghost" | "ai" | "danger" | "success";
   size?: "sm" | "md" | "lg";
   loading?: boolean;
-};
+}
 
-export default function Button({ 
+export function Button({ 
   className, 
   variant = "primary", 
   size = "md", 
@@ -16,7 +16,7 @@ export default function Button({
   children,
   disabled,
   ...props 
-}: Props) {
+}: ButtonProps) {
   const base = "inline-flex items-center justify-center gap-2 rounded-2xl font-medium transition-all duration-200 focus:outline-none focus:ring-2 focus:ring-accent/50 disabled:opacity-50 disabled:cursor-not-allowed relative overflow-hidden group";
   
   const sizes = { 

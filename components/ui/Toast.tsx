@@ -1,12 +1,6 @@
-/**
- * Toast Component
- * 
- * Utilité : Feedback instant pour actions utilisateur
- * UX Impact : Perceived latency 0ms
- */
-
 "use client";
 
+import { cn } from "@/lib/utils";
 import { useEffect, useState } from "react";
 import { CheckCircle2, XCircle, Info, AlertCircle, AlertTriangle, X } from "lucide-react";
 

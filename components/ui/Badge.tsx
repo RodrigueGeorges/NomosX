@@ -1,13 +1,13 @@
 
-import { cn } from "./cn";
+import { cn } from "@/lib/utils";
 
 type BadgeVariant = "default" | "success" | "warning" | "error" | "premium" | "ai";
 
-type Props = React.HTMLAttributes<HTMLSpanElement> & {
+interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   variant?: BadgeVariant;
-};
+}
 
-export default function Badge({ className, variant = "default", ...props }: Props) {
+export function Badge({ className, variant = "default", ...props }: BadgeProps) {
   const variants: Record<BadgeVariant, string> = {
     default: "border-border bg-panel2 text-muted",
     success: "border-success/30 bg-success/10 text-success",

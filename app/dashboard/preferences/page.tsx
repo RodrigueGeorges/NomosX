@@ -10,11 +10,13 @@
  */
 
 import { useState, useEffect } from "react";
+import { Select } from "@/components/ui/Select"
 import { useRouter } from "next/navigation";
 import Shell from "@/components/Shell";
-import Button from "@/components/ui/Button";
+import { Button } from "@/components/ui/Button";
 import { Card, CardContent } from "@/components/ui/Card";
 import { Check, Loader2, Mail, Bell, Settings as SettingsIcon } from "lucide-react";
+import { cn } from "@/lib/utils"
 
 interface Vertical {
   id: string;
@@ -114,67 +116,67 @@ export default function PreferencesPage() {
 
   return (
     <Shell>
-      <div className="max-w-4xl mx-auto">
+      <div className="max-w-4xl mx-auto transition-all duration-200 hover:opacity-80">
         {/* Header */}
-        <div className="mb-10">
-          <div className="flex items-center gap-4 mb-6">
-            <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-cyan-500/10 to-blue-500/5 border border-cyan-500/20 flex items-center justify-center shadow-[0_0_20px_rgba(0,212,255,0.15)]">
-              <SettingsIcon size={32} className="text-cyan-400" />
+        <div className="mb-10 transition-all duration-200 hover:opacity-80">
+          <div className="flex items-center gap-4 mb-6 transition-all duration-200 hover:opacity-80">
+            <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-cyan-500/10 to-blue-500/5 border border-cyan-500/20 flex items-center justify-center shadow-[0_0_20px_rgba(0,212,255,0.15)] transition-all duration-200 hover:opacity-80">
+              <SettingsIcon size={32} className="text-cyan-400 transition-all duration-200 hover:opacity-80" />
             </div>
             <div>
-              <div className="text-xs text-cyan-400/60 tracking-[0.25em] uppercase mb-1">
+              <div className="text-xs text-cyan-400/60 tracking-[0.25em] uppercase mb-1 transition-all duration-200 hover:opacity-80">
                 Your Preferences
               </div>
-              <h1 className="text-4xl font-light tracking-tight text-white/95">
+              <h1 className="text-4xl font-light tracking-tight text-white/95 transition-all duration-200 hover:opacity-80">
                 Research Settings
               </h1>
             </div>
           </div>
-          <p className="text-white/60">
+          <p className="text-white/60 transition-all duration-200 hover:opacity-80">
             Customize which research verticals you follow and how you receive updates.
           </p>
         </div>
 
         {/* Status Messages */}
         {error && (
-          <div className="mb-6 p-4 rounded-lg bg-red-500/10 border border-red-500/20">
-            <p className="text-sm text-red-400">{error}</p>
+          <div className="mb-6 p-4 rounded-lg bg-red-500/10 border border-red-500/20 transition-all duration-200 hover:opacity-80">
+            <p className="text-sm text-red-400 transition-all duration-200 hover:opacity-80">{error}</p>
           </div>
         )}
 
         {success && (
-          <div className="mb-6 p-4 rounded-lg bg-emerald-500/10 border border-emerald-500/20">
-            <p className="text-sm text-emerald-400">{success}</p>
+          <div className="mb-6 p-4 rounded-lg bg-emerald-500/10 border border-emerald-500/20 transition-all duration-200 hover:opacity-80">
+            <p className="text-sm text-emerald-400 transition-all duration-200 hover:opacity-80">{success}</p>
           </div>
         )}
 
         {loading ? (
-          <div className="py-20 text-center">
-            <Loader2 size={32} className="text-cyan-400 animate-spin mx-auto mb-3" />
-            <p className="text-white/40 text-sm">Loading preferences...</p>
+          <div className="py-20 text-center transition-all duration-200 hover:opacity-80">
+            <Loader2 size={32} className="text-cyan-400 animate-spin mx-auto mb-3 transition-all duration-200 hover:opacity-80" />
+            <p className="text-white/40 text-sm transition-all duration-200 hover:opacity-80">Loading preferences...</p>
           </div>
         ) : (
           <>
             {/* Research Verticals */}
-            <section className="mb-8">
-              <div className="mb-4">
-                <h2 className="text-2xl font-light text-white/95 flex items-center gap-2 mb-2">
-                  <Bell size={20} className="text-cyan-400" />
+            <section className="mb-8 transition-all duration-200 hover:opacity-80">
+              <div className="mb-4 transition-all duration-200 hover:opacity-80">
+                <h2 className="text-4xl font-light text-white/95 flex items-center gap-2 mb-2 transition-all duration-200 hover:opacity-80">
+                  <Bell size={20} className="text-cyan-400 transition-all duration-200 hover:opacity-80" />
                   Research Verticals
                 </h2>
-                <p className="text-sm text-white/60">
+                <p className="text-sm text-white/60 transition-all duration-200 hover:opacity-80">
                   Select the topics you want to follow. You'll receive weekly briefs for selected verticals.
                 </p>
               </div>
 
-              <div className="mb-4 p-4 rounded-lg bg-white/[0.02] border border-white/10">
-                <p className="text-sm text-white/70">
-                  <span className="text-cyan-400 font-medium">{selectedCount}</span> vertical
+              <div className="mb-4 p-4 rounded-lg bg-background/[0.02] border border-white/10 transition-all duration-200 hover:opacity-80">
+                <p className="text-sm text-white/70 transition-all duration-200 hover:opacity-80">
+                  <span className="text-cyan-400 font-medium transition-all duration-200 hover:opacity-80">{selectedCount}</span> vertical
                   {selectedCount !== 1 ? "s" : ""} selected
                 </p>
               </div>
 
-              <div className="grid sm:grid-cols-2 gap-3">
+              <div className="grid sm:grid-cols-2 gap-3 transition-all duration-200 hover:opacity-80">
                 {verticals.map((vertical) => (
                   <Card
                     key={vertical.id}
@@ -182,26 +184,26 @@ export default function PreferencesPage() {
                     className={`cursor-pointer transition-all ${
                       vertical.enabled
                         ? "bg-cyan-500/10 border-cyan-500/40 shadow-[0_0_15px_rgba(0,212,255,0.2)]"
-                        : "bg-white/[0.02] border-white/10 hover:border-cyan-500/20"
+                        : "bg-background/[0.02] border-white/10 hover:border-cyan-500/20"
                     }`}
                     onClick={() => toggleVertical(vertical.id)}
                   >
-                    <CardContent className="pt-4 pb-4">
-                      <div className="flex items-start gap-3">
+                    <CardContent className="pt-4 pb-4 transition-all duration-200 hover:opacity-80">
+                      <div className="flex items-start gap-3 transition-all duration-200 hover:opacity-80">
                         <div
                           className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 transition-all ${
                             vertical.enabled
                               ? "bg-cyan-500/20 border border-cyan-500/40"
-                              : "bg-white/5 border border-white/10"
+                              : "bg-background/5 border border-white/10"
                           }`}
                         >
                           {vertical.enabled ? (
-                            <Check size={18} className="text-cyan-400" />
+                            <Check size={18} className="text-cyan-400 transition-all duration-200 hover:opacity-80" />
                           ) : (
-                            <span className="text-lg">{vertical.icon || "📊"}</span>
+                            <span className="text-4xl transition-all duration-200 hover:opacity-80">{vertical.icon || "📊"}</span>
                           )}
                         </div>
-                        <div className="flex-1 min-w-0">
+                        <div className="flex-1 min-w-0 transition-all duration-200 hover:opacity-80">
                           <h3
                             className={`text-sm font-medium mb-1 transition-colors ${
                               vertical.enabled ? "text-cyan-400" : "text-white"
@@ -210,7 +212,7 @@ export default function PreferencesPage() {
                             {vertical.name}
                           </h3>
                           {vertical.description && (
-                            <p className="text-xs text-white/40 line-clamp-2">
+                            <p className="text-xs text-white/40 line-clamp-2 transition-all duration-200 hover:opacity-80">
                               {vertical.description}
                             </p>
                           )}
@@ -223,37 +225,37 @@ export default function PreferencesPage() {
             </section>
 
             {/* Email Settings */}
-            <section className="mb-8">
-              <div className="mb-4">
-                <h2 className="text-2xl font-light text-white/95 flex items-center gap-2 mb-2">
-                  <Mail size={20} className="text-cyan-400" />
+            <section className="mb-8 transition-all duration-200 hover:opacity-80">
+              <div className="mb-4 transition-all duration-200 hover:opacity-80">
+                <h2 className="text-4xl font-light text-white/95 flex items-center gap-2 mb-2 transition-all duration-200 hover:opacity-80">
+                  <Mail size={20} className="text-cyan-400 transition-all duration-200 hover:opacity-80" />
                   Email Delivery
                 </h2>
-                <p className="text-sm text-white/60">
+                <p className="text-sm text-white/60 transition-all duration-200 hover:opacity-80">
                   Configure how often you receive research briefs by email.
                 </p>
               </div>
 
-              <Card variant="default" className="bg-white/[0.02] border-white/10">
-                <CardContent className="pt-6 pb-6">
+              <Card variant="default" className="bg-background/[0.02] border-white/10 transition-all duration-200 hover:opacity-80">
+                <CardContent className="pt-6 pb-6 transition-all duration-200 hover:opacity-80">
                   {/* Email Enabled Toggle */}
-                  <div className="flex items-center justify-between mb-6 pb-6 border-b border-white/10">
+                  <div className="flex items-center justify-between mb-6 pb-6 border-b border-white/10 transition-all duration-200 hover:opacity-80">
                     <div>
-                      <p className="text-sm font-medium text-white mb-1">
+                      <p className="text-sm font-medium text-white mb-1 transition-all duration-200 hover:opacity-80">
                         Receive weekly briefs by email
                       </p>
-                      <p className="text-xs text-white/40">
+                      <p className="text-xs text-white/40 transition-all duration-200 hover:opacity-80">
                         Get personalized research updates delivered to your inbox
                       </p>
                     </div>
                     <button
                       onClick={() => setEmailEnabled(!emailEnabled)}
                       className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                        emailEnabled ? "bg-cyan-500" : "bg-white/10"
+                        emailEnabled ? "bg-cyan-500" : "bg-background/10"
                       }`}
                     >
                       <span
-                        className={`inline-block h-4 w-4 transform rounded-full bg-white transition-transform ${
+                        className={`inline-block h-4 w-4 transform rounded-full bg-background transition-transform ${
                           emailEnabled ? "translate-x-6" : "translate-x-1"
                         }`}
                       />
@@ -263,8 +265,8 @@ export default function PreferencesPage() {
                   {/* Email Frequency */}
                   {emailEnabled && (
                     <div>
-                      <p className="text-sm font-medium text-white mb-3">Delivery frequency</p>
-                      <div className="grid grid-cols-3 gap-2">
+                      <p className="text-sm font-medium text-white mb-3 transition-all duration-200 hover:opacity-80">Delivery frequency</p>
+                      <div className="grid grid-cols-3 gap-2 transition-all duration-200 hover:opacity-80">
                         {[
                           { value: "DAILY", label: "Daily" },
                           { value: "WEEKLY", label: "Weekly" },
@@ -276,7 +278,7 @@ export default function PreferencesPage() {
                             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                               emailFrequency === freq.value
                                 ? "bg-cyan-500/20 border border-cyan-500/40 text-cyan-400"
-                                : "bg-white/5 border border-white/10 text-white/60 hover:border-cyan-500/20"
+                                : "bg-background/5 border border-white/10 text-white/60 hover:border-cyan-500/20"
                             }`}
                           >
                             {freq.label}
@@ -290,7 +292,7 @@ export default function PreferencesPage() {
             </section>
 
             {/* Actions */}
-            <div className="flex gap-3">
+            <div className="flex gap-3 transition-all duration-200 hover:opacity-80">
               <Button
                 variant="ai"
                 onClick={handleSave}
@@ -298,7 +300,7 @@ export default function PreferencesPage() {
               >
                 {saving ? (
                   <>
-                    <Loader2 size={18} className="mr-2 animate-spin" />
+                    <Loader2 size={18} className="mr-2 animate-spin transition-all duration-200 hover:opacity-80" />
                     Saving...
                   </>
                 ) : (

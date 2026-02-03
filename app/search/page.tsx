@@ -1,16 +1,18 @@
 
 "use client";
 import { useState } from "react";
+import { Select } from "@/components/ui/Select"
 import { useRouter } from "next/navigation";
 import Shell from "@/components/Shell";
-import Input from "@/components/ui/Input";
-import Button from "@/components/ui/Button";
-import Badge from "@/components/ui/Badge";
+import { Input } from "@/components/ui/Input";
+import { Button } from "@/components/ui/Button";
+import { Badge } from "@/components/ui/Badge";
 import { Card, CardContent, CardHeader } from "@/components/ui/Card";
-import Skeleton from "@/components/ui/Skeleton";
+import { Skeleton } from "@/components/ui/Skeleton";
 import DomainSelector from "@/components/DomainSelector";
 import { getDomainsBySlugs } from "@/lib/domains";
 import { Search, Filter, ArrowUpDown, Clock, TrendingUp, Award, Layers, Sparkles } from "lucide-react";
+import { cn } from "@/lib/utils"
 
 type Result = { 
   id: string; 
@@ -96,33 +98,33 @@ export default function SearchPage() {
   return (
     <Shell>
       {/* Hero Premium avec glow effect */}
-      <div className="mb-20">
-        <div className="flex items-center justify-between flex-wrap gap-6">
+      <div className="mb-20 transition-all duration-200 hover:opacity-80">
+        <div className="flex items-center justify-between flex-wrap gap-6 transition-all duration-200 hover:opacity-80">
           <div>
-            <div className="flex items-center gap-4 mb-6">
-              <div className="relative group">
+            <div className="flex items-center gap-4 mb-6 transition-all duration-200 hover:opacity-80">
+              <div className="relative group transition-all duration-200 hover:opacity-80">
                 <div className="absolute -inset-1 bg-gradient-to-r from-accent/40 via-cyan-500/40 to-accent/40 rounded-2xl blur opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
                 <div className="relative p-3 rounded-2xl bg-accent/10 border border-accent/20 transition-transform group-hover:scale-105">
-                  <Search size={32} className="text-accent" strokeWidth={1.5} />
+                  <Search size={32} className="text-accent transition-all duration-200 hover:opacity-80" strokeWidth={1.5} />
                 </div>
               </div>
-              <h1 className="text-7xl font-bold tracking-tight">Search</h1>
+              <h1 className="text-7xl font-bold tracking-tight transition-all duration-200 hover:opacity-80">Search</h1>
             </div>
-            <p className="text-xl text-muted leading-relaxed max-w-3xl mb-4">
+            <p className="text-4xl text-muted leading-relaxed max-w-3xl mb-4 transition-all duration-200 hover:opacity-80">
               Hybrid search (lexical + semantic) across 28M+ academic sources with advanced domain filters
             </p>
           </div>
-          <div className="flex gap-2 flex-wrap">
-            <Badge variant="ai" className="px-3 py-1">
-              <Layers size={14} className="mr-1" strokeWidth={1.5} />
+          <div className="flex gap-2 flex-wrap transition-all duration-200 hover:opacity-80">
+            <Badge variant="ai" className="px-3 py-1 transition-all duration-200 hover:opacity-80">
+              <Layers size={14} className="mr-1 transition-all duration-200 hover:opacity-80" strokeWidth={1.5} />
               Hybrid
             </Badge>
-            <Badge variant="default" className="px-3 py-1">
-              <Filter size={14} className="mr-1" strokeWidth={1.5} />
+            <Badge variant="default" className="px-3 py-1 transition-all duration-200 hover:opacity-80">
+              <Filter size={14} className="mr-1 transition-all duration-200 hover:opacity-80" strokeWidth={1.5} />
               8 domains
             </Badge>
-            <Badge variant="default" className="px-3 py-1">
-              <ArrowUpDown size={14} className="mr-1" strokeWidth={1.5} />
+            <Badge variant="default" className="px-3 py-1 transition-all duration-200 hover:opacity-80">
+              <ArrowUpDown size={14} className="mr-1 transition-all duration-200 hover:opacity-80" strokeWidth={1.5} />
               4 sorts
             </Badge>
           </div>
@@ -130,7 +132,7 @@ export default function SearchPage() {
       </div>
 
       {/* Search bar */}
-      <div className="mb-6 flex gap-3">
+      <div className="mb-6 flex gap-3 transition-all duration-200 hover:opacity-80">
         <Input 
           value={q} 
           onChange={(e) => setQ(e.target.value)} 
@@ -143,10 +145,10 @@ export default function SearchPage() {
       </div>
 
       {/* Domain selector */}
-      <div className="mb-6">
-        <div className="flex items-center gap-2 mb-3">
-          <Layers size={16} className="text-muted" />
-          <span className="text-sm text-muted">Filter by domain (optional)</span>
+      <div className="mb-6 transition-all duration-200 hover:opacity-80">
+        <div className="flex items-center gap-2 mb-3 transition-all duration-200 hover:opacity-80">
+          <Layers size={16} className="text-muted transition-all duration-200 hover:opacity-80" />
+          <span className="text-sm text-muted transition-all duration-200 hover:opacity-80">Filter by domain (optional)</span>
         </div>
         <DomainSelector
           selected={selectedDomains}
@@ -155,8 +157,8 @@ export default function SearchPage() {
           compact
         />
         {selectedDomains.length > 0 && (
-          <div className="mt-3 flex items-center gap-2">
-            <span className="text-xs text-muted">Selected:</span>
+          <div className="mt-3 flex items-center gap-2 transition-all duration-200 hover:opacity-80">
+            <span className="text-xs text-muted transition-all duration-200 hover:opacity-80">Selected:</span>
             {getDomainsBySlugs(selectedDomains).map((domain) => {
               const Icon = domain.icon;
               return (
@@ -168,7 +170,7 @@ export default function SearchPage() {
             })}
             <button
               onClick={() => setSelectedDomains([])}
-              className="text-xs text-muted hover:text-text ml-2"
+              className="text-xs text-muted hover:text-text ml-2 transition-all duration-200"
             >
               Clear
             </button>
@@ -178,7 +180,7 @@ export default function SearchPage() {
 
       {/* Results count + Action */}
       {results.length > 0 && (
-        <div className="mb-6 flex items-center justify-between flex-wrap gap-4">
+        <div className="mb-6 flex items-center justify-between flex-wrap gap-4 transition-all duration-200 hover:opacity-80">
           <Badge variant="ai">
             {filteredAndSorted.length} result{filteredAndSorted.length > 1 ? "s" : ""}
           </Badge>
@@ -197,14 +199,14 @@ export default function SearchPage() {
 
       {/* Filters and sort */}
       {results.length > 0 && (
-        <div className="mb-6 space-y-4">
+        <div className="mb-6 space-y-4 transition-all duration-200 hover:opacity-80">
           {/* Sort */}
           <div>
-            <div className="flex items-center gap-2 mb-3">
-              <ArrowUpDown size={16} className="text-muted" />
-              <span className="text-sm text-muted">Sort by</span>
+            <div className="flex items-center gap-2 mb-3 transition-all duration-200 hover:opacity-80">
+              <ArrowUpDown size={16} className="text-muted transition-all duration-200 hover:opacity-80" />
+              <span className="text-sm text-muted transition-all duration-200 hover:opacity-80">Sort by</span>
             </div>
-            <div className="flex gap-2 flex-wrap">
+            <div className="flex gap-2 flex-wrap transition-all duration-200 hover:opacity-80">
               {[
                 { id: "relevance", label: "Relevance", icon: Search },
                 { id: "quality", label: "Quality", icon: Award },
@@ -229,11 +231,11 @@ export default function SearchPage() {
 
           {/* Filters */}
           <div>
-            <div className="flex items-center gap-2 mb-3">
-              <Filter size={16} className="text-muted" />
-              <span className="text-sm text-muted">Filtres</span>
+            <div className="flex items-center gap-2 mb-3 transition-all duration-200 hover:opacity-80">
+              <Filter size={16} className="text-muted transition-all duration-200 hover:opacity-80" />
+              <span className="text-sm text-muted transition-all duration-200 hover:opacity-80">Filtres</span>
             </div>
-            <div className="flex gap-2 flex-wrap">
+            <div className="flex gap-2 flex-wrap transition-all duration-200 hover:opacity-80">
               {/* Provider filter */}
               <button
                 onClick={() => setProviderFilter(null)}
@@ -263,7 +265,7 @@ export default function SearchPage() {
               <select
                 value={minQuality}
                 onChange={(e) => setMinQuality(Number(e.target.value))}
-                className="px-4 py-2 rounded-2xl border border-border bg-panel text-text text-sm"
+                className="px-4 py-2 rounded-2xl border border-border bg-panel text-text text-sm transition-all duration-200 hover:opacity-80"
               >
                 <option value={0}>Qualité: Tous</option>
                 <option value={50}>Qualité ≥ 50</option>
@@ -277,7 +279,7 @@ export default function SearchPage() {
                 onChange={(e) =>
                   setYearRange({ ...yearRange, min: e.target.value ? Number(e.target.value) : undefined })
                 }
-                className="px-4 py-2 rounded-2xl border border-border bg-panel text-text text-sm"
+                className="px-4 py-2 rounded-2xl border border-border bg-panel text-text text-sm transition-all duration-200 hover:opacity-80"
               >
                 <option value="">Année min: Toutes</option>
                 <option value={2024}>≥ 2024</option>
@@ -306,17 +308,17 @@ export default function SearchPage() {
       )}
 
       {/* Results grid */}
-      <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4">
+      <div className="grid md:grid-cols-2 xl:grid-cols-3 gap-4 transition-all duration-200 hover:opacity-80">
         {loading && Array.from({ length: 6 }).map((_, i) => (
           <Card key={i}>
             <CardHeader>
-              <Skeleton className="h-4 w-24" />
-              <Skeleton className="h-6 w-full mt-3" />
-              <Skeleton className="h-4 w-2/3 mt-2" />
+              <Skeleton className="h-4 w-24 transition-all duration-200 hover:opacity-80" />
+              <Skeleton className="h-6 w-full mt-3 transition-all duration-200 hover:opacity-80" />
+              <Skeleton className="h-4 w-2/3 mt-2 transition-all duration-200 hover:opacity-80" />
             </CardHeader>
             <CardContent>
-              <Skeleton className="h-4 w-full" />
-              <Skeleton className="h-4 w-5/6 mt-2" />
+              <Skeleton className="h-4 w-full transition-all duration-200 hover:opacity-80" />
+              <Skeleton className="h-4 w-5/6 mt-2 transition-all duration-200 hover:opacity-80" />
             </CardContent>
           </Card>
         ))}
@@ -325,13 +327,13 @@ export default function SearchPage() {
           <Card 
             key={r.id} 
             hoverable
-            className="animate-spring-in"
+            className="animate-spring-in transition-all duration-200 hover:opacity-80"
             style={{ animationDelay: `${index * 40}ms` }}
           >
             <CardHeader>
-              <div className="flex items-center justify-between">
+              <div className="flex items-center justify-between transition-all duration-200 hover:opacity-80">
                 <Badge>{r.provider ?? "db"}</Badge>
-                <div className="flex gap-2">
+                <div className="flex gap-2 transition-all duration-200 hover:opacity-80">
                   <Badge variant={r.qualityScore && r.qualityScore > 70 ? "success" : "default"}>
                     QS {r.qualityScore ?? 0}
                   </Badge>
@@ -345,14 +347,14 @@ export default function SearchPage() {
               <h3 className="mt-3 font-semibold leading-snug group-hover:text-accent transition-colors">
                 {r.title}
               </h3>
-              <div className="flex items-center gap-3 text-xs text-muted mt-2">
+              <div className="flex items-center gap-3 text-xs text-muted mt-2 transition-all duration-200 hover:opacity-80">
                 {r.year && <span>{r.year}</span>}
                 {r.authors && r.authors.length > 0 && (
                   <span>{r.authors.slice(0, 2).join(", ")}</span>
                 )}
               </div>
               {r.domains && r.domains.length > 0 && (
-                <div className="flex gap-2 flex-wrap mt-3">
+                <div className="flex gap-2 flex-wrap mt-3 transition-all duration-200 hover:opacity-80">
                   {r.domains.slice(0, 3).map((domain) => {
                     const DomainIcon = getDomainsBySlugs([domain.slug])[0]?.icon;
                     return (
@@ -386,10 +388,10 @@ export default function SearchPage() {
         ))}
 
         {!loading && filteredAndSorted.length === 0 && results.length > 0 && (
-          <div className="col-span-full">
+          <div className="col-span-full transition-all duration-200 hover:opacity-80">
             <Card>
-              <CardContent className="py-8 text-center">
-                <p className="text-muted">No results with these filters</p>
+              <CardContent className="py-8 text-center transition-all duration-200 hover:opacity-80">
+                <p className="text-muted transition-all duration-200 hover:opacity-80">No results with these filters</p>
               </CardContent>
             </Card>
           </div>
@@ -399,10 +401,10 @@ export default function SearchPage() {
       {/* Empty state */}
       {!loading && results.length === 0 && q && (
         <Card>
-          <CardContent className="py-12 text-center">
-            <Search size={48} className="mx-auto mb-4 text-muted opacity-50" />
-            <h3 className="text-lg font-semibold mb-2">No results</h3>
-            <p className="text-sm text-muted">
+          <CardContent className="py-12 text-center transition-all duration-200 hover:opacity-80">
+            <Search size={48} className="mx-auto mb-4 text-muted opacity-50 transition-all duration-200 hover:opacity-80" />
+            <h3 className="text-4xl font-semibold mb-2 transition-all duration-200 hover:opacity-80">No results</h3>
+            <p className="text-sm text-muted transition-all duration-200 hover:opacity-80">
               Try a different query or run an ingestion to populate the database.
             </p>
           </CardContent>

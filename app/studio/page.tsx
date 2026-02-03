@@ -9,11 +9,13 @@
  */
 
 import { useState, useEffect, Suspense } from "react";
+import { Select } from "@/components/ui/Select"
+import { Input } from "@/components/ui/Input"
 import { useSearchParams, useRouter } from "next/navigation";
 import Shell from "@/components/Shell";
-import Textarea from "@/components/ui/Textarea";
-import Button from "@/components/ui/Button";
-import Badge from "@/components/ui/Badge";
+import { Textarea } from "@/components/ui/Textarea";
+import { Button } from "@/components/ui/Button";
+import { Badge } from "@/components/ui/Badge";
 import { Card, CardContent, CardHeader } from "@/components/ui/Card";
 import { 
   PenTool,
@@ -39,6 +41,7 @@ import { useStreamingBrief } from "@/hooks/useStreamingBrief";
 import { useStreamingCouncil } from "@/hooks/useStreamingCouncil";
 import ProgressBar from "@/components/ProgressBar";
 import { toast } from "@/components/ui/Toast";
+import { cn } from "@/lib/utils"
 
 type PublicationType = "EXECUTIVE_BRIEF" | "STRATEGIC_REPORT";
 
@@ -276,21 +279,21 @@ function StudioPageContent() {
 
   return (
     <Shell>
-      <div className="max-w-5xl mx-auto">
+      <div className="max-w-5xl mx-auto transition-all duration-200 hover:opacity-80">
         {/* Header */}
-        <div className="mb-10">
-          <div className="flex items-center gap-3 sm:gap-4 mb-3">
-            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br from-cyan-500/10 to-blue-500/5 border border-cyan-500/20 flex items-center justify-center shadow-[0_0_20px_rgba(0,212,255,0.2)]">
-              <PenTool size={24} className="sm:w-7 sm:h-7 text-cyan-400" />
+        <div className="mb-10 transition-all duration-200 hover:opacity-80">
+          <div className="flex items-center gap-3 sm:gap-4 mb-3 transition-all duration-200 hover:opacity-80">
+            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br from-cyan-500/10 to-blue-500/5 border border-cyan-500/20 flex items-center justify-center shadow-[0_0_20px_rgba(0,212,255,0.2)] transition-all duration-200 hover:opacity-80">
+              <PenTool size={24} className="sm:w-7 sm:h-7 text-cyan-400 transition-all duration-200 hover:opacity-80" />
             </div>
             <div>
-              <div className="text-xs text-cyan-400/60 tracking-[0.25em] uppercase mb-1">
+              <div className="text-xs text-cyan-400/60 tracking-[0.25em] uppercase mb-1 transition-all duration-200 hover:opacity-80">
                 Propose to Think Tank
               </div>
-              <h1 className="text-2xl sm:text-3xl md:text-4xl font-light tracking-tight text-white/95">Publication Studio</h1>
+              <h1 className="text-4xl sm:text-4xl md:text-4xl font-light tracking-tight text-white/95 transition-all duration-200 hover:opacity-80">Publication Studio</h1>
             </div>
           </div>
-          <p className="text-sm sm:text-base text-white/50 leading-relaxed max-w-3xl sm:ml-[4.5rem]">
+          <p className="text-sm sm:text-base text-white/50 leading-relaxed max-w-3xl sm:ml-[4.5rem] transition-all duration-200 hover:opacity-80">
             Propose topics to the autonomous Think Tank. Your proposal will be evaluated by the Editorial Gate. 
             The Think Tank may publish, hold for review, or choose strategic silence.
           </p>
@@ -298,13 +301,13 @@ function StudioPageContent() {
 
         {/* Signal Context Banner */}
         {signalContext && (
-          <Card variant="default" className="mb-6 bg-amber-500/5 border-amber-500/20">
-            <CardContent className="pt-4 pb-4">
-              <div className="flex items-center gap-3">
-                <Zap size={18} className="text-amber-400" />
-                <div className="flex-1">
-                  <p className="text-sm text-white/70">Based on detected signal:</p>
-                  <p className="text-white font-medium">{signalContext.title}</p>
+          <Card variant="default" className="mb-6 bg-amber-500/5 border-amber-500/20 transition-all duration-200 hover:opacity-80">
+            <CardContent className="pt-4 pb-4 transition-all duration-200 hover:opacity-80">
+              <div className="flex items-center gap-3 transition-all duration-200 hover:opacity-80">
+                <Zap size={18} className="text-amber-400 transition-all duration-200 hover:opacity-80" />
+                <div className="flex-1 transition-all duration-200 hover:opacity-80">
+                  <p className="text-sm text-white/70 transition-all duration-200 hover:opacity-80">Based on detected signal:</p>
+                  <p className="text-white font-medium transition-all duration-200 hover:opacity-80">{signalContext.title}</p>
                 </div>
                 <Button variant="ghost" size="sm" onClick={() => setSignalContext(null)}>
                   Detach
@@ -315,12 +318,12 @@ function StudioPageContent() {
         )}
 
         {/* Main Input */}
-        <Card variant="default" className="border-white/10 bg-white/[0.02] backdrop-blur-xl mb-8">
-          <CardContent className="pt-6">
+        <Card variant="default" className="border-white/10 bg-background/[0.02] backdrop-blur-xl mb-8 transition-all duration-200 hover:opacity-80">
+          <CardContent className="pt-6 transition-all duration-200 hover:opacity-80">
             {/* Publication Type Selection - Simplified to 2 formats */}
-            <div className="mb-6">
-              <label className="text-xs text-white/40 uppercase tracking-wider mb-3 block">Publication Format</label>
-              <div className="grid grid-cols-2 gap-3">
+            <div className="mb-6 transition-all duration-200 hover:opacity-80">
+              <label className="text-xs text-white/40 uppercase tracking-wider mb-3 block transition-all duration-200 hover:opacity-80">Publication Format</label>
+              <div className="grid grid-cols-2 gap-3 transition-all duration-200 hover:opacity-80">
                 {PUBLICATION_TYPES.map(type => {
                   const Icon = type.icon;
                   const isSelected = publicationType === type.value;
@@ -333,20 +336,20 @@ function StudioPageContent() {
                         p-4 rounded-xl text-left transition-all
                         ${isSelected 
                           ? 'bg-cyan-500/10 border-2 border-cyan-500/40 shadow-[0_0_20px_rgba(0,212,255,0.1)]' 
-                          : 'bg-white/[0.02] border border-white/10 hover:border-white/20'
+                          : 'bg-background/[0.02] border border-white/10 hover:border-white/20'
                         }
                       `}
                     >
-                      <div className="flex items-center gap-3 mb-2">
-                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${isSelected ? 'bg-cyan-500/20' : 'bg-white/5'}`}>
+                      <div className="flex items-center gap-3 mb-2 transition-all duration-200 hover:opacity-80">
+                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${isSelected ? 'bg-cyan-500/20' : 'bg-background/5'}`}>
                           <Icon size={20} className={isSelected ? 'text-cyan-400' : 'text-white/40'} />
                         </div>
                         <div>
                           <div className={`font-medium ${isSelected ? 'text-white' : 'text-white/70'}`}>{type.label}</div>
-                          <div className="text-xs text-white/40">{type.pages}</div>
+                          <div className="text-xs text-white/40 transition-all duration-200 hover:opacity-80">{type.pages}</div>
                         </div>
                       </div>
-                      <p className="text-xs text-white/50 mb-2">{type.description}</p>
+                      <p className="text-xs text-white/50 mb-2 transition-all duration-200 hover:opacity-80">{type.description}</p>
                       <div className={`text-xs px-2 py-1 rounded-full inline-block ${
                         type.value === "EXECUTIVE_BRIEF" 
                           ? 'bg-emerald-500/10 text-emerald-400' 
@@ -362,9 +365,9 @@ function StudioPageContent() {
 
             {/* Vertical Selection */}
             {verticals.length > 0 && (
-              <div className="mb-6">
-                <label className="text-xs text-white/40 uppercase tracking-wider mb-3 block">Vertical</label>
-                <div className="flex flex-wrap gap-2">
+              <div className="mb-6 transition-all duration-200 hover:opacity-80">
+                <label className="text-xs text-white/40 uppercase tracking-wider mb-3 block transition-all duration-200 hover:opacity-80">Vertical</label>
+                <div className="flex flex-wrap gap-2 transition-all duration-200 hover:opacity-80">
                   {verticals.map(v => (
                     <button
                       key={v.id}
@@ -373,8 +376,8 @@ function StudioPageContent() {
                       className={`
                         px-3 py-1.5 rounded-lg text-sm transition-all flex items-center gap-1.5
                         ${selectedVertical === v.id 
-                          ? 'bg-white/10 text-white border border-white/20' 
-                          : 'text-white/40 hover:text-white/60 hover:bg-white/[0.03]'
+                          ? 'bg-background/10 text-white border border-white/20' 
+                          : 'text-white/40 hover:text-white/60 hover:bg-background/[0.03]'
                         }
                       `}
                     >
@@ -392,7 +395,7 @@ function StudioPageContent() {
               onChange={(e) => setQuestion(e.target.value)}
               placeholder="What question deserves institutional publication?"
               rows={4}
-              className="mb-4 bg-white/[0.03] border-white/10 focus:border-cyan-500/50 text-base resize-none"
+              className="mb-4 bg-background/[0.03] border-white/10 focus:border-cyan-500/50 text-base resize-none transition-all duration-200 hover:opacity-80"
               disabled={isLoading}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
@@ -404,31 +407,31 @@ function StudioPageContent() {
 
             {/* Intent Detection */}
             {detectedIntent && detectedIntent.confidence > 0.6 && (
-              <div className="mb-4 text-xs text-cyan-400/70 flex items-center gap-1.5">
+              <div className="mb-4 text-xs text-cyan-400/70 flex items-center gap-1.5 transition-all duration-200 hover:opacity-80">
                 <Sparkles size={12} />
                 Suggested format: {detectedIntent.type === "brief" ? "Executive Brief" : "Strategic Report"} ({Math.round(detectedIntent.confidence * 100)}%)
               </div>
             )}
 
-            <div className="flex items-center justify-between">
-              <div className="flex gap-2 text-xs text-white/30">
+            <div className="flex items-center justify-between transition-all duration-200 hover:opacity-80">
+              <div className="flex gap-2 text-xs text-white/30 transition-all duration-200 hover:opacity-80">
                 <Kbd>⌘K</Kbd>
                 <span>focus</span>
-                <span className="text-white/10">•</span>
+                <span className="text-white/10 transition-all duration-200 hover:opacity-80">•</span>
                 <Kbd>⌘↵</Kbd>
                 <span>generate</span>
               </div>
               
-              <div className="flex gap-2">
+              <div className="flex gap-2 transition-all duration-200 hover:opacity-80">
                 <Button
                   variant="ai"
                   onClick={handleGenerate}
                   disabled={!question.trim() || isLoading}
-                  className="relative overflow-hidden group"
+                  className="relative overflow-hidden group transition-all duration-200 hover:opacity-80"
                 >
                   {isLoading ? (
                     <>
-                      <Zap size={18} className="mr-2 animate-pulse" />
+                      <Zap size={18} className="mr-2 animate-pulse transition-all duration-200 hover:opacity-80" />
                       Generating...
                     </>
                   ) : (
@@ -445,7 +448,7 @@ function StudioPageContent() {
 
         {/* Progress */}
         {isLoading && (
-          <div className="mb-8">
+          <div className="mb-8 transition-all duration-200 hover:opacity-80">
             <ProgressBar 
               progress={typeof streamingBrief.progress === 'number' ? streamingBrief.progress : (typeof streamingCouncil.progress === 'number' ? streamingCouncil.progress : 0)}
               message={streamingBrief.loading ? 'Génération du draft...' : 'Délibération en cours...'}
@@ -455,30 +458,30 @@ function StudioPageContent() {
 
         {/* Draft Result */}
         {briefResult && (
-          <div className="space-y-6 animate-fade-in">
-            <div className="flex items-center justify-between mb-4">
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center">
-                  <FileText size={20} className="text-white" />
+          <div className="space-y-6 animate-fade-in transition-all duration-200 hover:opacity-80">
+            <div className="flex items-center justify-between mb-4 transition-all duration-200 hover:opacity-80">
+              <div className="flex items-center gap-3 transition-all duration-200 hover:opacity-80">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center transition-all duration-200 hover:opacity-80">
+                  <FileText size={20} className="text-white transition-all duration-200 hover:opacity-80" />
                 </div>
                 <div>
-                  <div className="flex items-center gap-2">
-                    <h2 className="text-xl font-semibold text-white">Draft</h2>
-                    <Badge variant="warning" className="text-xs">Pending decision</Badge>
+                  <div className="flex items-center gap-2 transition-all duration-200 hover:opacity-80">
+                    <h2 className="text-4xl font-semibold text-white transition-all duration-200 hover:opacity-80">Draft</h2>
+                    <Badge variant="warning" className="text-xs transition-all duration-200 hover:opacity-80">Pending decision</Badge>
                   </div>
-                  <p className="text-sm text-white/50">{briefResult.sources.length} sources • {PUBLICATION_TYPES.find(t => t.value === publicationType)?.label}</p>
+                  <p className="text-sm text-white/50 transition-all duration-200 hover:opacity-80">{briefResult.sources.length} sources • {PUBLICATION_TYPES.find(t => t.value === publicationType)?.label}</p>
                 </div>
               </div>
               <Button variant="ai" size="sm" onClick={handleSubmitToEditorialGate}>
-                <CheckCircle size={16} className="mr-2" />
+                <CheckCircle size={16} className="mr-2 transition-all duration-200 hover:opacity-80" />
                 Submit to Editorial Gate
               </Button>
             </div>
 
-            <Card variant="default" className="border-white/10 bg-white/[0.02]">
-              <CardContent className="pt-8">
+            <Card variant="default" className="border-white/10 bg-background/[0.02] transition-all duration-200 hover:opacity-80">
+              <CardContent className="pt-8 transition-all duration-200 hover:opacity-80">
                 <div 
-                  className="nomosx-prose"
+                  className="nomosx-prose transition-all duration-200 hover:opacity-80"
                   dangerouslySetInnerHTML={{ __html: briefResult.html }}
                 />
               </CardContent>
@@ -488,76 +491,76 @@ function StudioPageContent() {
 
         {/* Deliberation Panel */}
         {showDeliberation && councilResult && (
-          <div className="mt-8 space-y-6 animate-fade-in">
-            <div className="flex items-center gap-3 mb-4">
-              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center">
-                <MessagesSquare size={20} className="text-white" />
+          <div className="mt-8 space-y-6 animate-fade-in transition-all duration-200 hover:opacity-80">
+            <div className="flex items-center gap-3 mb-4 transition-all duration-200 hover:opacity-80">
+              <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-blue-500 to-purple-600 flex items-center justify-center transition-all duration-200 hover:opacity-80">
+                <MessagesSquare size={20} className="text-white transition-all duration-200 hover:opacity-80" />
               </div>
               <div>
-                <h2 className="text-xl font-semibold text-white">Deliberation</h2>
-                <p className="text-sm text-white/50">4 perspectives to inform the decision</p>
+                <h2 className="text-4xl font-semibold text-white transition-all duration-200 hover:opacity-80">Deliberation</h2>
+                <p className="text-sm text-white/50 transition-all duration-200 hover:opacity-80">4 perspectives to inform the decision</p>
               </div>
             </div>
 
-            <div className="grid sm:grid-cols-2 gap-3 sm:gap-4">
-              <Card variant="default" className="border-l-4 border-l-cyan-500/50 bg-white/[0.02]">
+            <div className="grid sm:grid-cols-2 gap-3 sm:gap-4 transition-all duration-200 hover:opacity-80">
+              <Card variant="default" className="border-l-4 border-l-cyan-500/50 bg-background/[0.02] transition-all duration-200 hover:opacity-80">
                 <CardHeader>
-                  <div className="flex items-center gap-2">
-                    <DollarSign size={16} className="text-cyan-400" />
-                    <h3 className="text-base font-semibold text-white">Economic</h3>
+                  <div className="flex items-center gap-2 transition-all duration-200 hover:opacity-80">
+                    <DollarSign size={16} className="text-cyan-400 transition-all duration-200 hover:opacity-80" />
+                    <h3 className="text-base font-semibold text-white transition-all duration-200 hover:opacity-80">Economic</h3>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="nomosx-prose text-sm" dangerouslySetInnerHTML={{ __html: councilResult.economic }} />
+                  <div className="nomosx-prose text-sm transition-all duration-200 hover:opacity-80" dangerouslySetInnerHTML={{ __html: councilResult.economic }} />
                 </CardContent>
               </Card>
 
-              <Card variant="default" className="border-l-4 border-l-blue-500/50 bg-white/[0.02]">
+              <Card variant="default" className="border-l-4 border-l-blue-500/50 bg-background/[0.02] transition-all duration-200 hover:opacity-80">
                 <CardHeader>
-                  <div className="flex items-center gap-2">
-                    <Cpu size={16} className="text-blue-400" />
-                    <h3 className="text-base font-semibold text-white">Technical</h3>
+                  <div className="flex items-center gap-2 transition-all duration-200 hover:opacity-80">
+                    <Cpu size={16} className="text-primary transition-all duration-200 hover:opacity-80" />
+                    <h3 className="text-base font-semibold text-white transition-all duration-200 hover:opacity-80">Technical</h3>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="nomosx-prose text-sm" dangerouslySetInnerHTML={{ __html: councilResult.technical }} />
+                  <div className="nomosx-prose text-sm transition-all duration-200 hover:opacity-80" dangerouslySetInnerHTML={{ __html: councilResult.technical }} />
                 </CardContent>
               </Card>
 
-              <Card variant="default" className="border-l-4 border-l-rose-500/50 bg-white/[0.02]">
+              <Card variant="default" className="border-l-4 border-l-rose-500/50 bg-background/[0.02] transition-all duration-200 hover:opacity-80">
                 <CardHeader>
-                  <div className="flex items-center gap-2">
-                    <Heart size={16} className="text-rose-400" />
-                    <h3 className="text-base font-semibold text-white">Ethical</h3>
+                  <div className="flex items-center gap-2 transition-all duration-200 hover:opacity-80">
+                    <Heart size={16} className="text-rose-400 transition-all duration-200 hover:opacity-80" />
+                    <h3 className="text-base font-semibold text-white transition-all duration-200 hover:opacity-80">Ethical</h3>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="nomosx-prose text-sm" dangerouslySetInnerHTML={{ __html: councilResult.ethical }} />
+                  <div className="nomosx-prose text-sm transition-all duration-200 hover:opacity-80" dangerouslySetInnerHTML={{ __html: councilResult.ethical }} />
                 </CardContent>
               </Card>
 
-              <Card variant="default" className="border-l-4 border-l-purple-500/50 bg-white/[0.02]">
+              <Card variant="default" className="border-l-4 border-l-purple-500/50 bg-background/[0.02] transition-all duration-200 hover:opacity-80">
                 <CardHeader>
-                  <div className="flex items-center gap-2">
-                    <Users size={16} className="text-purple-400" />
-                    <h3 className="text-base font-semibold text-white">Political</h3>
+                  <div className="flex items-center gap-2 transition-all duration-200 hover:opacity-80">
+                    <Users size={16} className="text-secondary transition-all duration-200 hover:opacity-80" />
+                    <h3 className="text-base font-semibold text-white transition-all duration-200 hover:opacity-80">Political</h3>
                   </div>
                 </CardHeader>
                 <CardContent>
-                  <div className="nomosx-prose text-sm" dangerouslySetInnerHTML={{ __html: councilResult.political }} />
+                  <div className="nomosx-prose text-sm transition-all duration-200 hover:opacity-80" dangerouslySetInnerHTML={{ __html: councilResult.political }} />
                 </CardContent>
               </Card>
             </div>
 
-            <Card variant="default" className="bg-white/[0.02]">
+            <Card variant="default" className="bg-background/[0.02] transition-all duration-200 hover:opacity-80">
               <CardHeader>
-                <div className="flex items-center gap-2">
-                  <Sparkles size={18} className="text-cyan-400" />
-                  <h3 className="text-lg font-semibold text-white">Synthesis</h3>
+                <div className="flex items-center gap-2 transition-all duration-200 hover:opacity-80">
+                  <Sparkles size={18} className="text-cyan-400 transition-all duration-200 hover:opacity-80" />
+                  <h3 className="text-4xl font-semibold text-white transition-all duration-200 hover:opacity-80">Synthesis</h3>
                 </div>
               </CardHeader>
               <CardContent>
-                <div className="nomosx-prose" dangerouslySetInnerHTML={{ __html: councilResult.synthesis }} />
+                <div className="nomosx-prose transition-all duration-200 hover:opacity-80" dangerouslySetInnerHTML={{ __html: councilResult.synthesis }} />
               </CardContent>
             </Card>
           </div>
@@ -565,13 +568,13 @@ function StudioPageContent() {
 
         {/* Empty State */}
         {!isLoading && !briefResult && !councilResult && (
-          <div className="space-y-8">
-            <div className="text-center py-8">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center mx-auto mb-4">
-                <PenTool size={32} className="text-white" />
+          <div className="space-y-8 transition-all duration-200 hover:opacity-80">
+            <div className="text-center py-8 transition-all duration-200 hover:opacity-80">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center mx-auto mb-4 transition-all duration-200 hover:opacity-80">
+                <PenTool size={32} className="text-white transition-all duration-200 hover:opacity-80" />
               </div>
-              <h3 className="text-xl font-semibold text-white mb-2">Create a publication</h3>
-              <p className="text-white/50 text-sm max-w-md mx-auto">
+              <h3 className="text-4xl font-semibold text-white mb-2 transition-all duration-200 hover:opacity-80">Create a publication</h3>
+              <p className="text-white/50 text-sm max-w-md mx-auto transition-all duration-200 hover:opacity-80">
                 Select a format, a vertical, and ask your question. 
                 The system will generate a draft submitted to the Editorial Gate.
               </p>
@@ -594,10 +597,10 @@ export default function StudioPage() {
   return (
     <Suspense fallback={
       <Shell>
-        <div className="flex items-center justify-center min-h-screen">
-          <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-400 mx-auto mb-4"></div>
-            <p className="text-white/50">Chargement...</p>
+        <div className="flex items-center justify-center min-h-screen transition-all duration-200 hover:opacity-80">
+          <div className="text-center transition-all duration-200 hover:opacity-80">
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-400 mx-auto mb-4 transition-all duration-200 hover:opacity-80"></div>
+            <p className="text-white/50 transition-all duration-200 hover:opacity-80">Chargement...</p>
           </div>
         </div>
       </Shell>

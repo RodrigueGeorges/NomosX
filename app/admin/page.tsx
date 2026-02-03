@@ -18,10 +18,11 @@ import { useState, useEffect } from "react";
 import { useRouter } from "next/navigation";
 import Link from "next/link";
 import Shell from "@/components/Shell";
-import Button from "@/components/ui/Button";
-import Badge from "@/components/ui/Badge";
+import { Button } from "@/components/ui/Button";
+import { Badge } from "@/components/ui/Badge";
 import { Card, CardContent } from "@/components/ui/Card";
 import TrustScoreBadge from "@/components/TrustScoreBadge";
+import { cn } from "@/lib/utils"
 import { 
   Activity,
   Zap,
@@ -110,135 +111,135 @@ export default function AdminCommandCenter() {
 
   return (
     <Shell>
-      <div className="max-w-7xl mx-auto">
+      <div className="max-w-7xl mx-auto transition-all duration-200 hover:opacity-80">
         {/* Header - System Status */}
-        <div className="mb-10">
-          <div className="flex items-center justify-between mb-6">
-            <div className="flex items-center gap-4">
-              <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-cyan-500/10 to-blue-500/5 border border-cyan-500/20 flex items-center justify-center shadow-[0_0_20px_rgba(0,212,255,0.15)]">
-                <Activity size={32} className="text-cyan-400" />
+        <div className="mb-10 transition-all duration-200 hover:opacity-80">
+          <div className="flex items-center justify-between mb-6 transition-all duration-200 hover:opacity-80">
+            <div className="flex items-center gap-4 transition-all duration-200 hover:opacity-80">
+              <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-cyan-500/10 to-blue-500/5 border border-cyan-500/20 flex items-center justify-center shadow-[0_0_20px_rgba(0,212,255,0.15)] transition-all duration-200 hover:opacity-80">
+                <Activity size={32} className="text-cyan-400 transition-all duration-200 hover:opacity-80" />
               </div>
               <div>
-                <div className="text-xs text-cyan-400/60 tracking-[0.25em] uppercase mb-1">
+                <div className="text-xs text-cyan-400/60 tracking-[0.25em] uppercase mb-1 transition-all duration-200 hover:opacity-80">
                   Admin
                 </div>
-                <h1 className="text-4xl font-light tracking-tight text-white/95">Command Center</h1>
+                <h1 className="text-4xl font-light tracking-tight text-white/95 transition-all duration-200 hover:opacity-80">Command Center</h1>
               </div>
             </div>
             
-            <div className="text-right">
-              <div className="text-xs text-white/40 uppercase tracking-wider mb-1">System Status</div>
-              <div className={`text-2xl font-light ${statusColor}`}>{systemStatus}</div>
-              <div className="text-xs text-white/30 mt-1">Silence is a success state</div>
+            <div className="text-right transition-all duration-200 hover:opacity-80">
+              <div className="text-xs text-white/40 uppercase tracking-wider mb-1 transition-all duration-200 hover:opacity-80">System Status</div>
+              <div className={`text-4xl font-light ${statusColor}`}>{systemStatus}</div>
+              <div className="text-xs text-white/30 mt-1 transition-all duration-200 hover:opacity-80">Silence is a success state</div>
             </div>
           </div>
         </div>
 
         {/* Core Metrics - 3 Cards */}
-        <div className="grid grid-cols-3 gap-4 mb-8">
+        <div className="grid grid-cols-3 gap-4 mb-8 transition-all duration-200 hover:opacity-80">
           {/* Signals */}
-          <Card variant="default" className="bg-amber-500/5 border-amber-500/20">
-            <CardContent className="pt-5 pb-5">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center">
-                  <Zap size={18} className="text-amber-400" />
+          <Card variant="default" className="bg-amber-500/5 border-amber-500/20 transition-all duration-200 hover:opacity-80">
+            <CardContent className="pt-5 pb-5 transition-all duration-200 hover:opacity-80">
+              <div className="flex items-center gap-3 mb-3 transition-all duration-200 hover:opacity-80">
+                <div className="w-10 h-10 rounded-xl bg-amber-500/10 border border-amber-500/20 flex items-center justify-center transition-all duration-200 hover:opacity-80">
+                  <Zap size={18} className="text-amber-400 transition-all duration-200 hover:opacity-80" />
                 </div>
-                <div className="flex-1">
-                  <div className="text-2xl font-light text-amber-400">{totalPendingSignals}</div>
-                  <div className="text-xs text-amber-400/60">Pending Signals</div>
+                <div className="flex-1 transition-all duration-200 hover:opacity-80">
+                  <div className="text-4xl font-light text-amber-400 transition-all duration-200 hover:opacity-80">{totalPendingSignals}</div>
+                  <div className="text-xs text-amber-400/60 transition-all duration-200 hover:opacity-80">Pending Signals</div>
                 </div>
               </div>
-              <div className="flex items-center justify-between text-xs">
-                <span className="text-white/30">Held: {heldSignals}</span>
+              <div className="flex items-center justify-between text-xs transition-all duration-200 hover:opacity-80">
+                <span className="text-white/30 transition-all duration-200 hover:opacity-80">Held: {heldSignals}</span>
               </div>
             </CardContent>
           </Card>
 
           {/* Editorial Cadence */}
-          <Card variant="default" className="bg-white/[0.02] border-white/10">
-            <CardContent className="pt-5 pb-5">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center">
-                  <Clock size={18} className="text-emerald-400" />
+          <Card variant="default" className="bg-background/[0.02] border-white/10 transition-all duration-200 hover:opacity-80">
+            <CardContent className="pt-5 pb-5 transition-all duration-200 hover:opacity-80">
+              <div className="flex items-center gap-3 mb-3 transition-all duration-200 hover:opacity-80">
+                <div className="w-10 h-10 rounded-xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center transition-all duration-200 hover:opacity-80">
+                  <Clock size={18} className="text-emerald-400 transition-all duration-200 hover:opacity-80" />
                 </div>
-                <div className="flex-1">
-                  <div className="text-2xl font-light text-white">
+                <div className="flex-1 transition-all duration-200 hover:opacity-80">
+                  <div className="text-4xl font-light text-white transition-all duration-200 hover:opacity-80">
                     {subscription?.weeklyPublicationCount || 0} / {subscription?.weeklyPublicationMax || 3}
                   </div>
-                  <div className="text-xs text-white/40">This week</div>
+                  <div className="text-xs text-white/40 transition-all duration-200 hover:opacity-80">This week</div>
                 </div>
               </div>
-              <div className="w-full bg-white/5 rounded-full h-1.5 overflow-hidden">
+              <div className="w-full bg-background/5 rounded-full h-1.5 overflow-hidden transition-all duration-200 hover:opacity-80">
                 <div 
-                  className="h-full bg-gradient-to-r from-emerald-500 to-cyan-500 transition-all"
+                  className="h-full bg-gradient-to-r from-emerald-500 to-cyan-500 transition-all hover:opacity-80"
                   style={{ 
                     width: `${Math.min(100, ((subscription?.weeklyPublicationCount || 0) / (subscription?.weeklyPublicationMax || 3)) * 100)}%` 
                   }}
                 />
               </div>
-              <div className="text-xs text-white/30 mt-2">Editorial discipline enforced</div>
+              <div className="text-xs text-white/30 mt-2 transition-all duration-200 hover:opacity-80">Editorial discipline enforced</div>
             </CardContent>
           </Card>
 
           {/* Publications */}
-          <Card variant="default" className="bg-white/[0.02] border-white/10">
-            <CardContent className="pt-5 pb-5">
-              <div className="flex items-center gap-3 mb-3">
-                <div className="w-10 h-10 rounded-xl bg-blue-500/10 border border-blue-500/20 flex items-center justify-center">
-                  <Archive size={18} className="text-blue-400" />
+          <Card variant="default" className="bg-background/[0.02] border-white/10 transition-all duration-200 hover:opacity-80">
+            <CardContent className="pt-5 pb-5 transition-all duration-200 hover:opacity-80">
+              <div className="flex items-center gap-3 mb-3 transition-all duration-200 hover:opacity-80">
+                <div className="w-10 h-10 rounded-xl bg-primary/10 border border-primary/20 flex items-center justify-center transition-all duration-200 hover:opacity-80">
+                  <Archive size={18} className="text-primary transition-all duration-200 hover:opacity-80" />
                 </div>
-                <div className="flex-1">
-                  <div className="text-2xl font-light text-white">{recentPublications.length}</div>
-                  <div className="text-xs text-white/40">Recent</div>
+                <div className="flex-1 transition-all duration-200 hover:opacity-80">
+                  <div className="text-4xl font-light text-white transition-all duration-200 hover:opacity-80">{recentPublications.length}</div>
+                  <div className="text-xs text-white/40 transition-all duration-200 hover:opacity-80">Recent</div>
                 </div>
               </div>
-              <div className="text-xs text-white/30">Editorial snapshot</div>
+              <div className="text-xs text-white/30 transition-all duration-200 hover:opacity-80">Editorial snapshot</div>
             </CardContent>
           </Card>
         </div>
 
         {/* Two Column Layout */}
-        <div className="grid lg:grid-cols-2 gap-6 mb-8">
+        <div className="grid lg:grid-cols-2 gap-6 mb-8 transition-all duration-200 hover:opacity-80">
           {/* Signals Inbox (CORE) */}
           <section>
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-white flex items-center gap-2">
-                <Zap size={18} className="text-amber-400" />
+            <div className="flex items-center justify-between mb-4 transition-all duration-200 hover:opacity-80">
+              <h2 className="text-4xl font-semibold text-white flex items-center gap-2 transition-all duration-200 hover:opacity-80">
+                <Zap size={18} className="text-amber-400 transition-all duration-200 hover:opacity-80" />
                 Signals Inbox
               </h2>
-              <Link href="/signals" className="text-sm text-cyan-400 hover:text-cyan-300 flex items-center gap-1">
+              <Link href="/signals" className="text-sm text-cyan-400 hover:text-cyan-300 flex items-center gap-1 transition-all duration-200">
                 View all <ArrowRight size={14} />
               </Link>
             </div>
             
             {pendingSignals.length === 0 ? (
-              <Card variant="default" className="bg-white/[0.02] border-white/10">
-                <CardContent className="pt-10 pb-10 text-center">
-                  <Zap size={28} className="text-white/20 mx-auto mb-3" />
-                  <p className="text-white/50 text-sm font-medium">No pending signals</p>
-                  <p className="text-white/30 text-xs mt-1">System is monitoring autonomously</p>
+              <Card variant="default" className="bg-background/[0.02] border-white/10 transition-all duration-200 hover:opacity-80">
+                <CardContent className="pt-10 pb-10 text-center transition-all duration-200 hover:opacity-80">
+                  <Zap size={28} className="text-white/20 mx-auto mb-3 transition-all duration-200 hover:opacity-80" />
+                  <p className="text-white/50 text-sm font-medium transition-all duration-200 hover:opacity-80">No pending signals</p>
+                  <p className="text-white/30 text-xs mt-1 transition-all duration-200 hover:opacity-80">System is monitoring autonomously</p>
                 </CardContent>
               </Card>
             ) : (
-              <div className="space-y-2">
+              <div className="space-y-2 transition-all duration-200 hover:opacity-80">
                 {pendingSignals.map(signal => (
                   <Card 
                     key={signal.id}
                     variant="default"
-                    className="bg-white/[0.02] border-white/10 hover:border-amber-500/30 cursor-pointer transition-all group"
+                    className="bg-background/[0.02] border-white/10 hover:border-amber-500/30 cursor-pointer transition-all group"
                     onClick={() => router.push(`/studio?signalId=${signal.id}`)}
                   >
-                    <CardContent className="pt-3 pb-3">
-                      <div className="flex items-center gap-3">
-                        <div className="w-9 h-9 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center flex-shrink-0">
-                          <span className="text-sm font-bold text-amber-400">{signal.scores.priority}</span>
+                    <CardContent className="pt-3 pb-3 transition-all duration-200 hover:opacity-80">
+                      <div className="flex items-center gap-3 transition-all duration-200 hover:opacity-80">
+                        <div className="w-9 h-9 rounded-lg bg-amber-500/10 border border-amber-500/20 flex items-center justify-center flex-shrink-0 transition-all duration-200 hover:opacity-80">
+                          <span className="text-sm font-bold text-amber-400 transition-all duration-200 hover:opacity-80">{signal.scores.priority}</span>
                         </div>
-                        <div className="flex-1 min-w-0">
+                        <div className="flex-1 min-w-0 transition-all duration-200 hover:opacity-80">
                           <p className="text-sm text-white truncate group-hover:text-cyan-400 transition-colors">{signal.title}</p>
-                          <div className="flex items-center gap-2 text-xs text-white/40 mt-0.5">
+                          <div className="flex items-center gap-2 text-xs text-white/40 mt-0.5 transition-all duration-200 hover:opacity-80">
                             {signal.vertical && <span>{signal.vertical.name}</span>}
                             <span>•</span>
-                            <Badge variant={signal.status === "NEW" ? "warning" : "default"} className="text-xs px-1.5 py-0">
+                            <Badge variant={signal.status === "NEW" ? "warning" : "default"} className="text-xs px-1.5 py-0 transition-all duration-200 hover:opacity-80">
                               {signal.status}
                             </Badge>
                             {signal.scores.novelty && (
@@ -260,47 +261,47 @@ export default function AdminCommandCenter() {
 
           {/* Editorial Snapshot */}
           <section>
-            <div className="flex items-center justify-between mb-4">
-              <h2 className="text-lg font-semibold text-white flex items-center gap-2">
-                <Archive size={18} className="text-emerald-400" />
+            <div className="flex items-center justify-between mb-4 transition-all duration-200 hover:opacity-80">
+              <h2 className="text-4xl font-semibold text-white flex items-center gap-2 transition-all duration-200 hover:opacity-80">
+                <Archive size={18} className="text-emerald-400 transition-all duration-200 hover:opacity-80" />
                 Editorial Snapshot
               </h2>
-              <Link href="/publications" className="text-sm text-cyan-400 hover:text-cyan-300 flex items-center gap-1">
+              <Link href="/publications" className="text-sm text-cyan-400 hover:text-cyan-300 flex items-center gap-1 transition-all duration-200">
                 View all <ArrowRight size={14} />
               </Link>
             </div>
             
             {recentPublications.length === 0 ? (
-              <Card variant="default" className="bg-white/[0.02] border-white/10">
-                <CardContent className="pt-10 pb-10 text-center">
-                  <Archive size={28} className="text-white/20 mx-auto mb-3" />
-                  <p className="text-white/50 text-sm font-medium">No publications yet</p>
-                  <p className="text-white/30 text-xs mt-1">The think tank decides when to publish</p>
+              <Card variant="default" className="bg-background/[0.02] border-white/10 transition-all duration-200 hover:opacity-80">
+                <CardContent className="pt-10 pb-10 text-center transition-all duration-200 hover:opacity-80">
+                  <Archive size={28} className="text-white/20 mx-auto mb-3 transition-all duration-200 hover:opacity-80" />
+                  <p className="text-white/50 text-sm font-medium transition-all duration-200 hover:opacity-80">No publications yet</p>
+                  <p className="text-white/30 text-xs mt-1 transition-all duration-200 hover:opacity-80">The think tank decides when to publish</p>
                 </CardContent>
               </Card>
             ) : (
-              <div className="space-y-2">
+              <div className="space-y-2 transition-all duration-200 hover:opacity-80">
                 {recentPublications.map(pub => (
                   <Card 
                     key={pub.id}
                     variant="default"
-                    className="bg-white/[0.02] border-white/10 hover:border-emerald-500/30 cursor-pointer transition-all group"
+                    className="bg-background/[0.02] border-white/10 hover:border-emerald-500/30 cursor-pointer transition-all group"
                     onClick={() => router.push(`/publications/${pub.id}`)}
                   >
-                    <CardContent className="pt-3 pb-3">
-                      <div className="flex items-center gap-3">
+                    <CardContent className="pt-3 pb-3 transition-all duration-200 hover:opacity-80">
+                      <div className="flex items-center gap-3 transition-all duration-200 hover:opacity-80">
                         <TrustScoreBadge score={pub.trustScore} size="sm" />
-                        <div className="flex-1 min-w-0">
+                        <div className="flex-1 min-w-0 transition-all duration-200 hover:opacity-80">
                           <p className="text-sm text-white truncate group-hover:text-cyan-400 transition-colors">{pub.title}</p>
-                          <div className="flex items-center gap-2 text-xs text-white/40 mt-0.5">
+                          <div className="flex items-center gap-2 text-xs text-white/40 mt-0.5 transition-all duration-200 hover:opacity-80">
                             {pub.vertical && <span>{pub.vertical.name}</span>}
                             <span>•</span>
                             <span>{pub.type.replace("_", " ")}</span>
                           </div>
                         </div>
-                        {pub.status === "PUBLISHED" && <CheckCircle size={14} className="text-emerald-400" />}
-                        {pub.status === "HELD" && <Pause size={14} className="text-amber-400" />}
-                        {pub.status === "SILENT" && <VolumeX size={14} className="text-white/30" />}
+                        {pub.status === "PUBLISHED" && <CheckCircle size={14} className="text-emerald-400 transition-all duration-200 hover:opacity-80" />}
+                        {pub.status === "HELD" && <Pause size={14} className="text-amber-400 transition-all duration-200 hover:opacity-80" />}
+                        {pub.status === "SILENT" && <VolumeX size={14} className="text-white/30 transition-all duration-200 hover:opacity-80" />}
                       </div>
                     </CardContent>
                   </Card>
@@ -312,36 +313,36 @@ export default function AdminCommandCenter() {
 
         {/* Cadence Monitor */}
         {subscription && (
-          <section className="mb-8">
-            <Card variant="default" className={subscription.weeklyLimitReached ? "bg-amber-500/5 border-amber-500/20" : "bg-white/[0.02] border-white/10"}>
-              <CardContent className="pt-6 pb-6">
-                <div className="flex items-center justify-between">
-                  <div className="flex items-center gap-4">
+          <section className="mb-8 transition-all duration-200 hover:opacity-80">
+            <Card variant="default" className={subscription.weeklyLimitReached ? "bg-amber-500/5 border-amber-500/20" : "bg-background/[0.02] border-white/10"}>
+              <CardContent className="pt-6 pb-6 transition-all duration-200 hover:opacity-80">
+                <div className="flex items-center justify-between transition-all duration-200 hover:opacity-80">
+                  <div className="flex items-center gap-4 transition-all duration-200 hover:opacity-80">
                     <Clock size={20} className={subscription.weeklyLimitReached ? "text-amber-400" : "text-white/40"} />
                     <div>
-                      <p className="text-sm font-medium text-white">Cadence Monitor</p>
-                      <p className="text-xs text-white/40 mt-0.5">
+                      <p className="text-sm font-medium text-white transition-all duration-200 hover:opacity-80">Cadence Monitor</p>
+                      <p className="text-xs text-white/40 mt-0.5 transition-all duration-200 hover:opacity-80">
                         {subscription.weeklyLimitReached 
                           ? "Weekly limit reached — Silence is respected" 
                           : "Editorial discipline enforced"}
                       </p>
                     </div>
                   </div>
-                  <div className="flex items-center gap-8">
-                    <div className="text-center">
-                      <div className="text-lg font-light text-white">
+                  <div className="flex items-center gap-8 transition-all duration-200 hover:opacity-80">
+                    <div className="text-center transition-all duration-200 hover:opacity-80">
+                      <div className="text-4xl font-light text-white transition-all duration-200 hover:opacity-80">
                         {subscription.weeklyPublicationCount} / {subscription.weeklyPublicationMax}
                       </div>
-                      <div className="text-xs text-white/40">This week</div>
+                      <div className="text-xs text-white/40 transition-all duration-200 hover:opacity-80">This week</div>
                     </div>
                   </div>
                 </div>
                 
                 {subscription.weeklyLimitReached && (
-                  <div className="mt-4 pt-4 border-t border-amber-500/20 flex items-center justify-between">
-                    <div className="flex items-center gap-2">
-                      <AlertCircle size={16} className="text-amber-400" />
-                      <span className="text-sm text-amber-400">Silence is a success state — No publication required</span>
+                  <div className="mt-4 pt-4 border-t border-amber-500/20 flex items-center justify-between transition-all duration-200 hover:opacity-80">
+                    <div className="flex items-center gap-2 transition-all duration-200 hover:opacity-80">
+                      <AlertCircle size={16} className="text-amber-400 transition-all duration-200 hover:opacity-80" />
+                      <span className="text-sm text-amber-400 transition-all duration-200 hover:opacity-80">Silence is a success state — No publication required</span>
                     </div>
                   </div>
                 )}
@@ -351,23 +352,23 @@ export default function AdminCommandCenter() {
         )}
 
         {/* Admin Actions */}
-        <div className="flex gap-3">
+        <div className="flex gap-3 transition-all duration-200 hover:opacity-80">
           <Button 
             variant="ai" 
             onClick={() => router.push("/studio")}
           >
-            <PenTool size={18} className="mr-2" />
+            <PenTool size={18} className="mr-2 transition-all duration-200 hover:opacity-80" />
             Open Studio
           </Button>
           <Button variant="ghost" onClick={() => router.push("/signals")}>
-            <Zap size={18} className="mr-2" />
+            <Zap size={18} className="mr-2 transition-all duration-200 hover:opacity-80" />
             Signals
           </Button>
           <Button variant="ghost" onClick={() => router.push("/publications")}>
-            <Archive size={18} className="mr-2" />
+            <Archive size={18} className="mr-2 transition-all duration-200 hover:opacity-80" />
             Publications
           </Button>
-          <div className="flex-1" />
+          <div className="flex-1 transition-all duration-200 hover:opacity-80" />
           <Button variant="ghost" size="sm" onClick={loadAdminData} disabled={loading}>
             <RefreshCw size={16} className={loading ? "animate-spin" : ""} />
           </Button>

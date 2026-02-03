@@ -1,6 +1,6 @@
 import { useRouter } from "next/navigation";
 import { X, Shield, Check } from "lucide-react";
-import Button from "@/components/ui/Button";
+import { Button } from "@/components/ui/Button";
 import { Card, CardContent } from "@/components/ui/Card";
 
 type UpgradeModalProps = {

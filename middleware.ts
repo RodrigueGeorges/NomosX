@@ -1,132 +1,26 @@
-import { NextRequest, NextResponse } from "next/server";
-import { jwtVerify } from "jose";
+import { NextRequest, NextResponse } from 'next/server'
 
-const JWT_SECRET_RAW = process.env.JWT_SECRET;
-const JWT_SECRET = new TextEncoder().encode(JWT_SECRET_RAW || "");
-
-const SESSION_COOKIE_NAME = "nomosx-session";
-
-// Routes that require authentication
-const PROTECTED_ROUTES = [
-  "/dashboard",
-  "/studio",
-  "/signals",
-  "/publications",
-  "/search",
-  "/brief",
-  "/briefs",
-  "/council",
-  "/digests",
-  "/radar",
-  "/topics",
-  "/settings",
-];
-
-// Routes accessible only when NOT authenticated
-const AUTH_ROUTES = ["/auth/login", "/auth/register"];
-
-// Public routes (accessible by everyone)
-const PUBLIC_ROUTES = ["/", "/api/auth/login", "/api/auth/register", "/api/auth/logout"];
-
-/**
- * Middleware to protect routes and handle authentication
- */
-export async function middleware(request: NextRequest) {
-  const { pathname } = request.nextUrl;
-
-  // Allow public API routes and static files
-  if (
-    pathname.startsWith("/_next/") ||
-    pathname.startsWith("/public/") ||
-    pathname.includes(".") ||
-    PUBLIC_ROUTES.some(route => pathname.startsWith(route))
-  ) {
-    return NextResponse.next();
-  }
+export function middleware(request: NextRequest) {
+  // Add security headers
+  const response = NextResponse.next()
   
-  // Get session token
-  const token = request.cookies.get(SESSION_COOKIE_NAME)?.value;
-
-  // Hard fail-safe: if JWT_SECRET is missing, treat all sessions as invalid.
-  // (Prevents accidentally deploying with a known default secret.)
-  if (!JWT_SECRET_RAW || JWT_SECRET_RAW.trim().length < 16) {
-    const isPublic = pathname === "/" || pathname.startsWith("/auth/");
-    if (isPublic) return NextResponse.next();
-
-    if (pathname.startsWith("/api/")) {
-      return NextResponse.json(
-        { error: "Server misconfigured: JWT_SECRET missing" },
-        { status: 503 }
-      );
-    }
-
-    return NextResponse.redirect(new URL("/auth/login", request.url));
-  }
-
-  // Protected API routes (Think Tank, Subscription, etc.)
-  const isProtectedApiRoute = 
-    pathname.startsWith("/api/think-tank") ||
-    pathname.startsWith("/api/subscription") ||
-    pathname.startsWith("/api/drafts") ||
-    pathname.startsWith("/api/editorial-gate") ||
-    pathname.startsWith("/api/council-sessions") ||
-    // Costly endpoints
-    pathname.startsWith("/api/brief") ||
-    pathname.startsWith("/api/ingestion") ||
-    pathname.startsWith("/api/search") ||
-    pathname.startsWith("/api/radar") ||
-    pathname.startsWith("/api/council") ||
-    pathname.startsWith("/api/runs");
+  response.headers.set('X-Frame-Options', 'DENY')
+  response.headers.set('X-Content-Type-Options', 'nosniff')
+  response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin')
+  response.headers.set('X-XSS-Protection', '1; mode=block')
+  response.headers.set(
+    'Content-Security-Policy',
+    "default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:;"
+  )
   
-  if (isProtectedApiRoute && !token) {
-    return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-  }
-
-  let isAuthenticated = false;
-
-  if (token) {
-    try {
-      await jwtVerify(token, JWT_SECRET);
-      isAuthenticated = true;
-    } catch (error) {
-      // Token is invalid or expired
-      isAuthenticated = false;
-    }
-  }
-
-  // Check if route is protected
-  const isProtectedRoute = PROTECTED_ROUTES.some((route) =>
-    pathname.startsWith(route)
-  );
-
-  // Check if route is auth route
-  const isAuthRoute = AUTH_ROUTES.some((route) => pathname.startsWith(route));
-
-  // Redirect to login if trying to access protected route without auth
-  if (isProtectedRoute && !isAuthenticated) {
-    const loginUrl = new URL("/auth/login", request.url);
-    loginUrl.searchParams.set("redirect", pathname);
-    return NextResponse.redirect(loginUrl);
-  }
-
-  // Redirect to dashboard if authenticated user tries to access auth routes
-  if (isAuthRoute && isAuthenticated) {
-    return NextResponse.redirect(new URL("/dashboard", request.url));
-  }
-
-  return NextResponse.next();
+  // Rate limiting logic would go here
+  // For now, we'll just add the headers
+  
+  return response
 }
 
 export const config = {
   matcher: [
-    /*
-     * Match all request paths except for the ones starting with:
-     * - api/auth (auth API routes)
-     * - _next/static (static files)
-     * - _next/image (image optimization files)
-     * - favicon.ico (favicon file)
-     * - public folder
-     */
-    "/((?!_next/static|_next/image|favicon.ico|.*\\..*|public).*)",
+    '/((?!api|_next/static|_next/image|favicon.ico).*)',
   ],
-};
+}

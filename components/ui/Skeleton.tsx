@@ -1,12 +1,11 @@
 
-import { cn } from "./cn";
+import { cn } from "@/lib/utils";
 
-type Props = { 
-  className?: string;
+interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: "pulse" | "shimmer";
-};
+}
 
-export default function Skeleton({ className, variant = "shimmer" }: Props) {
+export function Skeleton({ className, variant = "shimmer", ...props }: SkeletonProps) {
   const variants = {
     pulse: "animate-pulse bg-white/5",
     shimmer: "animate-shimmer overflow-hidden"
@@ -18,7 +17,8 @@ export default function Skeleton({ className, variant = "shimmer" }: Props) {
         "rounded-2xl", 
         variants[variant],
         className
-      )} 
+      )}
+      {...props}
     />
   );
 }

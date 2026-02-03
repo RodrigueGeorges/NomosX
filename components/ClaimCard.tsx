@@ -5,7 +5,7 @@
  */
 
 import React from "react";
-import Badge from "./ui/Badge";
+import { Badge } from "./ui/Badge";
 import { CheckCircle, AlertTriangle, XCircle } from "lucide-react";
 
 export interface Claim {

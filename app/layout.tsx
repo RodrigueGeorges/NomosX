@@ -1,14 +1,31 @@
 
 import "./globals.css";
-import { Space_Grotesk } from "next/font/google";
-import { ToastContainer } from "@/components/ui/Toast";
-import { AuthProvider } from "@/hooks/useAuth";
+import { Inter, Space_Grotesk, JetBrains_Mono } from 'next/font/google'
+
+// Configuration des polices OpenClaw
+const inter = Inter({
+  subsets: ['latin'],
+  variable: '--font-primary',
+  weight: ['300', '400', '500', '600', '700', '800', '900'],
+  display: 'swap',
+})
 
 const spaceGrotesk = Space_Grotesk({
-  subsets: ["latin"],
-  variable: "--font-sans",
-  display: "swap",
-});
+  subsets: ['latin'],
+  variable: '--font-secondary',
+  weight: ['300', '400', '500', '600', '700'],
+  display: 'swap',
+})
+
+const jetbrainsMono = JetBrains_Mono({
+  subsets: ['latin'],
+  variable: '--font-mono',
+  weight: ['400', '500', '600'],
+  display: 'swap',
+})
+import { ToastContainer } from "@/components/ui/Toast";
+import { AuthProvider } from "@/hooks/useAuth";
+import { QueryProvider } from "@/components/providers/QueryProvider";
 
 export const metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
@@ -33,12 +50,14 @@ export const metadata = {
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr" className={spaceGrotesk.variable} suppressHydrationWarning>
-      <body suppressHydrationWarning>
-        <AuthProvider>
-          {children}
-          <ToastContainer />
-        </AuthProvider>
+    <html lang="fr" className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable}`} suppressHydrationWarning>
+      <body className="font-primary">
+        <QueryProvider>
+          <AuthProvider>
+            {children}
+            <ToastContainer />
+          </AuthProvider>
+        </QueryProvider>
       </body>
     </html>
   );

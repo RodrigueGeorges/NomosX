@@ -1,7 +1,7 @@
 
 "use client";
 import { useState } from "react";
-import { cn } from "./cn";
+import { cn } from "@/lib/utils" from "./cn";
 
 type Props = {
   content: string | React.ReactNode;
@@ -10,7 +10,7 @@ type Props = {
   delay?: number;
 };
 
-export default function Tooltip({ 
+export function Tooltip({ 
   content, 
   children, 
   position = "top",
