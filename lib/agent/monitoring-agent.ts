@@ -13,6 +13,12 @@ const {searchNARA} = require('../providers/institutional/v2/nara-api');
 const {searchUKArchives} = require('../providers/institutional/v2/uk-archives-api');
 const {searchUNDigitalLibrary,searchUNDP,searchUNCTAD} = require('../providers/institutional/v2/un-digital-library');
 const {searchODNIViaGoogle,searchNATOViaGoogle,searchNSAViaGoogle,searchENISAViaGoogle,searchLawZeroViaGoogle,searchGovAIViaGoogle,searchIAPSViaGoogle,searchCAIPViaGoogle,searchAIPIViaGoogle,searchCSETViaGoogle,searchAINowViaGoogle,searchDataSocietyViaGoogle,searchAbundanceViaGoogle,searchCAIDPViaGoogle,searchSCSPViaGoogle,searchIFPViaGoogle,searchCDTViaGoogle,searchBrookingsViaGoogle,searchFAIViaGoogle,searchCNASViaGoogle,searchRANDViaGoogle,searchNewAmericaViaGoogle,searchAspenDigitalViaGoogle,searchRStreetViaGoogle} = require('../providers/institutional/v2/google-cse');
+
+// 🧠 Think Tanks
+const {searchCSETViaGoogle,searchAINowViaGoogle,searchDataSocietyViaGoogle,searchBrookingsViaGoogle,searchRANDViaGoogle,searchLawZeroViaGoogle,searchGovAIViaGoogle,searchIAPSViaGoogle,searchCAIPViaGoogle,searchAIPIViaGoogle,searchCSETViaGoogle,searchAINowViaGoogle,searchDataSocietyViaGoogle,searchAbundanceViaGoogle,searchCAIDPViaGoogle,searchSCSPViaGoogle,searchIFPViaGoogle,searchCDTViaGoogle,searchBrookingsViaGoogle,searchFAIViaGoogle,searchCNASViaGoogle,searchRANDViaGoogle,searchNewAmericaViaGoogle,searchAspenDigitalViaGoogle,searchRStreetViaGoogle} = require('../providers/institutional/v2/google-cse');
+
+// 🚀 LinkUp Integration - Hyper-Intelligent Provider
+const { searchWithLinkUp, financialAnalysisWithLinkUp, complementarySearchWithLinkUp } = require('../providers/linkup-registry');
 const {searchCIAFOIAViaArchive} = require('../providers/institutional/v2/archive-org');
 const {searchEEAS,searchEDA} = require('../providers/institutional/v2/eu-open-data');
 const {searchMinistereArmees,searchSGDSN,searchArchivesNationales} = require('../providers/institutional/v2/france-gov');
@@ -266,7 +272,25 @@ const PROVIDER_FUNCTIONS: Record<string, (query: string, limit: number) => Promi
   'cnas': searchCNASViaGoogle,
   'newamerica': searchNewAmericaViaGoogle,
   'aspen-digital': searchAspenDigitalViaGoogle,
-  'rstreet': searchRStreetViaGoogle
+  'rstreet': searchRStreetViaGoogle,
+
+  // 🚀 LinkUp - Hyper-Intelligent AI Provider
+  'linkup': async (query: string, limit: number) => {
+    const result = await searchWithLinkUp(query, { 
+      depth: 'standard', 
+      outputType: 'searchResults',
+      includeImages: false 
+    });
+    return result.success ? (result.data.results || []).slice(0, limit) : [];
+  },
+  'linkup-financial': async (query: string, limit: number) => {
+    const result = await financialAnalysisWithLinkUp(query);
+    return result.success ? (result.data.results || []).slice(0, limit) : [];
+  },
+  'linkup-complement': async (query: string, limit: number) => {
+    const result = await complementarySearchWithLinkUp(query, []);
+    return result.success ? (result.data.complementary || result.data.results || []).slice(0, limit) : [];
+  }
 };
 
 /**
@@ -618,7 +642,10 @@ export const VARIED_SOURCES_MONITORING: MonitoringConfig = {
     // 🧠 Think Tanks (stratégique - 15% poids)
     'cset', 'ainow', 'datasociety', 'brookings', 'rand',
     'lawzero', 'govai', 'iaps', 'caip', 'aipi', 'abundance', 'caidp', 
-    'scsp', 'ifp', 'cdt', 'fai', 'cnas', 'newamerica', 'aspen-digital', 'rstreet'
+    'scsp', 'ifp', 'cdt', 'fai', 'cnas', 'newamerica', 'aspen-digital', 'rstreet',
+    
+    // 🚀 LinkUp - Hyper-Intelligent AI Provider (prioritaire)
+    'linkup', 'linkup-financial', 'linkup-complement'
   ],
   queries: [
     'artificial intelligence',
@@ -640,5 +667,49 @@ export const VARIED_SOURCES_MONITORING: MonitoringConfig = {
   interval: 180, // 3 heures
   limit: 8,
   minQualityScore: 60,
+  notifyOnNew: true
+};
+
+/**
+ * Config pour monitoring LinkUp - Hyper-Intelligent AI Provider
+ * Spécialisé dans les requêtes financières, business et analyses complexes
+ */
+export const LINKUP_INTELLIGENT_MONITORING: MonitoringConfig = {
+  providers: [
+    // 🚀 LinkUp - Hyper-Intelligent AI Provider (100% prioritaire)
+    'linkup', 'linkup-financial', 'linkup-complement'
+  ],
+  queries: [
+    // 📊 Finance & Business
+    'Microsoft revenue operating income 2024',
+    'Apple quarterly earnings 2024',
+    'Tesla financial performance Q4 2024',
+    'NVIDIA AI chip revenue 2024',
+    'Google Alphabet financial results 2024',
+    
+    // 🤖 AI & Technology Trends
+    'artificial intelligence market size 2024',
+    'machine learning industry trends',
+    'ChatGPT OpenAI revenue impact',
+    'AI startup funding rounds 2024',
+    'enterprise AI adoption rates',
+    
+    // 💰 Market Analysis
+    'S&P 500 technology sector performance',
+    'NASDAQ tech stocks analysis 2024',
+    'venture capital investment trends',
+    'private equity tech deals 2024',
+    'cryptocurrency market analysis',
+    
+    // 🏢 Corporate Intelligence
+    'Fortune 500 companies financial health',
+    'big tech earnings surprises 2024',
+    'supply chain disruptions impact',
+    'inflation effect on tech companies',
+    'digital transformation ROI'
+  ],
+  interval: 120, // 2 heures - plus fréquent pour les données financières
+  limit: 15, // Plus de résultats pour les analyses financières
+  minQualityScore: 75, // Qualité plus élevée pour les données financières
   notifyOnNew: true
 };
