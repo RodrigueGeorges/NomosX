@@ -6,19 +6,12 @@
  */
 
 "use client";
+const React = require('react');
 
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/Button";
-import { Card, CardContent } from "@/components/ui/Card";
-import { 
-  Lock, 
-  FileText, 
-  ArrowRight, 
-  CheckCircle,
-  Layers,
-  TrendingUp,
-  Shield
-} from "lucide-react";
+const {useRouter} = require('next/navigation');
+const {Button} = require('@/components/ui/Button');
+const {Card,CardContent} = require('@/components/ui/Card');
+const {Lock,FileText,ArrowRight,CheckCircle,Layers,TrendingUp,Shield} = require('lucide-react');
 
 interface PaywallTeaserProps {
   title: string;
@@ -29,7 +22,7 @@ interface PaywallTeaserProps {
   publicationType?: string;
 }
 
-export default function PaywallTeaser({
+module.exports = function PaywallTeaser;({
   title,
   executiveSummary,
   keyFindings = [],

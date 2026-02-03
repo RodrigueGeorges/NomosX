@@ -3,11 +3,11 @@
  * Returns health status of all services
  */
 
-import { NextResponse } from "next/server";
-import { getCacheStats } from "@/lib/cache/redis-cache";
-import { checkLLMHealth } from "@/lib/llm/unified-llm";
-import { prisma } from "@/lib/db";
-import * as Sentry from "@sentry/nextjs";
+const {NextResponse} = require('next/server');
+const {getCacheStats} = require('@/lib/cache/redis-cache');
+const {checkLLMHealth} = require('@/lib/llm/unified-llm');
+const {prisma} = require('@/lib/db');
+const Sentry = require('@sentry/nextjs');
 
 export async function GET() {
   try {

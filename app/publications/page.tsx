@@ -1,3 +1,4 @@
+const React = require('react');
 "use client";
 
 /**
@@ -7,31 +8,17 @@
  * All paths lead here: Signals, Briefs, Council deliberations
  */
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { useAuth } from "@/hooks/useAuth";
-import Shell from "@/components/Shell";
-import { Card, CardContent } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
-import { Badge } from "@/components/ui/Badge";
-import { Input } from "@/components/ui/Input";
-import TrustScoreBadge from "@/components/TrustScoreBadge";
-import { cn } from "@/lib/utils"
-import { 
-  Archive, 
-  FileText,
-  Search,
-  Filter,
-  ArrowUpDown,
-  Eye,
-  Download,
-  Clock,
-  Layers,
-  CheckCircle,
-  Pause,
-  VolumeX,
-  Lock
-} from "lucide-react";
+const {useEffect,useState} = require('react');
+const {useRouter} = require('next/navigation');
+const {useAuth} = require('@/hooks/useAuth');
+const Shell = require('@/components/Shell');
+const {Card,CardContent} = require('@/components/ui/Card');
+const {Button} = require('@/components/ui/Button');
+const {Badge} = require('@/components/ui/Badge');
+const {Input} = require('@/components/ui/Input');
+const TrustScoreBadge = require('@/components/TrustScoreBadge');
+const {cn} = require('@/lib/utils');
+const {Archive,FileText,Search,Filter,ArrowUpDown,Eye,Download,Clock,Layers,CheckCircle,Pause,VolumeX,Lock} = require('lucide-react');
 
 type EditorialStatus = "PUBLISHED" | "HELD" | "SILENT";
 
@@ -69,7 +56,7 @@ const STATUS_CONFIG: Record<EditorialStatus, { label: string; icon: React.Elemen
   SILENT: { label: "Silent", icon: VolumeX, color: "text-white/40" },
 };
 
-export default function PublicationsPage() {
+module.exports = function PublicationsPage;() {
   const router = useRouter();
   const { user, isAuthenticated } = useAuth();
   const [publications, setPublications] = useState<Publication[]>([]);

@@ -1,3 +1,4 @@
+const React = require('react');
 /**
  * ConversationHistory Component
  * 
@@ -7,8 +8,8 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
-import TrustScoreBadge from './TrustScoreBadge';
+const {useState,useEffect} = require('react');
+const TrustScoreBadge = require('./TrustScoreBadge');
 
 interface Analysis {
   id: string;
@@ -24,7 +25,7 @@ interface ConversationHistoryProps {
   onSelectAnalysis?: (analysisId: string) => void;
 }
 
-export default function ConversationHistory({ userId, onSelectAnalysis }: ConversationHistoryProps) {
+module.exports = function ConversationHistory;({ userId, onSelectAnalysis }: ConversationHistoryProps) {
   const [analyses, setAnalyses] = useState<Analysis[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');

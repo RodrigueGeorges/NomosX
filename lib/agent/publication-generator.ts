@@ -5,16 +5,12 @@
  * Uses templates to enforce structure and constraints
  */
 
-import OpenAI from "openai";
-import { prisma } from "@/lib/db";
-import { 
-  PublicationType,
-  PublicationTemplate,
-  CriticalLoopResult
-} from "@/lib/think-tank/types";
-import { getTemplate, PUBLICATION_TEMPLATES } from "@/lib/think-tank/templates";
-import { runCriticalLoop } from "./critical-loop";
-import { recordPublication } from "./cadence-enforcer";
+const OpenAI = require('openai');
+const {prisma} = require('@/lib/db');
+const {PublicationType,PublicationTemplate,CriticalLoopResult} = require('@/lib/think-tank/types');
+const {getTemplate,PUBLICATION_TEMPLATES} = require('@/lib/think-tank/templates');
+const {runCriticalLoop} = require('./critical-loop');
+const {recordPublication} = require('./cadence-enforcer');
 
 const ai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 const MODEL = "gpt-4o";

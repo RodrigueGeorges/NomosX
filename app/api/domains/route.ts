@@ -1,6 +1,6 @@
-import { NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
-import { PREDEFINED_DOMAINS } from "@/lib/domains";
+const {NextResponse} = require('next/server');
+const {prisma} = require('@/lib/db');
+const {PREDEFINED_DOMAINS} = require('@/lib/domains');
 
 /**
  * GET /api/domains

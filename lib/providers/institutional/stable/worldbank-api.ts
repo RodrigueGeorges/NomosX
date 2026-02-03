@@ -3,7 +3,7 @@
  * API Docs: https://datahelpdesk.worldbank.org/knowledgebase/articles/889392
  */
 
-import axios from 'axios';
+const axios = require('axios');
 
 const WB_API_BASE = 'https://search.worldbank.org/api/v2/wds';
 const USER_AGENT = 'NomosX Research Bot (+https://nomosx.com | contact@nomosx.com)';

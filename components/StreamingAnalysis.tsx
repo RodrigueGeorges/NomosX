@@ -1,3 +1,4 @@
+const React = require('react');
 /**
  * StreamingAnalysis Component
  * 
@@ -7,9 +8,9 @@
 
 'use client';
 
-import { useState, useEffect, useRef } from 'react';
-import TrustScoreBadge from './TrustScoreBadge';
-import ClaimCard from './ClaimCard';
+const {useState,useEffect,useRef} = require('react');
+const TrustScoreBadge = require('./TrustScoreBadge');
+const ClaimCard = require('./ClaimCard');
 
 interface StreamingAnalysisProps {
   runId: string;
@@ -41,7 +42,7 @@ interface Claim {
   confidence: number;
 }
 
-export default function StreamingAnalysis({ runId, onComplete, onError }: StreamingAnalysisProps) {
+module.exports = function StreamingAnalysis;({ runId, onComplete, onError }: StreamingAnalysisProps) {
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [isStreaming, setIsStreaming] = useState(true);
   const [error, setError] = useState<string | null>(null);

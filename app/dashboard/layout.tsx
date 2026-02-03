@@ -1,6 +1,7 @@
+const React = require('react');
 export const dynamic = 'force-dynamic';
 
-export default function DashboardLayout({
+module.exports = function DashboardLayout;({
   children,
 }: {
   children: React.ReactNode;

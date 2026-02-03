@@ -1,5 +1,5 @@
-import { NextRequest, NextResponse } from "next/server";
-import { refreshMacroSeries } from "@/lib/agent/macro-refresh";
+const {NextRequest,NextResponse} = require('next/server');
+const {refreshMacroSeries} = require('@/lib/agent/macro-refresh');
 
 /**
  * POST /api/cron/macro-refresh

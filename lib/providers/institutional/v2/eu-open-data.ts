@@ -4,7 +4,7 @@
  * API officielle, gratuite
  */
 
-import axios from 'axios';
+const axios = require('axios');
 
 const EU_DATA_API = 'https://data.europa.eu/api/hub/search/datasets';
 const USER_AGENT = 'NomosX Research Bot (+https://nomosx.com | contact@nomosx.com)';

@@ -2,7 +2,7 @@
  * AI Configuration (OpenAI, Cohere, etc.)
  */
 
-import { z } from "zod";
+const {z} = require('zod');
 
 const AIConfigSchema = z.object({
   openai: z.object({

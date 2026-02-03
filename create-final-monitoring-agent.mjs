@@ -140,7 +140,7 @@ async function createFinalMonitoringAgent() {
   
   console.log('\n📋 LISTE DÉFINITIVE DES 20 PROVIDERS:');
   workingProviders.forEach((provider, i) => {
-    console.log(`  ${i+1:2}. ${provider}`);
+    console.log(`  ${(i+1).toString().padStart(2)}. ${provider}`);
   });
   
   console.log('\n🎯 RECOMMANDATION PRODUCTION:');

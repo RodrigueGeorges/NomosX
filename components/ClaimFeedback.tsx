@@ -1,3 +1,4 @@
+const React = require('react');
 /**
  * ClaimFeedback Component
  * 
@@ -7,14 +8,14 @@
 
 'use client';
 
-import { useState } from 'react';
+const {useState} = require('react');
 
 interface ClaimFeedbackProps {
   claimId: string;
   onFeedbackSubmitted?: () => void;
 }
 
-export default function ClaimFeedback({ claimId, onFeedbackSubmitted }: ClaimFeedbackProps) {
+module.exports = function ClaimFeedback;({ claimId, onFeedbackSubmitted }: ClaimFeedbackProps) {
   const [rating, setRating] = useState<number | null>(null);
   const [feedbackType, setFeedbackType] = useState<string>('');
   const [comment, setComment] = useState('');

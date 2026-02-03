@@ -1,17 +1,18 @@
 "use client";
-import { useState } from "react";
-import { Modal } from "@/components/ui/Modal";
-import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
-import { Badge } from "@/components/ui/Badge";
-import { Mail, Bell, Check } from "lucide-react";
+const React = require('react');
+const {useState} = require('react');
+const {Modal} = require('@/components/ui/Modal');
+const {Button} = require('@/components/ui/Button');
+const {Input} = require('@/components/ui/Input');
+const {Badge} = require('@/components/ui/Badge');
+const {Mail,Bell,Check} = require('lucide-react');
 
 interface Props {
   isOpen: boolean;
   onClose: () => void;
 }
 
-export default function SubscribeRadarModal({ isOpen, onClose }: Props) {
+module.exports = function SubscribeRadarModal;({ isOpen, onClose }: Props) {
   const [email, setEmail] = useState("");
   const [frequency, setFrequency] = useState<"daily" | "weekly" | "monthly">("weekly");
   const [loading, setLoading] = useState(false);

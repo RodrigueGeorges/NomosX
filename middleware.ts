@@ -1,4 +1,4 @@
-import { NextRequest, NextResponse } from 'next/server'
+const {NextRequest,NextResponse} = require('next/server');
 
 export function middleware(request: NextRequest) {
   // Add security headers

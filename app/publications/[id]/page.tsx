@@ -1,3 +1,4 @@
+const React = require('react');
 "use client";
 
 /**
@@ -6,28 +7,15 @@
  * View a single publication with full content, sources, and audit trail
  */
 
-import { useEffect, useState } from "react";
-import { useParams, useRouter } from "next/navigation";
-import Shell from "@/components/Shell";
-import { Card, CardContent, CardHeader } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
-import { Badge } from "@/components/ui/Badge";
-import TrustScoreBadge from "@/components/TrustScoreBadge";
-import { cn } from "@/lib/utils"
-import { 
-  FileText,
-  ArrowLeft,
-  Clock,
-  Eye,
-  Download,
-  CheckCircle,
-  Pause,
-  VolumeX,
-  Layers,
-  ExternalLink,
-  BookOpen,
-  Shield
-} from "lucide-react";
+const {useEffect,useState} = require('react');
+const {useParams,useRouter} = require('next/navigation');
+const Shell = require('@/components/Shell');
+const {Card,CardContent,CardHeader} = require('@/components/ui/Card');
+const {Button} = require('@/components/ui/Button');
+const {Badge} = require('@/components/ui/Badge');
+const TrustScoreBadge = require('@/components/TrustScoreBadge');
+const {cn} = require('@/lib/utils');
+const {FileText,ArrowLeft,Clock,Eye,Download,CheckCircle,Pause,VolumeX,Layers,ExternalLink,BookOpen,Shield} = require('lucide-react');
 
 type Publication = {
   id: string;
@@ -85,7 +73,7 @@ const STATUS_CONFIG: Record<string, { label: string; icon: React.ElementType; co
   DRAFT: { label: "Draft", icon: FileText, color: "text-primary" },
 };
 
-export default function PublicationDetailPage() {
+module.exports = function PublicationDetailPage;() {
   const params = useParams();
   const router = useRouter();
   const [publication, setPublication] = useState<Publication | null>(null);

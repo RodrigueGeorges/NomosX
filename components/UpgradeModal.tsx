@@ -1,7 +1,7 @@
-import { useRouter } from "next/navigation";
-import { X, Shield, Check } from "lucide-react";
-import { Button } from "@/components/ui/Button";
-import { Card, CardContent } from "@/components/ui/Card";
+const {useRouter} = require('next/navigation');
+const {X,Shield,Check} = require('lucide-react');
+const {Button} = require('@/components/ui/Button');
+const {Card,CardContent} = require('@/components/ui/Card');
 
 type UpgradeModalProps = {
   isOpen: boolean;
@@ -10,7 +10,7 @@ type UpgradeModalProps = {
   message?: string;
 };
 
-export default function UpgradeModal({ isOpen, onClose, reason, message }: UpgradeModalProps) {
+module.exports = function UpgradeModal;({ isOpen, onClose, reason, message }: UpgradeModalProps) {
   const router = useRouter();
 
   if (!isOpen) return null;

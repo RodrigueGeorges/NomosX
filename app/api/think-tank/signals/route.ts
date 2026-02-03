@@ -5,10 +5,10 @@
  * POST /api/think-tank/signals - Trigger signal detection
  */
 
-import { NextRequest, NextResponse } from "next/server";
-import { getSession } from "@/lib/auth";
-import { prisma } from "@/lib/db";
-import { signalDetector } from "@/lib/agent/signal-detector";
+const {NextRequest,NextResponse} = require('next/server');
+const {getSession} = require('@/lib/auth');
+const {prisma} = require('@/lib/db');
+const {signalDetector} = require('@/lib/agent/signal-detector');
 
 export async function GET(request: NextRequest) {
   try {

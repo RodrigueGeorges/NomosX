@@ -3,7 +3,7 @@
  * Suivi des recommandations OpenClaw
  */
 
-import Stripe from 'stripe'
+const Stripe = require('stripe');
 
 // Configuration Stripe
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {
@@ -379,4 +379,5 @@ export type StripeWebhookEvent =
   | 'payment_method.attached'
   | 'checkout.session.completed'
 
-export default stripe
+module.exports = stripe
+;

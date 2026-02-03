@@ -1,33 +1,35 @@
 [build]
   command = "npm run build"
   publish = ".next"
+  functions = "netlify/functions"
 
-[functions]
-  directory = "netlify/functions"
-
-[[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/:splat"
-  status = 200
+[build.environment]
+  NODE_VERSION = "18"
+  NPM_VERSION = "9"
 
 [[redirects]]
   from = "/*"
   to = "/index.html"
   status = 200
 
+[[redirects]]
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
+  status = 200
+
 [[headers]]
   for = "/*"
   [headers.values]
     X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
     X-Content-Type-Options = "nosniff"
     Referrer-Policy = "strict-origin-when-cross-origin"
-    Permissions-Policy = "geolocation=(), microphone=(), camera=()"
 
-[build.environment]
-  NODE_ENV = "production"
-  NEXT_PUBLIC_API_URL = "/.netlify/functions"
+[dev]
+  command = "npm run dev"
+  port = 3000
+  publish = ".next"
+  functions = "netlify/functions"
 
-[[scheduled]]
-  name = "weekly-publication"
-  cron = "0 9 * * 1"
-  path = "/.netlify/functions/weekly-digest"
+[[plugins]]
+  package = "@netlify/plugin-nextjs"

@@ -4,9 +4,9 @@
  * Uses Pipeline V3 with query enhancement, relevance filtering, and reranking.
  */
 
-import { NextRequest, NextResponse } from "next/server";
-import { runPipelineV3 } from "@/lib/agent/pipeline-v3";
-import type { Providers } from "@/lib/agent/scout-v2";
+const {NextRequest,NextResponse} = require('next/server');
+const {runPipelineV3} = require('@/lib/agent/pipeline-v3');
+const type{Providers} = require('@/lib/agent/scout-v2');
 
 export async function POST(req: NextRequest) {
   try {

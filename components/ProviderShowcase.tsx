@@ -1,6 +1,7 @@
 "use client";
+const React = require('react');
 
-import { useEffect, useRef, useState } from "react";
+const {useEffect,useRef,useState} = require('react');
 
 interface Provider {
   id: string;
@@ -79,7 +80,7 @@ const categoryColors = {
   }
 };
 
-export default function ProviderShowcase() {
+module.exports = function ProviderShowcase;() {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

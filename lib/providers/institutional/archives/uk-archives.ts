@@ -4,8 +4,8 @@
  * URL: https://discovery.nationalarchives.gov.uk
  */
 
-import axios from 'axios';
-import * as cheerio from 'cheerio';
+const axios = require('axios');
+const cheerio = require('cheerio');
 
 const BASE_URL = 'https://discovery.nationalarchives.gov.uk';
 const USER_AGENT = 'NomosX Research Bot (+https://nomosx.com | contact@nomosx.com)';

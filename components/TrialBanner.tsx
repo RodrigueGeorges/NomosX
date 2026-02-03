@@ -1,14 +1,15 @@
-import { useRouter } from "next/navigation";
-import { AlertCircle, X } from "lucide-react";
-import { useState } from "react";
-import { Button } from "@/components/ui/Button";
+const React = require('react');
+const {useRouter} = require('next/navigation');
+const {AlertCircle,X} = require('lucide-react');
+const {useState} = require('react');
+const {Button} = require('@/components/ui/Button');
 
 type TrialBannerProps = {
   daysRemaining: number;
   onDismiss?: () => void;
 };
 
-export default function TrialBanner({ daysRemaining, onDismiss }: TrialBannerProps) {
+module.exports = function TrialBanner;({ daysRemaining, onDismiss }: TrialBannerProps) {
   const router = useRouter();
   const [dismissed, setDismissed] = useState(false);
 

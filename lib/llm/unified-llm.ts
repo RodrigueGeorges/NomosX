@@ -3,11 +3,11 @@
  * Supports multiple providers (OpenAI, Anthropic) with automatic fallback
  */
 
-import OpenAI from "openai";
-import Anthropic from "@anthropic-ai/sdk";
-import { env } from "../env";
-import { getCachedLLMResponse, cacheLLMResponse } from "../cache/redis-cache";
-import * as Sentry from "@sentry/nextjs";
+const OpenAI = require('openai');
+const Anthropic = require('@anthropic-ai/sdk');
+const {env} = require('../env');
+const {getCachedLLMResponse,cacheLLMResponse} = require('../cache/redis-cache');
+const Sentry = require('@sentry/nextjs');
 
 // Provider types
 export type LLMProvider = "openai" | "anthropic";

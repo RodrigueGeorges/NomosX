@@ -1,4 +1,5 @@
 "use client";
+const React = require('react');
 
 /**
  * SignalCard Component
@@ -7,18 +8,10 @@
  * Follows NomosX design system
  */
 
-import Link from "next/link";
-import { Card } from "@/components/ui/Card";
-import { Badge } from "@/components/ui/Badge";
-import { 
-  Zap, 
-  TrendingUp, 
-  AlertTriangle, 
-  Database, 
-  FileText,
-  Clock,
-  ChevronRight
-} from "lucide-react";
+const Link = require('next/link');
+const {Card} = require('@/components/ui/Card');
+const {Badge} = require('@/components/ui/Badge');
+const {Zap,TrendingUp,AlertTriangle,Database,FileText,Clock,ChevronRight} = require('lucide-react');
 
 interface SignalCardProps {
   signal: {
@@ -65,7 +58,7 @@ const STATUS_CONFIG: Record<string, { variant: "default" | "success" | "warning"
   EXPIRED: { variant: "default", label: "Expiré" }
 };
 
-export default function SignalCard({ signal, compact = false }: SignalCardProps) {
+module.exports = function SignalCard;({ signal, compact = false }: SignalCardProps) {
   const typeConfig = SIGNAL_TYPE_CONFIG[signal.signalType] || SIGNAL_TYPE_CONFIG.NEW_EVIDENCE;
   const statusConfig = STATUS_CONFIG[signal.status] || STATUS_CONFIG.NEW;
   const TypeIcon = typeConfig.icon;

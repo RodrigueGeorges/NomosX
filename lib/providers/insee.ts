@@ -6,9 +6,9 @@
  * - Dataset search: Melodi API (requires token)
  */
 
-import { fetchFromProvider } from "../http-client";
-import { env } from "../env";
-import { searchMelodi } from "./melodi";
+const {fetchFromProvider} = require('../http-client');
+const {env} = require('../env');
+const {searchMelodi} = require('./melodi');
 
 export interface MacroDataPoint {
   date: Date;

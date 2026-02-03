@@ -1,7 +1,8 @@
-import * as React from "react"
-import { cn } from "@/lib/utils"
+const React = require('react');
+const React = require('react');
+const {cn} = require('@/lib/utils');
 
-const Scroll-area = React.forwardRef<
+const ScrollArea = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
@@ -11,6 +12,6 @@ const Scroll-area = React.forwardRef<
     {...props}
   />
 ))
-Scroll-area.displayName = "Scroll-area"
+ScrollArea.displayName = "ScrollArea"
 
-export { Scroll-area }
+module.exports.ScrollArea = ScrollArea;

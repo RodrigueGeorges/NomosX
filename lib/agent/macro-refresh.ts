@@ -1,8 +1,8 @@
-import { prisma } from "@/lib/db";
+const {prisma} = require('@/lib/db');
 
-import { ingestEurostatIndicators } from "@/lib/providers/eurostat";
-import { ingestECBIndicators } from "@/lib/providers/ecb";
-import { ingestINSEEIndicators } from "@/lib/providers/insee";
+const {ingestEurostatIndicators} = require('@/lib/providers/eurostat');
+const {ingestECBIndicators} = require('@/lib/providers/ecb');
+const {ingestINSEEIndicators} = require('@/lib/providers/insee');
 
 export type MacroRefreshResult = {
   providers: Record<

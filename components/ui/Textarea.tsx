@@ -1,5 +1,6 @@
+const React = require('react');
 
-import { cn } from "@/lib/utils";
+const {cn} = require('@/lib/utils');
 
 export interface TextareaProps extends React.TextareaHTMLAttributes<HTMLTextAreaElement> {}
 

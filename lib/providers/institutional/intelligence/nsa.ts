@@ -4,8 +4,8 @@
  * URL: https://www.nsa.gov
  */
 
-import axios from 'axios';
-import * as cheerio from 'cheerio';
+const axios = require('axios');
+const cheerio = require('cheerio');
 
 const BASE_URL = 'https://www.nsa.gov';
 const USER_AGENT = 'NomosX Research Bot (+https://nomosx.com | contact@nomosx.com)';

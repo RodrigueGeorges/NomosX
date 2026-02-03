@@ -3,7 +3,7 @@
  * API: https://api.archives-ouvertes.fr/docs/search
  */
 
-import { fetchFromProvider } from "../http-client";
+const {fetchFromProvider} = require('../http-client');
 
 /**
  * HAL Provider - VERSION 2.0 FIX

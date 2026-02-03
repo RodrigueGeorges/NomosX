@@ -8,7 +8,7 @@
  * 3. Get API key: https://developers.google.com/custom-search/v1/introduction
  */
 
-import axios from 'axios';
+const axios = require('axios');
 
 const GOOGLE_CSE_BASE = 'https://www.googleapis.com/customsearch/v1';
 

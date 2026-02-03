@@ -3,8 +3,8 @@
  * Architecture puissante et robuste pour NomosX Think Tank
  */
 
-import { prisma } from '../db.ts';
-import { setTimeout as sleep } from 'timers/promises';
+const {prisma} = require('../db.ts');
+const {setTimeoutassleep} = require('timers/promises');
 
 // ============================================================================
 // ARCHITECTURE SYSTÈME OPTIMISÉ
@@ -646,15 +646,7 @@ class NomosXOrchestrator {
 // EXPORTS ET UTILISATION
 // ============================================================================
 
-export {
-  NomosXMCP,
-  AcademicSearchAgent,
-  CrossDomainAnalysisAgent,
-  StrategicSynthesisAgent,
-  UniversalSearchAgent,
-  UniversalPublisher,
-  NomosXOrchestrator
-};
+;
 
 // Point d'entrée principal
 export async function createOptimizedSystem() {

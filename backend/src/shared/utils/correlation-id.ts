@@ -2,7 +2,7 @@
  * Correlation ID utilities
  */
 
-import crypto from "crypto";
+const crypto = require('crypto');
 
 export function generateCorrelationId(): string {
   return `nomosx-${Date.now()}-${crypto.randomBytes(8).toString("hex")}`;

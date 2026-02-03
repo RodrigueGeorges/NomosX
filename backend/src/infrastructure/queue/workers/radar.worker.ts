@@ -5,11 +5,11 @@
  * Generates radar cards for dashboard
  */
 
-import { Job } from 'bullmq';
-import { PrismaClient } from '@prisma/client';
-import OpenAI from 'openai';
-import { logger } from '../../../shared/logging/Logger';
-import { z } from 'zod';
+const {Job} = require('bullmq');
+const {PrismaClient} = require('@prisma/client');
+const OpenAI = require('openai');
+const {logger} = require('../../../shared/logging/Logger');
+const {z} = require('zod');
 
 export interface RadarJobPayload {
   limit?: number;

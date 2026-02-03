@@ -3,8 +3,8 @@
  * URLs prévisibles pour papers (numéros séquentiels)
  */
 
-import axios from 'axios';
-import Parser from 'rss-parser';
+const axios = require('axios');
+const Parser = require('rss-parser');
 
 const BIS_RSS = 'https://www.bis.org/doclist/all.rss';
 const BIS_PAPER_BASE = 'https://www.bis.org/publ';

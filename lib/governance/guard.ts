@@ -9,9 +9,9 @@
  * ⚠️ INTERNAL ONLY - Never expose to UI or marketing
  */
 
-import { AgentRole } from "./roles";
-import { Permission, hasPermission } from "./permissions";
-import { logAuditEvent } from "./audit";
+const {AgentRole} = require('./roles');
+const {Permission,hasPermission} = require('./permissions');
+const {logAuditEvent} = require('./audit');
 
 /**
  * Governance violation error

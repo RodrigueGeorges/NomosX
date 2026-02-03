@@ -2,22 +2,24 @@
 // Créé par OpenClaw pour finalisation 100%
 
 // SCOUT Agent (alias pour scout-v2)
-export { scout as scoutAgent } from './scout-v2';
+from './scout-v2';
 
-// INDEX Agent
-export { indexAgent } from './index-agent';
+// INDEX Agent;
+from './index-agent';
 
-// READER Agent  
-export { readerAgent } from './reader-agent';
+// READER Agent;
+from './reader-agent';
 
-// ANALYST Agent
-export { analystAgent } from './analyst-agent';
+// ANALYST Agent;
+from './analyst-agent';
 
-// STRATEGIC Agent
-export { strategicAnalystAgent } from './strategic-analyst-agent';
+// STRATEGIC Agent;
+from './strategic-analyst-agent';
 
 // RANK Agent (alias pour pipeline-v2)
-export { rank as rankAgent } from './pipeline-v2';
+from './pipeline-v2';
 
-// PIPELINE complet
-export { pipeline } from './pipeline-v2';
+// PIPELINE complet;
+from './pipeline-v2';
+
+export { scoutV2 as scoutAgent, indexAgent, readerAgent, analystAgent, strategicAnalystAgent, rank as rankAgent, pipeline }

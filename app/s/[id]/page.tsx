@@ -1,9 +1,9 @@
 
-import Shell from "@/components/Shell";
-import { prisma } from "@/lib/db";
-import { cn } from "@/lib/utils"
+const Shell = require('@/components/Shell');
+const {prisma} = require('@/lib/db');
+const {cn} = require('@/lib/utils');
 
-export default async function SharedBrief({ params }: { params: { id: string } }) {
+module.exports = async function SharedBrief;({ params }: { params: { id: string } }) {
   const id = params.id;
   const brief = await prisma.brief.findFirst({ where: { OR: [{ publicId: id }, { id }] } });
   if (!brief) return <Shell><h1 className="text-4xl transition-all duration-200 hover:opacity-80">Not found</h1></Shell>;

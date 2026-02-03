@@ -1,6 +1,6 @@
 
-import { NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
+const {NextResponse} = require('next/server');
+const {prisma} = require('@/lib/db');
 
 export async function POST(_: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;

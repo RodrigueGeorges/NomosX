@@ -1,5 +1,6 @@
-import * as React from "react"
-import { cn } from "@/lib/utils"
+const React = require('react');
+const React = require('react');
+const {cn} = require('@/lib/utils');
 
 interface ChartProps extends React.HTMLAttributes<HTMLDivElement> {
   data?: any[]
@@ -24,4 +25,4 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
 )
 Chart.displayName = "Chart"
 
-export { Chart }
+module.exports.Chart = Chart;

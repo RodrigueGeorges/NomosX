@@ -9,8 +9,8 @@
  * ⚠️ INTERNAL ONLY - Never expose to UI or marketing
  */
 
-import { prisma } from "../db";
-import { logAuditEvent } from "./audit";
+const {prisma} = require('../db');
+const {logAuditEvent} = require('./audit');
 
 /**
  * Editorial cadence violation error

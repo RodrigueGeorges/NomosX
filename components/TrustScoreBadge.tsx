@@ -4,7 +4,7 @@
  * Affiche le trust score avec une visualisation claire et attrayante
  */
 
-import React from "react";
+const React = require('react');
 
 interface TrustScoreBadgeProps {
   score: number; // 0-1
@@ -12,7 +12,7 @@ interface TrustScoreBadgeProps {
   showLabel?: boolean;
 }
 
-export default function TrustScoreBadge({ score, size = "md", showLabel = true }: TrustScoreBadgeProps) {
+module.exports = function TrustScoreBadge;({ score, size = "md", showLabel = true }: TrustScoreBadgeProps) {
   const percentage = Math.round(score * 100);
 
   // Déterminer la couleur et le niveau

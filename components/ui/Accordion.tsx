@@ -1,5 +1,6 @@
-import * as React from "react"
-import { cn } from "@/lib/utils"
+const React = require('react');
+const React = require('react');
+const {cn} = require('@/lib/utils');
 
 const Accordion = React.forwardRef<
   React.ElementRef<"div">,
@@ -13,4 +14,4 @@ const Accordion = React.forwardRef<
 ))
 Accordion.displayName = "Accordion"
 
-export { Accordion }
+module.exports.Accordion = Accordion;

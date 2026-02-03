@@ -3,8 +3,8 @@
  * Architecture entreprise-grade pour NomosX Think Tank
  */
 
-import { prisma } from '../db.ts';
-import { setTimeout as sleep } from 'timers/promises';
+const {prisma} = require('../db.ts');
+const {setTimeoutassleep} = require('timers/promises');
 
 // ============================================================================
 // ARCHITECTURE SYSTÈME PROFESSIONNEL
@@ -1058,21 +1058,7 @@ class NomosXOrchestratorEnterprise {
 // EXPORTS ET UTILISATION ENTERPRISE
 // ============================================================================
 
-export {
-  NomosXMCPEnterprise,
-  AcademicSearchAgentEnterprise,
-  CrossDomainAnalysisAgentEnterprise,
-  InstitutionalSearchAgentEnterprise,
-  UniversalSearchAgentEnterprise,
-  TrendAnalysisAgentEnterprise,
-  SignalDetectionAgentEnterprise,
-  StrategicSynthesisAgentEnterprise,
-  TacticalSynthesisAgentEnterprise,
-  ResearchBriefPublisherEnterprise,
-  PolicyNotePublisherEnterprise,
-  UniversalPublisherEnterprise,
-  NomosXOrchestratorEnterprise
-};
+;
 
 // Point d'entrée principal enterprise
 export async function createOptimizedSystemEnterprise() {

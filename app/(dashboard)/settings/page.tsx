@@ -3,18 +3,18 @@
  * Suivi de la charte graphique OpenClaw
  */
 
-import { Metadata } from 'next'
-import { Suspense } from 'react'
-import { SettingsClient } from '@/components/features/user/SettingsClient'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card'
-import { cn } from "@/lib/utils"
+const {Metadata} = require('next');
+const {Suspense} = require('react');
+const {SettingsClient} = require('@/components/features/user/SettingsClient');
+const {Card,CardContent,CardDescription,CardHeader,CardTitle} = require('@/components/ui/Card');
+const {cn} = require('@/lib/utils');
 
 export const metadata: Metadata = {
   title: 'Paramètres | NomosX',
   description: 'Configurez vos préférences et paramètres',
 }
 
-export default function SettingsPage() {
+module.exports = function SettingsPage;() {
   return (
     <div className="container mx-auto px-4 py-8 transition-all duration-200 hover:opacity-80">
       <div className="max-w-4xl mx-auto space-y-8 transition-all duration-200 hover:opacity-80">

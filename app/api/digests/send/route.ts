@@ -1,7 +1,7 @@
 
-import { NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
-import { sendDigestEmail } from "@/lib/email";
+const {NextResponse} = require('next/server');
+const {prisma} = require('@/lib/db');
+const {sendDigestEmail} = require('@/lib/email');
 
 // POST /api/digests/send - Send digest to subscribers
 export async function POST(req: Request) {

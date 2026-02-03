@@ -3,9 +3,9 @@
  * Generates weekly/monthly summaries for topic subscriptions
  */
 
-import OpenAI from "openai";
-import { env } from "../env";
-import { prisma } from "../db";
+const OpenAI = require('openai');
+const {env} = require('../env');
+const {prisma} = require('../db');
 
 const ai = new OpenAI({ apiKey: env.OPENAI_API_KEY });
 const MODEL = env.OPENAI_MODEL;

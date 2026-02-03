@@ -4,8 +4,8 @@
  * GET /api/newsletter/unsubscribe?token=xxx (one-click unsubscribe)
  */
 
-import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
+const {NextRequest,NextResponse} = require('next/server');
+const {prisma} = require('@/lib/db');
 
 export async function POST(req: NextRequest) {
   try {

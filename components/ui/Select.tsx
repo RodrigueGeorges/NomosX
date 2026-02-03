@@ -1,12 +1,13 @@
+const React = require('react');
 /**
  * Select Component - Suivi de la charte graphique OpenClaw
  */
 
-import * as React from "react"
-import * as SelectPrimitive from "@radix-ui/react-select"
-import { Check, ChevronDown, ChevronUp } from "lucide-react"
+const React = require('react');
+const SelectPrimitive = require('@radix-ui/react-select');
+const {Check,ChevronDown,ChevronUp} = require('lucide-react');
 
-import { cn } from "@/lib/utils"
+const {cn} = require('@/lib/utils');
 
 const Select = SelectPrimitive.Root
 
@@ -148,15 +149,14 @@ const SelectSeparator = React.forwardRef<
 ))
 SelectSeparator.displayName = SelectPrimitive.Separator.displayName
 
-export {
-  Select,
-  SelectGroup,
-  SelectValue,
-  SelectTrigger,
-  SelectContent,
-  SelectLabel,
-  SelectItem,
-  SelectSeparator,
-  SelectScrollUpButton,
-  SelectScrollDownButton,
-}
+module.exports.Select = Select;
+module.exports.SelectGroup = SelectGroup;
+module.exports.SelectValue = SelectValue;
+module.exports.SelectTrigger = SelectTrigger;
+module.exports.SelectContent = SelectContent;
+module.exports.SelectLabel = SelectLabel;
+module.exports.SelectItem = SelectItem;
+module.exports.SelectSeparator = SelectSeparator;
+module.exports.SelectScrollUpButton = SelectScrollUpButton;
+module.exports.SelectScrollDownButton = SelectScrollDownButton;
+module.exports. = ;

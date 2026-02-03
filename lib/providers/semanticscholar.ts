@@ -9,8 +9,8 @@
  * - Extraction DOI et metadata enrichie
  */
 
-import { fetchFromProvider } from "../http-client";
-import { env } from "../env";
+const {fetchFromProvider} = require('../http-client');
+const {env} = require('../env');
 
 export async function searchSemanticScholar(query: string, limit = 50): Promise<any[]> {
   const base = env.SEMANTICSCHOLAR_API;

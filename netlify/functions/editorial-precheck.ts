@@ -4,7 +4,7 @@
  * Runs daily at 06:00 UTC to evaluate pending signals
  */
 
-import { evaluatePendingSignals } from "../../lib/agent/editorial-gate";
+const {evaluatePendingSignals} = require('../../lib/agent/editorial-gate');
 
 export const config = {
   schedule: "0 6 * * *"
@@ -36,4 +36,4 @@ const handler: Handler = async (event, context) => {
   }
 };
 
-export { handler };
+;

@@ -5,9 +5,9 @@
  * POST /api/think-tank/signals/[id]/evaluate - Trigger editorial evaluation
  */
 
-import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
-import { editorialGate } from "@/lib/agent/editorial-gate";
+const {NextRequest,NextResponse} = require('next/server');
+const {prisma} = require('@/lib/db');
+const {editorialGate} = require('@/lib/agent/editorial-gate');
 
 export async function GET(
   request: NextRequest,

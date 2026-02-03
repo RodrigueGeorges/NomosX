@@ -1,11 +1,12 @@
 "use client";
+const React = require('react');
 
-import { useState, useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { Modal } from "@/components/ui/Modal";
-import { Button } from "@/components/ui/Button";
-import { Card, CardContent } from "@/components/ui/Card";
-import { Check, Sparkles, Loader2 } from "lucide-react";
+const {useState,useEffect} = require('react');
+const {useRouter} = require('next/navigation');
+const {Modal} = require('@/components/ui/Modal');
+const {Button} = require('@/components/ui/Button');
+const {Card,CardContent} = require('@/components/ui/Card');
+const {Check,Sparkles,Loader2} = require('lucide-react');
 
 interface Vertical {
   id: string;
@@ -22,7 +23,7 @@ interface OnboardingModalProps {
   onClose: () => void;
 }
 
-export default function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
+module.exports = function OnboardingModal;({ isOpen, onClose }: OnboardingModalProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);

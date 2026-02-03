@@ -1,12 +1,13 @@
+const React = require('react');
 /**
  * Dialog Component - Suivi de la charte graphique OpenClaw
  */
 
-import * as React from "react"
-import * as DialogPrimitive from "@radix-ui/react-dialog"
-import { X } from "lucide-react"
+const React = require('react');
+const DialogPrimitive = require('@radix-ui/react-dialog');
+const {X} = require('lucide-react');
 
-import { cn } from "@/lib/utils"
+const {cn} = require('@/lib/utils');
 
 const Dialog = DialogPrimitive.Root
 
@@ -110,15 +111,14 @@ const DialogDescription = React.forwardRef<
 ))
 DialogDescription.displayName = DialogPrimitive.Description.displayName
 
-export {
-  Dialog,
-  DialogPortal,
-  DialogOverlay,
-  DialogClose,
-  DialogTrigger,
-  DialogContent,
-  DialogHeader,
-  DialogFooter,
-  DialogTitle,
-  DialogDescription,
-}
+module.exports.Dialog = Dialog;
+module.exports.DialogPortal = DialogPortal;
+module.exports.DialogOverlay = DialogOverlay;
+module.exports.DialogClose = DialogClose;
+module.exports.DialogTrigger = DialogTrigger;
+module.exports.DialogContent = DialogContent;
+module.exports.DialogHeader = DialogHeader;
+module.exports.DialogFooter = DialogFooter;
+module.exports.DialogTitle = DialogTitle;
+module.exports.DialogDescription = DialogDescription;
+module.exports. = ;

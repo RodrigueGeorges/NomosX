@@ -1,7 +1,8 @@
-import * as React from "react"
-import { cn } from "@/lib/utils"
+const React = require('react');
+const React = require('react');
+const {cn} = require('@/lib/utils');
 
-const Radio-group = React.forwardRef<
+const RadioGroup = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
@@ -11,6 +12,6 @@ const Radio-group = React.forwardRef<
     {...props}
   />
 ))
-Radio-group.displayName = "Radio-group"
+RadioGroup.displayName = "RadioGroup"
 
-export { Radio-group }
+module.exports.RadioGroup = RadioGroup;

@@ -3,11 +3,11 @@
  * Normalizes sources, enriches identities (ROR/ORCID), and deduplicates
  */
 
-import { prisma } from "../db";
-import { searchROR } from "../providers/ror";
-import { getORCIDById } from "../providers/orcid";
-import { classifyBatchSources } from "./domain-classifier";
-import { assertPermission, AgentRole } from "../governance";
+const {prisma} = require('../db');
+const {searchROR} = require('../providers/ror');
+const {getORCIDById} = require('../providers/orcid');
+const {classifyBatchSources} = require('./domain-classifier');
+const {assertPermission,AgentRole} = require('../governance');
 
 interface NormalizedSource {
   id: string;

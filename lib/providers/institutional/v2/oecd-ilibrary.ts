@@ -3,8 +3,8 @@
  * Alternative à l'API SDMX complexe
  */
 
-import axios from 'axios';
-import * as cheerio from 'cheerio';
+const axios = require('axios');
+const cheerio = require('cheerio');
 
 const OECD_ILIBRARY_BASE = 'https://www.oecd-ilibrary.org';
 const USER_AGENT = 'NomosX Research Bot (+https://nomosx.com | contact@nomosx.com)';

@@ -1,3 +1,4 @@
+const React = require('react');
 /**
  * Streaming Brief Hook
  * 
@@ -5,7 +6,7 @@
  * UX Impact : Progress temps réel, pas de fake setTimeout
  */
 
-import { useState, useCallback } from "react";
+const {useState,useCallback} = require('react');
 
 export type ProgressEvent = {
   step: string;

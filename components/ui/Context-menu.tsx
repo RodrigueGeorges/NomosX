@@ -1,7 +1,8 @@
-import * as React from "react"
-import { cn } from "@/lib/utils"
+const React = require('react');
+const React = require('react');
+const {cn} = require('@/lib/utils');
 
-const Context-menu = React.forwardRef<
+const ContextMenu = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
@@ -11,6 +12,6 @@ const Context-menu = React.forwardRef<
     {...props}
   />
 ))
-Context-menu.displayName = "Context-menu"
+ContextMenu.displayName = "ContextMenu"
 
-export { Context-menu }
+module.exports.ContextMenu = ContextMenu;

@@ -3,7 +3,7 @@
  * API: https://www.ncbi.nlm.nih.gov/books/NBK25501/
  */
 
-import { fetchFromProvider } from "../http-client";
+const {fetchFromProvider} = require('../http-client');
 
 export async function searchPubMed(query: string, retmax = 20): Promise<any[]> {
   try {

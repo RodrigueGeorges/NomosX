@@ -1,15 +1,16 @@
 "use client";
+const React = require('react');
 
 /**
  * Think Tank Page — Redirect to Dashboard
  * Legacy route maintained for backwards compatibility
  */
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { cn } from "@/lib/utils"
+const {useEffect} = require('react');
+const {useRouter} = require('next/navigation');
+const {cn} = require('@/lib/utils');
 
-export default function ThinkTankPage() {
+module.exports = function ThinkTankPage;() {
   const router = useRouter();
   
   useEffect(() => {

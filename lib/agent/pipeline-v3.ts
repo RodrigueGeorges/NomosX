@@ -13,13 +13,13 @@
  * - Graceful degradation on errors
  */
 
-import { prisma } from "../db";
-import { scoreNovelty } from "../score";
-import { scoutV2, type Providers } from "./scout-v2";
-import { indexAgent, deduplicateSources } from "./index-agent";
-import { readerAgent } from "./reader-agent";
-import { analystAgent } from "./analyst-agent";
-import { citationGuard, renderBriefHTML } from "./pipeline-v2";
+const {prisma} = require('../db');
+const {scoreNovelty} = require('../score');
+const {scoutV2,typeProviders} = require('./scout-v2');
+const {indexAgent,deduplicateSources} = require('./index-agent');
+const {readerAgent} = require('./reader-agent');
+const {analystAgent} = require('./analyst-agent');
+const {citationGuard,renderBriefHTML} = require('./pipeline-v2');
 
 export interface PipelineStats {
   scout: {

@@ -4,8 +4,8 @@
  * Runs daily at 03:00 UTC to detect signals from new sources
  */
 
-import { prisma } from "../../lib/db";
-import { signalDetector } from "../../lib/agent/signal-detector";
+const {prisma} = require('../../lib/db');
+const {signalDetector} = require('../../lib/agent/signal-detector');
 
 export const config = {
   schedule: "0 3 * * *"
@@ -62,4 +62,4 @@ const handler: Handler = async (event, context) => {
   }
 };
 
-export { handler };
+;

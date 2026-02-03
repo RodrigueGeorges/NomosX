@@ -7,7 +7,7 @@
  * ⚠️ INTERNAL ONLY - No UI, no export, no user access
  */
 
-import { prisma } from "../db";
+const {prisma} = require('../db');
 
 /**
  * Audit event types

@@ -4,7 +4,7 @@
  * API gratuite, très stable
  */
 
-import axios from 'axios';
+const axios = require('axios');
 
 const ARCHIVE_API_BASE = 'https://archive.org/advancedsearch.php';
 const USER_AGENT = 'NomosX Research Bot (+https://nomosx.com | contact@nomosx.com)';

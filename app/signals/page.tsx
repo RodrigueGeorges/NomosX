@@ -1,3 +1,4 @@
+const React = require('react');
 "use client";
 
 /**
@@ -9,27 +10,15 @@
  * ACCESS: Admin/Editorial only - internal mechanism
  */
 
-import { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
-import { useAuth } from "@/hooks/useAuth";
-import Shell from "@/components/Shell";
-import { Card, CardContent } from "@/components/ui/Card";
-import { Button } from "@/components/ui/Button";
-import { Badge } from "@/components/ui/Badge";
-import { cn } from "@/lib/utils"
-import { 
-  Zap, 
-  RefreshCw,
-  Filter,
-  Clock,
-  TrendingUp,
-  AlertCircle,
-  CheckCircle,
-  XCircle,
-  Pause,
-  ArrowRight,
-  Layers
-} from "lucide-react";
+const {useEffect,useState} = require('react');
+const {useRouter} = require('next/navigation');
+const {useAuth} = require('@/hooks/useAuth');
+const Shell = require('@/components/Shell');
+const {Card,CardContent} = require('@/components/ui/Card');
+const {Button} = require('@/components/ui/Button');
+const {Badge} = require('@/components/ui/Badge');
+const {cn} = require('@/lib/utils');
+const {Zap,RefreshCw,Filter,Clock,TrendingUp,AlertCircle,CheckCircle,XCircle,Pause,ArrowRight,Layers} = require('lucide-react');
 
 type SignalStatus = "NEW" | "HELD" | "PUBLISHED" | "REJECTED" | "EXPIRED" | "SILENT";
 
@@ -74,7 +63,7 @@ const SIGNAL_TYPE_LABELS: Record<string, string> = {
   METHODOLOGY_SHIFT: "Methodology Shift"
 };
 
-export default function SignalsPage() {
+module.exports = function SignalsPage;() {
   const router = useRouter();
   const { user, isAuthenticated, loading: authLoading } = useAuth();
   const [signals, setSignals] = useState<Signal[]>([]);

@@ -1,5 +1,5 @@
-import { cn } from "@/lib/utils";
-import { LucideIcon } from "lucide-react";
+const {cn} = require('@/lib/utils');
+const {LucideIcon} = require('lucide-react');
 
 interface EmptyStateProps {
   icon: LucideIcon;

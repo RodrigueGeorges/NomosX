@@ -3,8 +3,8 @@
  * Suivi des recommandations OpenClaw
  */
 
-import { Resend } from 'resend'
-import { Newsletter, NewsletterSubscription, NewsletterCampaign } from '@/types/newsletter'
+const {Resend} = require('resend');
+const {Newsletter,NewsletterSubscription,NewsletterCampaign} = require('@/types/newsletter');
 
 // Configuration Resend
 const resend = new Resend(process.env.RESEND_API_KEY)
@@ -12,8 +12,8 @@ const resend = new Resend(process.env.RESEND_API_KEY)
 export interface EmailTemplate {
   subject: string
   html: string
-  text?: string
-  from: string
+  text?: string;
+from: string
   to: string[]
   replyTo?: string
   headers?: Record<string, string>

@@ -4,7 +4,7 @@
  * API Solr officielle, gratuite
  */
 
-import axios from 'axios';
+const axios = require('axios');
 
 const UN_ODS_API = 'https://documents.un.org/api/search';
 const UN_LIBRARY_SEARCH = 'https://digitallibrary.un.org/search';

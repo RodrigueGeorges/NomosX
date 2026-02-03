@@ -3,10 +3,10 @@
  * Tests full API flow with real database (test environment)
  */
 
-import { describe, it, expect, beforeAll, afterAll } from 'vitest';
-import request from 'supertest';
-import { PrismaClient } from '@prisma/client';
-import { app } from '../../../src/api/server'; // Assuming we export app from server.ts
+const {describe,it,expect,beforeAll,afterAll} = require('vitest');
+const request = require('supertest');
+const {PrismaClient} = require('@prisma/client');
+const {app} = require('../../../src/api/server'); // Assuming we export app from server.ts
 
 const prisma = new PrismaClient();
 

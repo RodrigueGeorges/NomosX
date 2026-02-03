@@ -1,11 +1,12 @@
+const React = require('react');
 "use client";
 
-import { useState } from "react";
-import { useRouter } from "next/navigation";
-import { Modal } from "@/components/ui/Modal";
-import { Button } from "@/components/ui/Button";
-import { Input } from "@/components/ui/Input";
-import { Mail, Chrome as Google, Github } from "lucide-react";
+const {useState} = require('react');
+const {useRouter} = require('next/navigation');
+const {Modal} = require('@/components/ui/Modal');
+const {Button} = require('@/components/ui/Button');
+const {Input} = require('@/components/ui/Input');
+const {Mail,ChromeasGoogle,Github} = require('lucide-react');
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -14,7 +15,7 @@ interface AuthModalProps {
   onSignupSuccess?: () => void;
 }
 
-export default function AuthModal({ isOpen, onClose, initialQuestion, onSignupSuccess }: AuthModalProps) {
+module.exports = function AuthModal;({ isOpen, onClose, initialQuestion, onSignupSuccess }: AuthModalProps) {
   const router = useRouter();
   const [mode, setMode] = useState<"oauth" | "email" | "login">("oauth");
   const [email, setEmail] = useState("");

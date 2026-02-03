@@ -5,14 +5,10 @@
  * Part of the Institutional Think Tank pipeline
  */
 
-import { prisma } from "@/lib/db";
-import { 
-  SignalType, 
-  SignalScores,
-  SIGNAL_THRESHOLDS 
-} from "@/lib/think-tank/types";
-import { VERTICALS } from "@/lib/think-tank/verticals";
-import { callLLM } from "@/lib/llm/unified-llm";
+const {prisma} = require('@/lib/db');
+const {SignalType,SignalScores,SIGNAL_THRESHOLDS} = require('@/lib/think-tank/types');
+const {VERTICALS} = require('@/lib/think-tank/verticals');
+const {callLLM} = require('@/lib/llm/unified-llm');
 
 // ============================================================================
 // TYPES

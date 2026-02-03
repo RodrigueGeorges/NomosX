@@ -7,7 +7,7 @@
  * Nécessite une clé API INSEE
  */
 
-import { fetchFromProvider } from "../http-client";
+const {fetchFromProvider} = require('../http-client');
 
 const MELODI_BASE_URL = "https://api.insee.fr/melodi";
 

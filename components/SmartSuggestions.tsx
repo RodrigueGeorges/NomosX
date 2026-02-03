@@ -1,3 +1,4 @@
+const React = require('react');
 /**
  * SmartSuggestions Component
  * 
@@ -7,7 +8,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+const {useState,useEffect} = require('react');
 
 interface Suggestion {
   id: string;
@@ -22,7 +23,7 @@ interface SmartSuggestionsProps {
   onSelectSuggestion?: (suggestion: string) => void;
 }
 
-export default function SmartSuggestions({ analysisId, currentQuestion, onSelectSuggestion }: SmartSuggestionsProps) {
+module.exports = function SmartSuggestions;({ analysisId, currentQuestion, onSelectSuggestion }: SmartSuggestionsProps) {
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 

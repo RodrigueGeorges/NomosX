@@ -3,8 +3,8 @@
  * Tableau de bord pour monitoring providers et système
  */
 
-import { providerRegistry } from './providers/registry-v2';
-import { prisma } from './db';
+const {providerRegistry} = require('./providers/registry-v2');
+const {prisma} = require('./db');
 
 export interface SystemHealth {
   timestamp: Date;

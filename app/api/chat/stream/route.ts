@@ -3,9 +3,9 @@
  * Provides real-time streaming responses using Vercel AI SDK
  */
 
-import { streamLLM } from "@/lib/llm/unified-llm";
-import { NextRequest } from "next/server";
-import * as Sentry from "@sentry/nextjs";
+const {streamLLM} = require('@/lib/llm/unified-llm');
+const {NextRequest} = require('next/server');
+const Sentry = require('@sentry/nextjs');
 
 // Disable edge runtime for now - use Node.js
 // export const runtime = "edge";

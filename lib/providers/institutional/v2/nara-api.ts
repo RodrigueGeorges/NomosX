@@ -4,7 +4,7 @@
  * Cette API existe vraiment et est officielle !
  */
 
-import axios from 'axios';
+const axios = require('axios');
 
 const NARA_API_BASE = 'https://catalog.archives.gov/api/v1';
 const USER_AGENT = 'NomosX Research Bot (+https://nomosx.com | contact@nomosx.com)';

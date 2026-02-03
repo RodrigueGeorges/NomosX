@@ -1,4 +1,5 @@
 "use client";
+const React = require('react');
 
 /**
  * User Preferences Page
@@ -9,14 +10,14 @@
  * - Manage notification settings
  */
 
-import { useState, useEffect } from "react";
-import { Select } from "@/components/ui/Select"
-import { useRouter } from "next/navigation";
-import Shell from "@/components/Shell";
-import { Button } from "@/components/ui/Button";
-import { Card, CardContent } from "@/components/ui/Card";
-import { Check, Loader2, Mail, Bell, Settings as SettingsIcon } from "lucide-react";
-import { cn } from "@/lib/utils"
+const {useState,useEffect} = require('react');
+const {Select} = require('@/components/ui/Select');
+const {useRouter} = require('next/navigation');
+const Shell = require('@/components/Shell');
+const {Button} = require('@/components/ui/Button');
+const {Card,CardContent} = require('@/components/ui/Card');
+const {Check,Loader2,Mail,Bell,SettingsasSettingsIcon} = require('lucide-react');
+const {cn} = require('@/lib/utils');
 
 interface Vertical {
   id: string;
@@ -28,7 +29,7 @@ interface Vertical {
   enabled: boolean;
 }
 
-export default function PreferencesPage() {
+module.exports = function PreferencesPage;() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);

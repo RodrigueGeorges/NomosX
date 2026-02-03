@@ -1,4 +1,5 @@
 "use client";
+const React = require('react');
 
 /**
  * PublicNav Component
@@ -7,15 +8,15 @@
  * Consistent styling and behavior across public pages
  */
 
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/Button";
+const {useRouter} = require('next/navigation');
+const {Button} = require('@/components/ui/Button');
 
 interface PublicNavProps {
   currentPage?: "home" | "about" | "methodology";
   onSignInClick: () => void;
 }
 
-export default function PublicNav({ currentPage, onSignInClick }: PublicNavProps) {
+module.exports = function PublicNav;({ currentPage, onSignInClick }: PublicNavProps) {
   const router = useRouter();
 
   return (

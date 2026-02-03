@@ -1,8 +1,9 @@
 "use client";
+const React = require('react');
 
-import { Suspense, useEffect } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
-import { cn } from "@/lib/utils"
+const {Suspense,useEffect} = require('react');
+const {useRouter,useSearchParams} = require('next/navigation');
+const {cn} = require('@/lib/utils');
 
 /**
  * Inner component that uses useSearchParams
@@ -31,7 +32,7 @@ function BriefRedirectInner() {
  * Redirect /brief to /studio
  * Legacy route from old "Brief" model
  */
-export default function BriefRedirect() {
+module.exports = function BriefRedirect;() {
   return (
     <div className="min-h-screen bg-[#0A0A0B] flex items-center justify-center transition-all duration-200 hover:opacity-80">
       <Suspense fallback={

@@ -3,9 +3,9 @@
  * Handles password hashing, JWT tokens, and session management
  */
 
-import { SignJWT, jwtVerify } from "jose";
-import { cookies } from "next/headers";
-import bcrypt from "bcryptjs";
+const {SignJWT,jwtVerify} = require('jose');
+const {cookies} = require('next/headers');
+const bcrypt = require('bcryptjs');
 
 const JWT_SECRET_RAW = process.env.JWT_SECRET;
 const JWT_SECRET = new TextEncoder().encode(JWT_SECRET_RAW || "");

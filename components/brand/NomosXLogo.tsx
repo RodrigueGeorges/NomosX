@@ -6,7 +6,7 @@
 
 'use client'
 
-import { cn } from '@/lib/utils'
+const {cn} = require('@/lib/utils');
 
 interface LogoProps {
   size?: 'sm' | 'md' | 'lg' | 'xl'

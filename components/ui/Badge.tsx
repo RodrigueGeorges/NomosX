@@ -1,7 +1,8 @@
+const React = require('react');
 
-import { cn } from "@/lib/utils";
+const {cn} = require('@/lib/utils');
 
-type BadgeVariant = "default" | "success" | "warning" | "error" | "premium" | "ai";
+type BadgeVariant = "default" | "outline" | "secondary" | "success" | "warning" | "error" | "premium" | "ai" | "outline" | "secondary";
 
 interface BadgeProps extends React.HTMLAttributes<HTMLSpanElement> {
   variant?: BadgeVariant;
@@ -14,7 +15,9 @@ export function Badge({ className, variant = "default", ...props }: BadgeProps) 
     warning: "border-warning/30 bg-warning/10 text-warning",
     error: "border-danger/30 bg-danger/10 text-danger",
     premium: "border-accent2/30 bg-accent2/10 text-accent2",
-    ai: "border-ai/30 bg-ai/10 text-ai shadow-[0_0_10px_rgba(94,234,212,0.15)]"
+    ai: "border-ai/30 bg-ai/10 text-ai shadow-[0_0_10px_rgba(94,234,212,0.15)]",
+    outline: "border-border bg-transparent text-muted",
+    secondary: "border-muted bg-muted/10 text-muted"
   };
   
   return (

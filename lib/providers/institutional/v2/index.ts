@@ -6,11 +6,11 @@
 // ==========================================
 // APIS OFFICIELLES (Rock-solid) ✅✅
 // ==========================================
-export { searchWorldBankAPI } from '../stable/worldbank-api';
-export { searchCISAAdvisories } from '../stable/cisa-advisories';
-export { searchNARA } from './nara-api';
-export { searchUKArchives } from './uk-archives-api';
-export { searchUNDigitalLibrary, searchUNDP, searchUNCTAD } from './un-digital-library';
+from '../stable/worldbank-api';
+from '../stable/cisa-advisories';
+from './nara-api';
+from './uk-archives-api';
+from './un-digital-library';
 
 // ==========================================
 // APIS TIERCES (Très fiables) ✅
@@ -45,18 +45,18 @@ export {
 // ==========================================
 // ÉCONOMIE
 // ==========================================
-// ✅ IMF: SDMX (official IMF dataservices) with robust fallbacks
-export { searchIMFSDMX } from './imf-sdmx';
-// ⚠️ Legacy fallbacks (scraping / RSS) - keep for robustness
-export { searchIMFeLibrary } from './imf-elibrary';
+// ✅ IMF: SDMX (official IMF dataservices) with robust fallbacks;
+from './imf-sdmx';
+// ⚠️ Legacy fallbacks (scraping / RSS) - keep for robustness;
+from './imf-elibrary';
 
 // ✅ OECD: SDMX (separate domain, not behind OECD website Cloudflare)
-export { searchOECDSDMX } from './oecd-sdmx';
-// ⚠️ Legacy fallback
-export { searchOECDiLibrary } from './oecd-ilibrary';
+from './oecd-sdmx';
+// ⚠️ Legacy fallback;
+from './oecd-ilibrary';
 
-export { searchBIS } from './bis-papers';
-export { searchNIST } from './nist-publications';
+from './bis-papers';
+from './nist-publications';
 
 // ==========================================
 // CONFIGURATION
@@ -371,3 +371,5 @@ export function checkAuthRequirements(): { provider: string; envVar: string }[] 
     .filter(p => p.requiresAuth)
     .map(p => ({ provider: p.id, envVar: p.authEnvVar! }));
 }
+
+export { searchWorldBankAPI, searchCISAAdvisories, searchNARA, searchUKArchives, searchUNDigitalLibrary, searchUNDP, searchUNCTAD, searchIMFSDMX, searchIMFeLibrary, searchOECDSDMX, searchOECDiLibrary, searchBIS, searchNIST }

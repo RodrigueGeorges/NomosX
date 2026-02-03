@@ -3,8 +3,8 @@
  * Suivi des recommandations OpenClaw
  */
 
-import { Brief, BriefVersion, BriefReview, BriefAnalytics } from '@/types/briefs'
-import { prisma } from '@/lib/prisma'
+const {Brief,BriefVersion,BriefReview,BriefAnalytics} = require('@/types/briefs');
+const {prisma} = require('@/lib/prisma');
 
 export interface CreateBriefParams {
   title: string

@@ -1,13 +1,13 @@
 
-import { prisma } from "../db";
-import { scoreSource } from "../score";
-import { clamp } from "../text";
-import OpenAI from "openai";
-import { searchOpenAlex } from "../providers/openalex";
-import { searchThesesFr } from "../providers/thesesfr";
-import { searchCrossref } from "../providers/crossref";
-import { searchSemanticScholar } from "../providers/semanticscholar";
-import { unpaywallByDoi } from "../providers/unpaywall";
+const {prisma} = require('../db');
+const {scoreSource} = require('../score');
+const {clamp} = require('../text');
+const OpenAI = require('openai');
+const {searchOpenAlex} = require('../providers/openalex');
+const {searchThesesFr} = require('../providers/thesesfr');
+const {searchCrossref} = require('../providers/crossref');
+const {searchSemanticScholar} = require('../providers/semanticscholar');
+const {unpaywallByDoi} = require('../providers/unpaywall');
 
 const ai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 const MODEL = process.env.OPENAI_MODEL || "gpt-4.1-mini";

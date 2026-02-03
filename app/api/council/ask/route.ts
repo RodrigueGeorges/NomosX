@@ -1,11 +1,11 @@
 
-import { NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
-import OpenAI from "openai";
-import { selectSmartProviders } from "@/lib/agent/smart-provider-selector";
-import { scout } from "@/lib/agent/pipeline-v2";
-import { indexAgent } from "@/lib/agent/index-agent";
-import { rank } from "@/lib/agent/pipeline-v2";
+const {NextResponse} = require('next/server');
+const {prisma} = require('@/lib/db');
+const OpenAI = require('openai');
+const {selectSmartProviders} = require('@/lib/agent/smart-provider-selector');
+const {scout} = require('@/lib/agent/pipeline-v2');
+const {indexAgent} = require('@/lib/agent/index-agent');
+const {rank} = require('@/lib/agent/pipeline-v2');
 
 const ai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 const MODEL = process.env.OPENAI_MODEL || "gpt-4o";

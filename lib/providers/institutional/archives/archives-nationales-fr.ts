@@ -4,8 +4,8 @@
  * URL: https://www.archives-nationales.culture.gouv.fr
  */
 
-import axios from 'axios';
-import * as cheerio from 'cheerio';
+const axios = require('axios');
+const cheerio = require('cheerio');
 
 const BASE_URL = 'https://www.siv.archives-nationales.culture.gouv.fr';
 const USER_AGENT = 'NomosX Research Bot (+https://nomosx.com | contact@nomosx.com)';

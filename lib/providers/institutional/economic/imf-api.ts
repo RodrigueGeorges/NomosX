@@ -3,7 +3,7 @@
  * API Docs: https://datahelp.imf.org/knowledgebase/articles/667681
  */
 
-import axios from 'axios';
+const axios = require('axios');
 
 const IMF_API_BASE = 'https://www.imf.org/external/datamapper/api/v1';
 const USER_AGENT = 'NomosX Research Bot (+https://nomosx.com | contact@nomosx.com)';

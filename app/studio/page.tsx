@@ -1,3 +1,4 @@
+const React = require('react');
 "use client";
 
 /**
@@ -8,40 +9,24 @@
  * Output is NOT the brief itself — output is a Publication (or silence)
  */
 
-import { useState, useEffect, Suspense } from "react";
-import { Select } from "@/components/ui/Select"
-import { Input } from "@/components/ui/Input"
-import { useSearchParams, useRouter } from "next/navigation";
-import Shell from "@/components/Shell";
-import { Textarea } from "@/components/ui/Textarea";
-import { Button } from "@/components/ui/Button";
-import { Badge } from "@/components/ui/Badge";
-import { Card, CardContent, CardHeader } from "@/components/ui/Card";
-import { 
-  PenTool,
-  Sparkles, 
-  MessagesSquare, 
-  FileText, 
-  Download, 
-  Zap,
-  DollarSign,
-  Cpu,
-  Heart,
-  Users,
-  AlertTriangle,
-  ArrowRight,
-  Layers,
-  CheckCircle,
-  Clock
-} from "lucide-react";
-import { detectIntent, type IntentResult } from "@/lib/ai/intent-detection";
-import SmartSuggestions from "@/components/SmartSuggestions";
-import { useKeyboardShortcuts, Kbd } from "@/hooks/useKeyboardShortcuts";
-import { useStreamingBrief } from "@/hooks/useStreamingBrief";
-import { useStreamingCouncil } from "@/hooks/useStreamingCouncil";
-import ProgressBar from "@/components/ProgressBar";
-import { toast } from "@/components/ui/Toast";
-import { cn } from "@/lib/utils"
+const {useState,useEffect,Suspense} = require('react');
+const {Select} = require('@/components/ui/Select');
+const {Input} = require('@/components/ui/Input');
+const {useSearchParams,useRouter} = require('next/navigation');
+const Shell = require('@/components/Shell');
+const {Textarea} = require('@/components/ui/Textarea');
+const {Button} = require('@/components/ui/Button');
+const {Badge} = require('@/components/ui/Badge');
+const {Card,CardContent,CardHeader} = require('@/components/ui/Card');
+const {PenTool,Sparkles,MessagesSquare,FileText,Download,Zap,DollarSign,Cpu,Heart,Users,AlertTriangle,ArrowRight,Layers,CheckCircle,Clock} = require('lucide-react');
+const {detectIntent,typeIntentResult} = require('@/lib/ai/intent-detection');
+const SmartSuggestions = require('@/components/SmartSuggestions');
+const {useKeyboardShortcuts,Kbd} = require('@/hooks/useKeyboardShortcuts');
+const {useStreamingBrief} = require('@/hooks/useStreamingBrief');
+const {useStreamingCouncil} = require('@/hooks/useStreamingCouncil');
+const ProgressBar = require('@/components/ProgressBar');
+const {toast} = require('@/components/ui/Toast');
+const {cn} = require('@/lib/utils');
 
 type PublicationType = "EXECUTIVE_BRIEF" | "STRATEGIC_REPORT";
 
@@ -593,7 +578,7 @@ function StudioPageContent() {
   );
 }
 
-export default function StudioPage() {
+module.exports = function StudioPage;() {
   return (
     <Suspense fallback={
       <Shell>

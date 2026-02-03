@@ -1,8 +1,9 @@
 "use client";
+const React = require('react');
 
-import { cn } from "@/lib/utils";
-import { useEffect, useState } from "react";
-import { CheckCircle2, XCircle, Info, AlertCircle, AlertTriangle, X } from "lucide-react";
+const {cn} = require('@/lib/utils');
+const {useEffect,useState} = require('react');
+const {CheckCircle2,XCircle,Info,AlertCircle,AlertTriangle,X} = require('lucide-react');
 
 export type ToastType = "success" | "error" | "info" | "warning";
 

@@ -1,7 +1,8 @@
+const React = require('react');
 
 "use client";
-import { useState } from "react";
-import { cn } from "@/lib/utils" from "./cn";
+const {useState} = require('react');
+const {cn} = require('@/lib/utils');
 
 type Props = {
   content: string | React.ReactNode;

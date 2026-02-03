@@ -5,9 +5,9 @@
  * Evidence-first approach: trust is derived from verifiable evidence quality.
  */
 
-import { Claim, TrustScore } from "../entities/Claim";
-import { EvidenceSpan } from "../../evidence/services/EvidenceBinder";
-import { Logger } from "../../../shared/logging/Logger";
+const {Claim,TrustScore} = require('../entities/Claim');
+const {EvidenceSpan} = require('../../evidence/services/EvidenceBinder');
+const {Logger} = require('../../../shared/logging/Logger');
 
 // ============================================================================
 // INTERFACES

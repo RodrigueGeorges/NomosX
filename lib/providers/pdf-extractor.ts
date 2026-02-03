@@ -10,7 +10,7 @@
  * Installation : npm install pdf-parse
  */
 
-import { fetchFromProvider } from "../http-client";
+const {fetchFromProvider} = require('../http-client');
 
 // Charger PDFParse via un import dynamique asynchrone
 let PDFParseClass: any = null;

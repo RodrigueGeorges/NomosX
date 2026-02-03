@@ -1,3 +1,4 @@
+const React = require('react');
 /**
  * Profile Client - Composant client pour le profil utilisateur
  * Suivi de la charte graphique OpenClaw
@@ -5,17 +6,17 @@
 
 'use client'
 
-import { useState } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card'
-import { Button } from '@/components/ui/Button'
-import { Input } from '@/components/ui/Input'
-import { Label } from '@/components/ui/Label'
-import { Textarea } from '@/components/ui/Textarea'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select'
-import { Badge } from '@/components/ui/Badge'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/Dialog'
-import { User, Mail, Phone, Building, Calendar, Shield, Bell, Globe, Palette } from 'lucide-react'
-import { cn } from '@/lib/utils'
+const {useState} = require('react');
+const {Card,CardContent,CardDescription,CardHeader,CardTitle} = require('@/components/ui/Card');
+const {Button} = require('@/components/ui/Button');
+const {Input} = require('@/components/ui/Input');
+const {Label} = require('@/components/ui/Label');
+const {Textarea} = require('@/components/ui/Textarea');
+const {Select,SelectContent,SelectItem,SelectTrigger,SelectValue} = require('@/components/ui/Select');
+const {Badge} = require('@/components/ui/Badge');
+const {Dialog,DialogContent,DialogDescription,DialogHeader,DialogTitle,DialogTrigger} = require('@/components/ui/Dialog');
+const {User,Mail,Phone,Building,Calendar,Shield,Bell,Globe,Palette} = require('lucide-react');
+const {cn} = require('@/lib/utils');
 
 interface UserProfile {
   id: string

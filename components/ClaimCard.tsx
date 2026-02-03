@@ -4,9 +4,9 @@
  * Affiche une claim avec evidence, trust score et contradictions
  */
 
-import React from "react";
-import { Badge } from "./ui/Badge";
-import { CheckCircle, AlertTriangle, XCircle } from "lucide-react";
+const React = require('react');
+const {Badge} = require('./ui/Badge');
+const {CheckCircle,AlertTriangle,XCircle} = require('lucide-react');
 
 export interface Claim {
   id: string;
@@ -26,7 +26,7 @@ interface ClaimCardProps {
   onViewEvidence?: (claimId: string) => void;
 }
 
-export default function ClaimCard({ claim, onViewEvidence }: ClaimCardProps) {
+module.exports = function ClaimCard;({ claim, onViewEvidence }: ClaimCardProps) {
   const claimTypeColors = {
     factual: "bg-blue-500/20 text-blue-400 border-blue-500/30",
     causal: "bg-purple-500/20 text-purple-400 border-purple-500/30",

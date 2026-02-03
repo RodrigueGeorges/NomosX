@@ -86,9 +86,9 @@ export interface NewsletterCampaign {
   id: string
   newsletterId: string
   name: string
-  subject: string
-  fromEmail: string
-  fromName: string
+  subject: string;
+fromEmail: string;
+fromName: string
   replyTo: string
   template: string
   segments: CampaignSegment[]

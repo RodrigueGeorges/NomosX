@@ -1,15 +1,16 @@
 "use client";
+const React = require('react');
 
 /**
  * Redirect /briefs to /publications
  * Legacy route from old "Brief" model
  */
 
-import { useEffect } from "react";
-import { useRouter } from "next/navigation";
-import { cn } from "@/lib/utils"
+const {useEffect} = require('react');
+const {useRouter} = require('next/navigation');
+const {cn} = require('@/lib/utils');
 
-export default function BriefsRedirect() {
+module.exports = function BriefsRedirect;() {
   const router = useRouter();
 
   useEffect(() => {

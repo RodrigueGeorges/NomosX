@@ -7,8 +7,9 @@
  */
 
 "use client";
+const React = require('react');
 
-import { createContext, useContext, useState, useEffect, ReactNode } from "react";
+const {createContext,useContext,useState,useEffect,ReactNode} = require('react');
 
 export type User = {
   id: string;

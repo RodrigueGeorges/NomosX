@@ -6,9 +6,9 @@
  * Simple email-only signup, no password required.
  */
 
-import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
-import { randomBytes } from "crypto";
+const {NextRequest,NextResponse} = require('next/server');
+const {prisma} = require('@/lib/db');
+const {randomBytes} = require('crypto');
 
 // Email validation regex
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;

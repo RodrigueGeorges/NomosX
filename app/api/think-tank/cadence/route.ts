@@ -4,10 +4,10 @@
  * GET /api/think-tank/cadence - Get current cadence status
  */
 
-import { NextRequest, NextResponse } from "next/server";
-import { getSession } from "@/lib/auth";
-import { prisma } from "@/lib/db";
-import { GLOBAL_CADENCE } from "@/lib/think-tank/types";
+const {NextRequest,NextResponse} = require('next/server');
+const {getSession} = require('@/lib/auth');
+const {prisma} = require('@/lib/db');
+const {GLOBAL_CADENCE} = require('@/lib/think-tank/types');
 
 export async function GET(request: NextRequest) {
   try {

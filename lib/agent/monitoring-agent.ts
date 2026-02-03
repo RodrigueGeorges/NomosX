@@ -3,74 +3,49 @@
  * Vérifie régulièrement les nouvelles publications
  */
 
-import { prisma } from '../db';
-import { setTimeout as sleep } from 'timers/promises';
+const {prisma} = require('../db');
+const {setTimeoutassleep} = require('timers/promises');
 
 // Import tous les providers (chemins relatifs pour compatibilité runtime)
-import { searchWorldBankAPI } from '../providers/institutional/stable/worldbank-api';
-import { searchCISAAdvisories } from '../providers/institutional/stable/cisa-advisories';
-import { searchNARA } from '../providers/institutional/v2/nara-api';
-import { searchUKArchives } from '../providers/institutional/v2/uk-archives-api';
-import { searchUNDigitalLibrary, searchUNDP, searchUNCTAD } from '../providers/institutional/v2/un-digital-library';
-import {
-  searchODNIViaGoogle,
-  searchNATOViaGoogle,
-  searchNSAViaGoogle,
-  searchENISAViaGoogle,
-  searchLawZeroViaGoogle,
-  searchGovAIViaGoogle,
-  searchIAPSViaGoogle,
-  searchCAIPViaGoogle,
-  searchAIPIViaGoogle,
-  searchCSETViaGoogle,
-  searchAINowViaGoogle,
-  searchDataSocietyViaGoogle,
-  searchAbundanceViaGoogle,
-  searchCAIDPViaGoogle,
-  searchSCSPViaGoogle,
-  searchIFPViaGoogle,
-  searchCDTViaGoogle,
-  searchBrookingsViaGoogle,
-  searchFAIViaGoogle,
-  searchCNASViaGoogle,
-  searchRANDViaGoogle,
-  searchNewAmericaViaGoogle,
-  searchAspenDigitalViaGoogle,
-  searchRStreetViaGoogle
-} from '../providers/institutional/v2/google-cse';
-import { searchCIAFOIAViaArchive } from '../providers/institutional/v2/archive-org';
-import { searchEEAS, searchEDA } from '../providers/institutional/v2/eu-open-data';
-import { searchMinistereArmees, searchSGDSN, searchArchivesNationales } from '../providers/institutional/v2/france-gov';
+const {searchWorldBankAPI} = require('../providers/institutional/stable/worldbank-api');
+const {searchCISAAdvisories} = require('../providers/institutional/stable/cisa-advisories');
+const {searchNARA} = require('../providers/institutional/v2/nara-api');
+const {searchUKArchives} = require('../providers/institutional/v2/uk-archives-api');
+const {searchUNDigitalLibrary,searchUNDP,searchUNCTAD} = require('../providers/institutional/v2/un-digital-library');
+const {searchODNIViaGoogle,searchNATOViaGoogle,searchNSAViaGoogle,searchENISAViaGoogle,searchLawZeroViaGoogle,searchGovAIViaGoogle,searchIAPSViaGoogle,searchCAIPViaGoogle,searchAIPIViaGoogle,searchCSETViaGoogle,searchAINowViaGoogle,searchDataSocietyViaGoogle,searchAbundanceViaGoogle,searchCAIDPViaGoogle,searchSCSPViaGoogle,searchIFPViaGoogle,searchCDTViaGoogle,searchBrookingsViaGoogle,searchFAIViaGoogle,searchCNASViaGoogle,searchRANDViaGoogle,searchNewAmericaViaGoogle,searchAspenDigitalViaGoogle,searchRStreetViaGoogle} = require('../providers/institutional/v2/google-cse');
+const {searchCIAFOIAViaArchive} = require('../providers/institutional/v2/archive-org');
+const {searchEEAS,searchEDA} = require('../providers/institutional/v2/eu-open-data');
+const {searchMinistereArmees,searchSGDSN,searchArchivesNationales} = require('../providers/institutional/v2/france-gov');
 
 // IMF (robust chaining): SDMX first, then fallback eLibrary scraping
-import { searchIMFSDMX } from '../providers/institutional/v2/imf-sdmx';
-import { searchIMFeLibrary } from '../providers/institutional/v2/imf-elibrary';
+const {searchIMFSDMX} = require('../providers/institutional/v2/imf-sdmx');
+const {searchIMFeLibrary} = require('../providers/institutional/v2/imf-elibrary');
 
 // OECD (robust chaining): SDMX first (non-Cloudflare), then fallback iLibrary
-import { searchOECDSDMX } from '../providers/institutional/v2/oecd-sdmx';
-import { searchOECDiLibrary } from '../providers/institutional/v2/oecd-ilibrary';
+const {searchOECDSDMX} = require('../providers/institutional/v2/oecd-sdmx');
+const {searchOECDiLibrary} = require('../providers/institutional/v2/oecd-ilibrary');
 
-import { searchBIS } from '../providers/institutional/v2/bis-papers';
-import { searchNIST } from '../providers/institutional/v2/nist-publications';
-import { scoreSource } from '../score';
+const {searchBIS} = require('../providers/institutional/v2/bis-papers');
+const {searchNIST} = require('../providers/institutional/v2/nist-publications');
+const {scoreSource} = require('../score');
 
 // NOUVEAUX PROVIDERS SOURCES VARIÉES
-import { searchCrossref } from '../providers/academic/crossref-api';
-import { searchOpenAlex } from '../providers/academic/openalex-api';
-import { searchArXiv } from '../providers/academic/arxiv-api';
-import { searchPubMed } from '../providers/academic/pubmed-api';
-import { searchTechCrunch } from '../providers/business/techcrunch-api.ts';
-import { searchCrunchbase } from '../providers/business/crunchbase-api.ts';
-import { searchReuters } from '../providers/business/reuters-api.ts';
-import { searchGooglePatents } from '../providers/patents/google-patents-api';
-import { searchPatentsView } from '../providers/patents/patentsview-api';
-import { searchFigshare } from '../providers/data/figshare-api';
-import { searchZenodo } from '../providers/data/zenodo-api';
+const {searchCrossref} = require('../providers/academic/crossref-api');
+const {searchOpenAlex} = require('../providers/academic/openalex-api');
+const {searchArXiv} = require('../providers/academic/arxiv-api');
+const {searchPubMed} = require('../providers/academic/pubmed-api');
+const {searchTechCrunch} = require('../providers/business/techcrunch-api.ts');
+const {searchCrunchbase} = require('../providers/business/crunchbase-api.ts');
+const {searchReuters} = require('../providers/business/reuters-api.ts');
+const {searchGooglePatents} = require('../providers/patents/google-patents-api');
+const {searchPatentsView} = require('../providers/patents/patentsview-api');
+const {searchFigshare} = require('../providers/data/figshare-api');
+const {searchZenodo} = require('../providers/data/zenodo-api');
 
 // 🏛️ Macro providers
-import { searchEurostat } from '../providers/macro/eurostat-api.js';
-import { searchECB } from '../providers/macro/ecb-api.js';
-import { searchINSEE } from '../providers/macro/insee-api.js';
+const {searchEurostat} = require('../providers/macro/eurostat-api.js');
+const {searchECB} = require('../providers/macro/ecb-api.js');
+const {searchINSEE} = require('../providers/macro/insee-api.js');
 
 // Using shared prisma singleton from db.ts
 

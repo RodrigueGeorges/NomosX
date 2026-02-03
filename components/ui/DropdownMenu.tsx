@@ -1,12 +1,13 @@
+const React = require('react');
 /**
  * Dropdown Menu Component - Suivi de la charte graphique OpenClaw
  */
 
-import * as React from "react"
-import * as DropdownMenuPrimitive from "@radix-ui/react-dropdown-menu"
-import { Check, ChevronRight, Circle } from "lucide-react"
+const React = require('react');
+const DropdownMenuPrimitive = require('@radix-ui/react-dropdown-menu');
+const {Check,ChevronRight,Circle} = require('lucide-react');
 
-import { cn } from "@/lib/utils"
+const {cn} = require('@/lib/utils');
 
 const DropdownMenu = DropdownMenuPrimitive.Root
 
@@ -183,20 +184,19 @@ const DropdownMenuShortcut = ({
 }
 DropdownMenuShortcut.displayName = "DropdownMenuShortcut"
 
-export {
-  DropdownMenu,
-  DropdownMenuTrigger,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuCheckboxItem,
-  DropdownMenuRadioItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuShortcut,
-  DropdownMenuGroup,
-  DropdownMenuPortal,
-  DropdownMenuSub,
-  DropdownMenuSubContent,
-  DropdownMenuSubTrigger,
-  DropdownMenuRadioGroup,
-}
+module.exports.DropdownMenu = DropdownMenu;
+module.exports.DropdownMenuTrigger = DropdownMenuTrigger;
+module.exports.DropdownMenuContent = DropdownMenuContent;
+module.exports.DropdownMenuItem = DropdownMenuItem;
+module.exports.DropdownMenuCheckboxItem = DropdownMenuCheckboxItem;
+module.exports.DropdownMenuRadioItem = DropdownMenuRadioItem;
+module.exports.DropdownMenuLabel = DropdownMenuLabel;
+module.exports.DropdownMenuSeparator = DropdownMenuSeparator;
+module.exports.DropdownMenuShortcut = DropdownMenuShortcut;
+module.exports.DropdownMenuGroup = DropdownMenuGroup;
+module.exports.DropdownMenuPortal = DropdownMenuPortal;
+module.exports.DropdownMenuSub = DropdownMenuSub;
+module.exports.DropdownMenuSubContent = DropdownMenuSubContent;
+module.exports.DropdownMenuSubTrigger = DropdownMenuSubTrigger;
+module.exports.DropdownMenuRadioGroup = DropdownMenuRadioGroup;
+module.exports. = ;

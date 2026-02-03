@@ -1,13 +1,13 @@
 // MCP Agents Index - Point d'entrée unique
 // Créé par OpenClaw pour finalisation 100%
 
-import { scoutAgent } from './mcp-agents-aliases';
-import { indexAgent } from './mcp-agents-aliases';
-import { readerAgent } from './mcp-agents-aliases';
-import { analystAgent } from './mcp-agents-aliases';
-import { strategicAnalystAgent } from './mcp-agents-aliases';
-import { rankAgent } from './mcp-agents-aliases';
-import { pipeline } from './mcp-agents-aliases';
+const {scoutAgent} = require('./mcp-agents-aliases');
+const {indexAgent} = require('./mcp-agents-aliases');
+const {readerAgent} = require('./mcp-agents-aliases');
+const {analystAgent} = require('./mcp-agents-aliases');
+const {strategicAnalystAgent} = require('./mcp-agents-aliases');
+const {rankAgent} = require('./mcp-agents-aliases');
+const {pipeline} = require('./mcp-agents-aliases');
 
 export const mcpAgents = {
   scout: scoutAgent,
@@ -19,4 +19,4 @@ export const mcpAgents = {
   pipeline: pipeline
 };
 
-export default mcpAgents;
+module.exports = mcpAgents;;

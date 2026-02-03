@@ -1,5 +1,6 @@
-import * as React from "react"
-import { cn } from "@/lib/utils"
+const React = require('react');
+const React = require('react');
+const {cn} = require('@/lib/utils');
 
 const Avatar = React.forwardRef<
   React.ElementRef<"div">,
@@ -16,4 +17,4 @@ const Avatar = React.forwardRef<
 ))
 Avatar.displayName = "Avatar"
 
-export { Avatar }
+module.exports.Avatar = Avatar;

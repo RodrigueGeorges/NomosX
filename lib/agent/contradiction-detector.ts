@@ -11,9 +11,9 @@
  * 4. Generate CONTRADICTION signals when found
  */
 
-import { prisma } from "@/lib/db";
-import { callLLM } from "@/lib/llm/unified-llm";
-import { AgentRole, assertPermission } from "@/lib/governance/index";
+const {prisma} = require('@/lib/db');
+const {callLLM} = require('@/lib/llm/unified-llm');
+const {AgentRole,assertPermission} = require('@/lib/governance/index');
 
 // ============================================================================
 // TYPES

@@ -3,18 +3,18 @@
  * Suivi de la charte graphique OpenClaw
  */
 
-import { Metadata } from 'next'
-import { Suspense } from 'react'
-import { BillingPlansClient } from '@/components/features/billing/BillingPlansClient'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card'
-import { cn } from "@/lib/utils"
+const {Metadata} = require('next');
+const {Suspense} = require('react');
+const {BillingPlansClient} = require('@/components/features/billing/BillingPlansClient');
+const {Card,CardContent,CardDescription,CardHeader,CardTitle} = require('@/components/ui/Card');
+const {cn} = require('@/lib/utils');
 
 export const metadata: Metadata = {
   title: 'Plans d\'abonnement | NomosX',
   description: 'Choisissez le plan d\'abonnement qui correspond à vos besoins',
 }
 
-export default function BillingPlansPage() {
+module.exports = function BillingPlansPage;() {
   return (
     <div className="container mx-auto px-4 py-8 transition-all duration-200 hover:opacity-80">
       <div className="max-w-6xl mx-auto transition-all duration-200 hover:opacity-80">

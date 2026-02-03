@@ -1,6 +1,6 @@
 
-import { NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
+const {NextResponse} = require('next/server');
+const {prisma} = require('@/lib/db');
 
 // GET /api/sources - List recent sources
 export async function GET() {

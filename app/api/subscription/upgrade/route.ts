@@ -1,6 +1,6 @@
-import { NextRequest, NextResponse } from "next/server";
-import { getSession } from "@/lib/auth";
-import prisma from "@/lib/db";
+const {NextRequest,NextResponse} = require('next/server');
+const {getSession} = require('@/lib/auth');
+const prisma = require('@/lib/db');
 
 /**
  * POST /api/subscription/upgrade

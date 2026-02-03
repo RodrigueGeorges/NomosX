@@ -1,5 +1,6 @@
-import * as React from "react"
-import { cn } from "@/lib/utils"
+const React = require('react');
+const React = require('react');
+const {cn} = require('@/lib/utils');
 
 const Checkbox = React.forwardRef<
   HTMLDivElement,
@@ -13,4 +14,4 @@ const Checkbox = React.forwardRef<
 ))
 Checkbox.displayName = "Checkbox"
 
-export { Checkbox }
+module.exports.Checkbox = Checkbox;

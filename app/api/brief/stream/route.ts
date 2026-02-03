@@ -10,18 +10,18 @@
  * 3. Client affiche progress + résultats partiels
  */
 
-import { NextRequest } from "next/server";
-import { selectSmartProviders } from "@/lib/agent/smart-provider-selector";
-import { scout } from "@/lib/agent/pipeline-v2";
-import { indexAgent } from "@/lib/agent/index-agent";
-import { rank } from "@/lib/agent/pipeline-v2";
-import { readerAgent } from "@/lib/agent/reader-agent";
-import { analystAgent } from "@/lib/agent/analyst-agent";
-import { renderBriefHTML } from "@/lib/agent/pipeline-v2";
-import { enhanceQuestion } from "@/lib/ai/question-enhancer";
-import { getSession } from "@/lib/auth";
-import { assertRateLimit, RateLimitError } from "@/lib/security/rate-limit";
-import { assertAndConsumeRun, QuotaError } from "@/lib/security/quota";
+const {NextRequest} = require('next/server');
+const {selectSmartProviders} = require('@/lib/agent/smart-provider-selector');
+const {scout} = require('@/lib/agent/pipeline-v2');
+const {indexAgent} = require('@/lib/agent/index-agent');
+const {rank} = require('@/lib/agent/pipeline-v2');
+const {readerAgent} = require('@/lib/agent/reader-agent');
+const {analystAgent} = require('@/lib/agent/analyst-agent');
+const {renderBriefHTML} = require('@/lib/agent/pipeline-v2');
+const {enhanceQuestion} = require('@/lib/ai/question-enhancer');
+const {getSession} = require('@/lib/auth');
+const {assertRateLimit,RateLimitError} = require('@/lib/security/rate-limit');
+const {assertAndConsumeRun,QuotaError} = require('@/lib/security/quota');
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';

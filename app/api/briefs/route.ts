@@ -1,7 +1,7 @@
 
-import { NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
-import { analyst, citationGuard, renderBriefHTML, rank } from "@/lib/agent/pipeline";
+const {NextResponse} = require('next/server');
+const {prisma} = require('@/lib/db');
+const {analyst,citationGuard,renderBriefHTML,rank} = require('@/lib/agent/pipeline');
 
 // GET /api/briefs - List all briefs
 export async function GET(req: Request) {

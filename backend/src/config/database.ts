@@ -2,7 +2,7 @@
  * Database Configuration
  */
 
-import { z } from "zod";
+const {z} = require('zod');
 
 const DatabaseConfigSchema = z.object({
   url: z.string().url(),

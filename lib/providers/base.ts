@@ -3,7 +3,7 @@
  * API: https://www.base-search.net/about/en/about_develop.php
  */
 
-import { fetchFromProvider } from "../http-client";
+const {fetchFromProvider} = require('../http-client');
 
 export async function searchBASE(query: string, hits = 20): Promise<any[]> {
   const url = `https://api.base-search.net/cgi-bin/BaseHttpSearchInterface.fcgi?func=PerformSearch&query=${encodeURIComponent(query)}&format=json&hits=${hits}&type=all&sortby=relevance`;

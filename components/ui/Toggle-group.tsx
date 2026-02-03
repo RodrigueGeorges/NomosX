@@ -1,7 +1,8 @@
-import * as React from "react"
-import { cn } from "@/lib/utils"
+const React = require('react');
+const React = require('react');
+const {cn} = require('@/lib/utils');
 
-const Toggle-group = React.forwardRef<
+const ToggleGroup = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
@@ -11,6 +12,6 @@ const Toggle-group = React.forwardRef<
     {...props}
   />
 ))
-Toggle-group.displayName = "Toggle-group"
+ToggleGroup.displayName = "ToggleGroup"
 
-export { Toggle-group }
+module.exports.ToggleGroup = ToggleGroup;

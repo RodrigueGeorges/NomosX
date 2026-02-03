@@ -1,5 +1,6 @@
-import * as React from "react"
-import { cn } from "@/lib/utils"
+const React = require('react');
+const React = require('react');
+const {cn} = require('@/lib/utils');
 
 const Table = React.forwardRef<
   HTMLTableElement,
@@ -92,12 +93,11 @@ const TableCell = React.forwardRef<
 ))
 TableCell.displayName = "TableCell"
 
-export {
-  Table,
-  TableHeader,
-  TableBody,
-  TableFooter,
-  TableHead,
-  TableRow,
-  TableCell,
-}
+module.exports.Table = Table;
+module.exports.TableHeader = TableHeader;
+module.exports.TableBody = TableBody;
+module.exports.TableFooter = TableFooter;
+module.exports.TableHead = TableHead;
+module.exports.TableRow = TableRow;
+module.exports.TableCell = TableCell;
+module.exports. = ;

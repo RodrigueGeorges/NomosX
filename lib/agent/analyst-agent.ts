@@ -7,9 +7,9 @@
  * - Implications and risks
  */
 
-import { callLLM } from "../llm/unified-llm";
-import * as Sentry from "@sentry/nextjs";
-import { AgentRole, assertPermission } from "../governance/index";
+const {callLLM} = require('../llm/unified-llm');
+const Sentry = require('@sentry/nextjs');
+const {AgentRole,assertPermission} = require('../governance/index');
 
 export interface AnalysisOutput {
   title: string;

@@ -5,8 +5,8 @@
  * We request SDMX-JSON (ECB supports it via Accept header) and parse TIME_PERIOD.
  */
 
-import { fetchFromProvider } from "../http-client";
-import { env } from "../env";
+const {fetchFromProvider} = require('../http-client');
+const {env} = require('../env');
 
 export interface MacroDataPoint {
   date: Date;

@@ -1,3 +1,4 @@
+const React = require('react');
 /**
  * NotificationBell Component
  * 
@@ -7,7 +8,7 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
+const {useState,useEffect} = require('react');
 
 interface Notification {
   id: string;
@@ -24,7 +25,7 @@ interface NotificationBellProps {
   userId?: string;
 }
 
-export default function NotificationBell({ userId }: NotificationBellProps) {
+module.exports = function NotificationBell;({ userId }: NotificationBellProps) {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);

@@ -1,11 +1,12 @@
+const React = require('react');
 /**
  * Switch Component - Suivi de la charte graphique OpenClaw
  */
 
-import * as React from "react"
-import * as SwitchPrimitives from "@radix-ui/react-switch"
+const React = require('react');
+const SwitchPrimitives = require('@radix-ui/react-switch');
 
-import { cn } from "@/lib/utils"
+const {cn} = require('@/lib/utils');
 
 const Switch = React.forwardRef<
   React.ElementRef<typeof SwitchPrimitives.Root>,
@@ -28,4 +29,4 @@ const Switch = React.forwardRef<
 ))
 Switch.displayName = SwitchPrimitives.Root.displayName
 
-export { Switch }
+module.exports.Switch = Switch;

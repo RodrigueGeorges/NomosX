@@ -2,9 +2,9 @@
  * Editorial Gate Batch API - Evaluate pending signals in batch
  */
 
-import { NextRequest, NextResponse } from "next/server";
-import { getSession } from "@/lib/auth";
-import { evaluatePendingSignals } from "@/lib/agent/editorial-gate";
+const {NextRequest,NextResponse} = require('next/server');
+const {getSession} = require('@/lib/auth');
+const {evaluatePendingSignals} = require('@/lib/agent/editorial-gate');
 
 // POST /api/editorial-gate/batch - Evaluate all pending signals
 export async function POST(request: NextRequest) {

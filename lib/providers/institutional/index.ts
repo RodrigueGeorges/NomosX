@@ -3,28 +3,28 @@
  * Centralized exports for all institutional data sources
  */
 
-// INTELLIGENCE
-export { searchODNI } from './intelligence/odni';
-export { searchCIAFOIA } from './intelligence/cia-foia';
-export { searchNSA } from './intelligence/nsa';
-export { searchUKJIC } from './intelligence/uk-jic';
+// INTELLIGENCE;
+from './intelligence/odni';
+from './intelligence/cia-foia';
+from './intelligence/nsa';
+from './intelligence/uk-jic';
 
-// DEFENSE
-export { searchNATO } from './defense/nato';
-export { searchEEAS } from './defense/eeas';
-export { searchSGDSN } from './defense/sgdsn';
-export { searchEDA } from './defense/eda';
+// DEFENSE;
+from './defense/nato';
+from './defense/eeas';
+from './defense/sgdsn';
+from './defense/eda';
 
-// ECONOMIC
-export { searchIMF } from './economic/imf';
-export { searchWorldBank } from './economic/worldbank';
-export { searchOECD } from './economic/oecd';
-export { searchBIS } from './economic/bis';
+// ECONOMIC;
+from './economic/imf';
+from './economic/worldbank';
+from './economic/oecd';
+from './economic/bis';
 
-// CYBER & RISK
-export { searchNIST } from './cyber/nist';
-export { searchCISA } from './cyber/cisa';
-export { searchENISA } from './cyber/enisa';
+// CYBER & RISK;
+from './cyber/nist';
+from './cyber/cisa';
+from './cyber/enisa';
 
 // THINK TANKS (Innovative - via Google CSE)
 export {
@@ -50,15 +50,15 @@ export {
   searchRStreetViaGoogle
 } from './v2/google-cse';
 
-// MULTILATERAL
-export { searchUN } from './multilateral/un';
-export { searchUNDP } from './multilateral/undp';
-export { searchUNCTAD } from './multilateral/unctad';
+// MULTILATERAL;
+from './multilateral/un';
+from './multilateral/undp';
+from './multilateral/unctad';
 
-// ARCHIVES
-export { searchNARA } from './archives/nara';
-export { searchUKArchives } from './archives/uk-archives';
-export { searchArchivesNationalesFR } from './archives/archives-nationales-fr';
+// ARCHIVES;
+from './archives/nara';
+from './archives/uk-archives';
+from './archives/archives-nationales-fr';
 
 /**
  * Provider metadata
@@ -121,3 +121,5 @@ export const INSTITUTIONAL_PROVIDERS = {
 } as const;
 
 export type InstitutionalProvider = keyof typeof INSTITUTIONAL_PROVIDERS;
+
+export { searchODNI, searchCIAFOIA, searchNSA, searchUKJIC, searchNATO, searchEEAS, searchSGDSN, searchEDA, searchIMF, searchWorldBank, searchOECD, searchBIS, searchNIST, searchCISA, searchENISA, searchUN, searchUNDP, searchUNCTAD, searchNARA, searchUKArchives, searchArchivesNationalesFR }

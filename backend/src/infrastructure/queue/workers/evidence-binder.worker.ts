@@ -5,11 +5,11 @@
  * Uses EvidenceBinder service (deterministic + LLM)
  */
 
-import { Job } from 'bullmq';
-import { PrismaClient } from '@prisma/client';
-import { EvidenceBinder } from '../../../domain/evidence/services/EvidenceBinder';
-import { logger } from '../../../shared/logging/Logger';
-import { DomainError } from '../../../shared/errors/DomainError';
+const {Job} = require('bullmq');
+const {PrismaClient} = require('@prisma/client');
+const {EvidenceBinder} = require('../../../domain/evidence/services/EvidenceBinder');
+const {logger} = require('../../../shared/logging/Logger');
+const {DomainError} = require('../../../shared/errors/DomainError');
 
 export interface EvidenceBinderJobPayload {
   runId: string;

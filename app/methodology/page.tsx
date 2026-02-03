@@ -1,4 +1,5 @@
 "use client";
+const React = require('react');
 
 /**
  * Methodology Page — Deep Technical Dive
@@ -7,30 +8,17 @@
  * UX: Technical credibility, transparency, convert skeptics → believers
  */
 
-import { useState, useEffect } from "react";
-import { Select } from "@/components/ui/Select"
-import { Input } from "@/components/ui/Input"
-import { useRouter } from "next/navigation";
-import { Button } from "@/components/ui/Button";
-import AuthModal from "@/components/AuthModal";
-import PublicNav from "@/components/PublicNav";
-import { cn } from "@/lib/utils"
-import {
-  Search,
-  Database,
-  BarChart3,
-  FileText,
-  Brain,
-  Shield,
-  ArrowRight,
-  CheckCircle,
-  Zap,
-  GitBranch,
-  Lock,
-  Eye
-} from "lucide-react";
+const {useState,useEffect} = require('react');
+const {Select} = require('@/components/ui/Select');
+const {Input} = require('@/components/ui/Input');
+const {useRouter} = require('next/navigation');
+const {Button} = require('@/components/ui/Button');
+const AuthModal = require('@/components/AuthModal');
+const PublicNav = require('@/components/PublicNav');
+const {cn} = require('@/lib/utils');
+const {Search,Database,BarChart3,FileText,Brain,Shield,ArrowRight,CheckCircle,Zap,GitBranch,Lock,Eye} = require('lucide-react');
 
-export default function MethodologyPage() {
+module.exports = function MethodologyPage;() {
   const router = useRouter();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [mounted, setMounted] = useState(false);

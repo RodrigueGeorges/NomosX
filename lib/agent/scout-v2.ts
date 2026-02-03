@@ -17,17 +17,17 @@
  * - Reranking time
  */
 
-import { prisma } from "../db";
-import { scoreSource, scoreNovelty } from "../score";
-import { clamp } from "../text";
-import { searchOpenAlex } from "../providers/openalex";
-import { searchThesesFr } from "../providers/thesesfr";
-import { searchCrossref } from "../providers/crossref";
-import { searchSemanticScholar } from "../providers/semanticscholar";
-import { unpaywallByDoi } from "../providers/unpaywall";
-import { enhanceQuery, generateSearchQueries, type EnhancedQuery } from "./query-enhancer";
-import { filterByRelevance, logRelevanceScores } from "./relevance-scorer";
-import { rerankSources } from "./cohere-reranker";
+const {prisma} = require('../db');
+const {scoreSource,scoreNovelty} = require('../score');
+const {clamp} = require('../text');
+const {searchOpenAlex} = require('../providers/openalex');
+const {searchThesesFr} = require('../providers/thesesfr');
+const {searchCrossref} = require('../providers/crossref');
+const {searchSemanticScholar} = require('../providers/semanticscholar');
+const {unpaywallByDoi} = require('../providers/unpaywall');
+const {enhanceQuery,generateSearchQueries,typeEnhancedQuery} = require('./query-enhancer');
+const {filterByRelevance,logRelevanceScores} = require('./relevance-scorer');
+const {rerankSources} = require('./cohere-reranker');
 
 export type Providers = Array<"openalex" | "thesesfr" | "crossref" | "semanticscholar">;
 

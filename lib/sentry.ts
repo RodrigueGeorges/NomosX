@@ -7,7 +7,7 @@
  * 3. Uncomment the code below
  */
 
-// import * as Sentry from "@sentry/nextjs";
+// const Sentry = require('@sentry/nextjs');
 
 export function initSentry() {
   const dsn = process.env.SENTRY_DSN;

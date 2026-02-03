@@ -2,9 +2,9 @@
  * Council Session API - Single session operations
  */
 
-import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
-import { getSession } from "@/lib/auth";
+const {NextRequest,NextResponse} = require('next/server');
+const {prisma} = require('@/lib/db');
+const {getSession} = require('@/lib/auth');
 
 // GET /api/council-sessions/[id] - Get a single council session
 export async function GET(

@@ -1,9 +1,10 @@
+const React = require('react');
 
-import { cn } from "@/lib/utils";
-import { LoadingSpinner } from "./LoadingSpinner";
+const {cn} = require('@/lib/utils');
+const {LoadingSpinner} = require('./LoadingSpinner');
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
-  variant?: "primary" | "secondary" | "ghost" | "ai" | "danger" | "success";
+  variant?: "primary" | "outline" | "destructive" | "secondary" | "ghost" | "ai" | "danger" | "success" | "outline" | "destructive";
   size?: "sm" | "md" | "lg";
   loading?: boolean;
 }
@@ -31,7 +32,9 @@ export function Button({
     ai: "bg-ai text-black hover:brightness-105 hover:scale-[1.02] active:scale-[0.98] shadow-glow hover:shadow-[0_0_30px_rgba(94,234,212,0.25)]",
     ghost: "bg-transparent text-text border border-border hover:bg-panel hover:border-border-hover",
     danger: "bg-danger text-white hover:brightness-110 hover:scale-[1.02] active:scale-[0.98]",
-    success: "bg-success text-white hover:brightness-110 hover:scale-[1.02] active:scale-[0.98]"
+    success: "bg-success text-white hover:brightness-110 hover:scale-[1.02] active:scale-[0.98]",
+    outline: "bg-transparent text-text border border-border hover:bg-panel hover:border-accent/40",
+    destructive: "bg-danger text-white hover:brightness-110 hover:scale-[1.02] active:scale-[0.98]"
   }[variant];
   
   return (

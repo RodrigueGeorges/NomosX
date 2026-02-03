@@ -1,3 +1,4 @@
+const React = require('react');
 /**
  * LibraryView Component
  * 
@@ -7,8 +8,8 @@
 
 'use client';
 
-import { useState, useEffect } from 'react';
-import TrustScoreBadge from './TrustScoreBadge';
+const {useState,useEffect} = require('react');
+const TrustScoreBadge = require('./TrustScoreBadge');
 
 interface Brief {
   id: string;
@@ -36,7 +37,7 @@ interface LibraryViewProps {
   onSelectBrief?: (briefId: string) => void;
 }
 
-export default function LibraryView({ userId, onSelectBrief }: LibraryViewProps) {
+module.exports = function LibraryView;({ userId, onSelectBrief }: LibraryViewProps) {
   const [briefs, setBriefs] = useState<Brief[]>([]);
   const [topics, setTopics] = useState<Topic[]>([]);
   const [isLoading, setIsLoading] = useState(true);

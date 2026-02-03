@@ -1,8 +1,8 @@
 
-import { NextResponse } from "next/server";
-import { hybridSearch } from "@/lib/embeddings";
-import { getSession } from "@/lib/auth";
-import { assertRateLimit, RateLimitError } from "@/lib/security/rate-limit";
+const {NextResponse} = require('next/server');
+const {hybridSearch} = require('@/lib/embeddings');
+const {getSession} = require('@/lib/auth');
+const {assertRateLimit,RateLimitError} = require('@/lib/security/rate-limit');
 
 export async function GET(req: Request) {
   // Auth (P0): prevent public embedding-cost abuse

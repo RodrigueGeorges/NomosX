@@ -1,12 +1,13 @@
+const React = require('react');
 /**
  * Label Component - Suivi de la charte graphique OpenClaw
  */
 
-import * as React from "react"
-import * as LabelPrimitive from "@radix-ui/react-label"
-import { cva, type VariantProps } from "class-variance-authority"
+const React = require('react');
+const LabelPrimitive = require('@radix-ui/react-label');
+const {cva,typeVariantProps} = require('class-variance-authority');
 
-import { cn } from "@/lib/utils"
+const {cn} = require('@/lib/utils');
 
 const labelVariants = cva(
   "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",
@@ -44,4 +45,4 @@ const Label = React.forwardRef<
 ))
 Label.displayName = LabelPrimitive.Root.displayName
 
-export { Label }
+module.exports.Label = Label;

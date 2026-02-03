@@ -3,7 +3,7 @@
  * Ensures all required vars are present at runtime
  */
 
-import { z } from "zod";
+const {z} = require('zod');
 
 const envSchema = z.object({
   // Core

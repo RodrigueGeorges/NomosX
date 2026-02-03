@@ -13,7 +13,7 @@
  * - Options (o): JSON object, notably { size: <n> }
  */
 
-import { fetchFromProvider } from "../../http-client";
+const {fetchFromProvider} = require('../../http-client');
 
 const PATENTSVIEW_BASE = "https://search.patentsview.org/api/v1/patent/";
 

@@ -5,7 +5,7 @@
  * Accès aux thèses de doctorat françaises
  */
 
-import { fetchFromProvider } from "../http-client";
+const {fetchFromProvider} = require('../http-client');
 
 const THESESFR_API = process.env.THESESFR_API || "https://theses.fr/api/v1";
 

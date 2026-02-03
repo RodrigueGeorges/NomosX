@@ -1,3 +1,4 @@
+const React = require('react');
 
 /**
  * OpenClaw Data Visualization Components
@@ -6,8 +7,8 @@
 
 'use client'
 
-import { cn } from "@/lib/utils" from '@/lib/utils'
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/Card'
+const {cn} = require('@/lib/utils');
+const {Card,CardContent,CardHeader,CardTitle} = require('@/components/ui/Card');
 
 interface DataVizCardProps {
   title: string

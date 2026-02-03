@@ -16,7 +16,7 @@
  * - 0.0-0.4 : Not relevant, likely off-topic
  */
 
-import type { EnhancedQuery } from "./query-enhancer";
+const type{EnhancedQuery} = require('./query-enhancer');
 
 export interface RelevanceScore {
   overall: number; // 0.0 - 1.0

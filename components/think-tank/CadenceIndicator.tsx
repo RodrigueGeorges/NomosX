@@ -1,4 +1,5 @@
 "use client";
+const React = require('react');
 
 /**
  * CadenceIndicator Component
@@ -7,7 +8,7 @@
  * Follows NomosX design system
  */
 
-import { Clock, AlertCircle, CheckCircle } from "lucide-react";
+const {Clock,AlertCircle,CheckCircle} = require('lucide-react');
 
 interface CadenceIndicatorProps {
   global: {
@@ -19,7 +20,7 @@ interface CadenceIndicatorProps {
   compact?: boolean;
 }
 
-export default function CadenceIndicator({ 
+module.exports = function CadenceIndicator;({ 
   global, 
   nextPublishWindow,
   isQuietHours = false,

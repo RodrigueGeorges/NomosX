@@ -1,4 +1,5 @@
 "use client";
+const React = require('react');
 
 /**
  * VerticalCard Component
@@ -7,9 +8,9 @@
  * Follows NomosX design system
  */
 
-import Link from "next/link";
-import { Card } from "@/components/ui/Card";
-import { TrendingUp, AlertCircle, FileText } from "lucide-react";
+const Link = require('next/link');
+const {Card} = require('@/components/ui/Card');
+const {TrendingUp,AlertCircle,FileText} = require('lucide-react');
 
 interface VerticalCardProps {
   vertical: {
@@ -29,7 +30,7 @@ interface VerticalCardProps {
   };
 }
 
-export default function VerticalCard({ vertical }: VerticalCardProps) {
+module.exports = function VerticalCard;({ vertical }: VerticalCardProps) {
   const cadencePercentage = (vertical.cadence.current / vertical.cadence.max) * 100;
   const isNearLimit = cadencePercentage >= 80;
   const isAtLimit = cadencePercentage >= 100;

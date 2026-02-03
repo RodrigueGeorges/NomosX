@@ -1,6 +1,7 @@
+const React = require('react');
 
 import "./globals.css";
-import { Inter, Space_Grotesk, JetBrains_Mono } from 'next/font/google'
+const {Inter,Space_Grotesk,JetBrains_Mono} = require('next/font/google');
 
 // Configuration des polices OpenClaw
 const inter = Inter({
@@ -23,9 +24,9 @@ const jetbrainsMono = JetBrains_Mono({
   weight: ['400', '500', '600'],
   display: 'swap',
 })
-import { ToastContainer } from "@/components/ui/Toast";
-import { AuthProvider } from "@/hooks/useAuth";
-import { QueryProvider } from "@/components/providers/QueryProvider";
+const {ToastContainer} = require('@/components/ui/Toast');
+const {AuthProvider} = require('@/hooks/useAuth');
+const {QueryProvider} = require('@/components/providers/QueryProvider');
 
 export const metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
@@ -48,7 +49,7 @@ export const metadata = {
   },
 };
 
-export default function RootLayout({ children }: { children: React.ReactNode }) {
+module.exports = function RootLayout;({ children }: { children: React.ReactNode }) {
   return (
     <html lang="fr" className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable}`} suppressHydrationWarning>
       <body className="font-primary">

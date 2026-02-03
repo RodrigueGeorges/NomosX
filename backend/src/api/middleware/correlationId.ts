@@ -2,8 +2,8 @@
  * Correlation ID Middleware
  */
 
-import { Request, Response, NextFunction } from "express";
-import { generateCorrelationId, extractCorrelationId } from "../../shared/utils/correlation-id";
+const {Request,Response,NextFunction} = require('express');
+const {generateCorrelationId,extractCorrelationId} = require('../../shared/utils/correlation-id');
 
 declare global {
   namespace Express {

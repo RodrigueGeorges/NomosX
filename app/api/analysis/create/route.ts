@@ -4,8 +4,8 @@
  * Intégration avec le nouveau backend CTO-grade
  */
 
-import { NextRequest, NextResponse } from "next/server";
-import { z } from "zod";
+const {NextRequest,NextResponse} = require('next/server');
+const {z} = require('zod');
 
 const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:3000";
 

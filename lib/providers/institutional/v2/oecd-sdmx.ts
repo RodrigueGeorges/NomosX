@@ -13,7 +13,7 @@
  * - Returned items are treated as "dataset" sources in NomosX.
  */
 
-import { fetchFromProvider } from "../../../http-client";
+const {fetchFromProvider} = require('../../../http-client');
 
 const OECD_SDMX_BASE = "https://sdmx.oecd.org/public/rest";
 

@@ -5,11 +5,11 @@
  * Uses ClaimExtractor service (deterministic + LLM fallback)
  */
 
-import { Job } from 'bullmq';
-import { PrismaClient } from '@prisma/client';
-import { ClaimExtractor } from '../../../domain/claim/services/ClaimExtractor';
-import { logger } from '../../../shared/logging/Logger';
-import { DomainError } from '../../../shared/errors/DomainError';
+const {Job} = require('bullmq');
+const {PrismaClient} = require('@prisma/client');
+const {ClaimExtractor} = require('../../../domain/claim/services/ClaimExtractor');
+const {logger} = require('../../../shared/logging/Logger');
+const {DomainError} = require('../../../shared/errors/DomainError');
 
 export interface ClaimExtractorJobPayload {
   runId: string;

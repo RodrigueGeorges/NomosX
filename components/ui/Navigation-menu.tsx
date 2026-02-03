@@ -1,7 +1,8 @@
-import * as React from "react"
-import { cn } from "@/lib/utils"
+const React = require('react');
+const React = require('react');
+const {cn} = require('@/lib/utils');
 
-const Navigation-menu = React.forwardRef<
+const NavigationMenu = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
@@ -11,6 +12,6 @@ const Navigation-menu = React.forwardRef<
     {...props}
   />
 ))
-Navigation-menu.displayName = "Navigation-menu"
+NavigationMenu.displayName = "NavigationMenu"
 
-export { Navigation-menu }
+module.exports.NavigationMenu = NavigationMenu;

@@ -5,11 +5,11 @@
  * Uses TrustScorer service
  */
 
-import { Job } from 'bullmq';
-import { PrismaClient } from '@prisma/client';
-import { TrustScorer } from '../../../domain/claim/services/TrustScorer';
-import { logger } from '../../../shared/logging/Logger';
-import { DomainError } from '../../../shared/errors/DomainError';
+const {Job} = require('bullmq');
+const {PrismaClient} = require('@prisma/client');
+const {TrustScorer} = require('../../../domain/claim/services/TrustScorer');
+const {logger} = require('../../../shared/logging/Logger');
+const {DomainError} = require('../../../shared/errors/DomainError');
 
 export interface TrustScorerJobPayload {
   runId: string;

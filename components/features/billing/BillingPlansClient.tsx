@@ -1,3 +1,4 @@
+const React = require('react');
 /**
  * Billing Plans Client - Composant client pour les plans d'abonnement
  * Suivi de la charte graphique OpenClaw
@@ -5,12 +6,12 @@
 
 'use client'
 
-import { useState } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card'
-import { Button } from '@/components/ui/Button'
-import { Badge } from '@/components/ui/Badge'
-import { Check, X, Star, Zap, Shield, Users } from 'lucide-react'
-import { cn } from '@/lib/utils'
+const {useState} = require('react');
+const {Card,CardContent,CardDescription,CardHeader,CardTitle} = require('@/components/ui/Card');
+const {Button} = require('@/components/ui/Button');
+const {Badge} = require('@/components/ui/Badge');
+const {Check,X,Star,Zap,Shield,Users} = require('lucide-react');
+const {cn} = require('@/lib/utils');
 
 interface BillingPlan {
   id: string

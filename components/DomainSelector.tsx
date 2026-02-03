@@ -1,6 +1,7 @@
 "use client";
+const React = require('react');
 
-import { PREDEFINED_DOMAINS, type Domain } from "@/lib/domains";
+const {PREDEFINED_DOMAINS,typeDomain} = require('@/lib/domains');
 
 type Props = {
   selected: string[];
@@ -9,7 +10,7 @@ type Props = {
   compact?: boolean;
 };
 
-export default function DomainSelector({
+module.exports = function DomainSelector;({
   selected,
   onChange,
   mode = "multiple",

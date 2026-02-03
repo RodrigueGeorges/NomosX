@@ -1,4 +1,5 @@
 "use client";
+const React = require('react');
 
 /**
  * PublicationCard Component
@@ -7,17 +8,10 @@
  * Follows NomosX design system
  */
 
-import Link from "next/link";
-import { Card } from "@/components/ui/Card";
-import { Badge } from "@/components/ui/Badge";
-import { 
-  FileText, 
-  Eye, 
-  Clock, 
-  CheckCircle,
-  AlertCircle,
-  ChevronRight
-} from "lucide-react";
+const Link = require('next/link');
+const {Card} = require('@/components/ui/Card');
+const {Badge} = require('@/components/ui/Badge');
+const {FileText,Eye,Clock,CheckCircle,AlertCircle,ChevronRight} = require('lucide-react');
 
 interface PublicationCardProps {
   publication: {
@@ -51,7 +45,7 @@ const TYPE_LABELS: Record<string, string> = {
   DOSSIER: "Dossier"
 };
 
-export default function PublicationCard({ publication, compact = false }: PublicationCardProps) {
+module.exports = function PublicationCard;({ publication, compact = false }: PublicationCardProps) {
   const isPublished = !!publication.publishedAt;
   const trustColor = publication.trustScore >= 80 ? "text-emerald-400" :
                      publication.trustScore >= 70 ? "text-cyan-400" :

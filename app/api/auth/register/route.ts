@@ -1,7 +1,7 @@
-import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
-import { hashPassword, createSession } from "@/lib/auth";
-import { z } from "zod";
+const {NextRequest,NextResponse} = require('next/server');
+const {prisma} = require('@/lib/db');
+const {hashPassword,createSession} = require('@/lib/auth');
+const {z} = require('zod');
 
 const registerSchema = z.object({
   email: z.string().email("Email invalide"),

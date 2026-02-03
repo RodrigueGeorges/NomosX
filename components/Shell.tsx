@@ -1,22 +1,11 @@
+const React = require('react');
 "use client";
 
-import Link from "next/link";
-import { useRouter, usePathname } from "next/navigation";
-import { useState, useEffect } from "react";
-import { 
-  LayoutDashboard, 
-  Zap, 
-  Search, 
-  Archive, 
-  Settings, 
-  LogOut,
-  User as UserIcon,
-  Menu,
-  X,
-  PenTool,
-  DollarSign
-} from "lucide-react";
-import { useAuth } from "@/hooks/useAuth";
+const Link = require('next/link');
+const {useRouter,usePathname} = require('next/navigation');
+const {useState,useEffect} = require('react');
+const {LayoutDashboard,Zap,Search,Archive,Settings,LogOut,UserasUserIcon,Menu,X,PenTool,DollarSign} = require('lucide-react');
+const {useAuth} = require('@/hooks/useAuth');
 
 // USER Navigation - Reading focused
 const userNav = [
@@ -38,7 +27,7 @@ const secondaryNav = [
   { href: "/pricing", label: "Pricing", icon: DollarSign },
 ];
 
-export default function Shell({ children }: { children: React.ReactNode }) {
+module.exports = function Shell;({ children }: { children: React.ReactNode }) {
   const { user, loading, isAuthenticated, logout } = useAuth();
   const router = useRouter();
   const pathname = usePathname();

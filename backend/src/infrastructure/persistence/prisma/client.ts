@@ -2,8 +2,8 @@
  * Prisma Client Singleton
  */
 
-import { PrismaClient } from "../../../../generated/prisma-client";
-import { createLogger } from "../../../shared/logging/Logger";
+const {PrismaClient} = require('../../../../generated/prisma-client');
+const {createLogger} = require('../../../shared/logging/Logger');
 
 const logger = createLogger({ service: "prisma-client" });
 

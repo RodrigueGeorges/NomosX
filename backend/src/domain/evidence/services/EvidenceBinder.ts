@@ -5,10 +5,10 @@
  * Ensures every claim is traceable to verifiable source text.
  */
 
-import OpenAI from "openai";
-import { z } from "zod";
-import { Claim } from "../../claim/entities/Claim";
-import { Logger } from "../../../shared/logging/Logger";
+const OpenAI = require('openai');
+const {z} = require('zod');
+const {Claim} = require('../../claim/entities/Claim');
+const {Logger} = require('../../../shared/logging/Logger');
 
 // ============================================================================
 // SCHEMAS

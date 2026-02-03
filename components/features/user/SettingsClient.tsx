@@ -1,3 +1,4 @@
+const React = require('react');
 /**
  * Settings Client - Composant client pour les paramètres
  * Suivi de la charte graphique OpenClaw
@@ -5,32 +6,18 @@
 
 'use client'
 
-import { useState } from 'react'
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/Card'
-import { Button } from '@/components/ui/Button'
-import { Input } from '@/components/ui/Input'
-import { Label } from '@/components/ui/Label'
-import { Textarea } from '@/components/ui/Textarea'
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/Select'
-import { Switch } from '@/components/ui/Switch'
-import { Badge } from '@/components/ui/Badge'
-import { Dialog, DialogContent, DialogDescription, DialogHeader, DialogTitle, DialogTrigger } from '@/components/ui/Dialog'
-import { 
-  Settings, 
-  Database, 
-  Mail, 
-  Shield, 
-  Globe, 
-  Bell, 
-  Palette, 
-  Zap, 
-  AlertTriangle,
-  CheckCircle,
-  XCircle,
-  Clock,
-  Users
-} from 'lucide-react'
-import { cn } from '@/lib/utils'
+const {useState} = require('react');
+const {Card,CardContent,CardDescription,CardHeader,CardTitle} = require('@/components/ui/Card');
+const {Button} = require('@/components/ui/Button');
+const {Input} = require('@/components/ui/Input');
+const {Label} = require('@/components/ui/Label');
+const {Textarea} = require('@/components/ui/Textarea');
+const {Select,SelectContent,SelectItem,SelectTrigger,SelectValue} = require('@/components/ui/Select');
+const {Switch} = require('@/components/ui/Switch');
+const {Badge} = require('@/components/ui/Badge');
+const {Dialog,DialogContent,DialogDescription,DialogHeader,DialogTitle,DialogTrigger} = require('@/components/ui/Dialog');
+const {Settings,Database,Mail,Shield,Globe,Bell,Palette,Zap,AlertTriangle,CheckCircle,XCircle,Clock,Users} = require('lucide-react');
+const {cn} = require('@/lib/utils');
 
 interface SystemSettings {
   general: {
@@ -43,8 +30,8 @@ interface SystemSettings {
   }
   email: {
     provider: 'resend' | 'sendgrid' | 'smtp'
-    fromEmail: string
-    fromName: string
+    fromEmail: string;
+fromName: string
     replyTo: string
     smtpHost?: string
     smtpPort?: number

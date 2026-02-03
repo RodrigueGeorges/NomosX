@@ -1,3 +1,4 @@
+const React = require('react');
 /**
  * Conversation History Hook
  * 
@@ -5,7 +6,7 @@
  * UX Impact : Itération +50%, moins de réécriture
  */
 
-import { useState, useEffect } from "react";
+const {useState,useEffect} = require('react');
 
 export type ConversationItem = {
   id: string;

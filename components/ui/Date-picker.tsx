@@ -1,7 +1,8 @@
-import * as React from "react"
-import { cn } from "@/lib/utils"
+const React = require('react');
+const React = require('react');
+const {cn} = require('@/lib/utils');
 
-const Date-picker = React.forwardRef<
+const DatePicker = React.forwardRef<
   HTMLDivElement,
   React.HTMLAttributes<HTMLDivElement>
 >(({ className, ...props }, ref) => (
@@ -11,6 +12,6 @@ const Date-picker = React.forwardRef<
     {...props}
   />
 ))
-Date-picker.displayName = "Date-picker"
+DatePicker.displayName = "DatePicker"
 
-export { Date-picker }
+module.exports.DatePicker = DatePicker;

@@ -2,7 +2,7 @@
  * Structured Logger - Production-grade logging with Pino
  */
 
-import pino from "pino";
+const pino = require('pino');
 
 export interface LoggerConfig {
   service: string;

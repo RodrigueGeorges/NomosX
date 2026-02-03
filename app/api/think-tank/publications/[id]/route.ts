@@ -4,8 +4,8 @@
  * GET /api/think-tank/publications/[id] - Get publication with full audit trail
  */
 
-import { NextRequest, NextResponse } from "next/server";
-import { prisma } from "@/lib/db";
+const {NextRequest,NextResponse} = require('next/server');
+const {prisma} = require('@/lib/db');
 
 export async function GET(
   request: NextRequest,

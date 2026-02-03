@@ -1,10 +1,10 @@
-import { NextRequest, NextResponse } from "next/server";
-import { scout } from "@/lib/agent/pipeline-v2";
-import { indexAgent, deduplicateSources } from "@/lib/agent/index-agent";
-import { prisma } from "@/lib/db";
-import { getSession } from "@/lib/auth";
-import { assertRateLimit, RateLimitError } from "@/lib/security/rate-limit";
-import { assertAndConsumeRun, QuotaError } from "@/lib/security/quota";
+const {NextRequest,NextResponse} = require('next/server');
+const {scout} = require('@/lib/agent/pipeline-v2');
+const {indexAgent,deduplicateSources} = require('@/lib/agent/index-agent');
+const {prisma} = require('@/lib/db');
+const {getSession} = require('@/lib/auth');
+const {assertRateLimit,RateLimitError} = require('@/lib/security/rate-limit');
+const {assertAndConsumeRun,QuotaError} = require('@/lib/security/quota');
 
 export async function POST(req: NextRequest) {
   try {

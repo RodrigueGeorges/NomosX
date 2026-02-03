@@ -5,7 +5,7 @@
  * bound to evidence spans for verifiability and traceability.
  */
 
-import { z } from "zod";
+const {z} = require('zod');
 
 // ============================================================================
 // VALUE OBJECTS
