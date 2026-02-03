@@ -4,7 +4,7 @@
     "publication": false,
     "newsletter": true,
     "providers": false,
-    "database": false
+    "database": true
   },
   "testResults": {
     "pipeline": {
@@ -20,6 +20,6 @@
       "error": null
     }
   },
-  "successRate": 20,
-  "duration": 8
+  "successRate": 40,
+  "duration": 3
 }

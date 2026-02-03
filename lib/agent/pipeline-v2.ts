@@ -3,7 +3,7 @@
  * SCOUT → INDEX → RANK → READER → ANALYST → EDITOR → GUARD → PUBLISHER
  */
 
-import { prisma } from "../db";
+const { prisma } = require("../db");
 import { scoreSource, scoreNovelty } from "../score";
 import { clamp } from "../text";
 import crypto from "crypto";

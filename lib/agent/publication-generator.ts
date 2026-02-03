@@ -6,7 +6,7 @@
  */
 
 const OpenAI = require('openai');
-const {prisma} = require('@/lib/db');
+const {prisma} = require('../db');
 const {PublicationType,PublicationTemplate,CriticalLoopResult} = require('@/lib/think-tank/types');
 const {getTemplate,PUBLICATION_TEMPLATES} = require('@/lib/think-tank/templates');
 const {runCriticalLoop} = require('./critical-loop');
