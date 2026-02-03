@@ -4,7 +4,7 @@
  */
 
 const {prisma} = require('../db');
-const {setTimeoutassleep} = require('timers/promises');
+const {setTimeout: sleep} = require('timers/promises');
 
 // Import tous les providers (chemins relatifs pour compatibilité runtime)
 const {searchWorldBankAPI} = require('../providers/institutional/stable/worldbank-api');
@@ -13,9 +13,6 @@ const {searchNARA} = require('../providers/institutional/v2/nara-api');
 const {searchUKArchives} = require('../providers/institutional/v2/uk-archives-api');
 const {searchUNDigitalLibrary,searchUNDP,searchUNCTAD} = require('../providers/institutional/v2/un-digital-library');
 const {searchODNIViaGoogle,searchNATOViaGoogle,searchNSAViaGoogle,searchENISAViaGoogle,searchLawZeroViaGoogle,searchGovAIViaGoogle,searchIAPSViaGoogle,searchCAIPViaGoogle,searchAIPIViaGoogle,searchCSETViaGoogle,searchAINowViaGoogle,searchDataSocietyViaGoogle,searchAbundanceViaGoogle,searchCAIDPViaGoogle,searchSCSPViaGoogle,searchIFPViaGoogle,searchCDTViaGoogle,searchBrookingsViaGoogle,searchFAIViaGoogle,searchCNASViaGoogle,searchRANDViaGoogle,searchNewAmericaViaGoogle,searchAspenDigitalViaGoogle,searchRStreetViaGoogle} = require('../providers/institutional/v2/google-cse');
-
-// 🧠 Think Tanks
-const {searchCSETViaGoogle,searchAINowViaGoogle,searchDataSocietyViaGoogle,searchBrookingsViaGoogle,searchRANDViaGoogle,searchLawZeroViaGoogle,searchGovAIViaGoogle,searchIAPSViaGoogle,searchCAIPViaGoogle,searchAIPIViaGoogle,searchCSETViaGoogle,searchAINowViaGoogle,searchDataSocietyViaGoogle,searchAbundanceViaGoogle,searchCAIDPViaGoogle,searchSCSPViaGoogle,searchIFPViaGoogle,searchCDTViaGoogle,searchBrookingsViaGoogle,searchFAIViaGoogle,searchCNASViaGoogle,searchRANDViaGoogle,searchNewAmericaViaGoogle,searchAspenDigitalViaGoogle,searchRStreetViaGoogle} = require('../providers/institutional/v2/google-cse');
 
 // 🚀 LinkUp Integration - Hyper-Intelligent Provider
 const { searchWithLinkUp, financialAnalysisWithLinkUp, complementarySearchWithLinkUp } = require('../providers/linkup-registry');
