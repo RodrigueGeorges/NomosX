@@ -1,0 +1,25 @@
+{
+  "results": {
+    "pipeline": false,
+    "publication": false,
+    "newsletter": true,
+    "providers": false,
+    "database": false
+  },
+  "testResults": {
+    "pipeline": {
+      "success": false,
+      "error": "Cannot find module 'C:\\Users\\madeleine.stephann\\OneDrive\\Bureau\\NomosX\\lib\\db' imported from C:\\Users\\madeleine.stephann\\OneDrive\\Bureau\\NomosX\\lib\\agent\\pipeline-v2.ts"
+    },
+    "publication": {
+      "success": false,
+      "error": "require is not defined in ES module scope, you can use import instead"
+    },
+    "newsletter": {
+      "success": true,
+      "error": null
+    }
+  },
+  "successRate": 20,
+  "duration": 8
+}
