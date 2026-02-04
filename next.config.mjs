@@ -3,7 +3,7 @@ const nextConfig = {
   // React strict mode
   reactStrictMode: true,
   
-  // Server external packages
+  // Server external packages (moved from experimental in Next.js 16)
   serverExternalPackages: ['@prisma/client'],
   
   // OpenClaw Netlify static export
@@ -28,22 +28,11 @@ const nextConfig = {
   //   formats: ['image/webp', 'image/avif'],
   // },
   
-  // Turbopack désactivé pour stabilité
-  turbopack: false,
-  
   // Compression
   compress: true,
   
   // Performance
   poweredByHeader: false,
-  
-  // SWC minification
-  swcMinify: true,
-  
-  // Experimental features
-  experimental: {
-    serverComponentsExternalPackages: ['@prisma/client'],
-  },
   
   // OpenClaw final webpack config
   webpack: (config, { isServer }) => {
