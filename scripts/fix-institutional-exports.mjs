@@ -1,4 +1,65 @@
 /**
+ * OpenClaw Institutional Providers Export Fixer
+ * Automatically fixes all export mismatches
+ */
+
+import fs from 'fs';
+import path from 'path';
+import { fileURLToPath } from 'url';
+import { execSync } from 'child_process';
+
+const __filename = fileURLToPath(import.meta.url);
+const __dirname = path.dirname(__filename);
+
+console.log('🔧 OpenClaw Institutional Providers Export Fixer\n');
+console.log('='.repeat(80));
+
+const institutionalDir = path.join(process.cwd(), 'lib/providers/institutional');
+
+// Find all exported search functions in subdirectories
+function findAllExportedFunctions(dir, baseDir = dir) {
+  const functions = new Map();
+  
+  const entries = fs.readdirSync(dir, { withFileTypes: true });
+  
+  for (const entry of entries) {
+    const fullPath = path.join(dir, entry.name);
+    
+    if (entry.isDirectory()) {
+      // Recursively scan subdirectories
+      const subFunctions = findAllExportedFunctions(fullPath, baseDir);
+      subFunctions.forEach((value, key) => functions.set(key, value));
+    } else if (entry.isFile() && /\.(ts|js)$/.test(entry.name) && entry.name !== 'index.ts') {
+      const content = fs.readFileSync(fullPath, 'utf8');
+      const relativePath = path.relative(baseDir, fullPath).replace(/\\/g, '/').replace(/\.(ts|js)$/, '');
+      
+      // Find all exported functions
+      const exportMatches = content.matchAll(/export\s+(?:async\s+)?function\s+(\w+)/g);
+      for (const match of exportMatches) {
+        const funcName = match[1];
+        if (funcName.startsWith('search')) {
+          functions.set(funcName, relativePath);
+        }
+      }
+    }
+  }
+  
+  return functions;
+}
+
+console.log('\n📂 Scanning all institutional provider files...\n');
+const allFunctions = findAllExportedFunctions(institutionalDir);
+
+console.log(`Found ${allFunctions.size} search functions:\n`);
+const sortedFunctions = Array.from(allFunctions.entries()).sort((a, b) => a[0].localeCompare(b[0]));
+sortedFunctions.forEach(([name, path]) => {
+  console.log(`   ✓ ${name} (from ./${path})`);
+});
+
+// Generate the new index.ts content
+console.log('\n📝 Generating new index.ts...\n');
+
+const newIndexContent = `/**
  * Institutional Providers Index
  * Centralized exports for all institutional data sources
  * AUTO-GENERATED - DO NOT EDIT MANUALLY
@@ -140,3 +201,15 @@ export const INSTITUTIONAL_PROVIDERS = {
 } as const;
 
 export type InstitutionalProvider = keyof typeof INSTITUTIONAL_PROVIDERS;
+`;
+
+// Write the new index.ts
+const indexPath = path.join(institutionalDir, 'index.ts');
+fs.writeFileSync(indexPath, newIndexContent, 'utf8');
+
+console.log('✅ New index.ts generated successfully!\n');
+console.log('📊 Summary:');
+console.log(`   - Total search functions available: ${allFunctions.size}`);
+console.log(`   - All functions re-exported via export *`);
+console.log(`   - No explicit function list (avoids undefined export errors)`);
+console.log('\n✨ All exports are now properly defined!');
