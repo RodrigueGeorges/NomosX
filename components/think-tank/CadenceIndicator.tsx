@@ -20,7 +20,7 @@ interface CadenceIndicatorProps {
   compact?: boolean;
 }
 
-module.exports = function CadenceIndicator;({ 
+export default function CadenceIndicator({ 
   global, 
   nextPublishWindow,
   isQuietHours = false,

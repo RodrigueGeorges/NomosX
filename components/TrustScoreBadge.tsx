@@ -12,7 +12,7 @@ interface TrustScoreBadgeProps {
   showLabel?: boolean;
 }
 
-module.exports = function TrustScoreBadge;({ score, size = "md", showLabel = true }: TrustScoreBadgeProps) {
+export default function TrustScoreBadge({ score, size = "md", showLabel = true }: TrustScoreBadgeProps) {
   const percentage = Math.round(score * 100);
 
   // Déterminer la couleur et le niveau

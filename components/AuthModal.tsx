@@ -15,7 +15,7 @@ interface AuthModalProps {
   onSignupSuccess?: () => void;
 }
 
-module.exports = function AuthModal;({ isOpen, onClose, initialQuestion, onSignupSuccess }: AuthModalProps) {
+export default function AuthModal({ isOpen, onClose, initialQuestion, onSignupSuccess }: AuthModalProps) {
   const router = useRouter();
   const [mode, setMode] = useState<"oauth" | "email" | "login">("oauth");
   const [email, setEmail] = useState("");

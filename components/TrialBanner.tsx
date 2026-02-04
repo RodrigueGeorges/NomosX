@@ -9,7 +9,7 @@ type TrialBannerProps = {
   onDismiss?: () => void;
 };
 
-module.exports = function TrialBanner;({ daysRemaining, onDismiss }: TrialBannerProps) {
+export default function TrialBanner({ daysRemaining, onDismiss }: TrialBannerProps) {
   const router = useRouter();
   const [dismissed, setDismissed] = useState(false);
 

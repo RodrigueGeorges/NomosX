@@ -80,7 +80,7 @@ const categoryColors = {
   }
 };
 
-module.exports = function ProviderShowcase;() {
+export default function ProviderShowcase() {
   const scrollRef = useRef<HTMLDivElement>(null);
 
   useEffect(() => {

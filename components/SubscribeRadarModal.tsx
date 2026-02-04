@@ -12,7 +12,7 @@ interface Props {
   onClose: () => void;
 }
 
-module.exports = function SubscribeRadarModal;({ isOpen, onClose }: Props) {
+export default function SubscribeRadarModal({ isOpen, onClose }: Props) {
   const [email, setEmail] = useState("");
   const [frequency, setFrequency] = useState<"daily" | "weekly" | "monthly">("weekly");
   const [loading, setLoading] = useState(false);

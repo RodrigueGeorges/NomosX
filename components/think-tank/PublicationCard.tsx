@@ -45,7 +45,7 @@ const TYPE_LABELS: Record<string, string> = {
   DOSSIER: "Dossier"
 };
 
-module.exports = function PublicationCard;({ publication, compact = false }: PublicationCardProps) {
+export default function PublicationCard({ publication, compact = false }: PublicationCardProps) {
   const isPublished = !!publication.publishedAt;
   const trustColor = publication.trustScore >= 80 ? "text-emerald-400" :
                      publication.trustScore >= 70 ? "text-cyan-400" :

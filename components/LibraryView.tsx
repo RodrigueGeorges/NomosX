@@ -37,7 +37,7 @@ interface LibraryViewProps {
   onSelectBrief?: (briefId: string) => void;
 }
 
-module.exports = function LibraryView;({ userId, onSelectBrief }: LibraryViewProps) {
+export default function LibraryView({ userId, onSelectBrief }: LibraryViewProps) {
   const [briefs, setBriefs] = useState<Brief[]>([]);
   const [topics, setTopics] = useState<Topic[]>([]);
   const [isLoading, setIsLoading] = useState(true);

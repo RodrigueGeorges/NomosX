@@ -58,7 +58,7 @@ const STATUS_CONFIG: Record<string, { variant: "default" | "success" | "warning"
   EXPIRED: { variant: "default", label: "Expiré" }
 };
 
-module.exports = function SignalCard;({ signal, compact = false }: SignalCardProps) {
+export default function SignalCard({ signal, compact = false }: SignalCardProps) {
   const typeConfig = SIGNAL_TYPE_CONFIG[signal.signalType] || SIGNAL_TYPE_CONFIG.NEW_EVIDENCE;
   const statusConfig = STATUS_CONFIG[signal.status] || STATUS_CONFIG.NEW;
   const TypeIcon = typeConfig.icon;

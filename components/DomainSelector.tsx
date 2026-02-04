@@ -10,7 +10,7 @@ type Props = {
   compact?: boolean;
 };
 
-module.exports = function DomainSelector;({
+export default function DomainSelector({
   selected,
   onChange,
   mode = "multiple",

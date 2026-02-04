@@ -27,7 +27,7 @@ const secondaryNav = [
   { href: "/pricing", label: "Pricing", icon: DollarSign },
 ];
 
-module.exports = function Shell;({ children }: { children: React.ReactNode }) {
+export default function Shell({ children }: { children: React.ReactNode }) {
   const { user, loading, isAuthenticated, logout } = useAuth();
   const router = useRouter();
   const pathname = usePathname();

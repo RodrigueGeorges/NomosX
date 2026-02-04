@@ -23,7 +23,7 @@ interface SmartSuggestionsProps {
   onSelectSuggestion?: (suggestion: string) => void;
 }
 
-module.exports = function SmartSuggestions;({ analysisId, currentQuestion, onSelectSuggestion }: SmartSuggestionsProps) {
+export default function SmartSuggestions({ analysisId, currentQuestion, onSelectSuggestion }: SmartSuggestionsProps) {
   const [suggestions, setSuggestions] = useState<Suggestion[]>([]);
   const [isLoading, setIsLoading] = useState(false);
 

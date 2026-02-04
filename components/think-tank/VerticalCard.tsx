@@ -30,7 +30,7 @@ interface VerticalCardProps {
   };
 }
 
-module.exports = function VerticalCard;({ vertical }: VerticalCardProps) {
+export default function VerticalCard({ vertical }: VerticalCardProps) {
   const cadencePercentage = (vertical.cadence.current / vertical.cadence.max) * 100;
   const isNearLimit = cadencePercentage >= 80;
   const isAtLimit = cadencePercentage >= 100;

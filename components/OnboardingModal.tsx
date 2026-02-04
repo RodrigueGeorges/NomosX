@@ -23,7 +23,7 @@ interface OnboardingModalProps {
   onClose: () => void;
 }
 
-module.exports = function OnboardingModal;({ isOpen, onClose }: OnboardingModalProps) {
+export default function OnboardingModal({ isOpen, onClose }: OnboardingModalProps) {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);

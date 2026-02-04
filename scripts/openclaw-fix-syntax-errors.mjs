@@ -65,17 +65,25 @@ function scanDirectory(dir) {
   }
 }
 
-// Start scanning from app directory
+// Start scanning from app and components directories
 const appDir = path.join(process.cwd(), 'app');
+const componentsDir = path.join(process.cwd(), 'components');
 
-console.log(`\n📂 Scanning: ${appDir}\n`);
+console.log(`\n📂 Scanning directories:\n`);
+console.log(`   - ${appDir}`);
+console.log(`   - ${componentsDir}\n`);
 
-if (!fs.existsSync(appDir)) {
-  console.error('❌ app directory not found!');
-  process.exit(1);
+if (fs.existsSync(appDir)) {
+  scanDirectory(appDir);
+} else {
+  console.warn('⚠️  app directory not found, skipping...');
 }
 
-scanDirectory(appDir);
+if (fs.existsSync(componentsDir)) {
+  scanDirectory(componentsDir);
+} else {
+  console.warn('⚠️  components directory not found, skipping...');
+}
 
 console.log('\n' + '='.repeat(60));
 console.log('\n📊 SUMMARY:\n');

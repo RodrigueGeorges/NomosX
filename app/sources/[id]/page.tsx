@@ -6,7 +6,7 @@ const {Card,CardContent,CardHeader} = require('@/components/ui/Card');
 const {Button} = require('@/components/ui/Button');
 const {cn} = require('@/lib/utils');
 
-module.exports = async function SourcePage;({ params }: { params: { id: string } }) {
+export default async function SourcePage({ params }: { params: { id: string } }) {
   const id = decodeURIComponent(params.id);
   const s = await prisma.source.findUnique({ 
     where: { id },

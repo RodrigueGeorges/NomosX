@@ -22,7 +22,7 @@ interface PaywallTeaserProps {
   publicationType?: string;
 }
 
-module.exports = function PaywallTeaser;({
+export default function PaywallTeaser({
   title,
   executiveSummary,
   keyFindings = [],

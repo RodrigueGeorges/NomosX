@@ -25,7 +25,7 @@ interface NotificationBellProps {
   userId?: string;
 }
 
-module.exports = function NotificationBell;({ userId }: NotificationBellProps) {
+export default function NotificationBell({ userId }: NotificationBellProps) {
   const [notifications, setNotifications] = useState<Notification[]>([]);
   const [isOpen, setIsOpen] = useState(false);
   const [unreadCount, setUnreadCount] = useState(0);

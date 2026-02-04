@@ -26,7 +26,7 @@ interface ClaimCardProps {
   onViewEvidence?: (claimId: string) => void;
 }
 
-module.exports = function ClaimCard;({ claim, onViewEvidence }: ClaimCardProps) {
+export default function ClaimCard({ claim, onViewEvidence }: ClaimCardProps) {
   const claimTypeColors = {
     factual: "bg-blue-500/20 text-blue-400 border-blue-500/30",
     causal: "bg-purple-500/20 text-purple-400 border-purple-500/30",

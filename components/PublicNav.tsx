@@ -16,7 +16,7 @@ interface PublicNavProps {
   onSignInClick: () => void;
 }
 
-module.exports = function PublicNav;({ currentPage, onSignInClick }: PublicNavProps) {
+export default function PublicNav({ currentPage, onSignInClick }: PublicNavProps) {
   const router = useRouter();
 
   return (

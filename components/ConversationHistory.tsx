@@ -25,7 +25,7 @@ interface ConversationHistoryProps {
   onSelectAnalysis?: (analysisId: string) => void;
 }
 
-module.exports = function ConversationHistory;({ userId, onSelectAnalysis }: ConversationHistoryProps) {
+export default function ConversationHistory({ userId, onSelectAnalysis }: ConversationHistoryProps) {
   const [analyses, setAnalyses] = useState<Analysis[]>([]);
   const [isLoading, setIsLoading] = useState(true);
   const [searchQuery, setSearchQuery] = useState('');

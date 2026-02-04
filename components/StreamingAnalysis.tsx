@@ -42,7 +42,7 @@ interface Claim {
   confidence: number;
 }
 
-module.exports = function StreamingAnalysis;({ runId, onComplete, onError }: StreamingAnalysisProps) {
+export default function StreamingAnalysis({ runId, onComplete, onError }: StreamingAnalysisProps) {
   const [result, setResult] = useState<AnalysisResult | null>(null);
   const [isStreaming, setIsStreaming] = useState(true);
   const [error, setError] = useState<string | null>(null);

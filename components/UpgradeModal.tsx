@@ -10,7 +10,7 @@ type UpgradeModalProps = {
   message?: string;
 };
 
-module.exports = function UpgradeModal;({ isOpen, onClose, reason, message }: UpgradeModalProps) {
+export default function UpgradeModal({ isOpen, onClose, reason, message }: UpgradeModalProps) {
   const router = useRouter();
 
   if (!isOpen) return null;
