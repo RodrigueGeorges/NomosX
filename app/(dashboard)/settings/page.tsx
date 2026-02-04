@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   description: 'Configurez vos préférences et paramètres',
 }
 
-module.exports = function SettingsPage;() {
+export default function SettingsPage() {
   return (
     <div className="container mx-auto px-4 py-8 transition-all duration-200 hover:opacity-80">
       <div className="max-w-4xl mx-auto space-y-8 transition-all duration-200 hover:opacity-80">

@@ -32,7 +32,7 @@ function BriefRedirectInner() {
  * Redirect /brief to /studio
  * Legacy route from old "Brief" model
  */
-module.exports = function BriefRedirect;() {
+export default function BriefRedirect() {
   return (
     <div className="min-h-screen bg-[#0A0A0B] flex items-center justify-center transition-all duration-200 hover:opacity-80">
       <Suspense fallback={

@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   description: 'Choisissez le plan d\'abonnement qui correspond à vos besoins',
 }
 
-module.exports = function BillingPlansPage;() {
+export default function BillingPlansPage() {
   return (
     <div className="container mx-auto px-4 py-8 transition-all duration-200 hover:opacity-80">
       <div className="max-w-6xl mx-auto transition-all duration-200 hover:opacity-80">

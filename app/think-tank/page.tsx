@@ -10,7 +10,7 @@ const {useEffect} = require('react');
 const {useRouter} = require('next/navigation');
 const {cn} = require('@/lib/utils');
 
-module.exports = function ThinkTankPage;() {
+export default function ThinkTankPage() {
   const router = useRouter();
   
   useEffect(() => {

@@ -32,7 +32,7 @@ function CouncilRedirectInner() {
  * Redirect /council to /studio
  * Legacy route from old "Council" model
  */
-module.exports = function CouncilRedirect;() {
+export default function CouncilRedirect() {
   return (
     <div className="min-h-screen bg-[#0A0A0B] flex items-center justify-center transition-all duration-200 hover:opacity-80">
       <Suspense fallback={

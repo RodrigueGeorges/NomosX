@@ -35,7 +35,7 @@ type Result = {
 
 type SortMode = "relevance" | "quality" | "novelty" | "date";
 
-module.exports = function SearchPage;() {
+export default function SearchPage() {
   const router = useRouter();
   const [q, setQ] = useState("");
   const [loading, setLoading] = useState(false);

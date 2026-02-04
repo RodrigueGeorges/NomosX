@@ -13,7 +13,7 @@ const ProviderShowcase = require('@/components/ProviderShowcase');
 const {cn} = require('@/lib/utils');
 const {ArrowRight,Zap,CheckCircle,Shield,TrendingUp,GitBranch,Mail,Loader2} = require('lucide-react');
 
-module.exports = function HomePage;() {
+export default function HomePage() {
   const router = useRouter();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [showOnboardingModal, setShowOnboardingModal] = useState(false);

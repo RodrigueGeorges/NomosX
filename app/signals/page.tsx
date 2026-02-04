@@ -63,7 +63,7 @@ const SIGNAL_TYPE_LABELS: Record<string, string> = {
   METHODOLOGY_SHIFT: "Methodology Shift"
 };
 
-module.exports = function SignalsPage;() {
+export default function SignalsPage() {
   const router = useRouter();
   const { user, isAuthenticated, loading: authLoading } = useAuth();
   const [signals, setSignals] = useState<Signal[]>([]);

@@ -578,7 +578,7 @@ function StudioPageContent() {
   );
 }
 
-module.exports = function StudioPage;() {
+export default function StudioPage() {
   return (
     <Suspense fallback={
       <Shell>

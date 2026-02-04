@@ -17,7 +17,7 @@ const {Card,CardContent} = require('@/components/ui/Card');
 const {cn} = require('@/lib/utils');
 const {Check,X,Shield,Zap,TrendingUp,Users,Briefcase,FileText} = require('lucide-react');
 
-module.exports = function PricingPage;() {
+export default function PricingPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(false);
 

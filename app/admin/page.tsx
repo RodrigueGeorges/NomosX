@@ -52,7 +52,7 @@ type SubscriptionStatus = {
   weeklyLimitReached: boolean;
 };
 
-module.exports = function AdminCommandCenter;() {
+export default function AdminCommandCenter() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [pendingSignals, setPendingSignals] = useState<Signal[]>([]);

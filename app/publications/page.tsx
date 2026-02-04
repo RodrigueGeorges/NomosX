@@ -56,7 +56,7 @@ const STATUS_CONFIG: Record<EditorialStatus, { label: string; icon: React.Elemen
   SILENT: { label: "Silent", icon: VolumeX, color: "text-white/40" },
 };
 
-module.exports = function PublicationsPage;() {
+export default function PublicationsPage() {
   const router = useRouter();
   const { user, isAuthenticated } = useAuth();
   const [publications, setPublications] = useState<Publication[]>([]);

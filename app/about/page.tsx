@@ -16,7 +16,7 @@ const PublicNav = require('@/components/PublicNav');
 const {cn} = require('@/lib/utils');
 const {Sparkles,Brain,Shield,Target,ArrowRight,Globe,Users,Lightbulb,BookOpen} = require('lucide-react');
 
-module.exports = function AboutPage;() {
+export default function AboutPage() {
   const router = useRouter();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [mounted, setMounted] = useState(false);

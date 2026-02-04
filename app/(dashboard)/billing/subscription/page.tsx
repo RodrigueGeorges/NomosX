@@ -14,7 +14,7 @@ export const metadata: Metadata = {
   description: 'Gérez votre abonnement NomosX',
 }
 
-module.exports = function SubscriptionPage;() {
+export default function SubscriptionPage() {
   return (
     <div className="container mx-auto px-4 py-8 transition-all duration-200 hover:opacity-80">
       <div className="max-w-4xl mx-auto space-y-8 transition-all duration-200 hover:opacity-80">

@@ -18,7 +18,7 @@ const PublicNav = require('@/components/PublicNav');
 const {cn} = require('@/lib/utils');
 const {Search,Database,BarChart3,FileText,Brain,Shield,ArrowRight,CheckCircle,Zap,GitBranch,Lock,Eye} = require('lucide-react');
 
-module.exports = function MethodologyPage;() {
+export default function MethodologyPage() {
   const router = useRouter();
   const [showAuthModal, setShowAuthModal] = useState(false);
   const [mounted, setMounted] = useState(false);

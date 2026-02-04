@@ -61,7 +61,7 @@ type SubscriptionStatus = {
   activeVerticals: number;
 };
 
-module.exports = function UserDashboard;() {
+export default function UserDashboard() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [verticals, setVerticals] = useState<Vertical[]>([]);

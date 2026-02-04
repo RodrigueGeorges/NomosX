@@ -29,7 +29,7 @@ interface Vertical {
   enabled: boolean;
 }
 
-module.exports = function PreferencesPage;() {
+export default function PreferencesPage() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);

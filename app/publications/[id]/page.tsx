@@ -73,7 +73,7 @@ const STATUS_CONFIG: Record<string, { label: string; icon: React.ElementType; co
   DRAFT: { label: "Draft", icon: FileText, color: "text-primary" },
 };
 
-module.exports = function PublicationDetailPage;() {
+export default function PublicationDetailPage() {
   const params = useParams();
   const router = useRouter();
   const [publication, setPublication] = useState<Publication | null>(null);

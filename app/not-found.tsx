@@ -5,7 +5,7 @@ const {useRouter} = require('next/navigation');
 const {Button} = require('@/components/ui/Button');
 const {Home,ArrowLeft} = require('lucide-react');
 
-module.exports = function NotFound;() {
+export default function NotFound() {
   const router = useRouter();
 
   return (

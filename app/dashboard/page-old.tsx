@@ -75,7 +75,7 @@ type SubscriptionStatus = {
   canAccessStudio: boolean;
 };
 
-module.exports = function ThinkTankCommandCenter;() {
+export default function ThinkTankCommandCenter() {
   const router = useRouter();
   const [loading, setLoading] = useState(true);
   const [verticals, setVerticals] = useState<Vertical[]>([]);
