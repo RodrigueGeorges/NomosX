@@ -1,11 +1,11 @@
 const React = require('react');
+const {useState,useCallback} = require('react');
 /**
  * Hook: useAnalysisRun
  * 
  * Gère la création et le suivi d'une analyse avec le nouveau backend
  */
 
-const {useState,useCallback} = require('react');
 
 export interface AnalysisRun {
   id: string;

@@ -1,6 +1,7 @@
 
 "use client";
 const React = require('react');
+const {useState,useEffect,Suspense} = require('react');
 
 /**
  * NomosX Publication Studio
@@ -10,7 +11,6 @@ const React = require('react');
  * Output is NOT the brief itself — output is a Publication (or silence)
  */
 
-const {useState,useEffect,Suspense} = require('react');
 const {Select} = require('@/components/ui/Select');
 const {Input} = require('@/components/ui/Input');
 const {useSearchParams,useRouter} = require('next/navigation');

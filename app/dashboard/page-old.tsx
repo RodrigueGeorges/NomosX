@@ -1,5 +1,6 @@
 "use client";
 const React = require('react');
+const {useState,useEffect} = require('react');
 
 /**
  * NomosX Think Tank Command Center
@@ -12,7 +13,6 @@ const React = require('react');
  * - Cadence & limits
  */
 
-const {useState,useEffect} = require('react');
 const {useRouter} = require('next/navigation');
 const Link = require('next/link');
 const Shell = require('@/components/Shell');

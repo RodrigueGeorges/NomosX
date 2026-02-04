@@ -1,12 +1,12 @@
 "use client";
 const React = require('react');
+const {useEffect} = require('react');
 
 /**
  * Radar Page — Redirect to Signals
  * Legacy route maintained for backwards compatibility
  */
 
-const {useEffect} = require('react');
 const {useRouter} = require('next/navigation');
 const {cn} = require('@/lib/utils');
 

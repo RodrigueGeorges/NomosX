@@ -1,5 +1,6 @@
 "use client";
 const React = require('react');
+const {useState} = require('react');
 
 /**
  * NomosX Pricing Page
@@ -9,7 +10,6 @@ const React = require('react');
  * Clean, institutional, bankable
  */
 
-const {useState} = require('react');
 const {useRouter} = require('next/navigation');
 const Shell = require('@/components/Shell');
 const {Button} = require('@/components/ui/Button');

@@ -3,7 +3,6 @@ const React = require('react');
  * Switch Component - Suivi de la charte graphique OpenClaw
  */
 
-const React = require('react');
 const SwitchPrimitives = require('@radix-ui/react-switch');
 
 const {cn} = require('@/lib/utils');

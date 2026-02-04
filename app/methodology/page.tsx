@@ -1,5 +1,6 @@
 "use client";
 const React = require('react');
+const {useState,useEffect} = require('react');
 
 /**
  * Methodology Page — Deep Technical Dive
@@ -8,7 +9,6 @@ const React = require('react');
  * UX: Technical credibility, transparency, convert skeptics → believers
  */
 
-const {useState,useEffect} = require('react');
 const {Select} = require('@/components/ui/Select');
 const {Input} = require('@/components/ui/Input');
 const {useRouter} = require('next/navigation');

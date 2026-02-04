@@ -1,7 +1,7 @@
 const React = require('react');
+const {useState} = require('react');
 const {useRouter} = require('next/navigation');
 const {AlertCircle,X} = require('lucide-react');
-const {useState} = require('react');
 const {Button} = require('@/components/ui/Button');
 
 type TrialBannerProps = {

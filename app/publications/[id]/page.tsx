@@ -1,6 +1,7 @@
 
 "use client";
 const React = require('react');
+const {useEffect,useState} = require('react');
 
 /**
  * NomosX Publication Detail Page
@@ -8,7 +9,6 @@ const React = require('react');
  * View a single publication with full content, sources, and audit trail
  */
 
-const {useEffect,useState} = require('react');
 const {useParams,useRouter} = require('next/navigation');
 const Shell = require('@/components/Shell');
 const {Card,CardContent,CardHeader} = require('@/components/ui/Card');

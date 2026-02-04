@@ -1,6 +1,7 @@
 
 "use client";
 const React = require('react');
+const {useState,useEffect} = require('react');
 /**
  * NotificationBell Component
  * 
@@ -9,7 +10,6 @@ const React = require('react');
  */
 
 
-const {useState,useEffect} = require('react');
 
 interface Notification {
   id: string;

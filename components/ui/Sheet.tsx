@@ -1,5 +1,4 @@
 const React = require('react');
-const React = require('react');
 const {cn} = require('@/lib/utils');
 
 const Sheet = React.forwardRef<

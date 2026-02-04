@@ -8,7 +8,7 @@
  */
 
 const {env} = require('../env');
-const type{EnhancedQuery} = require('./query-enhancer');
+import type {EnhancedQuery} from './query-enhancer';
 const {scoreRelevance,typeSourceForScoring} = require('./relevance-scorer');
 
 export interface RerankResult<T> {

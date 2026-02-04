@@ -1,4 +1,5 @@
 const React = require('react');
+const {useState,useCallback} = require('react');
 /**
  * Streaming Council Hook
  * 
@@ -6,7 +7,6 @@ const React = require('react');
  * UX Impact : Progress temps réel pour multi-perspectives
  */
 
-const {useState,useCallback} = require('react');
 
 export type ProgressEvent = {
   step: string;

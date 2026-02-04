@@ -3,7 +3,7 @@
  * Recommandations automatiques selon le type de question
  */
 
-const type{Providers} = require('@/lib/agent/pipeline-v2');
+import type {Providers} from '@/lib/agent/pipeline-v2';
 
 export interface ProviderPreset {
   name: string;

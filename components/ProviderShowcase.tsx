@@ -1,7 +1,7 @@
 "use client";
 const React = require('react');
-
 const {useEffect,useRef,useState} = require('react');
+
 
 interface Provider {
   id: string;

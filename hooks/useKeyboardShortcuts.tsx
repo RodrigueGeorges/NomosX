@@ -1,4 +1,5 @@
 const React = require('react');
+const {useEffect,useRef} = require('react');
 /**
  * Keyboard Shortcuts Hook
  * 
@@ -8,7 +9,6 @@ const React = require('react');
  * Shortcuts essentiels uniquement (pas de surcharge)
  */
 
-const {useEffect,useRef} = require('react');
 
 export type ShortcutConfig = {
   key: string;

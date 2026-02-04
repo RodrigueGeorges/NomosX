@@ -1,6 +1,7 @@
 
 "use client";
 const React = require('react');
+const {useState} = require('react');
 /**
  * ClaimFeedback Component
  * 
@@ -9,7 +10,6 @@ const React = require('react');
  */
 
 
-const {useState} = require('react');
 
 interface ClaimFeedbackProps {
   claimId: string;

@@ -1,6 +1,7 @@
 
 "use client";
 const React = require('react');
+const {useEffect,useState} = require('react');
 
 /**
  * NomosX Signals Page - ADMIN ONLY
@@ -11,7 +12,6 @@ const React = require('react');
  * ACCESS: Admin/Editorial only - internal mechanism
  */
 
-const {useEffect,useState} = require('react');
 const {useRouter} = require('next/navigation');
 const {useAuth} = require('@/hooks/useAuth');
 const Shell = require('@/components/Shell');

@@ -3,7 +3,6 @@ const React = require('react');
  * Dialog Component - Suivi de la charte graphique OpenClaw
  */
 
-const React = require('react');
 const DialogPrimitive = require('@radix-ui/react-dialog');
 const {X} = require('lucide-react');
 
@@ -121,4 +120,3 @@ module.exports.DialogHeader = DialogHeader;
 module.exports.DialogFooter = DialogFooter;
 module.exports.DialogTitle = DialogTitle;
 module.exports.DialogDescription = DialogDescription;
-module.exports. = ;

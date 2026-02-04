@@ -1,13 +1,13 @@
 
 "use client";
 const React = require('react');
+const {useState} = require('react');
 /**
  * Profile Client - Composant client pour le profil utilisateur
  * Suivi de la charte graphique OpenClaw
  */
 
 
-const {useState} = require('react');
 const {Card,CardContent,CardDescription,CardHeader,CardTitle} = require('@/components/ui/Card');
 const {Button} = require('@/components/ui/Button');
 const {Input} = require('@/components/ui/Input');

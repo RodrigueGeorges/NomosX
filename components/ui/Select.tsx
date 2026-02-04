@@ -3,7 +3,6 @@ const React = require('react');
  * Select Component - Suivi de la charte graphique OpenClaw
  */
 
-const React = require('react');
 const SelectPrimitive = require('@radix-ui/react-select');
 const {Check,ChevronDown,ChevronUp} = require('lucide-react');
 

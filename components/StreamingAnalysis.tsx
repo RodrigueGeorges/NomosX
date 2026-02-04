@@ -1,6 +1,7 @@
 
 "use client";
 const React = require('react');
+const {useState,useEffect,useRef} = require('react');
 /**
  * StreamingAnalysis Component
  * 
@@ -9,7 +10,6 @@ const React = require('react');
  */
 
 
-const {useState,useEffect,useRef} = require('react');
 const TrustScoreBadge = require('./TrustScoreBadge');
 const ClaimCard = require('./ClaimCard');
 

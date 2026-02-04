@@ -1,5 +1,6 @@
 "use client";
 const React = require('react');
+const {useState,useEffect} = require('react');
 
 /**
  * User Preferences Page
@@ -10,7 +11,6 @@ const React = require('react');
  * - Manage notification settings
  */
 
-const {useState,useEffect} = require('react');
 const {Select} = require('@/components/ui/Select');
 const {useRouter} = require('next/navigation');
 const Shell = require('@/components/Shell');

@@ -3,7 +3,6 @@ const React = require('react');
  * Label Component - Suivi de la charte graphique OpenClaw
  */
 
-const React = require('react');
 const LabelPrimitive = require('@radix-ui/react-label');
 const {cva,typeVariantProps} = require('class-variance-authority');
 

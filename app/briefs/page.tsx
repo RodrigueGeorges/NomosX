@@ -1,12 +1,12 @@
 "use client";
 const React = require('react');
+const {useEffect} = require('react');
 
 /**
  * Redirect /briefs to /publications
  * Legacy route from old "Brief" model
  */
 
-const {useEffect} = require('react');
 const {useRouter} = require('next/navigation');
 const {cn} = require('@/lib/utils');
 

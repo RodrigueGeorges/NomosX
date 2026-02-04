@@ -1,5 +1,4 @@
 const React = require('react');
-const React = require('react');
 const {cn} = require('@/lib/utils');
 
 const Table = React.forwardRef<
@@ -100,4 +99,3 @@ module.exports.TableFooter = TableFooter;
 module.exports.TableHead = TableHead;
 module.exports.TableRow = TableRow;
 module.exports.TableCell = TableCell;
-module.exports. = ;

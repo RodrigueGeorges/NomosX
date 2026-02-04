@@ -3,7 +3,6 @@ const React = require('react');
  * Dropdown Menu Component - Suivi de la charte graphique OpenClaw
  */
 
-const React = require('react');
 const DropdownMenuPrimitive = require('@radix-ui/react-dropdown-menu');
 const {Check,ChevronRight,Circle} = require('lucide-react');
 
@@ -199,4 +198,3 @@ module.exports.DropdownMenuSub = DropdownMenuSub;
 module.exports.DropdownMenuSubContent = DropdownMenuSubContent;
 module.exports.DropdownMenuSubTrigger = DropdownMenuSubTrigger;
 module.exports.DropdownMenuRadioGroup = DropdownMenuRadioGroup;
-module.exports. = ;

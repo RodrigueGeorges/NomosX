@@ -1,5 +1,6 @@
 "use client";
 const React = require('react');
+const {useState,useEffect} = require('react');
 
 /**
  * USER Dashboard — Think Tank Command Center
@@ -20,7 +21,6 @@ const React = require('react');
  * - Editorial controls (admin-only)
  */
 
-const {useState,useEffect} = require('react');
 const {useRouter} = require('next/navigation');
 const Link = require('next/link');
 const Shell = require('@/components/Shell');

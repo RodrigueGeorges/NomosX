@@ -8,8 +8,8 @@
  */
 
 const React = require('react');
-
 const {useState,useEffect} = require('react');
+
 const {useRouter} = require('next/navigation');
 const {Button} = require('@/components/ui/Button');
 const AuthModal = require('@/components/AuthModal');
