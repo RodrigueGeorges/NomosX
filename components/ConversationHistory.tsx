@@ -1,3 +1,5 @@
+
+"use client";
 const React = require('react');
 /**
  * ConversationHistory Component
@@ -6,7 +8,6 @@ const React = require('react');
  * Implements smart organization and search
  */
 
-'use client';
 
 const {useState,useEffect} = require('react');
 const TrustScoreBadge = require('./TrustScoreBadge');

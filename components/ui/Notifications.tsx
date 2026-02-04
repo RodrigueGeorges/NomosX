@@ -1,5 +1,6 @@
+
+"use client";
 const React = require('react');
-'use client'
 
 const {useEffect} = require('react');
 const {useAppStore} = require('@/lib/store');

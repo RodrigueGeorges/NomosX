@@ -1,3 +1,5 @@
+
+"use client";
 const React = require('react');
 /**
  * SmartSuggestions Component
@@ -6,7 +8,6 @@ const React = require('react');
  * Based on current analysis and user history
  */
 
-'use client';
 
 const {useState,useEffect} = require('react');
 

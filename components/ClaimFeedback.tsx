@@ -1,3 +1,5 @@
+
+"use client";
 const React = require('react');
 /**
  * ClaimFeedback Component
@@ -6,7 +8,6 @@ const React = require('react');
  * Implements human-in-the-loop quality improvement
  */
 
-'use client';
 
 const {useState} = require('react');
 

@@ -1,3 +1,5 @@
+
+"use client";
 /**
  * PaywallTeaser Component
  * 
@@ -5,7 +7,6 @@
  * Displays executive summary + upgrade CTA.
  */
 
-"use client";
 const React = require('react');
 
 const {useRouter} = require('next/navigation');

@@ -1,3 +1,5 @@
+
+"use client";
 const React = require('react');
 /**
  * NotificationBell Component
@@ -6,7 +8,6 @@ const React = require('react');
  * Implements smart notification grouping and priorities
  */
 
-'use client';
 
 const {useState,useEffect} = require('react');
 

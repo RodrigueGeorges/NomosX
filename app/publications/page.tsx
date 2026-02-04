@@ -1,5 +1,6 @@
-const React = require('react');
 "use client";
+
+const React = require('react');
 
 /**
  * NomosX Publications Archive

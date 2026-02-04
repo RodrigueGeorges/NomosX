@@ -1,3 +1,5 @@
+
+"use client";
 /**
  * About Page — Story, Mission & Vision
  * 
@@ -5,7 +7,6 @@
  * UX: Storytelling, institutional credibility, convert curiosity → trust
  */
 
-"use client";
 const React = require('react');
 
 const {useState,useEffect} = require('react');

@@ -1,10 +1,11 @@
+
+"use client";
 const React = require('react');
 /**
  * Settings Client - Composant client pour les paramètres
  * Suivi de la charte graphique OpenClaw
  */
 
-'use client'
 
 const {useState} = require('react');
 const {Card,CardContent,CardDescription,CardHeader,CardTitle} = require('@/components/ui/Card');

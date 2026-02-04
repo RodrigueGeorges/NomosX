@@ -1,5 +1,6 @@
-const React = require('react');
+
 "use client";
+const React = require('react');
 
 const {QueryClient,QueryClientProvider} = require('@tanstack/react-query');
 const {ReactQueryDevtools} = require('@tanstack/react-query-devtools');

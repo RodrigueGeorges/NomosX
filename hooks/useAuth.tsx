@@ -1,3 +1,5 @@
+
+"use client";
 /**
  * Authentication Hook
  * 
@@ -6,7 +8,6 @@
  * UX Impact : Auth state cohérent dans toute l'app
  */
 
-"use client";
 const React = require('react');
 
 const {createContext,useContext,useState,useEffect,ReactNode} = require('react');

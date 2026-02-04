@@ -1,6 +1,6 @@
-const React = require('react');
-
 "use client";
+
+const React = require('react');
 const {useEffect} = require('react');
 const {X} = require('lucide-react');
 const {cn} = require('@/lib/utils');

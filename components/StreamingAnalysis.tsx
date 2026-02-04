@@ -1,3 +1,5 @@
+
+"use client";
 const React = require('react');
 /**
  * StreamingAnalysis Component
@@ -6,7 +8,6 @@ const React = require('react');
  * Provides instant feedback and progressive disclosure of results
  */
 
-'use client';
 
 const {useState,useEffect,useRef} = require('react');
 const TrustScoreBadge = require('./TrustScoreBadge');

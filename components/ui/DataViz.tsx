@@ -1,3 +1,5 @@
+
+"use client";
 const React = require('react');
 
 /**
@@ -5,7 +7,6 @@ const React = require('react');
  * Composants pour la visualisation de données intelligentes
  */
 
-'use client'
 
 const {cn} = require('@/lib/utils');
 const {Card,CardContent,CardHeader,CardTitle} = require('@/components/ui/Card');

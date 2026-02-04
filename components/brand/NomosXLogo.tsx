@@ -1,10 +1,10 @@
 
+"use client";
 /**
  * NomosX Intelligence Symbol - Logo OpenClaw
  * Logo moderne symbolisant l'intelligence collective
  */
 
-'use client'
 
 const {cn} = require('@/lib/utils');
 
