@@ -159,4 +159,3 @@ module.exports.SelectItem = SelectItem;
 module.exports.SelectSeparator = SelectSeparator;
 module.exports.SelectScrollUpButton = SelectScrollUpButton;
 module.exports.SelectScrollDownButton = SelectScrollDownButton;
-module.exports. = ;

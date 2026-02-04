@@ -1,5 +1,6 @@
-const React = require('react');
 "use client";
+
+const React = require('react');
 
 const {useState,useEffect} = require('react');
 const {NomosXLogo} = require('@/components/brand/NomosXLogo');
