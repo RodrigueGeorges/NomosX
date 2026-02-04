@@ -4,10 +4,10 @@
  */
 
 const { prisma } = require("../db");
-import { scoreSource, scoreNovelty } from "../score";
-import { clamp } from "../text";
+const { scoreSource, scoreNovelty } = require("../score");
+const { clamp } = require("../text");
 import crypto from "crypto";
-import { AgentRole, assertPermission } from "../governance";
+const { AgentRole, assertPermission } = require("../governance");
 
 // P0 FIX #3: Redis caching for SCOUT
 // P2 FIX: Enhanced Redis with reconnection strategy

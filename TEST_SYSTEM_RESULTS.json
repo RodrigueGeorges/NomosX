@@ -9,7 +9,7 @@
   "testResults": {
     "pipeline": {
       "success": false,
-      "error": "Cannot find module 'C:\\Users\\madeleine.stephann\\OneDrive\\Bureau\\NomosX\\lib\\db' imported from C:\\Users\\madeleine.stephann\\OneDrive\\Bureau\\NomosX\\lib\\agent\\pipeline-v2.ts"
+      "error": "Cannot find module 'C:\\Users\\madeleine.stephann\\OneDrive\\Bureau\\NomosX\\lib\\providers\\openalex' imported from C:\\Users\\madeleine.stephann\\OneDrive\\Bureau\\NomosX\\lib\\agent\\pipeline-v2.ts"
     },
     "publication": {
       "success": false,
@@ -21,5 +21,5 @@
     }
   },
   "successRate": 40,
-  "duration": 3
+  "duration": 4
 }
