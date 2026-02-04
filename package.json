@@ -8,6 +8,7 @@
   "scripts": {
     "dev": "next dev",
     "build": "next build --webpack",
+    "postinstall": "prisma generate",
     "start": "next start",
     "test": "jest",
     "test:watch": "jest --watch",
