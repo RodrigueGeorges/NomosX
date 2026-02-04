@@ -2,7 +2,7 @@
   "name": "nomosx-full-agentic-v1",
   "private": true,
   "engines": {
-    "node": ">=20.9.0",
+    "node": ">=20.16.0",
     "npm": ">=10.0.0"
   },
   "scripts": {
