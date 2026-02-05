@@ -1,3 +1,6 @@
+// MIXED MODULES WARNING: This file mixes CommonJS (require) and ES modules (import)
+// Consider standardizing to one module system
+
 const React = require('react');
 
 import "./globals.css";

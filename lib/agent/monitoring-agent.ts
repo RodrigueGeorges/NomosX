@@ -15,7 +15,6 @@ const {searchUNDigitalLibrary,searchUNDP,searchUNCTAD} = require('../providers/i
 const {searchODNIViaGoogle,searchNATOViaGoogle,searchNSAViaGoogle,searchENISAViaGoogle,searchLawZeroViaGoogle,searchGovAIViaGoogle,searchIAPSViaGoogle,searchCAIPViaGoogle,searchAIPIViaGoogle,searchCSETViaGoogle,searchAINowViaGoogle,searchDataSocietyViaGoogle,searchAbundanceViaGoogle,searchCAIDPViaGoogle,searchSCSPViaGoogle,searchIFPViaGoogle,searchCDTViaGoogle,searchBrookingsViaGoogle,searchFAIViaGoogle,searchCNASViaGoogle,searchRANDViaGoogle,searchNewAmericaViaGoogle,searchAspenDigitalViaGoogle,searchRStreetViaGoogle} = require('../providers/institutional/v2/google-cse');
 
 // 🚀 LinkUp Integration - Hyper-Intelligent Provider
-const { searchWithLinkUp, financialAnalysisWithLinkUp, complementarySearchWithLinkUp } = require('../providers/linkup-registry');
 const {searchCIAFOIAViaArchive} = require('../providers/institutional/v2/archive-org');
 const {searchEEAS,searchEDA} = require('../providers/institutional/v2/eu-open-data');
 const {searchMinistereArmees,searchSGDSN,searchArchivesNationales} = require('../providers/institutional/v2/france-gov');
@@ -46,9 +45,6 @@ const {searchFigshare} = require('../providers/data/figshare-api');
 const {searchZenodo} = require('../providers/data/zenodo-api');
 
 // 🏛️ Macro providers
-const {searchEurostat} = require('../providers/macro/eurostat-api.js');
-const {searchECB} = require('../providers/macro/ecb-api.js');
-const {searchINSEE} = require('../providers/macro/insee-api.js');
 
 // Using shared prisma singleton from db.ts
 

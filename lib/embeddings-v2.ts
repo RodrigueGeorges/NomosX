@@ -3,9 +3,6 @@
  * Service d'embeddings avec stockage vectoriel réel
  */
 
-const {prisma} = require('./db');
-const {generateEmbedding} = require('./openai');
-
 /**
  * Generate and store embedding for a source (pgvector real storage)
  */

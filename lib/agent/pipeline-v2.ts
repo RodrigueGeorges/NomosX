@@ -1,3 +1,6 @@
+// MIXED MODULES WARNING: This file mixes CommonJS (require) and ES modules (import)
+// Consider standardizing to one module system
+
 /**
  * Complete Agentic Pipeline V2
  * SCOUT → INDEX → RANK → READER → ANALYST → EDITOR → GUARD → PUBLISHER
@@ -1277,18 +1280,7 @@ export async function runPipeline(
 // ================================
 
 // Re-export intelligence agents for easy access
-export {
-  // Contradiction Detection
-  contradictionDetector,
-  detectContradictionsInRecent,
-  
-  // Trend Analysis
-  trendAnalyzer,
-  runWeeklyTrendAnalysis,
-  
-  // Signal Detection
-  signalDetector
-};
+;
 
 // ================================
 // FULL INTELLIGENCE SWEEP

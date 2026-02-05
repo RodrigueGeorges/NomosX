@@ -6,39 +6,31 @@
 // ==========================================
 // APIS OFFICIELLES (Rock-solid) ✅✅
 // ==========================================
-from '../stable/worldbank-api';
-from '../stable/cisa-advisories';
-from './nara-api';
-from './uk-archives-api';
-from './un-digital-library';
+export * from '../stable/worldbank-api';
+export * from '../stable/cisa-advisories';
+export * from './nara-api';
+export * from './uk-archives-api';
+export * from './un-digital-library';
 
 // ==========================================
 // APIS TIERCES (Très fiables) ✅
 // ==========================================
-export { 
-  searchODNIViaGoogle,
-  searchNATOViaGoogle,
-  searchNSAViaGoogle,
+export {
   searchENISAViaGoogle
 } from './google-cse';
 
 export {
-  searchCIAFOIAViaArchive,
   searchFBIViaArchive
 } from './archive-org';
 
 export {
-  searchEEAS,
-  searchEDA,
   searchENISAViaEUData
 } from './eu-open-data';
 
 // ==========================================
 // FRANCE (data.gouv.fr + Légifrance)
 // ==========================================
-export { 
-  searchMinistereArmees,
-  searchSGDSN,
+export {
   searchArchivesNationales
 } from './france-gov';
 
@@ -46,17 +38,17 @@ export {
 // ÉCONOMIE
 // ==========================================
 // ✅ IMF: SDMX (official IMF dataservices) with robust fallbacks;
-from './imf-sdmx';
+export * from './imf-sdmx';
 // ⚠️ Legacy fallbacks (scraping / RSS) - keep for robustness;
-from './imf-elibrary';
+export * from './imf-elibrary';
 
 // ✅ OECD: SDMX (separate domain, not behind OECD website Cloudflare)
-from './oecd-sdmx';
+export * from './oecd-sdmx';
 // ⚠️ Legacy fallback;
-from './oecd-ilibrary';
+export * from './oecd-ilibrary';
 
-from './bis-papers';
-from './nist-publications';
+export * from './bis-papers';
+export * from './nist-publications';
 
 // ==========================================
 // CONFIGURATION
@@ -372,4 +364,4 @@ export function checkAuthRequirements(): { provider: string; envVar: string }[] 
     .map(p => ({ provider: p.id, envVar: p.authEnvVar! }));
 }
 
-export { searchWorldBankAPI, searchCISAAdvisories, searchNARA, searchUKArchives, searchUNDigitalLibrary, searchUNDP, searchUNCTAD, searchIMFSDMX, searchIMFeLibrary, searchOECDSDMX, searchOECDiLibrary, searchBIS, searchNIST }
+export { searchNIST }

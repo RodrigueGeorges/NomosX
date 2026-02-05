@@ -14,68 +14,39 @@ const {ORCIDProvider} = require('./orcid');
 const {RORProvider} = require('./ror');
 
 // Providers institutionnels existants
-const {IMFProvider} = require('./institutional/imf');
-const {WorldBankProvider} = require('./institutional/worldbank');
-const {OECDProvider} = require('./institutional/oecd');
-const {ECBProvider} = require('./institutional/ecb');
-const {EurostatProvider} = require('./institutional/eurostat');
-const {INSEEProvider} = require('./institutional/insee');
-const {MelodiProvider} = require('./institutional/melodi');
-const {FedProvider} = require('./institutional/fed');
-const {BISProvider} = require('./institutional/bis');
-const {WTOProvider} = require('./institutional/wto');
-const {UNProvider} = require('./institutional/un');
 
 // Providers innovants
-const {LawZeroProvider} = require('./lawzero-provider');
 const {AstResProvider} = require('./ast-res-provider');
 const {BerlinPolicyHubProvider} = require('./berlin-policy-hub-provider');
 const {CopenhagenInstituteProvider} = require('./copenhagen-institute-provider');
 const {IdeaFactoryProvider} = require('./idea-factory-provider');
 
 // Business Elite Complément
-const {PwCResearchProvider} = require('./pwc-research-provider');
 const {EYResearchProvider} = require('./ey-research-provider');
-const {KPMGThoughtLeadershipProvider} = require('./kpmg-thought-leadership-provider');
 const {BainInsightsProvider} = require('./bain-insights-provider');
 const {AccentureResearchProvider} = require('./accenture-research-provider');
 
 // Recherche Médicale Avancée
-const {LancetProvider} = require('./lancet-provider');
-const {NEJMProvider} = require('./nejm-provider');
-const {NatureMedicineProvider} = require('./nature-medicine-provider');
-const {JAMAProvider} = require('./jama-provider');
 
 // Intelligence Artificielle Spécialisée
 const {DeepMindResearchProvider} = require('./deepmind-research-provider');
-const {OpenAIResearchProvider} = require('./openai-research-provider');
 const {AIIndexProvider} = require('./ai-index-provider');
-const {PartnershipAIProvider} = require('./partnership-ai-provider');
 
 // Énergie Transition
 const {IEAProvider} = require('./iea-provider');
 const {IRENAProvider} = require('./irena-provider');
-const {RMIProvider} = require('./rmi-provider');
 const {EnergyFuturesProvider} = require('./energy-futures-provider');
 
 // Science Fondamentale
-const {NatureProvider} = require('./nature-provider');
-const {ScienceProvider} = require('./science-provider');
-const {CellProvider} = require('./cell-provider');
-const {PNASProvider} = require('./pnas-provider');
 
 // Développement International
-const {WorldBankResearchProvider} = require('./worldbank-research-provider');
-const {UNDResearchProvider} = require('./undp-research-provider');
 const {CGDProvider} = require('./cgd-provider');
 
 // Think Tanks Afrique
 const {ACETProvider} = require('./acet-provider');
-const {SAIIAProvider} = require('./saiia-provider');
 
 // E-commerce Digital
 const {AmazonScienceProvider} = require('./amazon-science-provider');
-const {MicrosoftResearchProvider} = require('./microsoft-research-provider');
 const {GoogleAIResearchProvider} = require('./google-ai-research-provider');
 
 export const allProviders = {
