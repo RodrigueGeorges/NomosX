@@ -39,8 +39,8 @@ export * from './archives/archives-nationales-fr';
 
 // V2 PROVIDERS (Stable, API-based)
 export * from './v2/google-cse';
-export * from './v2/worldbank-api';
-export * from './v2/cisa-advisories';
+export * from './stable/worldbank-api';
+export * from './stable/cisa-advisories';
 export * from './v2/nara-api';
 export * from './v2/uk-archives-api';
 export * from './v2/un-digital-library';
@@ -52,7 +52,6 @@ export * from './v2/bis-papers';
 export * from './v2/nist-publications';
 export * from './v2/eu-open-data';
 export * from './v2/france-gov';
-export * from './v2/nato-library';
 export * from './v2/archive-org';
 
 // THINK TANKS (Innovative - via Google CSE)
