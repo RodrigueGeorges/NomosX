@@ -4,17 +4,20 @@
   functions = "netlify/functions"
 
 [build.environment]
+  # Node.js 20.x LTS - REQUIRED for Next.js 16 compatibility
+  # Node.js 24+ causes "exports is not defined in ES module scope"
+  # due to ESM/CJS detection changes in console-dim.external.js
   NODE_VERSION = "20.16.0"
   NPM_VERSION = "10"
 
 [[redirects]]
-  from = "/*"
-  to = "/index.html"
+  from = "/api/*"
+  to = "/.netlify/functions/:splat"
   status = 200
 
 [[redirects]]
-  from = "/api/*"
-  to = "/.netlify/functions/:splat"
+  from = "/*"
+  to = "/index.html"
   status = 200
 
 [[headers]]

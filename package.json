@@ -2,12 +2,12 @@
   "name": "nomosx-full-agentic-v1",
   "private": true,
   "engines": {
-    "node": ">=20.16.0",
+    "node": ">=20.16.0 <24.0.0",
     "npm": ">=10.0.0"
   },
   "scripts": {
     "dev": "next dev",
-    "build": "next build --webpack",
+    "build": "next build",
     "postinstall": "prisma generate",
     "start": "next start",
     "test": "jest",

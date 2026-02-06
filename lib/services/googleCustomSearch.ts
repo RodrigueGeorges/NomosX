@@ -7,7 +7,7 @@
  * @see https://developers.google.com/custom-search/v1/reference/rest/v1/cse/list
  */
 
-const axios,{AxiosError} = require('axios');
+import axios, { AxiosError } from 'axios';
 
 // ============================================================================
 // Configuration
