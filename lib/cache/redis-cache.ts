@@ -3,9 +3,9 @@
  * Provides caching for embeddings, LLM responses, and API calls
  */
 
-const Redis = require('ioredis');
-const {env} = require('../env');
-const {createHash} = require('crypto');
+import Redis from 'ioredis';
+import { env } from '../env';
+import { createHash } from 'crypto';
 
 // Singleton Redis client
 let redis: Redis | null = null;

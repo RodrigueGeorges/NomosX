@@ -5,10 +5,10 @@
  * Uses deterministic parsing + LLM fallback for robustness.
  */
 
-const OpenAI = require('openai');
-const {z} = require('zod');
-const {Claim,ClaimType,Category} = require('../entities/Claim');
-const {Logger} = require('../../../shared/logging/Logger');
+import OpenAI from 'openai';
+import { z } from 'zod';
+import { Claim,ClaimType,Category } from '../entities/Claim';
+import { Logger } from '../../../shared/logging/Logger';
 
 // ============================================================================
 // SCHEMAS

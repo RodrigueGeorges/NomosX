@@ -1,12 +1,12 @@
-const React = require('react');
+import React from 'react';
 /**
  * Label Component - Suivi de la charte graphique OpenClaw
  */
 
-const LabelPrimitive = require('@radix-ui/react-label');
-const {cva,typeVariantProps} = require('class-variance-authority');
+import LabelPrimitive from '@radix-ui/react-label';
+import { cva,typeVariantProps } from 'class-variance-authority';
 
-const {cn} = require('@/lib/utils');
+import { cn } from '@/lib/utils';
 
 const labelVariants = cva(
   "text-sm font-medium leading-none peer-disabled:cursor-not-allowed peer-disabled:opacity-70",

@@ -5,8 +5,8 @@
  * Part of the Institutional Think Tank pipeline
  */
 
-const {prisma} = require('@/lib/db');
-const {CadenceResult,GLOBAL_CADENCE,VerticalConfig} = require('@/lib/think-tank/types');
+import { prisma } from '@/lib/db';
+import { CadenceResult,GLOBAL_CADENCE,VerticalConfig } from '@/lib/think-tank/types';
 
 // ============================================================================
 // TYPES

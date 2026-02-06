@@ -3,7 +3,7 @@
  * API officielle INSEE pour données statistiques françaises
  */
 
-const {z} = require('zod');
+import { z } from 'zod';
 
 const INSEEResultSchema = z.object({
   id: z.string(),

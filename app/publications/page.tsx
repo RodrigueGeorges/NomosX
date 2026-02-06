@@ -1,7 +1,7 @@
 "use client";
 
-const React = require('react');
-const {useEffect,useState} = require('react');
+import React from 'react';
+import { useEffect,useState } from 'react';
 
 /**
  * NomosX Publications Archive
@@ -10,16 +10,16 @@ const {useEffect,useState} = require('react');
  * All paths lead here: Signals, Briefs, Council deliberations
  */
 
-const {useRouter} = require('next/navigation');
-const {useAuth} = require('@/hooks/useAuth');
-const Shell = require('@/components/Shell');
-const {Card,CardContent} = require('@/components/ui/Card');
-const {Button} = require('@/components/ui/Button');
-const {Badge} = require('@/components/ui/Badge');
-const {Input} = require('@/components/ui/Input');
-const TrustScoreBadge = require('@/components/TrustScoreBadge');
-const {cn} = require('@/lib/utils');
-const {Archive,FileText,Search,Filter,ArrowUpDown,Eye,Download,Clock,Layers,CheckCircle,Pause,VolumeX,Lock} = require('lucide-react');
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/hooks/useAuth';
+import Shell from '@/components/Shell';
+import { Card,CardContent } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
+import { Badge } from '@/components/ui/Badge';
+import { Input } from '@/components/ui/Input';
+import TrustScoreBadge from '@/components/TrustScoreBadge';
+import { cn } from '@/lib/utils';
+import { Archive,FileText,Search,Filter,ArrowUpDown,Eye,Download,Clock,Layers,CheckCircle,Pause,VolumeX,Lock } from 'lucide-react';
 
 type EditorialStatus = "PUBLISHED" | "HELD" | "SILENT";
 

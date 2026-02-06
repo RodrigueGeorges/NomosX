@@ -8,9 +8,9 @@
  * - Meilleur error handling
  */
 
-const {callLLM} = require('../llm/unified-llm');
-const Sentry = require('@sentry/nextjs');
-const {AgentRole,assertPermission} = require('../governance/index');
+import { callLLM } from '../llm/unified-llm';
+import Sentry from '@sentry/nextjs';
+import { AgentRole,assertPermission } from '../governance/index';
 
 /**
  * P2 FIX #2: Error categorization for READER agent

@@ -1,7 +1,7 @@
 "use client";
-const React = require('react');
+import React from 'react';
 
-const {PREDEFINED_DOMAINS,typeDomain} = require('@/lib/domains');
+import { PREDEFINED_DOMAINS,typeDomain } from '@/lib/domains';
 
 type Props = {
   selected: string[];

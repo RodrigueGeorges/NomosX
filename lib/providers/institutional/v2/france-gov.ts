@@ -3,7 +3,7 @@
  * SOLUTION pour Ministère Armées, SGDSN, Archives Nationales
  */
 
-const axios = require('axios');
+import axios from 'axios';
 
 const DATA_GOUV_API = 'https://www.data.gouv.fr/api/1';
 const USER_AGENT = 'NomosX Research Bot (+https://nomosx.com | contact@nomosx.com)';

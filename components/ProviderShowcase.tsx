@@ -1,6 +1,6 @@
 "use client";
-const React = require('react');
-const {useEffect,useRef,useState} = require('react');
+import React from 'react';
+import { useEffect,useRef,useState } from 'react';
 
 
 interface Provider {

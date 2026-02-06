@@ -6,9 +6,9 @@
  * Decisions: PUBLISH, HOLD, REJECT, SILENCE
  */
 
-const {prisma} = require('@/lib/db');
-const {EditorialChecks,EditorialDecisionType,SIGNAL_THRESHOLDS,FORBIDDEN_PHRASES,VerticalConfig} = require('@/lib/think-tank/types');
-const {cadenceEnforcer} = require('./cadence-enforcer');
+import { prisma } from '@/lib/db';
+import { EditorialChecks,EditorialDecisionType,SIGNAL_THRESHOLDS,FORBIDDEN_PHRASES,VerticalConfig } from '@/lib/think-tank/types';
+import { cadenceEnforcer } from './cadence-enforcer';
 
 // ============================================================================
 // TYPES

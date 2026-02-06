@@ -2,7 +2,7 @@
  * API Route: Get Analysis Run Status
  */
 
-const {NextRequest,NextResponse} = require('next/server');
+import { NextRequest,NextResponse } from 'next/server';
 
 const BACKEND_URL = process.env.BACKEND_URL || "http://localhost:3000";
 

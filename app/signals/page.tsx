@@ -1,7 +1,7 @@
 
 "use client";
-const React = require('react');
-const {useEffect,useState} = require('react');
+import React from 'react';
+import { useEffect,useState } from 'react';
 
 /**
  * NomosX Signals Page - ADMIN ONLY
@@ -12,14 +12,14 @@ const {useEffect,useState} = require('react');
  * ACCESS: Admin/Editorial only - internal mechanism
  */
 
-const {useRouter} = require('next/navigation');
-const {useAuth} = require('@/hooks/useAuth');
-const Shell = require('@/components/Shell');
-const {Card,CardContent} = require('@/components/ui/Card');
-const {Button} = require('@/components/ui/Button');
-const {Badge} = require('@/components/ui/Badge');
-const {cn} = require('@/lib/utils');
-const {Zap,RefreshCw,Filter,Clock,TrendingUp,AlertCircle,CheckCircle,XCircle,Pause,ArrowRight,Layers} = require('lucide-react');
+import { useRouter } from 'next/navigation';
+import { useAuth } from '@/hooks/useAuth';
+import Shell from '@/components/Shell';
+import { Card,CardContent } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
+import { Badge } from '@/components/ui/Badge';
+import { cn } from '@/lib/utils';
+import { Zap,RefreshCw,Filter,Clock,TrendingUp,AlertCircle,CheckCircle,XCircle,Pause,ArrowRight,Layers } from 'lucide-react';
 
 type SignalStatus = "NEW" | "HELD" | "PUBLISHED" | "REJECTED" | "EXPIRED" | "SILENT";
 

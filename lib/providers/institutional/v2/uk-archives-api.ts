@@ -4,8 +4,8 @@
  * API officielle, gratuite, bien documentée
  */
 
-const axios = require('axios');
-const cheerio = require('cheerio');
+import axios from 'axios';
+import cheerio from 'cheerio';
 
 const UK_DISCOVERY_API = 'http://discovery.nationalarchives.gov.uk/API/search/records';
 const USER_AGENT = 'NomosX Research Bot (+https://nomosx.com | contact@nomosx.com)';

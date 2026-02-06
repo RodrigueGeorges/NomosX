@@ -1,10 +1,10 @@
 
 "use client";
-const React = require('react');
-const {useEffect} = require('react');
+import React from 'react';
+import { useEffect } from 'react';
 
-const {useAppStore} = require('@/lib/store');
-const {cn} = require('@/lib/utils');
+import { useAppStore } from '@/lib/store';
+import { cn } from '@/lib/utils';
 
 export function Notifications() {
   const { notifications, removeNotification } = useAppStore()

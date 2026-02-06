@@ -1,13 +1,13 @@
 "use client";
 
-const React = require('react');
-const {useState} = require('react');
+import React from 'react';
+import { useState } from 'react';
 
-const {useRouter} = require('next/navigation');
-const {Modal} = require('@/components/ui/Modal');
-const {Button} = require('@/components/ui/Button');
-const {Input} = require('@/components/ui/Input');
-const {Mail,ChromeasGoogle,Github} = require('lucide-react');
+import { useRouter } from 'next/navigation';
+import { Modal } from '@/components/ui/Modal';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
+import { Mail,ChromeasGoogle,Github } from 'lucide-react';
 
 interface AuthModalProps {
   isOpen: boolean;

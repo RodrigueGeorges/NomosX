@@ -1,24 +1,24 @@
 
 "use client";
-const React = require('react');
-const {useState} = require('react');
+import React from 'react';
+import { useState } from 'react';
 /**
  * Settings Client - Composant client pour les paramètres
  * Suivi de la charte graphique OpenClaw
  */
 
 
-const {Card,CardContent,CardDescription,CardHeader,CardTitle} = require('@/components/ui/Card');
-const {Button} = require('@/components/ui/Button');
-const {Input} = require('@/components/ui/Input');
-const {Label} = require('@/components/ui/Label');
-const {Textarea} = require('@/components/ui/Textarea');
-const {Select,SelectContent,SelectItem,SelectTrigger,SelectValue} = require('@/components/ui/Select');
-const {Switch} = require('@/components/ui/Switch');
-const {Badge} = require('@/components/ui/Badge');
-const {Dialog,DialogContent,DialogDescription,DialogHeader,DialogTitle,DialogTrigger} = require('@/components/ui/Dialog');
-const {Settings,Database,Mail,Shield,Globe,Bell,Palette,Zap,AlertTriangle,CheckCircle,XCircle,Clock,Users} = require('lucide-react');
-const {cn} = require('@/lib/utils');
+import { Card,CardContent,CardDescription,CardHeader,CardTitle } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
+import { Label } from '@/components/ui/Label';
+import { Textarea } from '@/components/ui/Textarea';
+import { Select,SelectContent,SelectItem,SelectTrigger,SelectValue } from '@/components/ui/Select';
+import { Switch } from '@/components/ui/Switch';
+import { Badge } from '@/components/ui/Badge';
+import { Dialog,DialogContent,DialogDescription,DialogHeader,DialogTitle,DialogTrigger } from '@/components/ui/Dialog';
+import { Settings,Database,Mail,Shield,Globe,Bell,Palette,Zap,AlertTriangle,CheckCircle,XCircle,Clock,Users } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface SystemSettings {
   general: {

@@ -1,8 +1,8 @@
-const React = require('react');
-const {useState} = require('react');
-const {useRouter} = require('next/navigation');
-const {AlertCircle,X} = require('lucide-react');
-const {Button} = require('@/components/ui/Button');
+import React from 'react';
+import { useState } from 'react';
+import { useRouter } from 'next/navigation';
+import { AlertCircle,X } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
 
 type TrialBannerProps = {
   daysRemaining: number;

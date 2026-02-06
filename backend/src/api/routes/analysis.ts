@@ -2,12 +2,12 @@
  * Analysis API Routes
  */
 
-const {Router} = require('express');
-const {CreateAnalysisRun} = require('../../application/usecases/CreateAnalysisRun');
-const {QueueManager} = require('../../infrastructure/queue/QueueManager');
-const {getQueueConfig} = require('../../config/queue');
-const {createLogger} = require('../../shared/logging/Logger');
-const {CreateAnalysisRunRequestSchema} = require('../contracts/analysis.contract');
+import { Router } from 'express';
+import { CreateAnalysisRun } from '../../application/usecases/CreateAnalysisRun';
+import { QueueManager } from '../../infrastructure/queue/QueueManager';
+import { getQueueConfig } from '../../config/queue';
+import { createLogger } from '../../shared/logging/Logger';
+import { CreateAnalysisRunRequestSchema } from '../contracts/analysis.contract';
 
 const router = Router();
 const logger = createLogger({ service: "analysis-routes" });

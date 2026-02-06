@@ -1,7 +1,7 @@
 
 "use client";
-const React = require('react');
-const {useState,useEffect} = require('react');
+import React from 'react';
+import { useState,useEffect } from 'react';
 /**
  * SmartSuggestions Component
  * 

@@ -1,7 +1,7 @@
-const {NextRequest,NextResponse} = require('next/server');
-const {prisma} = require('@/lib/db');
-const {sendEmail} = require('@/lib/email');
-const {renderWeeklyBriefEmail,renderWeeklyBriefPlainText} = require('@/lib/email-templates/weekly-brief');
+import { NextRequest,NextResponse } from 'next/server';
+import { prisma } from '@/lib/db';
+import { sendEmail } from '@/lib/email';
+import { renderWeeklyBriefEmail,renderWeeklyBriefPlainText } from '@/lib/email-templates/weekly-brief';
 
 /**
  * POST /api/cron/weekly-briefs

@@ -1,6 +1,6 @@
-const React = require('react');
+import React from 'react';
 
-const {cn} = require('@/lib/utils');
+import { cn } from '@/lib/utils';
 
 type BadgeVariant = "default" | "outline" | "secondary" | "success" | "warning" | "error" | "premium" | "ai" | "outline" | "secondary";
 

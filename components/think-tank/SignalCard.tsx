@@ -1,5 +1,5 @@
 "use client";
-const React = require('react');
+import React from 'react';
 
 /**
  * SignalCard Component
@@ -8,10 +8,10 @@ const React = require('react');
  * Follows NomosX design system
  */
 
-const Link = require('next/link');
-const {Card} = require('@/components/ui/Card');
-const {Badge} = require('@/components/ui/Badge');
-const {Zap,TrendingUp,AlertTriangle,Database,FileText,Clock,ChevronRight} = require('lucide-react');
+import Link from 'next/link';
+import { Card } from '@/components/ui/Card';
+import { Badge } from '@/components/ui/Badge';
+import { Zap,TrendingUp,AlertTriangle,Database,FileText,Clock,ChevronRight } from 'lucide-react';
 
 interface SignalCardProps {
   signal: {

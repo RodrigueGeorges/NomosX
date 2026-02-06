@@ -5,7 +5,7 @@
  * basé sur title, abstract, topics et JEL codes
  */
 
-const {prisma} = require('@/lib/db');
+import { prisma } from '@/lib/db';
 
 /**
  * Classifie une source unique dans des domaines

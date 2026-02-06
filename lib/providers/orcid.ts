@@ -2,8 +2,8 @@
  * ORCID client for author identity enrichment
  */
 
-const {fetchFromProvider} = require('../http-client');
-const {env} = require('../env');
+import { fetchFromProvider } from '../http-client';
+import { env } from '../env';
 
 export interface ORCIDData {
   orcid: string;

@@ -2,10 +2,10 @@
  * Claim Repository Implementation (Prisma)
  */
 
-const {PrismaClient} = require('../../../../../generated/prisma-client');
-const {Claim} = require('../../../domain/claim/entities/Claim');
-const {IClaimRepository} = require('../../../domain/claim/repositories/IClaimRepository');
-const {DatabaseError} = require('../../../shared/errors/DomainError');
+import { PrismaClient } from '../../../../../generated/prisma-client';
+import { Claim } from '../../../domain/claim/entities/Claim';
+import { IClaimRepository } from '../../../domain/claim/repositories/IClaimRepository';
+import { DatabaseError } from '../../../shared/errors/DomainError';
 
 export class ClaimRepository implements IClaimRepository {
   constructor(private readonly prisma: PrismaClient) {}

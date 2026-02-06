@@ -1,10 +1,10 @@
 "use client";
 
-const React = require('react');
-const {useEffect} = require('react');
-const {X} = require('lucide-react');
-const {cn} = require('@/lib/utils');
-const {Button} = require('./Button');
+import React from 'react';
+import { useEffect } from 'react';
+import { X } from 'lucide-react';
+import { cn } from '@/lib/utils';
+import { Button } from './Button';
 
 interface ModalProps {
   isOpen: boolean;

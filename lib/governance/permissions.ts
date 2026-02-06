@@ -7,7 +7,7 @@
  * ⚠️ INTERNAL ONLY - Never expose to UI or marketing
  */
 
-const {AgentRole} = require('./roles');
+import { AgentRole } from './roles';
 
 /**
  * Permission types

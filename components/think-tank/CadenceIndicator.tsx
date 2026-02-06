@@ -1,5 +1,5 @@
 "use client";
-const React = require('react');
+import React from 'react';
 
 /**
  * CadenceIndicator Component
@@ -8,7 +8,7 @@ const React = require('react');
  * Follows NomosX design system
  */
 
-const {Clock,AlertCircle,CheckCircle} = require('lucide-react');
+import { Clock,AlertCircle,CheckCircle } from 'lucide-react';
 
 interface CadenceIndicatorProps {
   global: {

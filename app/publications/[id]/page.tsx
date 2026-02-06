@@ -1,7 +1,7 @@
 
 "use client";
-const React = require('react');
-const {useEffect,useState} = require('react');
+import React from 'react';
+import { useEffect,useState } from 'react';
 
 /**
  * NomosX Publication Detail Page
@@ -9,14 +9,14 @@ const {useEffect,useState} = require('react');
  * View a single publication with full content, sources, and audit trail
  */
 
-const {useParams,useRouter} = require('next/navigation');
-const Shell = require('@/components/Shell');
-const {Card,CardContent,CardHeader} = require('@/components/ui/Card');
-const {Button} = require('@/components/ui/Button');
-const {Badge} = require('@/components/ui/Badge');
-const TrustScoreBadge = require('@/components/TrustScoreBadge');
-const {cn} = require('@/lib/utils');
-const {FileText,ArrowLeft,Clock,Eye,Download,CheckCircle,Pause,VolumeX,Layers,ExternalLink,BookOpen,Shield} = require('lucide-react');
+import { useParams,useRouter } from 'next/navigation';
+import Shell from '@/components/Shell';
+import { Card,CardContent,CardHeader } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
+import { Badge } from '@/components/ui/Badge';
+import TrustScoreBadge from '@/components/TrustScoreBadge';
+import { cn } from '@/lib/utils';
+import { FileText,ArrowLeft,Clock,Eye,Download,CheckCircle,Pause,VolumeX,Layers,ExternalLink,BookOpen,Shield } from 'lucide-react';
 
 type Publication = {
   id: string;

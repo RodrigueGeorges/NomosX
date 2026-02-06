@@ -1,7 +1,7 @@
 
 "use client";
-const React = require('react');
-const {useState,useEffect,useRef} = require('react');
+import React from 'react';
+import { useState,useEffect,useRef } from 'react';
 /**
  * StreamingAnalysis Component
  * 
@@ -10,8 +10,8 @@ const {useState,useEffect,useRef} = require('react');
  */
 
 
-const TrustScoreBadge = require('./TrustScoreBadge');
-const ClaimCard = require('./ClaimCard');
+import TrustScoreBadge from './TrustScoreBadge';
+import ClaimCard from './ClaimCard';
 
 interface StreamingAnalysisProps {
   runId: string;

@@ -7,7 +7,7 @@
  * - Graceful error handling
  */
 
-const {env} = require('./env');
+import { env } from './env';
 
 // ================================
 // TYPES

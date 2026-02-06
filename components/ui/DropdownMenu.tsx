@@ -1,12 +1,12 @@
-const React = require('react');
+import React from 'react';
 /**
  * Dropdown Menu Component - Suivi de la charte graphique OpenClaw
  */
 
-const DropdownMenuPrimitive = require('@radix-ui/react-dropdown-menu');
-const {Check,ChevronRight,Circle} = require('lucide-react');
+import DropdownMenuPrimitive from '@radix-ui/react-dropdown-menu';
+import { Check,ChevronRight,Circle } from 'lucide-react';
 
-const {cn} = require('@/lib/utils');
+import { cn } from '@/lib/utils';
 
 const DropdownMenu = DropdownMenuPrimitive.Root
 

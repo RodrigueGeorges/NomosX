@@ -6,7 +6,7 @@
  * NOTE: For strict cost control, we should also track estimatedCostUsd per run.
  */
 
-const {prisma} = require('../db');
+import { prisma } from '../db';
 
 export class QuotaError extends Error {
   constructor(message: string) {

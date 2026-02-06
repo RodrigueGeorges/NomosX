@@ -3,8 +3,8 @@
  * Site académique stable, structure HTML prévisible
  */
 
-const axios = require('axios');
-const cheerio = require('cheerio');
+import axios from 'axios';
+import cheerio from 'cheerio';
 
 const IMF_DATA_API = 'https://www.imf.org/en/Publications/Search';
 const IMF_WP_RSS = 'https://www.imf.org/en/Publications/WP/RSS';

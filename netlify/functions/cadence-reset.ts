@@ -4,7 +4,7 @@
  * Runs daily at 00:00 UTC to reset expired counters
  */
 
-const {resetDailyCounters,resetWeeklyCounters} = require('../../lib/agent/cadence-enforcer');
+import { resetDailyCounters,resetWeeklyCounters } from '../../lib/agent/cadence-enforcer';
 
 export const config = {
   schedule: "0 0 * * *"

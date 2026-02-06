@@ -3,7 +3,7 @@
  * Schémas de validation robustes pour tous les agents
  */
 
-const {z} = require('zod');
+import { z } from 'zod';
 
 // ==========================================
 // READING RESULT SCHEMA (Unified)

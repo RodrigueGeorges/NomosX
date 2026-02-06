@@ -7,15 +7,15 @@
  * UX: Storytelling, institutional credibility, convert curiosity → trust
  */
 
-const React = require('react');
-const {useState,useEffect} = require('react');
+import React from 'react';
+import { useState,useEffect } from 'react';
 
-const {useRouter} = require('next/navigation');
-const {Button} = require('@/components/ui/Button');
-const AuthModal = require('@/components/AuthModal');
-const PublicNav = require('@/components/PublicNav');
-const {cn} = require('@/lib/utils');
-const {Sparkles,Brain,Shield,Target,ArrowRight,Globe,Users,Lightbulb,BookOpen} = require('lucide-react');
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/Button';
+import AuthModal from '@/components/AuthModal';
+import PublicNav from '@/components/PublicNav';
+import { cn } from '@/lib/utils';
+import { Sparkles,Brain,Shield,Target,ArrowRight,Globe,Users,Lightbulb,BookOpen } from 'lucide-react';
 
 export default function AboutPage() {
   const router = useRouter();

@@ -4,7 +4,7 @@
  * Type-safe contracts using Zod for validation + TypeScript types
  */
 
-const {z} = require('zod');
+import { z } from 'zod';
 
 // ============================================================================
 // REQUEST SCHEMAS

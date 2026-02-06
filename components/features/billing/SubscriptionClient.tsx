@@ -1,19 +1,19 @@
 
 "use client";
-const React = require('react');
-const {useState} = require('react');
+import React from 'react';
+import { useState } from 'react';
 /**
  * Subscription Client - Composant client pour la gestion d'abonnement
  * Suivi de la charte graphique OpenClaw
  */
 
 
-const {Card,CardContent,CardDescription,CardHeader,CardTitle} = require('@/components/ui/Card');
-const {Button} = require('@/components/ui/Button');
-const {Badge} = require('@/components/ui/Badge');
-const {Dialog,DialogContent,DialogDescription,DialogHeader,DialogTitle,DialogTrigger} = require('@/components/ui/Dialog');
-const {CreditCard,Download,Trash2,Plus,AlertCircle,CheckCircle} = require('lucide-react');
-const {cn} = require('@/lib/utils');
+import { Card,CardContent,CardDescription,CardHeader,CardTitle } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
+import { Badge } from '@/components/ui/Badge';
+import { Dialog,DialogContent,DialogDescription,DialogHeader,DialogTitle,DialogTrigger } from '@/components/ui/Dialog';
+import { CreditCard,Download,Trash2,Plus,AlertCircle,CheckCircle } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 interface Subscription {
   id: string

@@ -1,8 +1,8 @@
 
-const {NextResponse} = require('next/server');
-const {prisma} = require('@/lib/db');
-const puppeteer = require('puppeteer-core');
-const chromium = require('@sparticuz/chromium');
+import { NextResponse } from 'next/server';
+import { prisma } from '@/lib/db';
+import puppeteer from 'puppeteer-core';
+import chromium from '@sparticuz/chromium';
 
 export async function POST(_: Request, { params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;

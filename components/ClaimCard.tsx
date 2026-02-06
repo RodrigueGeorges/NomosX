@@ -4,9 +4,9 @@
  * Affiche une claim avec evidence, trust score et contradictions
  */
 
-const React = require('react');
-const {Badge} = require('./ui/Badge');
-const {CheckCircle,AlertTriangle,XCircle} = require('lucide-react');
+import React from 'react';
+import { Badge } from './ui/Badge';
+import { CheckCircle,AlertTriangle,XCircle } from 'lucide-react';
 
 export interface Claim {
   id: string;

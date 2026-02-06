@@ -1,6 +1,6 @@
-const React = require('react');
+import React from 'react';
 
-const {cn} = require('@/lib/utils');
+import { cn } from '@/lib/utils';
 
 interface SkeletonProps extends React.HTMLAttributes<HTMLDivElement> {
   variant?: "pulse" | "shimmer";

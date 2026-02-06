@@ -1,6 +1,6 @@
 "use client";
-const React = require('react');
-const {useState} = require('react');
+import React from 'react';
+import { useState } from 'react';
 
 /**
  * NomosX Pricing Page
@@ -10,12 +10,12 @@ const {useState} = require('react');
  * Clean, institutional, bankable
  */
 
-const {useRouter} = require('next/navigation');
-const Shell = require('@/components/Shell');
-const {Button} = require('@/components/ui/Button');
-const {Card,CardContent} = require('@/components/ui/Card');
-const {cn} = require('@/lib/utils');
-const {Check,X,Shield,Zap,TrendingUp,Users,Briefcase,FileText} = require('lucide-react');
+import { useRouter } from 'next/navigation';
+import Shell from '@/components/Shell';
+import { Button } from '@/components/ui/Button';
+import { Card,CardContent } from '@/components/ui/Card';
+import { cn } from '@/lib/utils';
+import { Check,X,Shield,Zap,TrendingUp,Users,Briefcase,FileText } from 'lucide-react';
 
 export default function PricingPage() {
   const router = useRouter();

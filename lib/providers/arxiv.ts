@@ -3,7 +3,7 @@
  * API: https://info.arxiv.org/help/api/index.html
  */
 
-const {fetchFromProvider} = require('../http-client');
+import { fetchFromProvider } from '../http-client';
 
 interface ArxivEntry {
   id: string;

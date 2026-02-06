@@ -1,7 +1,7 @@
 
-const Shell = require('@/components/Shell');
-const {prisma} = require('@/lib/db');
-const {cn} = require('@/lib/utils');
+import Shell from '@/components/Shell';
+import { prisma } from '@/lib/db';
+import { cn } from '@/lib/utils';
 
 export default async function SharedBrief({ params }: { params: { id: string } }) {
   const id = params.id;

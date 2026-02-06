@@ -1,5 +1,5 @@
 "use client";
-const React = require('react');
+import React from 'react';
 
 /**
  * PublicationCard Component
@@ -8,10 +8,10 @@ const React = require('react');
  * Follows NomosX design system
  */
 
-const Link = require('next/link');
-const {Card} = require('@/components/ui/Card');
-const {Badge} = require('@/components/ui/Badge');
-const {FileText,Eye,Clock,CheckCircle,AlertCircle,ChevronRight} = require('lucide-react');
+import Link from 'next/link';
+import { Card } from '@/components/ui/Card';
+import { Badge } from '@/components/ui/Badge';
+import { FileText,Eye,Clock,CheckCircle,AlertCircle,ChevronRight } from 'lucide-react';
 
 interface PublicationCardProps {
   publication: {

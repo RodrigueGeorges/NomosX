@@ -1,9 +1,9 @@
-const {NextRequest,NextResponse} = require('next/server');
-const {scout} = require('@/lib/agent/pipeline-v2');
-const {indexAgent,deduplicateSources} = require('@/lib/agent/index-agent');
-const {rank,read,analyst,citationGuard,renderBriefHTML} = require('@/lib/agent/pipeline-v2');
-const {prisma} = require('@/lib/db');
-const {selectSmartProviders} = require('@/lib/agent/smart-provider-selector');
+import { NextRequest,NextResponse } from 'next/server';
+import { scout } from '@/lib/agent/pipeline-v2';
+import { indexAgent,deduplicateSources } from '@/lib/agent/index-agent';
+import { rank,read,analyst,citationGuard,renderBriefHTML } from '@/lib/agent/pipeline-v2';
+import { prisma } from '@/lib/db';
+import { selectSmartProviders } from '@/lib/agent/smart-provider-selector';
 
 /**
  * API Auto-Brief — Orchestration complète du pipeline

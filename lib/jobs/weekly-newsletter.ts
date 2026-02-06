@@ -8,7 +8,7 @@
  * Run with: npx tsx lib/jobs/weekly-newsletter.ts
  */
 
-const {prisma} = require('@/lib/db');
+import { prisma } from '@/lib/db';
 
 // Newsletter HTML template
 function generateNewsletterHTML(

@@ -1,7 +1,7 @@
 
-const {fetchFromProvider} = require('../http-client');
-const {invertedIndexToText} = require('../text');
-const {env} = require('../env');
+import { fetchFromProvider } from '../http-client';
+import { invertedIndexToText } from '../text';
+import { env } from '../env';
 
 type Work = any;
 type Resp = { results?: Work[] };

@@ -1,10 +1,10 @@
 
-const Shell = require('@/components/Shell');
-const {prisma} = require('@/lib/db');
-const {Badge} = require('@/components/ui/Badge');
-const {Card,CardContent,CardHeader} = require('@/components/ui/Card');
-const {Button} = require('@/components/ui/Button');
-const {cn} = require('@/lib/utils');
+import Shell from '@/components/Shell';
+import { prisma } from '@/lib/db';
+import { Badge } from '@/components/ui/Badge';
+import { Card,CardContent,CardHeader } from '@/components/ui/Card';
+import { Button } from '@/components/ui/Button';
+import { cn } from '@/lib/utils';
 
 export default async function SourcePage({ params }: { params: { id: string } }) {
   const id = decodeURIComponent(params.id);

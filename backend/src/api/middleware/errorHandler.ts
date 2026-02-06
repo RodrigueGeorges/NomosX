@@ -2,9 +2,9 @@
  * Error Handler Middleware
  */
 
-const {Request,Response,NextFunction} = require('express');
-const {DomainError} = require('../../shared/errors/DomainError');
-const {createLogger} = require('../../shared/logging/Logger');
+import { Request,Response,NextFunction } from 'express';
+import { DomainError } from '../../shared/errors/DomainError';
+import { createLogger } from '../../shared/logging/Logger';
 
 const logger = createLogger({ service: "error-handler" });
 

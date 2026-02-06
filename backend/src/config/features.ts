@@ -2,7 +2,7 @@
  * Feature Flags Configuration
  */
 
-const {z} = require('zod');
+import { z } from 'zod';
 
 const FeatureFlagsSchema = z.object({
   claimExtraction: z.boolean().default(true),

@@ -140,7 +140,7 @@ function consolidateReactImports(filePath) {
       
       // Update React line to include hooks
       const hooksStr = Array.from(allHooks).join(',');
-      const newReactLine = `const React = require('react');\nconst {${hooksStr}} = require('react');`;
+      const newReactLine = `import React from 'react';\nconst {${hooksStr}} = require('react');`;
       
       // Find the new position of React line after deletions
       let adjustedReactLine = reactLine;

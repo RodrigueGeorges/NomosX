@@ -1,6 +1,6 @@
 
-const {NextResponse} = require('next/server');
-const {prisma} = require('@/lib/db');
+import { NextResponse } from 'next/server';
+import { prisma } from '@/lib/db';
 
 export async function POST(req: Request) {
   const admin = req.headers.get("x-admin-key") || "";

@@ -3,7 +3,7 @@
  * Garantit conformité légale et évite bannissements IP
  */
 
-const {INSTITUTIONAL_PROVIDERS} = require('./index');
+import { INSTITUTIONAL_PROVIDERS } from './index';
 
 interface RateLimitEntry {
   lastRequest: number;

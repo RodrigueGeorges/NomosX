@@ -1,9 +1,9 @@
 "use client";
-const React = require('react');
+import React from 'react';
 
-const {useRouter} = require('next/navigation');
-const {Button} = require('@/components/ui/Button');
-const {Home,ArrowLeft} = require('lucide-react');
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/Button';
+import { Home,ArrowLeft } from 'lucide-react';
 
 export default function NotFound() {
   const router = useRouter();

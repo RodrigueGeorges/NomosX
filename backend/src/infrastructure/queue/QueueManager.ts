@@ -10,9 +10,9 @@
  * - Distributed locking
  */
 
-const {Queue,Worker,Job,QueueEvents} = require('bullmq');
-const Redis = require('ioredis');
-const {Logger} = require('../../shared/logging/Logger');
+import { Queue,Worker,Job,QueueEvents } from 'bullmq';
+import Redis from 'ioredis';
+import { Logger } from '../../shared/logging/Logger';
 
 // ============================================================================
 // TYPES

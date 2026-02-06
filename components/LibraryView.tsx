@@ -1,7 +1,7 @@
 
 "use client";
-const React = require('react');
-const {useState,useEffect} = require('react');
+import React from 'react';
+import { useState,useEffect } from 'react';
 /**
  * LibraryView Component
  * 
@@ -10,7 +10,7 @@ const {useState,useEffect} = require('react');
  */
 
 
-const TrustScoreBadge = require('./TrustScoreBadge');
+import TrustScoreBadge from './TrustScoreBadge';
 
 interface Brief {
   id: string;

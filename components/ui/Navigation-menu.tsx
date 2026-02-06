@@ -1,5 +1,5 @@
-const React = require('react');
-const {cn} = require('@/lib/utils');
+import React from 'react';
+import { cn } from '@/lib/utils';
 
 const NavigationMenu = React.forwardRef<
   HTMLDivElement,

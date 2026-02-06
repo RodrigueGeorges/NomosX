@@ -1,6 +1,6 @@
-const React = require('react');
+import React from 'react';
 
-const {cn} = require('@/lib/utils');
+import { cn } from '@/lib/utils';
 
 interface CardProps extends React.HTMLAttributes<HTMLDivElement> {
   hoverable?: boolean;

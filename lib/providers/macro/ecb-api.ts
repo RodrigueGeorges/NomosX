@@ -3,7 +3,7 @@
  * API officielle BCE pour données monétaires et financières
  */
 
-const {z} = require('zod');
+import { z } from 'zod';
 
 const ECBResultSchema = z.object({
   series: z.object({

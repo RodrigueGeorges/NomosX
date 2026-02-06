@@ -3,8 +3,8 @@
  * Architecture entreprise-grade pour NomosX Think Tank
  */
 
-const {prisma} = require('../db.ts');
-const {setTimeoutassleep} = require('timers/promises');
+import { prisma } from '../db.ts';
+import { setTimeoutassleep } from 'timers/promises';
 
 // ============================================================================
 // ARCHITECTURE SYSTÈME PROFESSIONNEL

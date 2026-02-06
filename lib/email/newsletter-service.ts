@@ -3,8 +3,8 @@
  * Suivi des recommandations OpenClaw
  */
 
-const {Resend} = require('resend');
-const {Newsletter,NewsletterSubscription,NewsletterCampaign} = require('@/types/newsletter');
+import { Resend } from 'resend';
+import { Newsletter,NewsletterSubscription,NewsletterCampaign } from '@/types/newsletter';
 
 // Configuration Resend
 const resend = new Resend(process.env.RESEND_API_KEY)

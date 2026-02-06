@@ -1,18 +1,18 @@
 "use client";
 
-const React = require('react');
-const {useState,useEffect} = require('react');
+import React from 'react';
+import { useState,useEffect } from 'react';
 
-const {NomosXLogo} = require('@/components/brand/NomosXLogo');
-const {useRouter} = require('next/navigation');
-const {Button} = require('@/components/ui/Button');
-const {Card,CardContent} = require('@/components/ui/Card');
-const AuthModal = require('@/components/AuthModal');
-const OnboardingModal = require('@/components/OnboardingModal');
-const PublicNav = require('@/components/PublicNav');
-const ProviderShowcase = require('@/components/ProviderShowcase');
-const {cn} = require('@/lib/utils');
-const {ArrowRight,Zap,CheckCircle,Shield,TrendingUp,GitBranch,Mail,Loader2} = require('lucide-react');
+import { NomosXLogo } from '@/components/brand/NomosXLogo';
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/Button';
+import { Card,CardContent } from '@/components/ui/Card';
+import AuthModal from '@/components/AuthModal';
+import OnboardingModal from '@/components/OnboardingModal';
+import PublicNav from '@/components/PublicNav';
+import ProviderShowcase from '@/components/ProviderShowcase';
+import { cn } from '@/lib/utils';
+import { ArrowRight,Zap,CheckCircle,Shield,TrendingUp,GitBranch,Mail,Loader2 } from 'lucide-react';
 
 export default function HomePage() {
   const router = useRouter();

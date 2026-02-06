@@ -2,52 +2,52 @@
 // Fichier généré automatiquement par OpenClaw
 
 // Providers académiques existants
-const {OpenAlexProvider} = require('./openalex');
-const {CrossRefProvider} = require('./crossref');
-const {PubMedProvider} = require('./pubmed');
-const {ArxivProvider} = require('./arxiv');
-const {SemanticScholarProvider} = require('./semanticscholar');
-const {HALProvider} = require('./hal');
-const {ThesesFrProvider} = require('./thesesfr');
-const {UnpaywallProvider} = require('./unpaywall');
-const {ORCIDProvider} = require('./orcid');
-const {RORProvider} = require('./ror');
+import { OpenAlexProvider } from './openalex';
+import { CrossRefProvider } from './crossref';
+import { PubMedProvider } from './pubmed';
+import { ArxivProvider } from './arxiv';
+import { SemanticScholarProvider } from './semanticscholar';
+import { HALProvider } from './hal';
+import { ThesesFrProvider } from './thesesfr';
+import { UnpaywallProvider } from './unpaywall';
+import { ORCIDProvider } from './orcid';
+import { RORProvider } from './ror';
 
 // Providers institutionnels existants
 
 // Providers innovants
-const {AstResProvider} = require('./ast-res-provider');
-const {BerlinPolicyHubProvider} = require('./berlin-policy-hub-provider');
-const {CopenhagenInstituteProvider} = require('./copenhagen-institute-provider');
-const {IdeaFactoryProvider} = require('./idea-factory-provider');
+import { AstResProvider } from './ast-res-provider';
+import { BerlinPolicyHubProvider } from './berlin-policy-hub-provider';
+import { CopenhagenInstituteProvider } from './copenhagen-institute-provider';
+import { IdeaFactoryProvider } from './idea-factory-provider';
 
 // Business Elite Complément
-const {EYResearchProvider} = require('./ey-research-provider');
-const {BainInsightsProvider} = require('./bain-insights-provider');
-const {AccentureResearchProvider} = require('./accenture-research-provider');
+import { EYResearchProvider } from './ey-research-provider';
+import { BainInsightsProvider } from './bain-insights-provider';
+import { AccentureResearchProvider } from './accenture-research-provider';
 
 // Recherche Médicale Avancée
 
 // Intelligence Artificielle Spécialisée
-const {DeepMindResearchProvider} = require('./deepmind-research-provider');
-const {AIIndexProvider} = require('./ai-index-provider');
+import { DeepMindResearchProvider } from './deepmind-research-provider';
+import { AIIndexProvider } from './ai-index-provider';
 
 // Énergie Transition
-const {IEAProvider} = require('./iea-provider');
-const {IRENAProvider} = require('./irena-provider');
-const {EnergyFuturesProvider} = require('./energy-futures-provider');
+import { IEAProvider } from './iea-provider';
+import { IRENAProvider } from './irena-provider';
+import { EnergyFuturesProvider } from './energy-futures-provider';
 
 // Science Fondamentale
 
 // Développement International
-const {CGDProvider} = require('./cgd-provider');
+import { CGDProvider } from './cgd-provider';
 
 // Think Tanks Afrique
-const {ACETProvider} = require('./acet-provider');
+import { ACETProvider } from './acet-provider';
 
 // E-commerce Digital
-const {AmazonScienceProvider} = require('./amazon-science-provider');
-const {GoogleAIResearchProvider} = require('./google-ai-research-provider');
+import { AmazonScienceProvider } from './amazon-science-provider';
+import { GoogleAIResearchProvider } from './google-ai-research-provider';
 
 export const allProviders = {
   // Académiques (10)

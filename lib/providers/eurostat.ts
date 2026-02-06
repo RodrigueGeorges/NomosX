@@ -8,8 +8,8 @@
  * - For our curated indicators we fully specify non-time dimensions so only TIME varies.
  */
 
-const {fetchFromProvider} = require('../http-client');
-const {env} = require('../env');
+import { fetchFromProvider } from '../http-client';
+import { env } from '../env';
 
 export interface MacroDataPoint {
   date: Date;

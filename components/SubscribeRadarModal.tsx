@@ -1,11 +1,11 @@
 "use client";
-const React = require('react');
-const {useState} = require('react');
-const {Modal} = require('@/components/ui/Modal');
-const {Button} = require('@/components/ui/Button');
-const {Input} = require('@/components/ui/Input');
-const {Badge} = require('@/components/ui/Badge');
-const {Mail,Bell,Check} = require('lucide-react');
+import React from 'react';
+import { useState } from 'react';
+import { Modal } from '@/components/ui/Modal';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
+import { Badge } from '@/components/ui/Badge';
+import { Mail,Bell,Check } from 'lucide-react';
 
 interface Props {
   isOpen: boolean;

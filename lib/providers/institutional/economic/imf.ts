@@ -5,8 +5,8 @@
  * API: https://data.imf.org
  */
 
-const axios = require('axios');
-const cheerio = require('cheerio');
+import axios from 'axios';
+import cheerio from 'cheerio';
 
 const BASE_URL = 'https://www.imf.org';
 const ELIBRARY_URL = 'https://www.elibrary.imf.org';

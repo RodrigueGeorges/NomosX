@@ -1,14 +1,14 @@
 "use client";
-const React = require('react');
-const {useEffect} = require('react');
+import React from 'react';
+import { useEffect } from 'react';
 
 /**
  * Redirect /library to /publications
  * Legacy route from old "Library" model
  */
 
-const {useRouter} = require('next/navigation');
-const {cn} = require('@/lib/utils');
+import { useRouter } from 'next/navigation';
+import { cn } from '@/lib/utils';
 
 export default function LibraryPage() {
   const router = useRouter();

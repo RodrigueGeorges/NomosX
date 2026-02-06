@@ -4,7 +4,7 @@
  * Très stable, mis à jour quotidiennement
  */
 
-const Parser = require('rss-parser');
+import Parser from 'rss-parser';
 
 const CISA_FEED = 'https://www.cisa.gov/cybersecurity-advisories/all.xml';
 const parser = new Parser({

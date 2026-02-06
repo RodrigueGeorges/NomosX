@@ -1,6 +1,6 @@
 
-const {fetchFromProvider} = require('../http-client');
-const {env} = require('../env');
+import { fetchFromProvider } from '../http-client';
+import { env } from '../env';
 
 function normalizeDOI(doi: string): string {
   return doi.replace(/^https?:\/\/(dx\.)?doi\.org\//i, "").toLowerCase();

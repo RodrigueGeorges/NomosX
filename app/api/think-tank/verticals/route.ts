@@ -4,9 +4,9 @@
  * GET /api/think-tank/verticals - List all verticals
  */
 
-const {NextRequest,NextResponse} = require('next/server');
-const {getSession} = require('@/lib/auth');
-const {prisma} = require('@/lib/db');
+import { NextRequest,NextResponse } from 'next/server';
+import { getSession } from '@/lib/auth';
+import { prisma } from '@/lib/db';
 
 export async function GET(req: NextRequest) {
   try {

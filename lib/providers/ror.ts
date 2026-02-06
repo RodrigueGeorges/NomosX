@@ -3,8 +3,8 @@
  * Enriches institution metadata with canonical IDs
  */
 
-const {fetchFromProvider} = require('../http-client');
-const {env} = require('../env');
+import { fetchFromProvider } from '../http-client';
+import { env } from '../env';
 
 export interface RORData {
   id: string;

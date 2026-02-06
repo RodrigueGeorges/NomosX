@@ -5,10 +5,10 @@
  * POST /api/think-tank/publications - Generate publication from signal
  */
 
-const {NextRequest,NextResponse} = require('next/server');
-const {getSession} = require('@/lib/auth');
-const {prisma} = require('@/lib/db');
-const {generatePublication} = require('@/lib/agent/publication-generator');
+import { NextRequest,NextResponse } from 'next/server';
+import { getSession } from '@/lib/auth';
+import { prisma } from '@/lib/db';
+import { generatePublication } from '@/lib/agent/publication-generator';
 
 export async function GET(request: NextRequest) {
   try {

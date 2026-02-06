@@ -1,5 +1,5 @@
-const {NextRequest,NextResponse} = require('next/server');
-const {getSession} = require('@/lib/auth');
+import { NextRequest,NextResponse } from 'next/server';
+import { getSession } from '@/lib/auth';
 
 /**
  * GET /api/auth/me

@@ -2,7 +2,7 @@
  * Claim Repository Interface (Domain Layer)
  */
 
-const {Claim} = require('../entities/Claim');
+import { Claim } from '../entities/Claim';
 
 export interface IClaimRepository {
   /**

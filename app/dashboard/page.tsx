@@ -1,6 +1,6 @@
 "use client";
-const React = require('react');
-const {useState,useEffect} = require('react');
+import React from 'react';
+import { useState,useEffect } from 'react';
 
 /**
  * USER Dashboard — Think Tank Command Center
@@ -21,16 +21,16 @@ const {useState,useEffect} = require('react');
  * - Editorial controls (admin-only)
  */
 
-const {useRouter} = require('next/navigation');
-const Link = require('next/link');
-const Shell = require('@/components/Shell');
-const {Button} = require('@/components/ui/Button');
-const {Badge} = require('@/components/ui/Badge');
-const {Card,CardContent} = require('@/components/ui/Card');
-const TrustScoreBadge = require('@/components/TrustScoreBadge');
-const TrialBanner = require('@/components/TrialBanner');
-const {cn} = require('@/lib/utils');
-const {BookOpen,FileText,Lock,TrendingUp,Sparkles,ArrowRight,Clock,Shield,Layers,Settings} = require('lucide-react');
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import Shell from '@/components/Shell';
+import { Button } from '@/components/ui/Button';
+import { Badge } from '@/components/ui/Badge';
+import { Card,CardContent } from '@/components/ui/Card';
+import TrustScoreBadge from '@/components/TrustScoreBadge';
+import TrialBanner from '@/components/TrialBanner';
+import { cn } from '@/lib/utils';
+import { BookOpen,FileText,Lock,TrendingUp,Sparkles,ArrowRight,Clock,Shield,Layers,Settings } from 'lucide-react';
 
 type Vertical = {
   id: string;

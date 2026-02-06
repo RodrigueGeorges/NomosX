@@ -2,7 +2,7 @@
  * Queue Configuration
  */
 
-const {z} = require('zod');
+import { z } from 'zod';
 
 const QueueConfigSchema = z.object({
   redis: z.object({

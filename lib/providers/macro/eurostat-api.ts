@@ -3,7 +3,7 @@
  * API officielle Eurostat pour données statistiques européennes
  */
 
-const {z} = require('zod');
+import { z } from 'zod';
 
 const EurostatResultSchema = z.object({
   code: z.string(),

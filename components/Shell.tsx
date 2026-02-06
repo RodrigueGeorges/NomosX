@@ -1,12 +1,12 @@
 "use client";
 
-const React = require('react');
-const {useState,useEffect} = require('react');
+import React from 'react';
+import { useState,useEffect } from 'react';
 
-const Link = require('next/link');
-const {useRouter,usePathname} = require('next/navigation');
-const {LayoutDashboard,Zap,Search,Archive,Settings,LogOut,UserasUserIcon,Menu,X,PenTool,DollarSign} = require('lucide-react');
-const {useAuth} = require('@/hooks/useAuth');
+import Link from 'next/link';
+import { useRouter,usePathname } from 'next/navigation';
+import { LayoutDashboard,Zap,Search,Archive,Settings,LogOut,UserasUserIcon,Menu,X,PenTool,DollarSign } from 'lucide-react';
+import { useAuth } from '@/hooks/useAuth';
 
 // USER Navigation - Reading focused
 const userNav = [

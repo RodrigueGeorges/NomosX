@@ -1,6 +1,6 @@
-const {NextRequest,NextResponse} = require('next/server');
-const {prisma} = require('@/lib/db');
-const {runPipeline} = require('@/lib/agent/pipeline-v2');
+import { NextRequest,NextResponse } from 'next/server';
+import { prisma } from '@/lib/db';
+import { runPipeline } from '@/lib/agent/pipeline-v2';
 
 /**
  * POST /api/cron/generate-briefs

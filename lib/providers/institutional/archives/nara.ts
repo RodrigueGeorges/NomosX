@@ -4,7 +4,7 @@
  * URL: https://catalog.archives.gov
  */
 
-const axios = require('axios');
+import axios from 'axios';
 
 const BASE_URL = 'https://catalog.archives.gov';
 const API_URL = `${BASE_URL}/api/v1`;

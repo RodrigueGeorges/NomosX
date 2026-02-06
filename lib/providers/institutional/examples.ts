@@ -3,8 +3,8 @@
  * À utiliser pour tests, démos, documentation
  */
 
-const {scout,runFullPipeline} = require('@/lib/agent/pipeline-v2');
-const {recommendProviders} = require('./presets');
+import { scout,runFullPipeline } from '@/lib/agent/pipeline-v2';
+import { recommendProviders } from './presets';
 
 /**
  * EXEMPLE 1: Géopolitique - Menaces cyber russes

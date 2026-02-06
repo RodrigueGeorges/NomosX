@@ -13,10 +13,10 @@
  * }
  */
 
-const {NextRequest,NextResponse} = require('next/server');
-const {runWeeklyNewsletter} = require('@/lib/jobs/weekly-newsletter');
-const {sendBulkNewsletter} = require('@/lib/email');
-const {prisma} = require('@/lib/db');
+import { NextRequest,NextResponse } from 'next/server';
+import { runWeeklyNewsletter } from '@/lib/jobs/weekly-newsletter';
+import { sendBulkNewsletter } from '@/lib/email';
+import { prisma } from '@/lib/db';
 
 // Verify cron secret to prevent unauthorized access
 const CRON_SECRET = process.env.CRON_SECRET;

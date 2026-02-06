@@ -3,7 +3,7 @@
  * BEAUCOUP plus fiable que le scraping HTML
  */
 
-const Parser = require('rss-parser');
+import Parser from 'rss-parser';
 
 const parser = new Parser({
   headers: {

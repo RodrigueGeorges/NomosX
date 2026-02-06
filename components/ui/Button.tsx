@@ -1,7 +1,7 @@
-const React = require('react');
+import React from 'react';
 
-const {cn} = require('@/lib/utils');
-const {LoadingSpinner} = require('./LoadingSpinner');
+import { cn } from '@/lib/utils';
+import { LoadingSpinner } from './LoadingSpinner';
 
 interface ButtonProps extends React.ButtonHTMLAttributes<HTMLButtonElement> {
   variant?: "primary" | "outline" | "destructive" | "secondary" | "ghost" | "ai" | "danger" | "success" | "outline" | "destructive";

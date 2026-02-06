@@ -2,10 +2,10 @@
  * Editorial Gate API - Evaluate signals/drafts for publication
  */
 
-const {NextRequest,NextResponse} = require('next/server');
-const {prisma} = require('@/lib/db');
-const {getSession} = require('@/lib/auth');
-const {editorialGate,evaluatePendingSignals} = require('@/lib/agent/editorial-gate');
+import { NextRequest,NextResponse } from 'next/server';
+import { prisma } from '@/lib/db';
+import { getSession } from '@/lib/auth';
+import { editorialGate,evaluatePendingSignals } from '@/lib/agent/editorial-gate';
 
 // POST /api/editorial-gate - Evaluate a signal or draft
 export async function POST(request: NextRequest) {

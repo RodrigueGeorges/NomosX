@@ -3,7 +3,7 @@
  * Suivi des recommandations OpenClaw
  */
 
-const Stripe = require('stripe');
+import Stripe from 'stripe';
 
 // Configuration Stripe
 const stripe = new Stripe(process.env.STRIPE_SECRET_KEY!, {

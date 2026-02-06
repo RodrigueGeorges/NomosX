@@ -3,7 +3,7 @@
  * Suivi des recommandations OpenClaw
  */
 
-const {prisma} = require('@/lib/prisma');
+import { prisma } from '@/lib/prisma';
 
 export interface AnalyticsEvent {
   event: string

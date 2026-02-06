@@ -2,10 +2,10 @@
  * Draft API - Single draft operations
  */
 
-const {NextRequest,NextResponse} = require('next/server');
-const {prisma} = require('@/lib/db');
-const {getSession} = require('@/lib/auth');
-const {submitDraftToGate} = require('@/lib/agent/editorial-gate');
+import { NextRequest,NextResponse } from 'next/server';
+import { prisma } from '@/lib/db';
+import { getSession } from '@/lib/auth';
+import { submitDraftToGate } from '@/lib/agent/editorial-gate';
 
 // GET /api/drafts/[id] - Get a single draft
 export async function GET(

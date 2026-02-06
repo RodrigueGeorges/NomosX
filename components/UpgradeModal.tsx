@@ -1,7 +1,7 @@
-const {useRouter} = require('next/navigation');
-const {X,Shield,Check} = require('lucide-react');
-const {Button} = require('@/components/ui/Button');
-const {Card,CardContent} = require('@/components/ui/Card');
+import { useRouter } from 'next/navigation';
+import { X,Shield,Check } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
+import { Card,CardContent } from '@/components/ui/Card';
 
 type UpgradeModalProps = {
   isOpen: boolean;

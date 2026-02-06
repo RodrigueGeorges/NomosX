@@ -2,7 +2,7 @@
  * Domaines prédéfinis pour la classification des sources
  */
 
-const {Wallet,Microscope,Leaf,Stethoscope,Cpu,Users,Scale,Zap,typeLucideIcon,} = require('lucide-react');
+import { Wallet,Microscope,Leaf,Stethoscope,Cpu,Users,Scale,Zap,typeLucideIcon, } from 'lucide-react';
 
 export type Domain = {
   slug: string;

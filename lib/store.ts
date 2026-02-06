@@ -1,5 +1,5 @@
-const {create} = require('zustand');
-const {devtools} = require('zustand/middleware');
+import { create } from 'zustand';
+import { devtools } from 'zustand/middleware';
 
 interface AppState {
   // User state

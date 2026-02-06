@@ -5,8 +5,8 @@
  * Includes: METHODOLOGY_JUDGE, ADVERSARIAL_REVIEWER, DECISION_CALIBRATOR
  */
 
-const OpenAI = require('openai');
-const {CriticalLoopResult,MethodologyJudgment,AdversarialReview,CalibrationAssessment} = require('@/lib/think-tank/types');
+import OpenAI from 'openai';
+import { CriticalLoopResult,MethodologyJudgment,AdversarialReview,CalibrationAssessment } from '@/lib/think-tank/types';
 
 const ai = new OpenAI({ apiKey: process.env.OPENAI_API_KEY });
 const MODEL = "gpt-4o";

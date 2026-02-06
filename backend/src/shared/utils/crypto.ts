@@ -2,7 +2,7 @@
  * Cryptography utilities
  */
 
-const crypto = require('crypto');
+import crypto from 'crypto';
 
 export function hash(text: string): string {
   return crypto.createHash("sha256").update(text).digest("hex");

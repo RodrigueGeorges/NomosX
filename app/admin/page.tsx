@@ -1,6 +1,6 @@
 "use client";
-const React = require('react');
-const {useState,useEffect} = require('react');
+import React from 'react';
+import { useState,useEffect } from 'react';
 
 /**
  * ADMIN Dashboard — Think Tank Command Center
@@ -16,15 +16,15 @@ const {useState,useEffect} = require('react');
  * - Newsletter control
  */
 
-const {useRouter} = require('next/navigation');
-const Link = require('next/link');
-const Shell = require('@/components/Shell');
-const {Button} = require('@/components/ui/Button');
-const {Badge} = require('@/components/ui/Badge');
-const {Card,CardContent} = require('@/components/ui/Card');
-const TrustScoreBadge = require('@/components/TrustScoreBadge');
-const {cn} = require('@/lib/utils');
-const {Activity,Zap,FileText,Archive,Clock,CheckCircle,Pause,VolumeX,ArrowRight,RefreshCw,PenTool,AlertCircle,Shield} = require('lucide-react');
+import { useRouter } from 'next/navigation';
+import Link from 'next/link';
+import Shell from '@/components/Shell';
+import { Button } from '@/components/ui/Button';
+import { Badge } from '@/components/ui/Badge';
+import { Card,CardContent } from '@/components/ui/Card';
+import TrustScoreBadge from '@/components/TrustScoreBadge';
+import { cn } from '@/lib/utils';
+import { Activity,Zap,FileText,Archive,Clock,CheckCircle,Pause,VolumeX,ArrowRight,RefreshCw,PenTool,AlertCircle,Shield } from 'lucide-react';
 
 type Signal = {
   id: string;

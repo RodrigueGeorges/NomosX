@@ -2,10 +2,10 @@
  * Draft Submit API - Submit draft to Editorial Gate
  */
 
-const {NextRequest,NextResponse} = require('next/server');
-const {prisma} = require('@/lib/db');
-const {getSession} = require('@/lib/auth');
-const {submitDraftToGate} = require('@/lib/agent/editorial-gate');
+import { NextRequest,NextResponse } from 'next/server';
+import { prisma } from '@/lib/db';
+import { getSession } from '@/lib/auth';
+import { submitDraftToGate } from '@/lib/agent/editorial-gate';
 
 // POST /api/drafts/[id]/submit - Submit draft to Editorial Gate
 export async function POST(

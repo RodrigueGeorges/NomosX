@@ -1,6 +1,6 @@
-const {NextRequest,NextResponse} = require('next/server');
-const {prisma} = require('@/lib/db');
-const {getSession} = require('@/lib/auth');
+import { NextRequest,NextResponse } from 'next/server';
+import { prisma } from '@/lib/db';
+import { getSession } from '@/lib/auth';
 
 /**
  * GET /api/user/verticals

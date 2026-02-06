@@ -25,8 +25,8 @@
  * }
  */
 
-const OpenAI = require('openai');
-const {env} = require('../env');
+import OpenAI from 'openai';
+import { env } from '../env';
 
 const ai = new OpenAI({ apiKey: env.OPENAI_API_KEY });
 

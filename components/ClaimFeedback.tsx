@@ -1,7 +1,7 @@
 
 "use client";
-const React = require('react');
-const {useState} = require('react');
+import React from 'react';
+import { useState } from 'react';
 /**
  * ClaimFeedback Component
  * 

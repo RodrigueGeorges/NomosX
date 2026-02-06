@@ -2,10 +2,10 @@
  * Use Case: Create Analysis Run
  */
 
-const {generateCorrelationId} = require('../../shared/utils/correlation-id');
-const {IClaimRepository} = require('../../domain/claim/repositories/IClaimRepository');
-const {Logger} = require('../../shared/logging/Logger');
-const {QueueManager,QUEUE_NAMES} = require('../../infrastructure/queue/QueueManager');
+import { generateCorrelationId } from '../../shared/utils/correlation-id';
+import { IClaimRepository } from '../../domain/claim/repositories/IClaimRepository';
+import { Logger } from '../../shared/logging/Logger';
+import { QueueManager,QUEUE_NAMES } from '../../infrastructure/queue/QueueManager';
 
 export interface CreateAnalysisRunInput {
   question: string;

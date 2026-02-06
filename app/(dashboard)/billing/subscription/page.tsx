@@ -3,11 +3,11 @@
  * Suivi de la charte graphique OpenClaw
  */
 
-const {Metadata} = require('next');
-const {Suspense} = require('react');
-const {SubscriptionClient} = require('@/components/features/billing/SubscriptionClient');
-const {Card,CardContent,CardDescription,CardHeader,CardTitle} = require('@/components/ui/Card');
-const {cn} = require('@/lib/utils');
+import { Metadata } from 'next';
+import { Suspense } from 'react';
+import { SubscriptionClient } from '@/components/features/billing/SubscriptionClient';
+import { Card,CardContent,CardDescription,CardHeader,CardTitle } from '@/components/ui/Card';
+import { cn } from '@/lib/utils';
 
 export const metadata: Metadata = {
   title: 'Abonnement | NomosX',

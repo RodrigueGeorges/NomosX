@@ -1,9 +1,9 @@
 "use client";
-const React = require('react');
-const {Suspense,useEffect} = require('react');
+import React from 'react';
+import { Suspense,useEffect } from 'react';
 
-const {useRouter,useSearchParams} = require('next/navigation');
-const {cn} = require('@/lib/utils');
+import { useRouter,useSearchParams } from 'next/navigation';
+import { cn } from '@/lib/utils';
 
 /**
  * Inner component that uses useSearchParams

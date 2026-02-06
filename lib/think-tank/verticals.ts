@@ -4,7 +4,7 @@
  * Pre-configured verticals for the think tank
  */
 
-const {VerticalConfig,PublicationType} = require('./types');
+import { VerticalConfig,PublicationType } from './types';
 
 export interface VerticalDefinition {
   slug: string;

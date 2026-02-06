@@ -3,9 +3,9 @@
  * Part of the Publication Studio workflow
  */
 
-const {NextRequest,NextResponse} = require('next/server');
-const {prisma} = require('@/lib/db');
-const {getSession} = require('@/lib/auth');
+import { NextRequest,NextResponse } from 'next/server';
+import { prisma } from '@/lib/db';
+import { getSession } from '@/lib/auth';
 
 // GET /api/drafts - List drafts with filters
 export async function GET(request: NextRequest) {

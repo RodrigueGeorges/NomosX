@@ -1,5 +1,5 @@
-const {NextRequest,NextResponse} = require('next/server');
-const {deleteSession} = require('@/lib/auth');
+import { NextRequest,NextResponse } from 'next/server';
+import { deleteSession } from '@/lib/auth';
 
 /**
  * POST /api/auth/logout

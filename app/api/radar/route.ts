@@ -1,5 +1,5 @@
-const {NextRequest,NextResponse} = require('next/server');
-const {generateRadarCards} = require('@/lib/agent/radar-agent');
+import { NextRequest,NextResponse } from 'next/server';
+import { generateRadarCards } from '@/lib/agent/radar-agent';
 
 export async function GET(req: NextRequest) {
   try {

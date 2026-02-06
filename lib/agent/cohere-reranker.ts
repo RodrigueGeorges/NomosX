@@ -7,9 +7,9 @@
  * Fallback: If Cohere API fails or is not configured, uses local relevance scoring.
  */
 
-const {env} = require('../env');
+import { env } from '../env';
 import type {EnhancedQuery} from './query-enhancer';
-const {scoreRelevance,typeSourceForScoring} = require('./relevance-scorer');
+import { scoreRelevance,typeSourceForScoring } from './relevance-scorer';
 
 export interface RerankResult<T> {
   source: T;

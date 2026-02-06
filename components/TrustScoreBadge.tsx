@@ -4,7 +4,7 @@
  * Affiche le trust score avec une visualisation claire et attrayante
  */
 
-const React = require('react');
+import React from 'react';
 
 interface TrustScoreBadgeProps {
   score: number; // 0-1

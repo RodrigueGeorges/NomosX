@@ -8,8 +8,8 @@
  * - Charts placeholders
  */
 
-const {StrategicAnalysisOutput} = require('./strategic-analyst-agent');
-const {AgentRole,assertPermission} = require('../governance/index');
+import { StrategicAnalysisOutput } from './strategic-analyst-agent';
+import { AgentRole,assertPermission } from '../governance/index';
 
 const esc = (s: string) =>
   String(s || "")

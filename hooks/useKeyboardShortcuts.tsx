@@ -1,5 +1,5 @@
-const React = require('react');
-const {useEffect,useRef} = require('react');
+import React from 'react';
+import { useEffect,useRef } from 'react';
 /**
  * Keyboard Shortcuts Hook
  * 

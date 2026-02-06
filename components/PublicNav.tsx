@@ -1,5 +1,5 @@
 "use client";
-const React = require('react');
+import React from 'react';
 
 /**
  * PublicNav Component
@@ -8,8 +8,8 @@ const React = require('react');
  * Consistent styling and behavior across public pages
  */
 
-const {useRouter} = require('next/navigation');
-const {Button} = require('@/components/ui/Button');
+import { useRouter } from 'next/navigation';
+import { Button } from '@/components/ui/Button';
 
 interface PublicNavProps {
   currentPage?: "home" | "about" | "methodology";

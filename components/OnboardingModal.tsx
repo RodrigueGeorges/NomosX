@@ -1,12 +1,12 @@
 "use client";
-const React = require('react');
-const {useState,useEffect} = require('react');
+import React from 'react';
+import { useState,useEffect } from 'react';
 
-const {useRouter} = require('next/navigation');
-const {Modal} = require('@/components/ui/Modal');
-const {Button} = require('@/components/ui/Button');
-const {Card,CardContent} = require('@/components/ui/Card');
-const {Check,Sparkles,Loader2} = require('lucide-react');
+import { useRouter } from 'next/navigation';
+import { Modal } from '@/components/ui/Modal';
+import { Button } from '@/components/ui/Button';
+import { Card,CardContent } from '@/components/ui/Card';
+import { Check,Sparkles,Loader2 } from 'lucide-react';
 
 interface Vertical {
   id: string;

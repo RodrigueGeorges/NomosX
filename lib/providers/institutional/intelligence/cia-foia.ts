@@ -4,8 +4,8 @@
  * URL: https://www.cia.gov/readingroom/
  */
 
-const axios = require('axios');
-const cheerio = require('cheerio');
+import axios from 'axios';
+import cheerio from 'cheerio';
 
 const BASE_URL = 'https://www.cia.gov';
 const READING_ROOM = `${BASE_URL}/readingroom`;

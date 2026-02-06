@@ -1,19 +1,19 @@
 
 "use client";
-const React = require('react');
-const {useState} = require('react');
-const {Select} = require('@/components/ui/Select');
-const {useRouter} = require('next/navigation');
-const Shell = require('@/components/Shell');
-const {Input} = require('@/components/ui/Input');
-const {Button} = require('@/components/ui/Button');
-const {Badge} = require('@/components/ui/Badge');
-const {Card,CardContent,CardHeader} = require('@/components/ui/Card');
-const {Skeleton} = require('@/components/ui/Skeleton');
-const DomainSelector = require('@/components/DomainSelector');
-const {getDomainsBySlugs} = require('@/lib/domains');
-const {Search,Filter,ArrowUpDown,Clock,TrendingUp,Award,Layers,Sparkles} = require('lucide-react');
-const {cn} = require('@/lib/utils');
+import React from 'react';
+import { useState } from 'react';
+import { Select } from '@/components/ui/Select';
+import { useRouter } from 'next/navigation';
+import Shell from '@/components/Shell';
+import { Input } from '@/components/ui/Input';
+import { Button } from '@/components/ui/Button';
+import { Badge } from '@/components/ui/Badge';
+import { Card,CardContent,CardHeader } from '@/components/ui/Card';
+import { Skeleton } from '@/components/ui/Skeleton';
+import DomainSelector from '@/components/DomainSelector';
+import { getDomainsBySlugs } from '@/lib/domains';
+import { Search,Filter,ArrowUpDown,Clock,TrendingUp,Award,Layers,Sparkles } from 'lucide-react';
+import { cn } from '@/lib/utils';
 
 type Result = { 
   id: string; 

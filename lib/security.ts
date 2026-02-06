@@ -1,4 +1,4 @@
-const {NextRequest} = require('next/server');
+import { NextRequest } from 'next/server';
 
 interface RateLimitStore {
   [key: string]: {

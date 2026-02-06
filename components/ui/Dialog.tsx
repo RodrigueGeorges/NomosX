@@ -1,12 +1,12 @@
-const React = require('react');
+import React from 'react';
 /**
  * Dialog Component - Suivi de la charte graphique OpenClaw
  */
 
-const DialogPrimitive = require('@radix-ui/react-dialog');
-const {X} = require('lucide-react');
+import DialogPrimitive from '@radix-ui/react-dialog';
+import { X } from 'lucide-react';
 
-const {cn} = require('@/lib/utils');
+import { cn } from '@/lib/utils';
 
 const Dialog = DialogPrimitive.Root
 

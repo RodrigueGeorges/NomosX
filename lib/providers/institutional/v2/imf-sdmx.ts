@@ -14,7 +14,7 @@
  * - If no match is found, it returns a curated set of core IMF datasets (so the provider stays operational).
  */
 
-const {fetchFromProvider} = require('../../../http-client');
+import { fetchFromProvider } from '../../../http-client';
 
 const IMF_SDMX_BASE = "https://dataservices.imf.org/REST/SDMX_JSON.svc";
 

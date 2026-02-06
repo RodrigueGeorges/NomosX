@@ -5,7 +5,7 @@
  * pour récupérer le texte intégral quand disponible
  */
 
-const {fetchFromProvider} = require('../http-client');
+import { fetchFromProvider } from '../http-client';
 
 const HAL_API = "https://api.archives-ouvertes.fr/search";
 

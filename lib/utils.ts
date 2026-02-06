@@ -2,8 +2,8 @@
  * Utils - Fonctions utilitaires OpenClaw
  */
 
-const {typeClassValue,clsx} = require('clsx');
-const {twMerge} = require('tailwind-merge');
+import { type ClassValue, clsx } from 'clsx';
+import { twMerge } from 'tailwind-merge';
 
 export function cn(...inputs: ClassValue[]) {
   return twMerge(clsx(inputs))

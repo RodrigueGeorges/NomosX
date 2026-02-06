@@ -4,7 +4,7 @@
  * Defines structure and constraints for each publication type
  */
 
-const {PublicationTemplate,ClaimType,FORBIDDEN_PHRASES} = require('./types');
+import { PublicationTemplate,ClaimType,FORBIDDEN_PHRASES } from './types';
 
 export const PUBLICATION_TEMPLATES: Record<string, PublicationTemplate> = {
   RESEARCH_BRIEF: {

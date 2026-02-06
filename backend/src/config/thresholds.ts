@@ -2,7 +2,7 @@
  * System Thresholds & Limits
  */
 
-const {z} = require('zod');
+import { z } from 'zod';
 
 const ThresholdsConfigSchema = z.object({
   trust: z.object({

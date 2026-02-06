@@ -3,8 +3,8 @@
  * Site très stable avec plusieurs feeds
  */
 
-const axios = require('axios');
-const Parser = require('rss-parser');
+import axios from 'axios';
+import Parser from 'rss-parser';
 
 const NIST_CSRC_API = 'https://csrc.nist.gov/CSRC/media/feeds/publications/all-pubs.json';
 const NIST_NVD_API = 'https://services.nvd.nist.gov/rest/json/cves/2.0';

@@ -1,5 +1,5 @@
-const React = require('react');
-const {useState,useCallback} = require('react');
+import React from 'react';
+import { useState,useCallback } from 'react';
 /**
  * Streaming Council Hook
  * 

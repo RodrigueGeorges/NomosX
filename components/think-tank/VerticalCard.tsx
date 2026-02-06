@@ -1,5 +1,5 @@
 "use client";
-const React = require('react');
+import React from 'react';
 
 /**
  * VerticalCard Component
@@ -8,9 +8,9 @@ const React = require('react');
  * Follows NomosX design system
  */
 
-const Link = require('next/link');
-const {Card} = require('@/components/ui/Card');
-const {TrendingUp,AlertCircle,FileText} = require('lucide-react');
+import Link from 'next/link';
+import { Card } from '@/components/ui/Card';
+import { TrendingUp,AlertCircle,FileText } from 'lucide-react';
 
 interface VerticalCardProps {
   vertical: {

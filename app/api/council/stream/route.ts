@@ -5,12 +5,12 @@
  * UX Impact : Trust +60%, transparency totale
  */
 
-const {NextRequest} = require('next/server');
-const {selectSmartProviders} = require('@/lib/agent/smart-provider-selector');
-const {scout} = require('@/lib/agent/pipeline-v2');
-const {indexAgent} = require('@/lib/agent/index-agent');
-const {rank} = require('@/lib/agent/pipeline-v2');
-const {OpenAI} = require('openai');
+import { NextRequest } from 'next/server';
+import { selectSmartProviders } from '@/lib/agent/smart-provider-selector';
+import { scout } from '@/lib/agent/pipeline-v2';
+import { indexAgent } from '@/lib/agent/index-agent';
+import { rank } from '@/lib/agent/pipeline-v2';
+import { OpenAI } from 'openai';
 
 export const runtime = 'nodejs';
 export const dynamic = 'force-dynamic';

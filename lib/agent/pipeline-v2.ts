@@ -6,11 +6,11 @@
  * SCOUT → INDEX → RANK → READER → ANALYST → EDITOR → GUARD → PUBLISHER
  */
 
-const { prisma } = require("../db");
-const { scoreSource, scoreNovelty } = require("../score");
-const { clamp } = require("../text");
+import {  prisma  } from '../db';
+import {  scoreSource, scoreNovelty  } from '../score';
+import {  clamp  } from '../text';
 import crypto from "crypto";
-const { AgentRole, assertPermission } = require("../governance");
+import {  AgentRole, assertPermission  } from '../governance';
 
 // P0 FIX #3: Redis caching for SCOUT
 // P2 FIX: Enhanced Redis with reconnection strategy
@@ -19,7 +19,7 @@ let redisConnected = false;
 
 try {
   // Try to load redis if available (optional dependency)
-  const RedisModule = require("ioredis");
+  import RedisModule from 'ioredis';
   redis = new RedisModule(process.env.REDIS_URL || "redis://localhost:6379", {
     retryStrategy: (times: number) => {
       // P2: Auto-reconnect with exponential backoff (max 2 seconds)

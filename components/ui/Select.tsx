@@ -1,12 +1,12 @@
-const React = require('react');
+import React from 'react';
 /**
  * Select Component - Suivi de la charte graphique OpenClaw
  */
 
-const SelectPrimitive = require('@radix-ui/react-select');
-const {Check,ChevronDown,ChevronUp} = require('lucide-react');
+import SelectPrimitive from '@radix-ui/react-select';
+import { Check,ChevronDown,ChevronUp } from 'lucide-react';
 
-const {cn} = require('@/lib/utils');
+import { cn } from '@/lib/utils';
 
 const Select = SelectPrimitive.Root
 

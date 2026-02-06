@@ -3,9 +3,9 @@
  * Uses OpenAI embeddings + JSON storage (pgvector fallback)
  */
 
-const OpenAI = require('openai');
-const {env} = require('./env');
-const {prisma} = require('./db');
+import OpenAI from 'openai';
+import { env } from './env';
+import { prisma } from './db';
 
 const ai = new OpenAI({ apiKey: env.OPENAI_API_KEY });
 const EMBEDDING_MODEL = "text-embedding-3-small";
