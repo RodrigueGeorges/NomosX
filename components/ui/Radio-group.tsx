@@ -13,4 +13,4 @@ const RadioGroup = React.forwardRef<
 ))
 RadioGroup.displayName = "RadioGroup"
 
-module.exports.RadioGroup = RadioGroup;
+module.export { RadioGroup as RadioGroup };

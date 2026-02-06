@@ -13,4 +13,4 @@ const Breadcrumb = React.forwardRef<
 ))
 Breadcrumb.displayName = "Breadcrumb"
 
-module.exports.Breadcrumb = Breadcrumb;
+module.export { Breadcrumb as Breadcrumb };

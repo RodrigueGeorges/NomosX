@@ -13,4 +13,4 @@ const Pagination = React.forwardRef<
 ))
 Pagination.displayName = "Pagination"
 
-module.exports.Pagination = Pagination;
+module.export { Pagination as Pagination };

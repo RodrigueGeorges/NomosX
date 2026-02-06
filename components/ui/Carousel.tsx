@@ -13,4 +13,4 @@ const Carousel = React.forwardRef<
 ))
 Carousel.displayName = "Carousel"
 
-module.exports.Carousel = Carousel;
+module.export { Carousel as Carousel };

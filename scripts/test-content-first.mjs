@@ -9,7 +9,7 @@
 
 import { searchThesesFr } from "../lib/providers/thesesfr.js";
 import { enrichManyThesesWithHAL } from "../lib/providers/thesesfr-hal-bridge.js";
-import { scoreSource } from "../lib/score.js";
+import { scoreSource } from "../lib/score.mjs";
 
 async function testContentFirstStrategy() {
   console.log("🧪 Test de la stratégie Content-First\n");

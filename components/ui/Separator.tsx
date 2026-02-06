@@ -13,4 +13,4 @@ const Separator = React.forwardRef<
 ))
 Separator.displayName = "Separator"
 
-module.exports.Separator = Separator;
+module.export { Separator as Separator };

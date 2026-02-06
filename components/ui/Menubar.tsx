@@ -13,4 +13,4 @@ const Menubar = React.forwardRef<
 ))
 Menubar.displayName = "Menubar"
 
-module.exports.Menubar = Menubar;
+module.export { Menubar as Menubar };

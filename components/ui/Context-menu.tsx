@@ -13,4 +13,4 @@ const ContextMenu = React.forwardRef<
 ))
 ContextMenu.displayName = "ContextMenu"
 
-module.exports.ContextMenu = ContextMenu;
+module.export { ContextMenu as ContextMenu };

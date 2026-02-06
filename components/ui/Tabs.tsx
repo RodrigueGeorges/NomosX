@@ -13,4 +13,4 @@ const Tabs = React.forwardRef<
 ))
 Tabs.displayName = "Tabs"
 
-module.exports.Tabs = Tabs;
+module.export { Tabs as Tabs };

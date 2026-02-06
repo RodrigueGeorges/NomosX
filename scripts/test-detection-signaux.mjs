@@ -3,7 +3,7 @@
  * Test du système de détection de signaux faibles
  */
 
-import { prisma } from '../lib/db.js';
+import { prisma } from '../lib/db.mjs';
 import { detectSignals } from '../lib/agents/signal-detector.js';
 
 async function testDetectionSignaux() {

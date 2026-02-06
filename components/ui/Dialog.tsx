@@ -110,13 +110,13 @@ const DialogDescription = React.forwardRef<
 ))
 DialogDescription.displayName = DialogPrimitive.Description.displayName
 
-module.exports.Dialog = Dialog;
-module.exports.DialogPortal = DialogPortal;
-module.exports.DialogOverlay = DialogOverlay;
-module.exports.DialogClose = DialogClose;
-module.exports.DialogTrigger = DialogTrigger;
-module.exports.DialogContent = DialogContent;
-module.exports.DialogHeader = DialogHeader;
-module.exports.DialogFooter = DialogFooter;
-module.exports.DialogTitle = DialogTitle;
-module.exports.DialogDescription = DialogDescription;
+module.export { Dialog as Dialog };
+module.export { DialogPortal as DialogPortal };
+module.export { DialogOverlay as DialogOverlay };
+module.export { DialogClose as DialogClose };
+module.export { DialogTrigger as DialogTrigger };
+module.export { DialogContent as DialogContent };
+module.export { DialogHeader as DialogHeader };
+module.export { DialogFooter as DialogFooter };
+module.export { DialogTitle as DialogTitle };
+module.export { DialogDescription as DialogDescription };

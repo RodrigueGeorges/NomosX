@@ -148,13 +148,13 @@ const SelectSeparator = React.forwardRef<
 ))
 SelectSeparator.displayName = SelectPrimitive.Separator.displayName
 
-module.exports.Select = Select;
-module.exports.SelectGroup = SelectGroup;
-module.exports.SelectValue = SelectValue;
-module.exports.SelectTrigger = SelectTrigger;
-module.exports.SelectContent = SelectContent;
-module.exports.SelectLabel = SelectLabel;
-module.exports.SelectItem = SelectItem;
-module.exports.SelectSeparator = SelectSeparator;
-module.exports.SelectScrollUpButton = SelectScrollUpButton;
-module.exports.SelectScrollDownButton = SelectScrollDownButton;
+module.export { Select as Select };
+module.export { SelectGroup as SelectGroup };
+module.export { SelectValue as SelectValue };
+module.export { SelectTrigger as SelectTrigger };
+module.export { SelectContent as SelectContent };
+module.export { SelectLabel as SelectLabel };
+module.export { SelectItem as SelectItem };
+module.export { SelectSeparator as SelectSeparator };
+module.export { SelectScrollUpButton as SelectScrollUpButton };
+module.export { SelectScrollDownButton as SelectScrollDownButton };

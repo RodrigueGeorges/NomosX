@@ -13,4 +13,4 @@ const Sheet = React.forwardRef<
 ))
 Sheet.displayName = "Sheet"
 
-module.exports.Sheet = Sheet;
+module.export { Sheet as Sheet };

@@ -128,4 +128,4 @@ export const allProviders = {
   'google-ai': new GoogleAIResearchProvider()
 };
 
-module.exports = allProviders;;
+export default allProviders;

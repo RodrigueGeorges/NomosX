@@ -24,4 +24,4 @@ const Chart = React.forwardRef<HTMLDivElement, ChartProps>(
 )
 Chart.displayName = "Chart"
 
-module.exports.Chart = Chart;
+module.export { Chart as Chart };

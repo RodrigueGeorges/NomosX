@@ -13,4 +13,4 @@ const Command = React.forwardRef<
 ))
 Command.displayName = "Command"
 
-module.exports.Command = Command;
+module.export { Command as Command };

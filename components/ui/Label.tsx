@@ -44,4 +44,4 @@ const Label = React.forwardRef<
 ))
 Label.displayName = LabelPrimitive.Root.displayName
 
-module.exports.Label = Label;
+module.export { Label as Label };

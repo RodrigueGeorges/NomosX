@@ -13,4 +13,4 @@ const ToggleGroup = React.forwardRef<
 ))
 ToggleGroup.displayName = "ToggleGroup"
 
-module.exports.ToggleGroup = ToggleGroup;
+module.export { ToggleGroup as ToggleGroup };

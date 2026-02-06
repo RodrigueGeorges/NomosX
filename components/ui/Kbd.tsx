@@ -13,4 +13,4 @@ const Kbd = React.forwardRef<
 ))
 Kbd.displayName = "Kbd"
 
-module.exports.Kbd = Kbd;
+module.export { Kbd as Kbd };

@@ -13,4 +13,4 @@ const DatePicker = React.forwardRef<
 ))
 DatePicker.displayName = "DatePicker"
 
-module.exports.DatePicker = DatePicker;
+module.export { DatePicker as DatePicker };

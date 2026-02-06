@@ -13,4 +13,4 @@ const NavigationMenu = React.forwardRef<
 ))
 NavigationMenu.displayName = "NavigationMenu"
 
-module.exports.NavigationMenu = NavigationMenu;
+module.export { NavigationMenu as NavigationMenu };

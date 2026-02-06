@@ -379,5 +379,4 @@ export type StripeWebhookEvent =
   | 'payment_method.attached'
   | 'checkout.session.completed'
 
-module.exports = stripe
-;
+export default stripe;

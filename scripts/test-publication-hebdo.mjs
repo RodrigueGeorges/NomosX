@@ -3,7 +3,7 @@
  * Test du système de publication automatique
  */
 
-import { prisma } from '../lib/db.js';
+import { prisma } from '../lib/db.mjs';
 import { generateWeeklyBrief } from '../lib/agents/weekly-brief-agent.js';
 import { publishNewsletter } from '../lib/newsletter/publisher.js';
 

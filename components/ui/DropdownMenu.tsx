@@ -183,18 +183,18 @@ const DropdownMenuShortcut = ({
 }
 DropdownMenuShortcut.displayName = "DropdownMenuShortcut"
 
-module.exports.DropdownMenu = DropdownMenu;
-module.exports.DropdownMenuTrigger = DropdownMenuTrigger;
-module.exports.DropdownMenuContent = DropdownMenuContent;
-module.exports.DropdownMenuItem = DropdownMenuItem;
-module.exports.DropdownMenuCheckboxItem = DropdownMenuCheckboxItem;
-module.exports.DropdownMenuRadioItem = DropdownMenuRadioItem;
-module.exports.DropdownMenuLabel = DropdownMenuLabel;
-module.exports.DropdownMenuSeparator = DropdownMenuSeparator;
-module.exports.DropdownMenuShortcut = DropdownMenuShortcut;
-module.exports.DropdownMenuGroup = DropdownMenuGroup;
-module.exports.DropdownMenuPortal = DropdownMenuPortal;
-module.exports.DropdownMenuSub = DropdownMenuSub;
-module.exports.DropdownMenuSubContent = DropdownMenuSubContent;
-module.exports.DropdownMenuSubTrigger = DropdownMenuSubTrigger;
-module.exports.DropdownMenuRadioGroup = DropdownMenuRadioGroup;
+module.export { DropdownMenu as DropdownMenu };
+module.export { DropdownMenuTrigger as DropdownMenuTrigger };
+module.export { DropdownMenuContent as DropdownMenuContent };
+module.export { DropdownMenuItem as DropdownMenuItem };
+module.export { DropdownMenuCheckboxItem as DropdownMenuCheckboxItem };
+module.export { DropdownMenuRadioItem as DropdownMenuRadioItem };
+module.export { DropdownMenuLabel as DropdownMenuLabel };
+module.export { DropdownMenuSeparator as DropdownMenuSeparator };
+module.export { DropdownMenuShortcut as DropdownMenuShortcut };
+module.export { DropdownMenuGroup as DropdownMenuGroup };
+module.export { DropdownMenuPortal as DropdownMenuPortal };
+module.export { DropdownMenuSub as DropdownMenuSub };
+module.export { DropdownMenuSubContent as DropdownMenuSubContent };
+module.export { DropdownMenuSubTrigger as DropdownMenuSubTrigger };
+module.export { DropdownMenuRadioGroup as DropdownMenuRadioGroup };

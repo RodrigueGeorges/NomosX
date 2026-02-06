@@ -13,4 +13,4 @@ const Accordion = React.forwardRef<
 ))
 Accordion.displayName = "Accordion"
 
-module.exports.Accordion = Accordion;
+module.export { Accordion as Accordion };

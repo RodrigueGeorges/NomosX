@@ -19,4 +19,4 @@ export const mcpAgents = {
   pipeline: pipeline
 };
 
-module.exports = mcpAgents;;
+export default mcpAgents;

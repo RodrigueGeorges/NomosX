@@ -92,10 +92,10 @@ const TableCell = React.forwardRef<
 ))
 TableCell.displayName = "TableCell"
 
-module.exports.Table = Table;
-module.exports.TableHeader = TableHeader;
-module.exports.TableBody = TableBody;
-module.exports.TableFooter = TableFooter;
-module.exports.TableHead = TableHead;
-module.exports.TableRow = TableRow;
-module.exports.TableCell = TableCell;
+module.export { Table as Table };
+module.export { TableHeader as TableHeader };
+module.export { TableBody as TableBody };
+module.export { TableFooter as TableFooter };
+module.export { TableHead as TableHead };
+module.export { TableRow as TableRow };
+module.export { TableCell as TableCell };

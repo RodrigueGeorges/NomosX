@@ -13,4 +13,4 @@ const Toggle = React.forwardRef<
 ))
 Toggle.displayName = "Toggle"
 
-module.exports.Toggle = Toggle;
+module.export { Toggle as Toggle };

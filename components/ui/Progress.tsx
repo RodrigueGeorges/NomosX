@@ -13,4 +13,4 @@ const Progress = React.forwardRef<
 ))
 Progress.displayName = "Progress"
 
-module.exports.Progress = Progress;
+module.export { Progress as Progress };

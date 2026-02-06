@@ -16,4 +16,4 @@ const Avatar = React.forwardRef<
 ))
 Avatar.displayName = "Avatar"
 
-module.exports.Avatar = Avatar;
+module.export { Avatar as Avatar };

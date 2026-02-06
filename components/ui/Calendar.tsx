@@ -13,4 +13,4 @@ const Calendar = React.forwardRef<
 ))
 Calendar.displayName = "Calendar"
 
-module.exports.Calendar = Calendar;
+module.export { Calendar as Calendar };

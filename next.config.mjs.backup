@@ -1,0 +1,33 @@
+/** @type {import('next').NextConfig} */
+const nextConfig = {
+  reactStrictMode: true,
+  serverExternalPackages: ['@prisma/client'],
+  images: {
+    unoptimized: true,
+  },
+  webpack: (config, { isServer }) => {
+    config.resolve.fallback = {
+      ...config.resolve.fallback,
+      fs: false,
+      path: false,
+      os: false,
+    };
+    
+    config.resolve.extensionAlias = {
+      '.js': ['.js', '.jsx', '.ts', '.tsx'],
+      '.mjs': ['.mjs', '.js'],
+      '.cjs': ['.cjs', '.js'],
+    };
+    
+    config.module.rules.push({
+      test: /\.(js|mjs|ts|tsx)$/,
+      resolve: {
+        fullySpecified: false,
+      },
+    });
+    
+    return config;
+  },
+}
+
+export default nextConfig;

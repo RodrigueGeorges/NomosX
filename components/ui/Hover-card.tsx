@@ -13,4 +13,4 @@ const HoverCard = React.forwardRef<
 ))
 HoverCard.displayName = "HoverCard"
 
-module.exports.HoverCard = HoverCard;
+module.export { HoverCard as HoverCard };

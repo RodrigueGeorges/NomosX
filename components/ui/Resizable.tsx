@@ -13,4 +13,4 @@ const Resizable = React.forwardRef<
 ))
 Resizable.displayName = "Resizable"
 
-module.exports.Resizable = Resizable;
+module.export { Resizable as Resizable };

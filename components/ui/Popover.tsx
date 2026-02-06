@@ -13,4 +13,4 @@ const Popover = React.forwardRef<
 ))
 Popover.displayName = "Popover"
 
-module.exports.Popover = Popover;
+module.export { Popover as Popover };

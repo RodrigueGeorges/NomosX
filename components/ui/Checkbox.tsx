@@ -13,4 +13,4 @@ const Checkbox = React.forwardRef<
 ))
 Checkbox.displayName = "Checkbox"
 
-module.exports.Checkbox = Checkbox;
+module.export { Checkbox as Checkbox };
