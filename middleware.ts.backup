@@ -1,0 +1,60 @@
+import { NextRequest, NextResponse } from 'next/server';
+
+// Allowed origins for CSRF validation
+function getAllowedOrigins(): string[] {
+  const origins = ['http://localhost:3000', 'http://127.0.0.1:3000'];
+  if (process.env.NEXT_PUBLIC_APP_URL) origins.push(process.env.NEXT_PUBLIC_APP_URL);
+  if (process.env.URL) origins.push(process.env.URL);
+  return origins;
+}
+
+function checkCsrf(request: NextRequest): boolean {
+  const method = request.method.toUpperCase();
+  if (['GET', 'HEAD', 'OPTIONS'].includes(method)) return true;
+
+  // Server-to-server calls (cron, admin) bypass CSRF
+  if (request.headers.get('x-admin-key') || request.headers.get('authorization')) return true;
+
+  const origin = request.headers.get('origin');
+  const referer = request.headers.get('referer');
+  const allowed = getAllowedOrigins();
+
+  if (origin) return allowed.includes(origin);
+  if (referer) {
+    try { return allowed.includes(new URL(referer).origin); } catch { return false; }
+  }
+  return false;
+}
+
+export function middleware(request: NextRequest) {
+  const isApi = request.nextUrl.pathname.startsWith('/api');
+
+  // CSRF protection for API mutations
+  if (isApi && !checkCsrf(request)) {
+    return NextResponse.json({ error: 'CSRF validation failed' }, { status: 403 });
+  }
+
+  const response = NextResponse.next();
+
+  // Security headers for ALL routes
+  response.headers.set('X-Frame-Options', 'DENY');
+  response.headers.set('X-Content-Type-Options', 'nosniff');
+  response.headers.set('Referrer-Policy', 'strict-origin-when-cross-origin');
+  response.headers.set('X-XSS-Protection', '1; mode=block');
+
+  // CSP only for pages (not API — would break JSON responses)
+  if (!isApi) {
+    response.headers.set(
+      'Content-Security-Policy',
+      "default-src 'self'; script-src 'self' 'unsafe-eval'; style-src 'self' 'unsafe-inline'; img-src 'self' data: https:; font-src 'self' data:;"
+    );
+  }
+
+  return response;
+}
+
+export const config = {
+  matcher: [
+    '/((?!_next/static|_next/image|favicon.ico).*)',
+  ],
+}

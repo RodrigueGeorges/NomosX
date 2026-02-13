@@ -1,0 +1,595 @@
+/**
+ * Brief Service - Service de gestion des briefs
+ * Suivi des recommandations OpenClaw
+ */
+
+import { Brief,BriefVersion,BriefReview,BriefAnalytics } from '@/types/briefs';
+import { prisma } from '@/lib/db';
+
+export interface CreateBriefParams {
+  title: string
+  type: 'executive' | 'strategic'
+  content: any
+  authorId: string
+  category: string
+  tags?: string[]
+  priority?: 'low' | 'medium' | 'high' | 'critical'
+}
+
+export interface UpdateBriefParams {
+  id: string
+  title?: string
+  content?: any
+  status?: string
+  priority?: string
+  tags?: string[]
+  category?: string
+}
+
+export interface BriefSearchParams {
+  query?: string
+  type?: 'executive' | 'strategic'
+  status?: string
+  category?: string
+  authorId?: string
+  tags?: string[]
+  dateRange?: {
+    start: Date
+    end: Date
+  }
+  page?: number
+  limit?: number
+  sortBy?: 'createdAt' | 'updatedAt' | 'title' | 'priority'
+  sortOrder?: 'asc' | 'desc'
+}
+
+/**
+ * Crée un nouveau brief
+ */
+export async function createBrief(params: CreateBriefParams) {
+  try {
+    const brief = await prisma.brief.create({
+      data: {
+        title: params.title,
+        type: params.type,
+        content: params.content,
+        authorId: params.authorId,
+        status: 'draft',
+        priority: params.priority || 'medium',
+        tags: params.tags || [],
+        category: params.category,
+        metadata: {
+          readingTime: calculateReadingTime(JSON.stringify(params.content)),
+          wordCount: countWords(JSON.stringify(params.content)),
+          pages: Math.ceil(countWords(JSON.stringify(params.content)) / 250),
+          complexity: 'medium',
+          sensitivity: 'internal',
+          audience: {
+            primary: [],
+            secondary: [],
+            stakeholders: [],
+            decisionMakers: []
+          },
+          timeframe: {
+            start: new Date(),
+            end: new Date(Date.now() + 90 * 24 * 60 * 60 * 1000) // 90 jours
+          }
+        }
+      },
+      include: {
+        author: true,
+        category: true,
+        versions: {
+          orderBy: { createdAt: 'desc' },
+          take: 1
+        }
+      }
+    })
+
+    // Créer la première version
+    await createBriefVersion({
+      briefId: brief.id,
+      content: params.content,
+      authorId: params.authorId,
+      version: 1,
+      notes: 'Version initiale'
+    })
+
+    return { success: true, brief }
+  } catch (error) {
+    console.error('Error creating brief:', error)
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Unknown error' 
+    }
+  }
+}
+
+/**
+ * Met à jour un brief
+ */
+export async function updateBrief(params: UpdateBriefParams) {
+  try {
+    const { id, ...updateData } = params
+    
+    // Récupérer le brief actuel pour comparaison
+    const currentBrief = await prisma.brief.findUnique({
+      where: { id },
+      include: { versions: { orderBy: { version: 'desc' }, take: 1 } }
+    })
+
+    if (!currentBrief) {
+      return { success: false, error: 'Brief not found' }
+    }
+
+    // Mettre à jour le brief
+    const updatedBrief = await prisma.brief.update({
+      where: { id },
+      data: {
+        ...updateData,
+        updatedAt: new Date(),
+        metadata: updateData.content ? {
+          ...currentBrief.metadata,
+          readingTime: calculateReadingTime(JSON.stringify(updateData.content)),
+          wordCount: countWords(JSON.stringify(updateData.content)),
+          pages: Math.ceil(countWords(JSON.stringify(updateData.content)) / 250)
+        } : undefined
+      },
+      include: {
+        author: true,
+        category: true,
+        versions: {
+          orderBy: { createdAt: 'desc' },
+          take: 1
+        }
+      }
+    })
+
+    // Si le contenu a changé, créer une nouvelle version
+    if (updateData.content && currentBrief.content !== updateData.content) {
+      const lastVersion = currentBrief.versions[0]
+      const newVersionNumber = (lastVersion?.version || 0) + 1
+
+      await createBriefVersion({
+        briefId: id,
+        content: updateData.content,
+        authorId: updatedBrief.authorId,
+        version: newVersionNumber,
+        notes: `Version ${newVersionNumber}`
+      })
+    }
+
+    return { success: true, brief: updatedBrief }
+  } catch (error) {
+    console.error('Error updating brief:', error)
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Unknown error' 
+    }
+  }
+}
+
+/**
+ * Récupère un brief par son ID
+ */
+export async function getBrief(id: string, includeVersions = false) {
+  try {
+    const brief = await prisma.brief.findUnique({
+      where: { id },
+      include: {
+        author: true,
+        category: true,
+        versions: includeVersions ? {
+          orderBy: { createdAt: 'desc' }
+        } : false,
+        reviews: {
+          include: {
+            reviewer: true
+          },
+          orderBy: { createdAt: 'desc' }
+        }
+      }
+    })
+
+    if (!brief) {
+      return { success: false, error: 'Brief not found' }
+    }
+
+    return { success: true, brief }
+  } catch (error) {
+    console.error('Error getting brief:', error)
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Unknown error' 
+    }
+  }
+}
+
+/**
+ * Recherche des briefs
+ */
+export async function searchBriefs(params: BriefSearchParams) {
+  try {
+    const {
+      query,
+      type,
+      status,
+      category,
+      authorId,
+      tags,
+      dateRange,
+      page = 1,
+      limit = 20,
+      sortBy = 'createdAt',
+      sortOrder = 'desc'
+    } = params
+
+    const whereClause: any = {}
+
+    if (query) {
+      whereClause.OR = [
+        { title: { contains: query, mode: 'insensitive' } },
+        { content: { contains: query, mode: 'insensitive' } }
+      ]
+    }
+
+    if (type) whereClause.type = type
+    if (status) whereClause.status = status
+    if (category) whereClause.category = { name: category }
+    if (authorId) whereClause.authorId = authorId
+    if (tags && tags.length > 0) whereClause.tags = { hasSome: tags }
+
+    if (dateRange) {
+      whereClause.createdAt = {
+        gte: dateRange.start,
+        lte: dateRange.end
+      }
+    }
+
+    const skip = (page - 1) * limit
+
+    const [briefs, total] = await Promise.all([
+      prisma.brief.findMany({
+        where: whereClause,
+        include: {
+          author: true,
+          category: true,
+          _count: {
+            select: {
+              versions: true,
+              reviews: true
+            }
+          }
+        },
+        orderBy: { [sortBy]: sortOrder },
+        skip,
+        take: limit
+      }),
+      prisma.brief.count({ where: whereClause })
+    ])
+
+    return {
+      success: true,
+      briefs,
+      pagination: {
+        page,
+        limit,
+        total,
+        pages: Math.ceil(total / limit)
+      }
+    }
+  } catch (error) {
+    console.error('Error searching briefs:', error)
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Unknown error' 
+    }
+  }
+}
+
+/**
+ * Supprime un brief
+ */
+export async function deleteBrief(id: string) {
+  try {
+    await prisma.brief.delete({
+      where: { id }
+    })
+
+    return { success: true }
+  } catch (error) {
+    console.error('Error deleting brief:', error)
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Unknown error' 
+    }
+  }
+}
+
+/**
+ * Crée une version de brief
+ */
+async function createBriefVersion(params: {
+  briefId: string
+  content: any
+  authorId: string
+  version: number
+  notes?: string
+}) {
+  try {
+    const version = await prisma.briefVersion.create({
+      data: {
+        briefId: params.briefId,
+        content: params.content,
+        version: params.version,
+        authorId: params.authorId,
+        notes: params.notes
+      }
+    })
+
+    return version
+  } catch (error) {
+    console.error('Error creating brief version:', error)
+    throw error
+  }
+}
+
+/**
+ * Récupère les versions d'un brief
+ */
+export async function getBriefVersions(briefId: string) {
+  try {
+    const versions = await prisma.briefVersion.findMany({
+      where: { briefId },
+      include: {
+        author: true
+      },
+      orderBy: { version: 'desc' }
+    })
+
+    return { success: true, versions }
+  } catch (error) {
+    console.error('Error getting brief versions:', error)
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Unknown error' 
+    }
+  }
+}
+
+/**
+ * Crée une review de brief
+ */
+export async function createBriefReview(params: {
+  briefId: string
+  reviewerId: string
+  status: 'pending' | 'approved' | 'rejected' | 'needs_revision'
+  comments: any[]
+  decision?: string
+}) {
+  try {
+    const review = await prisma.briefReview.create({
+      data: {
+        briefId: params.briefId,
+        reviewerId: params.reviewerId,
+        status: params.status,
+        comments: params.comments,
+        decision: params.decision
+      },
+      include: {
+        reviewer: true
+      }
+    })
+
+    return { success: true, review }
+  } catch (error) {
+    console.error('Error creating brief review:', error)
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Unknown error' 
+    }
+  }
+}
+
+/**
+ * Récupère les analytics d'un brief
+ */
+export async function getBriefAnalytics(briefId: string) {
+  try {
+    // Récupérer les métriques de base
+    const brief = await prisma.brief.findUnique({
+      where: { id: briefId },
+      include: {
+        _count: {
+          select: {
+            versions: true,
+            reviews: true,
+            accesses: true
+          }
+        }
+      }
+    })
+
+    if (!brief) {
+      return { success: false, error: 'Brief not found' }
+    }
+
+    // Récupérer les métriques détaillées
+    const analytics = await prisma.briefAnalytics.findUnique({
+      where: { briefId }
+    })
+
+    const result: BriefAnalytics = {
+      briefId,
+      views: analytics?.views || 0,
+      downloads: analytics?.downloads || 0,
+      shares: analytics?.shares || 0,
+      comments: brief._count.reviews,
+      averageRating: analytics?.averageRating || 0,
+      ratings: analytics?.ratings || 0,
+      readTime: analytics?.readTime || {
+        average: 0,
+        median: 0,
+        distribution: {}
+      },
+      engagement: analytics?.engagement || {
+        bySection: {},
+        byUserType: {}
+      },
+      feedback: []
+    }
+
+    return { success: true, analytics: result }
+  } catch (error) {
+    console.error('Error getting brief analytics:', error)
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Unknown error' 
+    }
+  }
+}
+
+/**
+ * Met à jour les analytics d'un brief
+ */
+export async function updateBriefAnalytics(
+  briefId: string,
+  metrics: Partial<BriefAnalytics>
+) {
+  try {
+    const existing = await prisma.briefAnalytics.findUnique({
+      where: { briefId }
+    })
+
+    const analytics = await prisma.briefAnalytics.upsert({
+      where: { briefId },
+      create: {
+        briefId,
+        views: metrics.views || 0,
+        downloads: metrics.downloads || 0,
+        shares: metrics.shares || 0,
+        averageRating: metrics.averageRating || 0,
+        ratings: metrics.ratings || 0,
+        readTime: metrics.readTime || { average: 0, median: 0, distribution: {} },
+        engagement: metrics.engagement || { bySection: {}, byUserType: {} }
+      },
+      update: {
+        views: metrics.views,
+        downloads: metrics.downloads,
+        shares: metrics.shares,
+        averageRating: metrics.averageRating,
+        ratings: metrics.ratings,
+        readTime: metrics.readTime,
+        engagement: metrics.engagement
+      }
+    })
+
+    return { success: true, analytics }
+  } catch (error) {
+    console.error('Error updating brief analytics:', error)
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Unknown error' 
+    }
+  }
+}
+
+/**
+ * Calcule le temps de lecture estimé
+ */
+function calculateReadingTime(content: string): number {
+  const wordsPerMinute = 200
+  const words = content.split(/\s+/).length
+  return Math.ceil(words / wordsPerMinute)
+}
+
+/**
+ * Compte le nombre de mots
+ */
+function countWords(content: string): number {
+  return content.split(/\s+/).length
+}
+
+/**
+ * Export des briefs
+ */
+export async function exportBriefs(
+  format: 'json' | 'csv' | 'pdf',
+  filters?: BriefSearchParams
+) {
+  try {
+    const searchResult = await searchBriefs({
+      ...filters,
+      page: 1,
+      limit: 1000 // Limite pour l'export
+    })
+
+    if (!searchResult.success) {
+      return searchResult
+    }
+
+    const briefs = searchResult.briefs
+
+    if (format === 'json') {
+      return { 
+        success: true, 
+        data: briefs, 
+        filename: 'briefs.json' 
+      }
+    }
+
+    if (format === 'csv') {
+      const headers = [
+        'ID', 'Titre', 'Type', 'Statut', 'Priorité', 
+        'Auteur', 'Catégorie', 'Tags', 'Créé le', 'Mis à jour le'
+      ]
+      
+      const csv = [
+        headers.join(','),
+        ...briefs.map((brief: any) => [
+          brief.id,
+          `"${brief.title}"`,
+          brief.type,
+          brief.status,
+          brief.priority,
+          `"${brief.author.name}"`,
+          brief.category?.name || '',
+          `"${brief.tags.join(';')}"`,
+          brief.createdAt.toISOString(),
+          brief.updatedAt.toISOString()
+        ].join(','))
+      ].join('\n')
+
+      return { 
+        success: true, 
+        data: csv, 
+        filename: 'briefs.csv' 
+      }
+    }
+
+    // Pour PDF, implémentation plus complexe avec Puppeteer
+    return { 
+      success: false, 
+      error: 'PDF export not implemented yet' 
+    }
+  } catch (error) {
+    console.error('Error exporting briefs:', error)
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Unknown error' 
+    }
+  }
+}
+
+export default {
+  createBrief,
+  updateBrief,
+  getBrief,
+  searchBriefs,
+  deleteBrief,
+  getBriefVersions,
+  createBriefReview,
+  getBriefAnalytics,
+  updateBriefAnalytics,
+  exportBriefs
+}

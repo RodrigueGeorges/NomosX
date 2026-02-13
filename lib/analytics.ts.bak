@@ -1,0 +1,578 @@
+/**
+ * Analytics Service - Service d'analyse et de tracking
+ * Suivi des recommandations OpenClaw
+ * 
+ * NOTE: Temporarily disabled - Prisma models not implemented yet
+ */
+
+// import { prisma } from '@/lib/db';
+
+export interface AnalyticsEvent {
+  event: string
+  userId?: string
+  sessionId?: string
+  properties?: Record<string, any>
+  timestamp: Date
+  userAgent?: string
+  ipAddress?: string
+  referrer?: string
+}
+
+export interface PageView {
+  path: string
+  userId?: string
+  sessionId: string
+  duration?: number
+  timestamp: Date
+  userAgent?: string
+  referrer?: string
+}
+
+export interface UserMetrics {
+  userId: string
+  totalSessions: number
+  totalPageViews: number
+  avgSessionDuration: number
+  bounceRate: number
+  lastActiveAt: Date
+  acquisitionSource: string
+}
+
+export interface ConversionMetrics {
+  event: string
+  count: number
+  conversionRate: number
+  revenue?: number
+  period: {
+    start: Date
+    end: Date
+  }
+}
+
+export interface TrafficMetrics {
+  pageViews: number
+  uniqueVisitors: number
+  sessions: number
+  avgSessionDuration: number
+  bounceRate: number
+  trafficSources: Record<string, number>
+  topPages: Array<{
+    path: string
+    views: number
+    uniqueViews: number
+    avgDuration: number
+  }>
+}
+
+export interface FunnelMetrics {
+  name: string
+  steps: Array<{
+    name: string
+    count: number
+    conversionRate: number
+    dropoffRate: number
+  }>
+  overallConversionRate: number
+}
+
+/**
+ * Track un événement analytics
+ */
+export async function trackEvent(event: AnalyticsEvent) {
+  try {
+    // TODO: Implement when Prisma models are available
+    console.log('Analytics event tracked:', event.event)
+    // await prisma.analyticsEvent.create({
+    //   data: {
+    //     event: event.event,
+    //     userId: event.userId,
+    //     sessionId: event.sessionId,
+    //     properties: event.properties || {},
+    //     timestamp: event.timestamp,
+    //     userAgent: event.userAgent,
+    //     ipAddress: event.ipAddress,
+    //     referrer: event.referrer,
+    //   },
+    // })
+
+    // Envoyer à des services externes si configuré
+    if (process.env.ANALYTICS_PROVIDER === 'plausible') {
+      await sendToPlausible(event)
+    }
+    
+    if (process.env.ANALYTICS_PROVIDER === 'google-analytics') {
+      await sendToGoogleAnalytics(event)
+    }
+
+    return { success: true }
+  } catch (error) {
+    console.error('Error tracking event:', error)
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Unknown error' 
+    }
+  }
+}
+
+/**
+ * Track une vue de page
+ */
+export async function trackPageView(pageView: PageView) {
+  try {
+    await prisma.pageView.create({
+      data: {
+        path: pageView.path,
+        userId: pageView.userId,
+        sessionId: pageView.sessionId,
+        duration: pageView.duration,
+        timestamp: pageView.timestamp,
+        userAgent: pageView.userAgent,
+        referrer: pageView.referrer,
+      },
+    })
+
+    return { success: true }
+  } catch (error) {
+    console.error('Error tracking page view:', error)
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Unknown error' 
+    }
+  }
+}
+
+/**
+ * Récupère les métriques d'un utilisateur
+ */
+export async function getUserMetrics(userId: string, period?: {
+  start: Date
+  end: Date
+}): Promise<UserMetrics | null> {
+  try {
+    const whereClause: any = { userId }
+    
+    if (period) {
+      whereClause.timestamp = {
+        gte: period.start,
+        lte: period.end,
+      }
+    }
+
+    // Sessions de l'utilisateur
+    const sessions = await prisma.session.findMany({
+      where: whereClause,
+      include: {
+        pageViews: true,
+      },
+    })
+
+    if (sessions.length === 0) return null
+
+    const totalSessions = sessions.length
+    const totalPageViews = sessions.reduce(
+      (sum: number, session: any) => sum + session.pageViews.length,
+      0
+    )
+    
+    const avgSessionDuration = sessions.reduce(
+      (sum: number, session: any) => sum + (session.duration || 0),
+      0
+    ) / totalSessions
+
+    const bouncedSessions = sessions.filter(
+      (session: any) => session.pageViews.length === 1
+    ).length
+    const bounceRate = (bouncedSessions / totalSessions) * 100
+
+    const lastActiveAt = new Date(
+      Math.max(...sessions.map((s: any) => s.timestamp.getTime()))
+    )
+
+    // Source d'acquisition (première session)
+    const firstSession = sessions.reduce((earliest: any, current: any) =>
+      current.timestamp < earliest.timestamp ? current : earliest
+    )
+    const acquisitionSource = firstSession.referrer || 'direct'
+
+    return {
+      userId,
+      totalSessions,
+      totalPageViews,
+      avgSessionDuration,
+      bounceRate,
+      lastActiveAt,
+      acquisitionSource,
+    }
+  } catch (error) {
+    console.error('Error getting user metrics:', error)
+    return null
+  }
+}
+
+/**
+ * Récupère les métriques de conversion
+ */
+export async function getConversionMetrics(
+  event: string,
+  period: {
+    start: Date
+    end: Date
+  }
+): Promise<ConversionMetrics | null> {
+  try {
+    // Nombre total de sessions dans la période
+    const totalSessions = await prisma.session.count({
+      where: {
+        timestamp: {
+          gte: period.start,
+          lte: period.end,
+        },
+      },
+    })
+
+    // Nombre d'événements de conversion
+    const conversionEvents = await prisma.analyticsEvent.count({
+      where: {
+        event,
+        timestamp: {
+          gte: period.start,
+          lte: period.end,
+        },
+      },
+    })
+
+    const conversionRate = totalSessions > 0 ? (conversionEvents / totalSessions) * 100 : 0
+
+    // Revenue si c'est un événement de paiement
+    let revenue = 0
+    if (event.includes('payment') || event.includes('purchase')) {
+      const revenueEvents = await prisma.analyticsEvent.findMany({
+        where: {
+          event,
+          timestamp: {
+            gte: period.start,
+            lte: period.end,
+          },
+        },
+      })
+
+      revenue = revenueEvents.reduce(
+        (sum: number, event: any) => sum + (event.properties?.amount || 0),
+        0
+      )
+    }
+
+    return {
+      event,
+      count: conversionEvents,
+      conversionRate,
+      revenue,
+      period,
+    }
+  } catch (error) {
+    console.error('Error getting conversion metrics:', error)
+    return null
+  }
+}
+
+/**
+ * Récupère les métriques de trafic
+ */
+export async function getTrafficMetrics(period: {
+  start: Date
+  end: Date
+}): Promise<TrafficMetrics | null> {
+  try {
+    // Page views totales
+    const pageViews = await prisma.pageView.count({
+      where: {
+        timestamp: {
+          gte: period.start,
+          lte: period.end,
+        },
+      },
+    })
+
+    // Sessions uniques
+    const uniqueSessions = await prisma.session.groupBy({
+      by: ['sessionId'],
+      where: {
+        timestamp: {
+          gte: period.start,
+          lte: period.end,
+        },
+      },
+    })
+
+    // Visiteurs uniques
+    const uniqueVisitors = await prisma.session.groupBy({
+      by: ['userId'],
+      where: {
+        userId: { not: null },
+        timestamp: {
+          gte: period.start,
+          lte: period.end,
+        },
+      },
+    })
+
+    // Durée moyenne de session
+    const sessions = await prisma.session.findMany({
+      where: {
+        timestamp: {
+          gte: period.start,
+          lte: period.end,
+        },
+      },
+    })
+
+    const avgSessionDuration = sessions.length > 0
+      ? sessions.reduce((sum: number, session: any) => sum + (session.duration || 0), 0) / sessions.length
+      : 0
+
+    // Taux de rebond
+    const bouncedSessions = sessions.filter(
+      (session: any) => session.pageViews.length === 1
+    ).length
+    const bounceRate = sessions.length > 0 ? (bouncedSessions / sessions.length) * 100 : 0
+
+    // Sources de trafic
+    const trafficSources = sessions.reduce((sources: any, session: any) => {
+      const source = session.referrer || 'direct'
+      sources[source] = (sources[source] || 0) + 1
+      return sources
+    }, {} as Record<string, number>)
+
+    // Pages les plus visitées
+    const pageViewsByPath = await prisma.pageView.groupBy({
+      by: ['path'],
+      where: {
+        timestamp: {
+          gte: period.start,
+          lte: period.end,
+        },
+      },
+      _count: { path: true },
+      orderBy: { _count: { path: 'desc' } },
+      take: 10,
+    })
+
+    const topPages = await Promise.all(
+      pageViewsByPath.map(async (page: any) => {
+        const pageData = await prisma.pageView.findMany({
+          where: {
+            path: page.path,
+            timestamp: {
+              gte: period.start,
+              lte: period.end,
+            },
+          },
+        })
+
+        const uniqueViews = new Set(pageData.map((pv: any) => pv.sessionId)).size
+        const avgDuration = pageData.reduce(
+          (sum: number, pv: any) => sum + (pv.duration || 0),
+          0
+        ) / pageData.length
+
+        return {
+          path: page.path,
+          views: page._count.path,
+          uniqueViews,
+          avgDuration,
+        }
+      })
+    )
+
+    return {
+      pageViews,
+      uniqueVisitors: uniqueVisitors.length,
+      sessions: uniqueSessions.length,
+      avgSessionDuration,
+      bounceRate,
+      trafficSources,
+      topPages,
+    }
+  } catch (error) {
+    console.error('Error getting traffic metrics:', error)
+    return null
+  }
+}
+
+/**
+ * Récupère les métriques de funnel
+ */
+export async function getFunnelMetrics(
+  funnelName: string,
+  steps: string[],
+  period: {
+    start: Date
+    end: Date
+  }
+): Promise<FunnelMetrics | null> {
+  try {
+    const stepMetrics = []
+
+    for (let i = 0; i < steps.length; i++) {
+      const step = steps[i]
+      const count = await prisma.analyticsEvent.count({
+        where: {
+          event: step,
+          timestamp: {
+            gte: period.start,
+            lte: period.end,
+          },
+        },
+      })
+
+      const previousCount = i > 0 ? stepMetrics[i - 1].count : count
+      const conversionRate = previousCount > 0 ? (count / previousCount) * 100 : 100
+      const dropoffRate = 100 - conversionRate
+
+      stepMetrics.push({
+        name: step,
+        count,
+        conversionRate,
+        dropoffRate,
+      })
+    }
+
+    const overallConversionRate = stepMetrics.length > 0
+      ? (stepMetrics[stepMetrics.length - 1].count / stepMetrics[0].count) * 100
+      : 0
+
+    return {
+      name: funnelName,
+      steps: stepMetrics,
+      overallConversionRate,
+    }
+  } catch (error) {
+    console.error('Error getting funnel metrics:', error)
+    return null
+  }
+}
+
+/**
+ * Envoie les données à Plausible Analytics
+ */
+async function sendToPlausible(event: AnalyticsEvent) {
+  try {
+    const response = await fetch(`https://${process.env.PLAUSIBLE_DOMAIN}/api/event`, {
+      method: 'POST',
+      headers: {
+        'User-Agent': event.userAgent || '',
+        'Content-Type': 'application/json',
+      },
+      body: JSON.stringify({
+        name: event.event,
+        url: event.properties?.url || '/',
+        domain: process.env.PLAUSIBLE_DOMAIN,
+        referrer: event.referrer,
+        props: event.properties,
+      }),
+    })
+
+    if (!response.ok) {
+      throw new Error(`Plausible API error: ${response.status}`)
+    }
+
+    return { success: true }
+  } catch (error) {
+    console.error('Error sending to Plausible:', error)
+    return { success: false, error }
+  }
+}
+
+/**
+ * Envoie les données à Google Analytics
+ */
+async function sendToGoogleAnalytics(event: AnalyticsEvent) {
+  try {
+    // Implémentation Google Analytics 4
+    const payload = {
+      client_id: event.sessionId,
+      user_id: event.userId,
+      events: [
+        {
+          name: event.event,
+          params: event.properties,
+        },
+      ],
+    }
+
+    const response = await fetch(
+      `https://www.google-analytics.com/mp/collect?measurement_id=${process.env.GA_MEASUREMENT_ID}&api_secret=${process.env.GA_API_SECRET}`,
+      {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(payload),
+      }
+    )
+
+    if (!response.ok) {
+      throw new Error(`Google Analytics API error: ${response.status}`)
+    }
+
+    return { success: true }
+  } catch (error) {
+    console.error('Error sending to Google Analytics:', error)
+    return { success: false, error }
+  }
+}
+
+/**
+ * Export des données analytics
+ */
+export async function exportAnalytics(
+  format: 'json' | 'csv',
+  filters?: {
+    event?: string
+    userId?: string
+    startDate?: Date
+    endDate?: Date
+  }
+) {
+  try {
+    const whereClause: any = {}
+    
+    if (filters?.event) whereClause.event = filters.event
+    if (filters?.userId) whereClause.userId = filters.userId
+    if (filters?.startDate || filters?.endDate) {
+      whereClause.timestamp = {}
+      if (filters.startDate) whereClause.timestamp.gte = filters.startDate
+      if (filters.endDate) whereClause.timestamp.lte = filters.endDate
+    }
+
+    const events = await prisma.analyticsEvent.findMany({
+      where: whereClause,
+      orderBy: { timestamp: 'desc' },
+    })
+
+    if (format === 'csv') {
+      // Convertir en CSV
+      const headers = ['event', 'userId', 'sessionId', 'timestamp', 'properties']
+      const csv = [
+        headers.join(','),
+        ...events.map(event => [
+          event.event,
+          event.userId || '',
+          event.sessionId || '',
+          event.timestamp.toISOString(),
+          JSON.stringify(event.properties),
+        ].join(',')),
+      ].join('\n')
+
+      return { success: true, data: csv, filename: 'analytics.csv' }
+    }
+
+    return { success: true, data: events, filename: 'analytics.json' }
+  } catch (error) {
+    console.error('Error exporting analytics:', error)
+    return { 
+      success: false, 
+      error: error instanceof Error ? error.message : 'Unknown error' 
+    }
+  }
+}

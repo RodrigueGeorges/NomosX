@@ -1,0 +1,39 @@
+[build]
+  command = "npm cache clean --force && npm install && npm run build"
+  publish = ".next"
+  functions = "netlify/functions"
+
+[build.environment]
+  # Node.js 20.x LTS - REQUIRED for Next.js 16 compatibility
+  # Node.js 24+ causes "exports is not defined in ES module scope"
+  # due to ESM/CJS detection changes in console-dim.external.js
+  NODE_VERSION = "20.19.0"
+  NPM_VERSION = "10"
+  # Fix Sharp installation issues
+  SHARP_IGNORE_GLOBALVIPS = "1"
+  # Skip Sharp binary download for faster builds
+  SHARP_GLOBAL_BASEDIR = "/opt/buildhome/.npm-global"
+  
+  # NOTE: All API keys and secrets should be set in Netlify UI
+  # Site settings → Build & deploy → Environment → Environment variables
+  # Required variables: DATABASE_URL, OPENAI_API_KEY, JWT_SECRET, ADMIN_KEY, CRON_SECRET
+
+# Note: @netlify/plugin-nextjs handles all routing automatically
+# No manual redirects needed for Next.js SSR
+
+[[headers]]
+  for = "/*"
+  [headers.values]
+    X-Frame-Options = "DENY"
+    X-XSS-Protection = "1; mode=block"
+    X-Content-Type-Options = "nosniff"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+
+[dev]
+  command = "npm run dev"
+  port = 3000
+  publish = ".next"
+  functions = "netlify/functions"
+
+[[plugins]]
+  package = "@netlify/plugin-nextjs"
