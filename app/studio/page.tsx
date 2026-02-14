@@ -4,11 +4,13 @@ import React from 'react';
 import { useState,useEffect,Suspense } from 'react';
 
 /**
- * NomosX Publication Studio
+ * NomosX Studio - STRATEGY TIER ONLY
  * 
- * Human-Initiated Publication Trigger
- * User expresses: "I think this deserves analysis/publication"
- * Output is NOT the brief itself — output is a Publication (or silence)
+ * STRATEGY subscribers can initiate custom research
+ * User expresses: "I need analysis on this specific topic"
+ * Output: Custom publication with Harvard Council insights
+ * 
+ * ACCESS LEVEL: STRATEGY tier only
  */
 
 import { Select } from '@/components/ui/Select';
@@ -28,6 +30,27 @@ import { useStreamingCouncil } from '@/hooks/useStreamingCouncil';
 import ProgressBar from '@/components/ProgressBar';
 import { toast } from '@/components/ui/Toast';
 import { cn } from '@/lib/utils';
+
+// STRATEGY tier check hook
+function useStrategyTier() {
+  const [subscription, setSubscription] = useState<any>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    fetch('/api/subscription/status')
+      .then(res => res.json())
+      .then(data => {
+        setSubscription(data);
+        setLoading(false);
+      })
+      .catch(() => setLoading(false));
+  }, []);
+
+  const isStrategyTier = subscription?.plan === 'STRATEGY' && !subscription?.studioLimitReached;
+  const canAccessStudio = !loading && isStrategyTier;
+
+  return { subscription, loading, canAccessStudio, isStrategyTier };
+}
 
 type PublicationType = "EXECUTIVE_BRIEF" | "STRATEGIC_REPORT";
 
@@ -70,6 +93,9 @@ function StudioPageContent() {
   const searchParams = useSearchParams();
   const router = useRouter();
   
+  // STRATEGY tier check
+  const { subscription, loading, canAccessStudio, isStrategyTier } = useStrategyTier();
+  
   const [question, setQuestion] = useState("");
   const [publicationType, setPublicationType] = useState<PublicationType>("EXECUTIVE_BRIEF");
   const [selectedVertical, setSelectedVertical] = useState<string>("");
@@ -87,6 +113,64 @@ function StudioPageContent() {
 
   const streamingBrief = useStreamingBrief();
   const streamingCouncil = useStreamingCouncil();
+
+  // Redirect if not STRATEGY tier
+  useEffect(() => {
+    if (!loading && !canAccessStudio) {
+      if (subscription?.plan === 'TRIAL') {
+        router.push('/pricing');
+      } else if (subscription?.plan === 'EXECUTIVE') {
+        router.push('/pricing?upgrade=strategy');
+      } else {
+        router.push('/pricing');
+      }
+    }
+  }, [loading, canAccessStudio, subscription, router]);
+
+  // Show loading state
+  if (loading) {
+    return (
+      <Shell>
+        <div className="flex items-center justify-center min-h-96">
+          <div className="text-center">
+            <div className="text-white/50 mb-4">Loading Studio...</div>
+          </div>
+        </div>
+      </Shell>
+    );
+  }
+
+  // Show upgrade prompt if not STRATEGY tier
+  if (!canAccessStudio) {
+    return (
+      <Shell>
+        <div className="flex items-center justify-center min-h-96">
+          <div className="text-center max-w-md">
+            <div className="w-16 h-16 rounded-xl bg-[#00D4FF]/10 border border-[#00D4FF]/20 flex items-center justify-center mx-auto mb-4">
+              <Layers size={32} className="text-[#00D4FF]" />
+            </div>
+            <h2 className="font-display text-2xl font-light text-white mb-4">
+              Studio requires <span className="nx-gradient-text">Strategy</span> tier
+            </h2>
+            <p className="text-white/40 mb-6">
+              Upgrade to Strategy for unlimited custom research with Harvard Council insights.
+            </p>
+            <button
+              onClick={() => router.push('/pricing')}
+              className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#00D4FF]/20 to-[#3B82F6]/20 border border-[#00D4FF]/20 text-white font-medium hover:border-[#00D4FF]/40 transition-all"
+            >
+              Upgrade to Strategy
+            </button>
+            <div className="mt-4 text-xs text-white/30">
+              {subscription?.studioQuestionsRemaining !== undefined && (
+                <>Questions remaining: {subscription.studioQuestionsRemaining}</>
+              )}
+            </div>
+          </div>
+        </div>
+      </Shell>
+    );
+  }
 
   useKeyboardShortcuts([
     {

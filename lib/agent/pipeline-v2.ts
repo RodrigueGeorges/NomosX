@@ -427,16 +427,16 @@ async function scoutImpl(query: string, providers: Providers, perProvider = 50) 
 
     if (detectedDomains.length > 0) {
       const extProviders = new Set<string>();
-      for (const domain of detectedDomains.slice(0, 2)) {
+      for (const domain of detectedDomains.slice(0, 3)) { // Increased from 2 to 3 domains
         const domainProviders = getExtendedProvidersForDomain(domain);
-        domainProviders.slice(0, 3).forEach(p => extProviders.add(p));
+        domainProviders.slice(0, 5).forEach(p => extProviders.add(p)); // Increased from 3 to 5 providers per domain
       }
 
       if (extProviders.size > 0) {
         const extResults = await searchExtendedProviders(
           Array.from(extProviders),
           queryForDomain,
-          Math.min(5, perProvider)
+          Math.min(15, perProvider) // Increased from 5 to 15 sources per extended provider
         );
         pool.push(...extResults);
         console.log(`[SCOUT] Extended registry: +${extResults.length} sources from ${extProviders.size} providers (${detectedDomains.join(", ")})`);
@@ -1150,7 +1150,16 @@ export const DEFAULT_ACADEMIC_PROVIDERS: Providers = [
   "core", "europepmc", "doaj", "ssrn", "repec",
 ];
 
-export async function runFullPipeline(query: string, providers: Providers = DEFAULT_ACADEMIC_PROVIDERS) {
+export async function runFullPipeline(
+  query: string, 
+  providers: Providers = ['openalex', 'arxiv', 'pubmed', 'nature', 'science'],
+  options: {
+    mode?: 'brief' | 'strategic';
+    maxSources?: number;
+    timeout?: number;
+    enableCaching?: boolean;
+  } = {}
+) {
   const stats: any = {};
   const pipelineStart = Date.now();
   
@@ -1193,9 +1202,10 @@ export async function runFullPipeline(query: string, providers: Providers = DEFA
   let scoutResult: Awaited<ReturnType<typeof scout>>;
   let allSourceIds: string[] = [];
 
-  // Initial scout
+  // Initial scout - Demo mode optimization
   const scoutStart = Date.now();
-  scoutResult = await scout(query, providers, 20);
+  const sourcesPerProvider = options.maxSources || (options.mode === 'brief' ? 25 : 50);
+  scoutResult = await scout(query, providers, sourcesPerProvider);
   allSourceIds = [...scoutResult.sourceIds];
   recordTransformation(lineage, "scout", 1, scoutResult.sourceIds.length, Date.now() - scoutStart, {
     sourceIds: scoutResult.sourceIds,
@@ -1217,7 +1227,7 @@ export async function runFullPipeline(query: string, providers: Providers = DEFA
       const expanded = await generateExpandedTerms(query, scoutResult.found, providers);
       stats.orchestrator.expandedTerms = expanded.terms;
       const extraResults = await Promise.allSettled(
-        expanded.terms.slice(0, 3).map(term => scout(term, providers, 10))
+        expanded.terms.slice(0, 5).map(term => scout(term, providers, 25)) // Increased: 5 terms instead of 3, 25 sources instead of 10
       );
       for (let i = 0; i < extraResults.length; i++) {
         const r = extraResults[i];
@@ -1568,11 +1578,11 @@ export async function runStrategicPipeline(
     stats.contextPrimer = { error: String(err) };
   }
 
-  // 1. SCOUT (more sources, with Orchestrator RE_SCOUT loop)
+  // 1. SCOUT (MAXIMUM sources for think tank level)
   console.log(`[Strategic] SCOUT: query="${query}" (${perProvider}/provider)`);
   let allSourceIds: string[] = [];
   const scoutStart = Date.now();
-  const scoutResult = await scout(query, providers, perProvider);
+  const scoutResult = await scout(query, providers, Math.max(perProvider, 75)); // Minimum 75 sources per provider
   allSourceIds = [...scoutResult.sourceIds];
   recordTransformation(lineage, "scout", 1, scoutResult.sourceIds.length, Date.now() - scoutStart, {
     sourceIds: scoutResult.sourceIds,
@@ -1593,7 +1603,7 @@ export async function runStrategicPipeline(
       const expanded = await generateExpandedTerms(query, scoutResult.found, providers);
       stats.orchestrator.expandedTerms = expanded.terms;
       const extraResults = await Promise.allSettled(
-        expanded.terms.slice(0, 3).map(term => scout(term, providers, 10))
+        expanded.terms.slice(0, 7).map(term => scout(term, providers, 30)) // Strategic: 7 terms, 30 sources each
       );
       for (let i = 0; i < extraResults.length; i++) {
         const r = extraResults[i];

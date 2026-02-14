@@ -18,6 +18,7 @@
     "seed:demo": "node scripts/seed-demo-data.mjs",
     "prisma:gen": "prisma generate",
     "db:push": "prisma db push",
+    "db:seed": "node scripts/seed-demo-data.mjs",
     "worker": "node scripts/worker.mjs",
     "seed": "node scripts/seed.mjs",
     "seed:domains": "node scripts/seed-domains.mjs",
@@ -34,6 +35,9 @@
     "netlify:dev": "netlify dev",
     "netlify:build": "npm run build",
     "netlify:deploy": "netlify deploy --prod"
+  },
+  "prisma": {
+    "seed": "node scripts/seed-demo-data.mjs"
   },
   "dependencies": {
     "@anthropic-ai/sdk": "^0.71.2",

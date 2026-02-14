@@ -37,6 +37,11 @@ export async function GET(req: NextRequest) {
           trialEnd,
           isTrialActive: true,
           status: "trialing",
+          // Set default limits based on plan
+          weeklyPublicationMax: 3,        // TRIAL gets 3 briefs/week
+          studioQuestionsPerMonth: 0,    // TRIAL gets no studio access
+          canAccessStudio: false,
+          canCreateVerticals: false,
         },
       });
     }
@@ -55,6 +60,9 @@ export async function GET(req: NextRequest) {
     // Calculate weekly publication limit status
     const weeklyLimitReached = subscription.weeklyPublicationCount >= subscription.weeklyPublicationMax;
 
+    // Calculate studio limit status
+    const studioLimitReached = subscription.studioQuestionsUsed >= subscription.studioQuestionsPerMonth;
+
     return NextResponse.json({
       plan: subscription.plan,
       status: subscription.status,
@@ -72,6 +80,12 @@ export async function GET(req: NextRequest) {
       activeVerticals: subscription.activeVerticals,
       activeVerticalsMax: subscription.activeVerticalsMax,
       verticalsLimitReached: subscription.activeVerticals >= subscription.activeVerticalsMax,
+      
+      // Studio limits
+      studioQuestionsPerMonth: subscription.studioQuestionsPerMonth,
+      studioQuestionsUsed: subscription.studioQuestionsUsed,
+      studioLimitReached,
+      studioQuestionsRemaining: Math.max(0, subscription.studioQuestionsPerMonth - subscription.studioQuestionsUsed),
       
       // Features
       canExportPdf: subscription.canExportPdf,

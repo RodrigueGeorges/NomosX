@@ -111,7 +111,7 @@ export async function POST(req: NextRequest) {
                 await prisma.thinkTankPublication.create({
                   data: {
                     verticalId: vertical.id,
-                    type: pipelineMode === "strategic" ? "RESEARCH_BRIEF" : "EXECUTIVE_BRIEF",
+                    type: pipelineMode === "strategic" ? "STRATEGIC_REPORT" : "EXECUTIVE_BRIEF",
                     title: proposal.topic,
                     html: briefHtml,
                     wordCount: Math.round(briefHtml.length / 6),

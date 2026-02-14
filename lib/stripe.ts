@@ -17,19 +17,19 @@
 
 export const STRIPE_PLANS = {
   TRIAL: {
-    name: 'Trial',
+    name: 'Free',
     priceId: null, // Free tier, no Stripe price
-    features: ['5 briefs/month', '3 providers', 'Basic analysis'],
+    features: ['Weekly summaries', 'Radar signals', 'Public brief previews'],
   },
-  ACCESS: {
-    name: 'NomosX Access',
-    priceId: process.env.STRIPE_PRICE_ACCESS || null,
-    features: ['Unlimited briefs', 'All providers', 'Strategic reports', 'Think tank'],
+  EXECUTIVE: {
+    name: 'Executive',
+    priceId: process.env.STRIPE_PRICE_EXECUTIVE || null,
+    features: ['Full briefs (2-3 pages)', 'Complete archives', 'Weekly newsletter', 'Decision-ready insights'],
   },
-  ENTERPRISE: {
-    name: 'Enterprise',
-    priceId: process.env.STRIPE_PRICE_ENTERPRISE || null,
-    features: ['Everything in Access', 'Custom verticals', 'API access', 'Priority support'],
+  STRATEGY: {
+    name: 'Strategy',
+    priceId: process.env.STRIPE_PRICE_STRATEGY || null,
+    features: ['Everything in Executive', 'Strategic reports (10-15 pages)', 'Studio research tool', 'Custom verticals', 'Priority support'],
   },
 } as const;
 
@@ -37,7 +37,7 @@ export const STRIPE_PLANS = {
  * Create a Stripe Checkout Session for subscription upgrade
  * 
  * Usage (when Stripe is configured):
- *   const session = await createCheckoutSession(userId, 'ACCESS');
+ *   const session = await createCheckoutSession(userId, 'EXECUTIVE');
  *   // Redirect user to session.url
  */
 export async function createCheckoutSession(

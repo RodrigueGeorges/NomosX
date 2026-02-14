@@ -1,417 +1,719 @@
 "use client";
-import React from 'react';
-import { useState, useEffect } from 'react';
-
-/**
- * USER Dashboard — Research Library
- * 
- * Purpose: Consult publications from the NomosX agentic think tank
- * Audience: Subscribers and free users
- * 
- * Shows:
- * - Latest executive briefs (free) with researcher attribution
- * - Latest strategic reports (premium) with researcher attribution
- * - Research verticals coverage
- * - Subscription access level
- * 
- * Does NOT contain:
- * - Generation buttons, prompts, or "ask AI" features
- * - Signal detection interface (internal mechanism)
- * - Editorial controls (admin-only)
- */
-
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
-import Link from 'next/link';
-import Shell from '@/components/Shell';
-import { Button } from '@/components/ui/Button';
-import { Badge } from '@/components/ui/Badge';
-import { Card, CardContent } from '@/components/ui/Card';
-import TrustScoreBadge from '@/components/TrustScoreBadge';
-import ResearcherBadge from '@/components/ResearcherBadge';
-import { getLeadResearcher } from '@/lib/researchers';
-import TrialBanner from '@/components/TrialBanner';
+import { 
+  FileText, 
+  TrendingUp, 
+  Users, 
+  ArrowRight, 
+  AlertTriangle, 
+  BookOpen, 
+  Brain, 
+  Shield, 
+  Scale, 
+  Leaf, 
+  Calculator
+} from 'lucide-react';
+import AdvancedResearcherAvatar from '@/components/AdvancedResearcherAvatar';
+import { RESEARCHERS } from '@/lib/researchers';
 import { cn } from '@/lib/utils';
-import { BookOpen, FileText, Lock, TrendingUp, Sparkles, ArrowRight, Clock, Shield, Layers, Settings } from 'lucide-react';
 
-type Vertical = {
-  id: string;
-  name: string;
-  slug: string;
-  color?: string;
-  recentPublicationCount: number;
-  lastPublishedAt?: string;
-};
+interface SubscriptionData {
+  plan: 'TRIAL' | 'EXECUTIVE' | 'STRATEGY';
+  canAccessBriefs: boolean;
+  canAccessStudio: boolean;
+  canCreateVerticals: boolean;
+  canExportPdf: boolean;
+  weeklyLimit: number;
+  studioLimit: number;
+  weeklyUsed: number;
+  studioUsed: number;
+  weeklyLimitReached: boolean;
+  studioLimitReached: boolean;
+}
 
-type Publication = {
+interface BriefData {
   id: string;
   title: string;
-  type: string;
-  vertical?: { name: string };
-  trustScore: number;
-  status: string;
-  createdAt: string;
-  isPremium: boolean;
-};
+  type: 'SUMMARY_BRIEF' | 'EXECUTIVE_BRIEF' | 'STRATEGIC_REPORT';
+  publishedAt: string;
+  readTime: number;
+  trending?: boolean;
+  critical?: boolean;
+}
 
-type SubscriptionStatus = {
-  plan: string;
-  status: string;
-  isTrialActive: boolean;
-  trialDaysRemaining: number;
-  canAccessPremium: boolean;
-  activeVerticals: number;
-};
+interface ResearcherStatus {
+  id: string;
+  name: string;
+  initials: string;
+  domain: string;
+  status: 'analyzing' | 'debating' | 'synthesizing' | 'idle';
+  currentTask?: string;
+  researcher?: any; // Add researcher data
+  progress?: number;
+}
 
-export default function UserDashboard() {
+export default function DashboardPage() {
   const router = useRouter();
+  const [subscription, setSubscription] = useState<SubscriptionData | null>(null);
   const [loading, setLoading] = useState(true);
-  const [verticals, setVerticals] = useState<Vertical[]>([]);
-  const [latestBriefs, setLatestBriefs] = useState<Publication[]>([]);
-  const [latestReports, setLatestReports] = useState<Publication[]>([]);
-  const [allPublications, setAllPublications] = useState<Publication[]>([]);
-  const [subscription, setSubscription] = useState<SubscriptionStatus | null>(null);
+  const [recentBriefs, setRecentBriefs] = useState<BriefData[]>([]);
+  const [researcherStatus, setResearcherStatus] = useState<ResearcherStatus[]>([]);
 
   useEffect(() => {
-    loadDashboardData();
+    fetchDashboardData();
   }, []);
 
-  async function loadDashboardData() {
-    setLoading(true);
+  const fetchDashboardData = async () => {
     try {
-      const [verticalsRes, publicationsRes, subRes] = await Promise.all([
-        fetch("/api/think-tank/verticals"),
-        fetch("/api/think-tank/publications?limit=20"),
-        fetch("/api/subscription/status"),
+      const [subscriptionRes, briefsRes, researchersRes] = await Promise.all([
+        fetch('/api/subscription/status'),
+        fetch('/api/user/briefs/recent')
       ]);
 
-      if (verticalsRes.ok) {
-        const data = await verticalsRes.json();
-        setVerticals(data.verticals || []);
-      }
-      
-      if (publicationsRes.ok) {
-        const data = await publicationsRes.json();
-        const pubs = data.publications || [];
-        
-        // Separate briefs and reports
-        const briefs = pubs.filter((p: Publication) => p.type === "EXECUTIVE_BRIEF").slice(0, 4);
-        const reports = pubs.filter((p: Publication) => p.type === "STRATEGIC_REPORT").slice(0, 4);
-        
-        setLatestBriefs(briefs);
-        setLatestReports(reports);
-        setAllPublications(pubs);
-      }
-      
-      if (subRes.ok) {
-        const data = await subRes.json();
-        setSubscription(data);
-      }
+      const subscriptionData = await subscriptionRes.json();
+      const briefsData = await briefsRes.json();
+
+      setSubscription(subscriptionData);
+      setRecentBriefs(briefsData.briefs || []);
+
+      fetchResearcherStatus();
     } catch (error) {
-      console.error("Failed to load dashboard data:", error);
+      console.error('Dashboard fetch error:', error);
     } finally {
       setLoading(false);
     }
-  }
+  };
 
-  // Determine vertical activity status
-  const getVerticalStatus = (vertical: Vertical) => {
-    if (!vertical.lastPublishedAt) return { label: "Quiet", color: "text-white/30" };
-    
-    const daysSincePublished = Math.floor(
-      (Date.now() - new Date(vertical.lastPublishedAt).getTime()) / (1000 * 60 * 60 * 24)
-    );
-    
-    if (daysSincePublished <= 7) return { label: "New this week", color: "text-cyan-400" };
-    if (daysSincePublished <= 14) return { label: "Active", color: "text-emerald-400" };
-    return { label: "Quiet", color: "text-white/30" };
+  const fetchResearcherStatus = async () => {
+    try {
+      const response = await fetch('/api/researchers/status');
+      if (response.ok) {
+        const data = await response.json();
+        
+        // Enhance with researcher data
+        const enhancedStatus = data.map((status: any) => {
+          const researcher = RESEARCHERS.find(r => 
+            r.name.toLowerCase().includes(status.name.toLowerCase().split(' ')[1]) ||
+            status.name.toLowerCase().includes(r.name.toLowerCase().split(' ')[1])
+          );
+          
+          return {
+            ...status,
+            researcher: researcher || null,
+            initials: researcher?.initials || status.initials
+          };
+        });
+        
+        setResearcherStatus(enhancedStatus);
+      }
+    } catch (error) {
+      console.error('Failed to fetch researcher status:', error);
+    }
   };
 
   if (loading) {
     return (
-      <Shell>
-        <div className="flex items-center justify-center py-24">
-          <div className="w-8 h-8 border-2 border-[#00D4FF]/20 border-t-[#00D4FF] rounded-full animate-spin" />
+      <div className="min-h-screen bg-[#06060A] flex items-center justify-center">
+        <div className="text-center">
+          <div className="w-16 h-16 mx-auto mb-6 relative">
+            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#00D4FF]/20 to-[#7C3AED]/10 blur-xl" />
+            <div className="relative w-full h-full rounded-full bg-[#0C0C12] border border-white/10 flex items-center justify-center">
+              <span className="font-display text-2xl font-light nx-gradient-text">N</span>
+            </div>
+          </div>
+          <div className="w-8 h-8 mx-auto border-2 border-[#00D4FF]/20 border-t-[#00D4FF] rounded-full animate-spin" />
         </div>
-      </Shell>
+      </div>
     );
   }
 
-  return (
-    <Shell>
-      <div className="max-w-6xl mx-auto">
+  if (!subscription) {
+    return (
+      <div className="min-h-screen bg-[#06060A] flex items-center justify-center">
+        <div className="text-center text-white/50">Error loading dashboard</div>
+      </div>
+    );
+  }
 
-        {/* ── Header ── */}
-        <div className="flex items-center justify-between mb-10">
-          <div>
-            <p className="text-[11px] text-white/20 tracking-[0.2em] uppercase mb-2">Research Library</p>
-            <h1 className="font-display text-3xl sm:text-4xl font-light tracking-tight text-white/95">
-              Your Briefings
-            </h1>
-            <p className="text-sm text-white/35 mt-1.5">
-              Publications from the NomosX research council
-            </p>
+  // TRIAL Dashboard
+  if (subscription.plan === 'TRIAL') {
+    return <TrialDashboard subscription={subscription} recentBriefs={recentBriefs} router={router} />;
+  }
+
+  // EXECUTIVE Dashboard
+  if (subscription.plan === 'EXECUTIVE') {
+    return <ExecutiveDashboard subscription={subscription} recentBriefs={recentBriefs} researcherStatus={researcherStatus} router={router} />;
+  }
+
+  // STRATEGY Dashboard
+  if (subscription.plan === 'STRATEGY') {
+    return <StrategyDashboard subscription={subscription} recentBriefs={recentBriefs} researcherStatus={researcherStatus} router={router} />;
+  }
+
+  return null;
+}
+
+// TRIAL Dashboard - Focus on discovery and upgrade
+function TrialDashboard({ subscription, recentBriefs, router }: { 
+  subscription: SubscriptionData; 
+  recentBriefs: BriefData[]; 
+  router: any;
+}) {
+  return (
+    <div className="min-h-screen bg-[#06060A] text-white">
+      {/* Background */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1400px] h-[900px]">
+          <div className="absolute inset-0 bg-gradient-to-b from-[#00D4FF]/[0.06] via-[#3B82F6]/[0.03] to-transparent blur-3xl" />
+        </div>
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(0,212,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,212,255,0.02)_1px,transparent_1px)] bg-[size:80px_80px]" />
+      </div>
+
+      <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-8">
+        {/* Header */}
+        <div className="mb-8">
+          <div className="flex items-center justify-between mb-6">
+            <div>
+              <h1 className="font-display text-3xl font-light text-white mb-2">
+                Welcome to <span className="nx-gradient-text">NomosX</span>
+              </h1>
+              <p className="text-white/40">Discover strategic intelligence from our autonomous think tank</p>
+            </div>
+            <div className="px-4 py-2 rounded-full border border-emerald-400/20 bg-emerald-400/5">
+              <span className="text-emerald-400 text-sm font-medium">FREE Plan</span>
+            </div>
           </div>
-          <button
-            onClick={() => router.push('/dashboard/preferences')}
-            className="p-2.5 rounded-xl border border-white/[0.06] bg-white/[0.02] text-white/30 hover:text-white/60 hover:border-white/[0.1] transition-all"
-          >
-            <Settings size={16} />
-          </button>
         </div>
 
-        {/* Trial Banner */}
-        {subscription?.isTrialActive && subscription.trialDaysRemaining > 0 && (
-          <div className="mb-8">
-            <TrialBanner daysRemaining={subscription.trialDaysRemaining} />
+        {/* Upgrade Hero */}
+        <div className="relative overflow-hidden mb-12">
+          <div className="absolute inset-0 bg-gradient-to-br from-[#00D4FF]/10 via-[#3B82F6]/5 to-[#7C3AED]/10 rounded-3xl blur-2xl" />
+          
+          <div className="relative text-center p-12 sm:p-16 rounded-3xl border border-white/[0.08] bg-gradient-to-br from-white/[0.02] to-white/[0.01]">
+            <div className="text-xs text-[#00D4FF]/50 tracking-wider uppercase mb-6">
+              UNLOCK STRATEGIC INTELLIGENCE
+            </div>
+            
+            <h2 className="font-display text-3xl sm:text-4xl font-light leading-tight mb-6">
+              <span className="nx-gradient-text">Where Research Becomes Strategy</span>
+              <br />
+              <span className="text-white/50 text-2xl sm:text-3xl">Get the intelligence others miss</span>
+            </h2>
+            
+            <p className="text-base text-white/40 mb-8 max-w-2xl mx-auto">
+              While competitors chase yesterday's news, our AI council analyzes 200,000+ academic sources 
+              to identify the strategic shifts that will shape your industry next quarter.
+            </p>
+            
+            <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
+              <button
+                onClick={() => router.push('/pricing')}
+                className="group px-8 py-4 rounded-xl bg-gradient-to-r from-[#00D4FF]/20 to-[#3B82F6]/20 border border-[#00D4FF]/20 text-white font-medium hover:border-[#00D4FF]/40 transition-all shadow-[0_0_30px_rgba(0,212,255,0.15)]"
+              >
+                <span className="flex items-center justify-center gap-2">
+                  Get Full Access
+                  <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
+                </span>
+              </button>
+              <button
+                onClick={() => router.push('/briefs')}
+                className="px-8 py-4 rounded-xl border border-white/[0.1] text-white/70 hover:text-white hover:border-white/[0.2] hover:bg-white/[0.03] transition-all"
+              >
+                Browse Briefs
+              </button>
+            </div>
+            
+            <div className="flex items-center justify-center gap-6 text-xs text-white/40">
+              <span>Executive: €15/month</span>
+              <div className="w-1 h-1 rounded-full bg-[#00D4FF]/40" />
+              <span>Strategy: €39/month</span>
+              <div className="w-1 h-1 rounded-full bg-[#00D4FF]/40" />
+              <span>30-day free trial</span>
+            </div>
           </div>
-        )}
+        </div>
 
-        {/* ── Quick Stats ── */}
-        <div className="grid grid-cols-2 sm:grid-cols-4 gap-3 mb-10">
-          {[
-            { value: allPublications.length, label: "Publications", color: "#00D4FF" },
-            { value: latestBriefs.length, label: "Executive Briefs", color: "#3B82F6" },
-            { value: latestReports.length, label: "Strategic Reports", color: "#7C3AED" },
-            { value: verticals.length, label: "Research Verticals", color: "#10B981" },
-          ].map((stat) => (
-            <div
-              key={stat.label}
-              className="rounded-xl border border-white/[0.06] bg-white/[0.015] p-4 text-center"
+        {/* Recent Briefs Preview */}
+        <div className="mb-12">
+          <div className="flex items-center justify-between mb-6">
+            <h2 className="font-display text-2xl font-light text-white">
+              Latest <span className="nx-gradient-text">Strategic Insights</span>
+            </h2>
+            <button
+              onClick={() => router.push('/briefs')}
+              className="text-[#00D4FF] hover:text-[#00D4FF]/80 transition-colors text-sm"
             >
-              <div className="font-display text-2xl font-light" style={{ color: stat.color }}>{stat.value}</div>
-              <div className="text-[11px] text-white/25 mt-0.5">{stat.label}</div>
+              View all →
+            </button>
+          </div>
+          
+          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
+            {recentBriefs.slice(0, 6).map((brief) => (
+              <div key={brief.id} className="group rounded-2xl border border-white/[0.08] bg-gradient-to-br from-white/[0.03] to-white/[0.01] p-6 hover:border-[#00D4FF]/20 transition-all duration-300">
+                <div className="flex items-center gap-2 mb-3">
+                  <div className="w-2 h-2 rounded-full bg-[#00D4FF]"></div>
+                  <span className="text-xs text-[#00D4FF]/60 uppercase tracking-wider">
+                    {brief.type === 'STRATEGIC_REPORT' ? 'Strategic Report' : brief.type === 'EXECUTIVE_BRIEF' ? 'Executive Brief' : 'Summary Brief'}
+                  </span>
+                  {brief.trending && (
+                    <TrendingUp size={12} className="text-orange-400" />
+                  )}
+                </div>
+                
+                <h3 className="font-display text-lg font-light text-white/90 mb-3 line-clamp-2 group-hover:text-[#00D4FF]/80 transition-colors">
+                  {brief.title}
+                </h3>
+                
+                <div className="flex items-center justify-between text-xs text-white/30 mb-4">
+                  <span>{new Date(brief.publishedAt).toLocaleDateString()}</span>
+                  <span>{brief.readTime} min read</span>
+                </div>
+                
+                <button
+                  onClick={() => router.push('/pricing')}
+                  className="w-full py-2.5 rounded-lg border border-[#00D4FF]/20 bg-[#00D4FF]/5 text-[#00D4FF] font-medium hover:bg-[#00D4FF]/10 transition-all"
+                >
+                  Unlock full brief
+                </button>
+              </div>
+            ))}
+          </div>
+        </div>
+
+        {/* Value Proposition */}
+        <div className="grid md:grid-cols-3 gap-6">
+          {[
+            {
+              icon: FileText,
+              title: "Executive Briefs",
+              description: "2-3 page decision-ready analyses with key findings and recommendations",
+              locked: false
+            },
+            {
+              icon: Brain,
+              title: "Strategic Reports", 
+              description: "10-15 page deep analysis with scenario planning and implementation roadmap",
+              locked: true
+            },
+            {
+              icon: Briefcase,
+              title: "Studio Research",
+              description: "Ask questions, get custom analysis from our Harvard Council",
+              locked: true
+            }
+          ].map((feature, index) => (
+            <div key={index} className="rounded-2xl border border-white/[0.08] bg-gradient-to-br from-white/[0.03] to-white/[0.01] p-6">
+              <div className="flex items-start gap-4 mb-4">
+                <div className={cn(
+                  "w-12 h-12 rounded-xl flex items-center justify-center",
+                  feature.locked ? "bg-white/[0.05]" : "bg-[#00D4FF]/10"
+                )}>
+                  <feature.icon size={20} className={cn(
+                    feature.locked ? "text-white/30" : "text-[#00D4FF]"
+                  )} />
+                </div>
+                <div className="flex-1">
+                  <h3 className="font-medium text-white/90 mb-2 flex items-center gap-2">
+                    {feature.title}
+                    {feature.locked && <Lock size={14} className="text-white/30" />}
+                  </h3>
+                  <p className="text-sm text-white/40 leading-relaxed">
+                    {feature.description}
+                  </p>
+                </div>
+              </div>
+              
+              {feature.locked && (
+                <button
+                  onClick={() => router.push('/pricing')}
+                  className="w-full py-2 rounded-lg border border-white/[0.1] text-white/50 hover:text-white hover:border-white/[0.2] transition-all text-sm"
+                >
+                  Upgrade to unlock
+                </button>
+              )}
+            </div>
+          ))}
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// EXECUTIVE Dashboard - Full briefs access
+function ExecutiveDashboard({ subscription, recentBriefs, researcherStatus, router }: { 
+  subscription: SubscriptionData; 
+  recentBriefs: BriefData[];
+  researcherStatus: ResearcherStatus[];
+  router: any;
+}) {
+  return (
+    <div className="min-h-screen bg-[#06060A] text-white">
+      {/* Background */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1400px] h-[900px]">
+          <div className="absolute inset-0 bg-gradient-to-b from-[#00D4FF]/[0.06] via-[#3B82F6]/[0.03] to-transparent blur-3xl" />
+        </div>
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(0,212,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,212,255,0.02)_1px,transparent_1px)] bg-[size:80px_80px]" />
+      </div>
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-8">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="font-display text-3xl font-light text-white mb-2">
+              Strategic <span className="nx-gradient-text">Intelligence</span>
+            </h1>
+            <p className="text-white/40">Executive briefs and strategic insights from our autonomous think tank</p>
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="px-4 py-2 rounded-full border border-[#00D4FF]/20 bg-[#00D4FF]/10">
+              <span className="text-[#00D4FF] text-sm font-medium">EXECUTIVE</span>
+            </div>
+            <button
+              onClick={() => router.push('/studio')}
+              className="px-4 py-2 rounded-xl border border-white/[0.1] text-white/70 hover:text-white hover:border-white/[0.2] hover:bg-white/[0.03] transition-all flex items-center gap-2"
+            >
+              <Lock size={14} />
+              <span className="text-sm">Upgrade to Studio</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Stats Bar */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          {[
+            { label: "Briefs Available", value: "Unlimited", icon: FileText },
+            { label: "Weekly Usage", value: `${subscription.weeklyUsed}/∞`, icon: BarChart3 },
+            { label: "Research Sources", value: "200K+", icon: Brain },
+            { label: "Council Members", value: "8", icon: Users },
+          ].map((stat, index) => (
+            <div key={index} className="rounded-xl border border-white/[0.08] bg-white/[0.02] p-4">
+              <div className="flex items-center gap-3 mb-2">
+                <stat.icon size={16} className="text-[#00D4FF]/60" />
+                <span className="text-xs text-white/40">{stat.label}</span>
+              </div>
+              <div className="text-lg font-light text-white/90">{stat.value}</div>
             </div>
           ))}
         </div>
 
-        {/* ── Executive Briefs ── */}
-        <section className="mb-12">
-          <div className="flex items-center justify-between mb-5">
-            <div className="flex items-center gap-3">
-              <div className="w-1 h-5 rounded-full bg-[#00D4FF]" />
-              <div>
-                <h2 className="font-display text-lg font-medium text-white/90">Executive Briefs</h2>
-                <p className="text-xs text-white/25 mt-0.5">Decision-ready insights — free access</p>
-              </div>
+        {/* Main Content Grid */}
+        <div className="grid lg:grid-cols-3 gap-8">
+          {/* Recent Briefs */}
+          <div className="lg:col-span-2">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="font-display text-2xl font-light text-white">
+                Latest <span className="nx-gradient-text">Executive Briefs</span>
+              </h2>
+              <button
+                onClick={() => router.push('/briefs')}
+                className="text-[#00D4FF] hover:text-[#00D4FF]/80 transition-colors text-sm"
+              >
+                View all →
+              </button>
             </div>
-            <Link href="/publications?type=brief" className="text-xs text-[#00D4FF]/50 hover:text-[#00D4FF] flex items-center gap-1 transition-colors">
-              View all <ArrowRight size={12} />
-            </Link>
-          </div>
-
-          {latestBriefs.length === 0 ? (
-            <div className="rounded-2xl border border-white/[0.06] bg-white/[0.015] py-14 text-center">
-              <FileText size={24} className="text-white/10 mx-auto mb-3" />
-              <p className="text-white/30 text-sm">No briefs published yet</p>
-              <p className="text-white/15 text-xs mt-1">The research council is working on new insights</p>
-            </div>
-          ) : (
-            <div className="grid sm:grid-cols-2 gap-3">
-              {latestBriefs.map(brief => {
-                const researcher = getLeadResearcher(brief.title);
-                return (
-                  <div
-                    key={brief.id}
-                    onClick={() => router.push(`/publications/${brief.id}`)}
-                    className="group rounded-xl border border-white/[0.06] bg-white/[0.015] p-5 cursor-pointer hover:border-[#00D4FF]/20 transition-all"
-                  >
-                    <div className="flex items-start justify-between mb-3">
-                      <ResearcherBadge researcher={researcher} size="sm" />
-                      <TrustScoreBadge score={brief.trustScore} size="sm" />
-                    </div>
-                    <h3 className="text-[15px] font-medium text-white/85 group-hover:text-white transition-colors line-clamp-2 leading-snug mb-3">
-                      {brief.title}
-                    </h3>
-                    <div className="flex items-center justify-between text-xs text-white/20">
-                      <div className="flex items-center gap-2">
-                        {brief.vertical && <span>{brief.vertical.name}</span>}
-                        <span className="text-white/10">·</span>
-                        <span>{new Date(brief.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span>
+            
+            <div className="space-y-4">
+              {recentBriefs.map((brief) => (
+                <div key={brief.id} className="group rounded-2xl border border-white/[0.08] bg-gradient-to-br from-white/[0.03] to-white/[0.01] p-6 hover:border-[#00D4FF]/20 transition-all duration-300">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="w-2 h-2 rounded-full bg-[#00D4FF]"></div>
+                        <span className="text-xs text-[#00D4FF]/60 uppercase tracking-wider">
+                          {brief.type === 'STRATEGIC_REPORT' ? 'Strategic Report' : 
+                           brief.type === 'EXECUTIVE_BRIEF' ? 'Executive Brief' : 'Summary Brief'}
+                        </span>
+                        {brief.trending && <TrendingUp size={12} className="text-orange-400" />}
+                        {brief.critical && <AlertTriangle size={12} className="text-red-400" />}
                       </div>
-                      <ArrowRight size={12} className="text-white/10 group-hover:text-[#00D4FF]/50 transition-colors" />
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </section>
-
-        {/* ── Strategic Reports ── */}
-        <section className="mb-12">
-          <div className="flex items-center justify-between mb-5">
-            <div className="flex items-center gap-3">
-              <div className="w-1 h-5 rounded-full bg-[#7C3AED]" />
-              <div>
-                <h2 className="font-display text-lg font-medium text-white/90">Strategic Reports</h2>
-                <p className="text-xs text-white/25 mt-0.5">Comprehensive analysis — premium access</p>
-              </div>
-            </div>
-            <Link href="/publications?type=report" className="text-xs text-[#7C3AED]/50 hover:text-[#7C3AED] flex items-center gap-1 transition-colors">
-              View all <ArrowRight size={12} />
-            </Link>
-          </div>
-
-          {latestReports.length === 0 ? (
-            <div className="rounded-2xl border border-white/[0.06] bg-white/[0.015] py-14 text-center">
-              <Sparkles size={24} className="text-white/10 mx-auto mb-3" />
-              <p className="text-white/30 text-sm">No reports published yet</p>
-              <p className="text-white/15 text-xs mt-1">Strategic reports are published periodically</p>
-            </div>
-          ) : (
-            <div className="grid sm:grid-cols-2 gap-3">
-              {latestReports.map(report => {
-                const isLocked = !subscription?.canAccessPremium;
-                const researcher = getLeadResearcher(report.title);
-
-                return (
-                  <div
-                    key={report.id}
-                    onClick={() => router.push(isLocked ? "/pricing" : `/publications/${report.id}`)}
-                    className={cn(
-                      "group rounded-xl border p-5 cursor-pointer transition-all",
-                      isLocked
-                        ? "border-[#7C3AED]/15 bg-[#7C3AED]/[0.03]"
-                        : "border-white/[0.06] bg-white/[0.015] hover:border-[#7C3AED]/20"
-                    )}
-                  >
-                    <div className="flex items-start justify-between mb-3">
-                      {isLocked ? (
-                        <div className="flex items-center gap-2">
-                          <div className="w-7 h-7 rounded-lg bg-[#7C3AED]/10 flex items-center justify-center">
-                            <Lock size={12} className="text-[#7C3AED]/60" />
-                          </div>
-                          <span className="text-[10px] font-semibold tracking-wider uppercase text-[#7C3AED]/50">Premium</span>
-                        </div>
-                      ) : (
-                        <ResearcherBadge researcher={researcher} size="sm" />
-                      )}
-                      {!isLocked && <TrustScoreBadge score={report.trustScore} size="sm" />}
-                    </div>
-                    <h3 className={cn(
-                      "text-[15px] font-medium line-clamp-2 leading-snug mb-3 transition-colors",
-                      isLocked ? "text-white/45" : "text-white/85 group-hover:text-white"
-                    )}>
-                      {report.title}
-                    </h3>
-                    <div className="flex items-center justify-between text-xs text-white/20">
-                      <div className="flex items-center gap-2">
-                        {report.vertical && <span>{report.vertical.name}</span>}
-                        <span className="text-white/10">·</span>
-                        <span>{new Date(report.createdAt).toLocaleDateString("en-US", { month: "short", day: "numeric" })}</span>
-                      </div>
-                      {isLocked ? (
-                        <span className="text-[#7C3AED]/40 text-[11px]">Upgrade to read</span>
-                      ) : (
-                        <ArrowRight size={12} className="text-white/10 group-hover:text-[#7C3AED]/50 transition-colors" />
-                      )}
-                    </div>
-                  </div>
-                );
-              })}
-            </div>
-          )}
-        </section>
-
-        {/* ── Research Verticals ── */}
-        <section className="mb-12">
-          <div className="flex items-center gap-3 mb-5">
-            <div className="w-1 h-5 rounded-full bg-[#10B981]" />
-            <div>
-              <h2 className="font-display text-lg font-medium text-white/90">Research Verticals</h2>
-              <p className="text-xs text-white/25 mt-0.5">Active focus areas monitored by the council</p>
-            </div>
-          </div>
-
-          {verticals.length === 0 ? (
-            <div className="rounded-2xl border border-white/[0.06] bg-white/[0.015] py-14 text-center">
-              <Layers size={24} className="text-white/10 mx-auto mb-3" />
-              <p className="text-white/30 text-sm">No verticals configured</p>
-            </div>
-          ) : (
-            <div className="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
-              {verticals.map(vertical => {
-                const status = getVerticalStatus(vertical);
-
-                return (
-                  <div
-                    key={vertical.id}
-                    onClick={() => router.push(`/publications?vertical=${vertical.slug}`)}
-                    className="group rounded-xl border border-white/[0.06] bg-white/[0.015] p-4 cursor-pointer hover:border-white/[0.1] transition-all"
-                  >
-                    <div className="flex items-center justify-between mb-1.5">
-                      <h3 className="text-sm font-medium text-white/70 group-hover:text-white/90 transition-colors">
-                        {vertical.name}
+                      
+                      <h3 className="font-display text-xl font-light text-white/90 mb-3 group-hover:text-[#00D4FF]/80 transition-colors">
+                        {brief.title}
                       </h3>
-                      <ArrowRight size={11} className="text-white/10 group-hover:text-white/30 transition-colors" />
+                      
+                      <div className="flex items-center gap-4 text-xs text-white/30">
+                        <span>{new Date(brief.publishedAt).toLocaleDateString()}</span>
+                        <span>{brief.readTime} min read</span>
+                        <span>Full access</span>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-2 text-xs">
-                      <span className={status.color}>{status.label}</span>
-                      {vertical.recentPublicationCount > 0 && (
-                        <>
-                          <span className="text-white/10">·</span>
-                          <span className="text-white/20">{vertical.recentPublicationCount} publications</span>
-                        </>
+                    
+                    <button
+                      onClick={() => router.push(`/briefs/${brief.id}`)}
+                      className="px-4 py-2 rounded-lg border border-[#00D4FF]/20 bg-[#00D4FF]/5 text-[#00D4FF] font-medium hover:bg-[#00D4FF]/10 transition-all"
+                    >
+                      Read Brief
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Research Council Status */}
+          <div>
+            <h2 className="font-display text-2xl font-light text-white mb-6">
+              Research <span className="nx-gradient-text">Council</span>
+            </h2>
+            
+            <div className="rounded-2xl border border-white/[0.08] bg-gradient-to-br from-white/[0.03] to-white/[0.01] p-6">
+              <div className="space-y-4">
+                {researcherStatus.slice(0, 4).map((researcher) => (
+                  <div key={researcher.id} className="flex items-center gap-3">
+                    {researcher.researcher ? (
+                      <AdvancedResearcherAvatar 
+                        researcher={researcher.researcher} 
+                        size="md" 
+                        showStatus={true}
+                        status={researcher.status}
+                      />
+                    ) : (
+                      <div className="w-10 h-10 rounded-full bg-[#00D4FF]/10 border border-[#00D4FF]/20 flex items-center justify-center">
+                        <span className="text-xs font-medium text-[#00D4FF]">{researcher.initials}</span>
+                      </div>
+                    )}
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-sm font-medium text-white/90 truncate">{researcher.name}</span>
+                        <div className={cn(
+                          "w-2 h-2 rounded-full",
+                          researcher.status === 'analyzing' ? "bg-green-400" :
+                          researcher.status === 'debating' ? "bg-yellow-400" :
+                          researcher.status === 'synthesizing' ? "bg-blue-400" :
+                          "bg-gray-400"
+                        )} />
+                      </div>
+                      <div className="text-xs text-white/40 truncate">{researcher.currentTask}</div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              
+              <div className="mt-6 pt-6 border-t border-white/[0.08]">
+                <div className="text-center">
+                  <p className="text-xs text-white/40 mb-3">Council analyzing emerging trends</p>
+                  <div className="flex items-center justify-center gap-2">
+                    <Activity size={12} className="text-[#00D4FF]" />
+                    <span className="text-xs text-[#00D4FF]">Live analysis in progress</span>
+                  </div>
+                </div>
+              </div>
+            </div>
+
+            {/* Upgrade Prompt */}
+            <div className="mt-6 rounded-2xl border border-[#00D4FF]/20 bg-gradient-to-br from-[#00D4FF]/[0.04] to-[#3B82F6]/[0.02] p-6">
+              <div className="text-center">
+                <Briefcase size={24} className="text-[#00D4FF] mx-auto mb-3" />
+                <h3 className="font-display text-lg font-light text-white mb-2">
+                  Need Custom Research?
+                </h3>
+                <p className="text-sm text-white/40 mb-4">
+                  Upgrade to Strategy for personalized analysis from our Harvard Council
+                </p>
+                <button
+                  onClick={() => router.push('/pricing')}
+                  className="w-full py-2.5 rounded-lg border border-[#00D4FF]/20 bg-[#00D4FF]/5 text-[#00D4FF] font-medium hover:bg-[#00D4FF]/10 transition-all"
+                >
+                  Upgrade to Strategy
+                </button>
+              </div>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+}
+
+// STRATEGY Dashboard - Full access + Studio
+function StrategyDashboard({ subscription, recentBriefs, researcherStatus, router }: { 
+  subscription: SubscriptionData; 
+  recentBriefs: BriefData[];
+  researcherStatus: ResearcherStatus[];
+  router: any;
+}) {
+  return (
+    <div className="min-h-screen bg-[#06060A] text-white">
+      {/* Background */}
+      <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
+        <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1400px] h-[900px]">
+          <div className="absolute inset-0 bg-gradient-to-b from-[#00D4FF]/[0.06] via-[#3B82F6]/[0.03] to-transparent blur-3xl" />
+        </div>
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(0,212,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,212,255,0.02)_1px,transparent_1px)] bg-[size:80px_80px]" />
+      </div>
+
+      <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-8">
+        {/* Header */}
+        <div className="flex items-center justify-between mb-8">
+          <div>
+            <h1 className="font-display text-3xl font-light text-white mb-2">
+              Strategic <span className="nx-gradient-text">Command Center</span>
+            </h1>
+            <p className="text-white/40">Your personal research council and strategic intelligence hub</p>
+          </div>
+          <div className="flex items-center gap-4">
+            <div className="px-4 py-2 rounded-full border border-purple-400/20 bg-purple-400/10">
+              <span className="text-purple-400 text-sm font-medium">STRATEGY</span>
+            </div>
+            <button
+              onClick={() => router.push('/studio')}
+              className="px-4 py-2 rounded-xl bg-gradient-to-r from-purple-400/20 to-pink-400/20 border border-purple-400/20 text-purple-400 font-medium hover:border-purple-400/40 transition-all flex items-center gap-2"
+            >
+              <Brain size={14} />
+              <span className="text-sm">Open Studio</span>
+            </button>
+          </div>
+        </div>
+
+        {/* Stats Bar */}
+        <div className="grid grid-cols-2 md:grid-cols-4 gap-4 mb-8">
+          {[
+            { label: "Studio Questions", value: `${subscription.studioUsed}/∞`, icon: Brain },
+            { label: "Briefs Available", value: "Unlimited", icon: FileText },
+            { label: "Custom Verticals", value: "Unlimited", icon: Target },
+            { label: "Council Access", value: "Full", icon: Users },
+          ].map((stat, index) => (
+            <div key={index} className="rounded-xl border border-purple-400/20 bg-purple-400/5 p-4">
+              <div className="flex items-center gap-3 mb-2">
+                <stat.icon size={16} className="text-purple-400/60" />
+                <span className="text-xs text-white/40">{stat.label}</span>
+              </div>
+              <div className="text-lg font-light text-white/90">{stat.value}</div>
+            </div>
+          ))}
+        </div>
+
+        {/* Main Content Grid */}
+        <div className="grid lg:grid-cols-3 gap-8">
+          {/* Recent Briefs */}
+          <div className="lg:col-span-2">
+            <div className="flex items-center justify-between mb-6">
+              <h2 className="font-display text-2xl font-light text-white">
+                Latest <span className="nx-gradient-text">Strategic Intelligence</span>
+              </h2>
+              <button
+                onClick={() => router.push('/briefs')}
+                className="text-purple-400 hover:text-purple-400/80 transition-colors text-sm"
+              >
+                View all →
+              </button>
+            </div>
+            
+            <div className="space-y-4">
+              {recentBriefs.map((brief) => (
+                <div key={brief.id} className="group rounded-2xl border border-purple-400/20 bg-gradient-to-br from-purple-400/[0.04] to-pink-400/[0.02] p-6 hover:border-purple-400/40 transition-all duration-300">
+                  <div className="flex items-start justify-between mb-4">
+                    <div className="flex-1">
+                      <div className="flex items-center gap-2 mb-3">
+                        <div className="w-2 h-2 rounded-full bg-purple-400"></div>
+                        <span className="text-xs text-purple-400/80 uppercase tracking-wider">
+                          {brief.type === 'STRATEGIC_REPORT' ? 'Strategic Report' : 
+                           brief.type === 'EXECUTIVE_BRIEF' ? 'Executive Brief' : 'Summary Brief'}
+                        </span>
+                        {brief.trending && <TrendingUp size={12} className="text-orange-400" />}
+                        {brief.critical && <AlertTriangle size={12} className="text-red-400" />}
+                      </div>
+                      
+                      <h3 className="font-display text-xl font-light text-white/90 mb-3 group-hover:text-purple-400/80 transition-colors">
+                        {brief.title}
+                      </h3>
+                      
+                      <div className="flex items-center gap-4 text-xs text-white/30">
+                        <span>{new Date(brief.publishedAt).toLocaleDateString()}</span>
+                        <span>{brief.readTime} min read</span>
+                        <span className="text-purple-400">Premium access</span>
+                      </div>
+                    </div>
+                    
+                    <button
+                      onClick={() => router.push(`/briefs/${brief.id}`)}
+                      className="px-4 py-2 rounded-lg border border-purple-400/20 bg-purple-400/5 text-purple-400 font-medium hover:bg-purple-400/10 transition-all"
+                    >
+                      Read Brief
+                    </button>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* Research Council & Studio */}
+          <div>
+            <h2 className="font-display text-2xl font-light text-white mb-6">
+              Research <span className="nx-gradient-text">Council</span>
+            </h2>
+            
+            <div className="rounded-2xl border border-purple-400/20 bg-gradient-to-br from-purple-400/[0.04] to-pink-400/[0.02] p-6 mb-6">
+              <div className="space-y-4">
+                {researcherStatus.map((researcher) => (
+                  <div key={researcher.id} className="flex items-center gap-3">
+                    <div className="w-10 h-10 rounded-full bg-purple-400/10 border border-purple-400/20 flex items-center justify-center">
+                      <span className="text-xs font-medium text-purple-400">{researcher.initials}</span>
+                    </div>
+                    <div className="flex-1 min-w-0">
+                      <div className="flex items-center gap-2 mb-1">
+                        <span className="text-sm font-medium text-white/90 truncate">{researcher.name}</span>
+                        <div className={cn(
+                          "w-2 h-2 rounded-full",
+                          researcher.status === 'analyzing' ? "bg-green-400" :
+                          researcher.status === 'debating' ? "bg-orange-400" :
+                          researcher.status === 'synthesizing' ? "bg-blue-400" :
+                          "bg-gray-400"
+                        )} />
+                      </div>
+                      <div className="text-xs text-white/40 truncate">
+                        {researcher.currentTask || researcher.domain}
+                      </div>
+                      {researcher.progress && (
+                        <div className="mt-1 w-full bg-white/[0.1] rounded-full h-1">
+                          <div 
+                            className="bg-purple-400 h-1 rounded-full transition-all duration-300"
+                            style={{ width: `${researcher.progress}%` }}
+                          />
+                        </div>
                       )}
                     </div>
                   </div>
-                );
-              })}
-            </div>
-          )}
-        </section>
-
-        {/* ── Subscription ── */}
-        {subscription && (
-          <section className="mb-8">
-            <div className={cn(
-              "rounded-xl border p-5 flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4",
-              subscription.isTrialActive
-                ? "border-[#00D4FF]/15 bg-[#00D4FF]/[0.03]"
-                : "border-white/[0.06] bg-white/[0.015]"
-            )}>
-              <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-[#00D4FF]/10 flex items-center justify-center flex-shrink-0">
-                  <Shield size={16} className="text-[#00D4FF]/60" />
-                </div>
-                <div>
-                  <p className="text-sm font-medium text-white/80">
-                    {subscription.isTrialActive ? "Trial Active" : "NomosX Access"}
-                  </p>
-                  <p className="text-xs text-white/30 mt-0.5">
-                    {subscription.isTrialActive
-                      ? `${subscription.trialDaysRemaining} days remaining`
-                      : `${subscription.activeVerticals} active verticals`}
-                  </p>
+                ))}
+              </div>
+              
+              <div className="mt-6 pt-6 border-t border-purple-400/20">
+                <div className="text-center">
+                  <p className="text-xs text-white/40 mb-3">Council analyzing your industry</p>
+                  <div className="flex items-center justify-center gap-2">
+                    <Activity size={12} className="text-purple-400" />
+                    <span className="text-xs text-purple-400">Live analysis in progress</span>
+                  </div>
                 </div>
               </div>
-
-              {subscription.isTrialActive ? (
-                <button
-                  onClick={() => router.push("/pricing")}
-                  className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#00D4FF]/20 to-[#3B82F6]/20 border border-[#00D4FF]/20 text-sm font-medium text-white hover:border-[#00D4FF]/40 transition-all"
-                >
-                  Continue with NomosX
-                </button>
-              ) : !subscription.canAccessPremium ? (
-                <button
-                  onClick={() => router.push("/pricing")}
-                  className="text-sm text-[#7C3AED]/50 hover:text-[#7C3AED] transition-colors"
-                >
-                  Upgrade to Strategic Reports →
-                </button>
-              ) : (
-                <button
-                  onClick={() => router.push("/pricing")}
-                  className="text-sm text-white/25 hover:text-white/50 transition-colors"
-                >
-                  Manage subscription
-                </button>
-              )}
             </div>
-          </section>
-        )}
+
+            {/* Studio Quick Access */}
+            <div className="rounded-2xl border border-purple-400/20 bg-gradient-to-br from-purple-400/[0.04] to-pink-400/[0.02] p-6">
+              <div className="text-center">
+                <Brain size={32} className="text-purple-400 mx-auto mb-3" />
+                <h3 className="font-display text-lg font-light text-white mb-2">
+                  Research Studio
+                </h3>
+                <p className="text-sm text-white/40 mb-4">
+                  Ask questions, get custom analysis from your personal research council
+                </p>
+                <button
+                  onClick={() => router.push('/studio')}
+                  className="w-full py-3 rounded-xl bg-gradient-to-r from-purple-400/20 to-pink-400/20 border border-purple-400/20 text-purple-400 font-medium hover:border-purple-400/40 transition-all"
+                >
+                  Open Studio
+                </button>
+                <div className="mt-3 text-xs text-purple-400/60">
+                  {subscription.studioLimit === -1 ? 'Unlimited questions' : `${subscription.studioLimit - subscription.studioUsed} questions remaining`}
+                </div>
+              </div>
+            </div>
+          </div>
+        </div>
       </div>
-    </Shell>
+    </div>
   );
 }

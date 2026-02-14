@@ -1,8 +1,10 @@
 /**
  * Weekly Newsletter Job
  * 
- * Compiles 3-5 Executive Briefs published in the last week
- * and sends them to all active newsletter subscribers.
+ * Compiles 3-5 publications based on user tier:
+ * - FREE: Summary Briefs (1 page)
+ * - EXECUTIVE: Executive Briefs (2-3 pages) 
+ * - STRATEGY: Strategic Reports (10-15 pages)
  * 
  * Schedule: Every Monday at 8:00 AM UTC
  * Run with: npx tsx lib/jobs/weekly-newsletter.ts

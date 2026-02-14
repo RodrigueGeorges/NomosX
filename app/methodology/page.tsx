@@ -79,9 +79,9 @@ export default function MethodologyPage() {
       icon: Shield,
       color: "red",
       purpose: "Editorial Gate",
-      description: "Evaluates every publication proposal against quality thresholds, cadence limits, and editorial standards. Can approve, hold, reject, or enforce silence.",
+      description: "Evaluates every publication proposal against quality thresholds, cadence limits, and editorial standards. Ensures only institutional-grade insights reach decision-makers.",
       inputs: ["Draft", "Signal", "Quality metrics"],
-      outputs: ["Decision (PUBLISH/HOLD/REJECT/SILENCE)", "Reasons", "Scores"],
+      outputs: ["Decision (PUBLISH/HOLD/REJECT/DEFER)", "Reasons", "Scores"],
       providers: ["Internal rules engine", "Quality scoring"]
     }
   ];
@@ -328,7 +328,7 @@ export default function MethodologyPage() {
               </h2>
               <p className="text-base text-white/40 leading-relaxed max-w-3xl">
                 Every publication proposal passes through our autonomous editorial gate.
-                It can approve, hold, reject, or enforce strategic silence.
+                Only research that meets institutional standards reaches your desk.
               </p>
             </div>
 
@@ -337,7 +337,7 @@ export default function MethodologyPage() {
                 { decision: "PUBLISH", color: "emerald", icon: CheckCircle, description: "Meets all quality thresholds and editorial standards" },
                 { decision: "HOLD", color: "amber", icon: Eye, description: "Needs more evidence or refinement before publication" },
                 { decision: "REJECT", color: "red", icon: Lock, description: "Does not meet quality standards or contains issues" },
-                { decision: "SILENCE", color: "purple", icon: GitBranch, description: "Strategic silence — nothing worth saying right now" }
+                { decision: "DEFER", color: "purple", icon: GitBranch, description: "Deferred — monitoring continues until evidence is conclusive" }
               ].map((item, i) => (
                 <div key={i} className={`group relative p-6 rounded-xl border border-white/[0.08] bg-gradient-to-br from-white/[0.03] to-white/[0.01] hover:border-${item.color}-500/30 transition-all duration-300`}>
                   <div className="relative z-10 text-center">
@@ -397,7 +397,7 @@ export default function MethodologyPage() {
                 <span className="font-display text-sm font-medium tracking-tight text-white/50">
                   Nomos<span className="text-[#00D4FF]/60">X</span>
                 </span>
-                <p className="text-[10px] text-white/20">Agentic Think Tank</p>
+                <p className="text-[10px] text-white/20">Institutional Intelligence, Democratized</p>
               </div>
             </div>
             <div className="flex items-center gap-6 text-xs text-white/20">

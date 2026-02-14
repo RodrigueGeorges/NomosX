@@ -1,76 +1,106 @@
 # NomosX
 
-**Le think tank agentique**  
+**Le think tank agentique de nouvelle génération**  
 De la recherche académique à l'intelligence stratégique, automatiquement.
 
 ---
 
 ## 🎯 Vision
 
-NomosX est le **premier think tank personnel autonome** qui orchestre 10 agents IA spécialisés pour transformer la recherche académique (28M+ sources) en insights décisionnels exploitables.
+NomosX est le **premier think tank personnel autonome** qui orchestre 15+ agents IA spécialisés pour transformer la recherche académique (250M+ sources OpenAlex) en insights décisionnels exploitables.
 
-**Pas un outil de recherche** — Un think tank automatisé.
+**Pas un outil de recherche** — Un think tank automatisé avec intelligence collective.
 
 ### 🏆 Avantages Uniques
 
 | Ce que vous obtenez | Comment | Concurrent |
 |---------------------|---------|------------|
-| **4 Perspectives Distinctes** | Analyse économique, technique, éthique, politique + synthèse | ❌ Aucun (STORM = questions, DeepDebater = research) |
-| **Decision-Ready en 60s** | De la question au brief structuré (10 sections) | ⚠️ Semantic Scholar, Consensus = research-ready |
+| **8 Perspectives PhD** | 8 experts domaines (MIT, Stanford, Oxford, Johns Hopkins, Georgetown, Yale, ETH, Harvard) | ❌ Aucun (STORM = questions, DeepDebater = research) |
+| **Decision-Ready en 60s** | De la question au brief structuré (10-15 sections) | ⚠️ Semantic Scholar, Consensus = research-ready |
 | **Radar Signaux Faibles** | Auto-détection tendances émergentes (novelty ≥ 60) | ❌ Aucun concurrent |
 | **Intent-First UX** | 1 question → Auto-sélection → Brief | ⚠️ Perplexity (conversational mais général) |
 | **Citations Vérifiées** | Citation Guard + [SRC-*] tracées | ✅ Consensus, Scite (mais pas multi-perspectives) |
+| **V5 Harvard Council** | Débat contradictoire avec review board Oxford CEBM | ❌ Aucun concurrent |
+| **V4 Agents Autonomes** | Context Primer, Orchestrator, Editorial Planner | ❌ Aucun concurrent |
+| **Meta-Analysis Engine** | Cohen's d, forest plots, I², Egger's test | ❌ Aucun concurrent |
 
 **Positionnement** : Think Tank Autonome pour Décideurs Stratégiques  
-**Cible** : C-level, Consultants, Innovation Directors, Policy Makers
+**Cible** : C-level, Consultants, Innovation Directors, Policy Makers, Chercheurs Senior
 
 ---
 
 ## 🏗️ Architecture
 
-### Pipeline agentic
+### Pipeline agentic V5
 
 ```
-SCOUT      → Collecte multi-sources (OpenAlex, CrossRef, Semantic Scholar, Theses.fr)
+V4 AUTONOMOUS LAYER:
+CONTEXT PRIMER → Knowledge Graph + prior briefs enrichment
+ORCHESTRATOR   → 4 checkpoint evaluators + RE_SCOUT loops
+EDITORIAL PLANNER → Trend detection + auto-commission
+
+V3 CORE PIPELINE:
+SCOUT      → Collecte multi-sources (OpenAlex 250M+, 66+ providers)
 INDEX      → Enrichissement identités (ROR, ORCID) + déduplication
-RANK       → Sélection stratégique (qualité, nouveauté)
-READER     → Extraction structurée (claims, méthodes, résultats, limitations)
-ANALYST    → Synthèse dialectique (consensus, débat, implications)
+EMBED      → Hybrid semantic + full-text search
+DEDUP      → DOI-based deduplication
+RANK       → Sélection stratégique (qualité, nouveauté, diversité)
+READER V3  → PDF full-text + extraction quantitative
+ANALYST V3 → Multi-pass synthesis (thematic → contradictions → synthesis)
 GUARD      → Validation citations (zéro hallucination)
 EDITOR     → Rendu HTML premium
+CITATION VERIFIER → Semantic + LLM verification
+
+V2 ADVANCED LAYER:
+CRITICAL LOOP V2 → Iterative critique + 3 parallel critics
+DEBATE AGENT → Steel-man adversarial + 2-pass LLM
+META-ANALYSIS ENGINE → Cohen's d, forest plots, I², Egger's
+KNOWLEDGE GRAPH → ConceptNode + longitudinal tracking
+PUBLISHER → Multi-format output
 DIGEST     → Veille hebdomadaire par topic
 RADAR      → Détection signaux faibles
-COUNCIL    → Débat multi-angles
+
+V5 HARVARD COUNCIL:
+8 PhD RESEARCHERS → MIT, Stanford, Oxford, Johns Hopkins, Georgetown, Yale, ETH, Harvard
+EVIDENCE GRADER → Oxford CEBM levels + GRADE framework
+ADVERSARIAL REVIEW BOARD → Methodologist, Statistician, Devil's Advocate
+SYNTHESIS DIRECTOR → Final integrated analysis
 ```
 
 ### Stack technique
 
 - **Frontend**: Next.js 16 + React 18 + TypeScript + Tailwind CSS
-- **Backend**: Next.js API Routes + Prisma ORM
-- **Base de données**: PostgreSQL (28M+ sources académiques)
-- **IA**: OpenAI GPT-4 Turbo (temp 0.1-0.4 selon agent)
-- **Providers**: OpenAlex, CrossRef, PubMed, Semantic Scholar, arXiv, SSRN, CORE
-- **Queue**: Redis (optionnel, pour jobs)
-- **Email**: Resend / SendGrid / SMTP (pour digests)
+- **Backend**: Next.js API Routes + Prisma ORM + Neon PostgreSQL
+- **Base de données**: PostgreSQL (250M+ sources OpenAlex + Knowledge Graph)
+- **IA**: OpenAI GPT-4 Turbo (temp 0.1-0.4 selon agent) + Anthropic Claude (fallback)
+- **Providers**: 66+ providers (OpenAlex, CrossRef, PubMed, Semantic Scholar, arXiv, SSRN, CORE, DOAJ, RePEc, EuropePMC, Google CSE, etc.)
+- **Queue**: Redis (Upstash) + job processing
+- **Email**: Resend (newsletter + digests)
+- **Monitoring**: Sentry + custom health checks
+- **Deployment**: Netlify (Edge Functions) + GitHub Actions CI/CD
 
 ---
 
 ## ✨ Features Uniques
 
-### 🎯 Brief Multi-Perspectives (Council)
+### 🎯 V5 Harvard Council (8 PhD Researchers)
 
-Analyse **4 perspectives distinctes** automatiquement :
+Analyse **8 perspectives expertes** automatiquement :
 
 ```
-💰 Économique : ROI, coûts, bénéfices, impacts marchés
-⚙️ Technique : Faisabilité, infrastructure, compatibilité
-❤️ Éthique : Consentement, biais, justice, implications sociales
-🏛️ Politique : Régulation, souveraineté, géopolitique
+� Dr. Elena Vasquez (MIT PhD) → Econometrics & Policy Economics
+🤖 Dr. James Chen (Stanford PhD) → AI/ML & Digital Systems  
+🏛️ Dr. Amara Okafor (Oxford PhD) → Public Policy & Governance
+🏥 Dr. Sarah Lindström (Johns Hopkins PhD) → Epidemiology & Public Health
+🔒 Dr. Marcus Webb (Georgetown PhD) → Strategic Security & Intelligence
+⚖️ Dr. Isabelle Moreau (Yale Law PhD) → International Law & Regulatory Frameworks
+🌍 Dr. Kenji Tanaka (ETH Zurich PhD) → Climate Science & Environmental Systems
+📈 Dr. Priya Sharma (Harvard Stats PhD) → Quantitative Methods & Causal Inference
 
-+ Synthèse intégrée des trade-offs
++ Evidence Grader (Oxford CEBM) + Adversarial Review Board + Synthesis Director
 ```
 
-**Unique sur le marché** — Aucun concurrent (Consensus = single view, STORM = questions, DeepDebater = research tool)
+**Unique sur le marché** — Aucun concurrent (8 experts PhD vs single AI analysis)
 
 ---
 
@@ -110,19 +140,33 @@ De la question au brief en **1 clic, 60 secondes** :
 
 ### 📊 Decision-Ready Output
 
-Brief structuré en **10 sections** :
-
+**Brief Standard** (10 sections) :
 ```
-1. Résumé Exécutif
+1. Résumé Exécutif + Key Findings
 2. Consensus Scientifique
-3. Points de Débat
+3. Points de Débat + Controversies
 4. Pour & Contre (argumentaires)
 5. Qualité des Preuves
-6. Implications Stratégiques    ← UNIQUE
+6. Implications Stratégiques
 7. Risques & Limitations
 8. Questions Ouvertes
-9. What Changes Our Mind        ← UNIQUE
+9. What Changes Our Mind
 10. Sources (12+ avec métadonnées)
+```
+
+**Strategic Report** (15 sections, V5 Council) :
+```
+1. Executive Summary + Key Findings
+2. Literature Review (frameworks, methodologies)
+3. Thematic Analysis (themes, consensus, controversies, trends)
+4. Debate (position 1, position 2, synthesis, nuances)
+5. Evidence Quality Assessment (1-10 score)
+6. Stakeholder Impact Matrix
+7. Scenario Planning (3-5 scenarios with probabilities)
+8. Recommendations (immediate, short-term, long-term, risk mitigation)
+9. Implementation Roadmap
+10. Conclusion + Open Questions
++ 5 sections détaillées par domaine expert
 ```
 
 **Decision-ready** (pas research-ready comme Semantic Scholar/Consensus)
@@ -148,9 +192,10 @@ Citation Guard + Traçabilité totale :
 
 ### Prérequis
 
-- Node.js 18+
-- PostgreSQL 14+
+- Node.js 20.19.0+ (Next.js 16 compatible)
+- PostgreSQL 14+ (Neon recommandé)
 - OpenAI API Key
+- Redis (Upstash recommandé)
 
 ### 1. Cloner et installer
 
@@ -168,19 +213,34 @@ Créez un fichier `.env` à la racine :
 # === REQUIRED ===
 NODE_ENV=development
 DATABASE_URL=postgresql://user:password@localhost:5432/nomosx
-OPENAI_API_KEY=sk-...
-OPENAI_MODEL=gpt-4-turbo-preview
+DATABASE_URL_UNPOOLED=postgresql://user:password@localhost:5432/nomosx
+OPENAI_API_KEY=sk-proj-...
+OPENAI_MODEL=gpt-4o
 
-# === ADMIN ===
-ADMIN_KEY=your-secret-key
+# === SECURITY ===
+JWT_SECRET=your-super-secret-jwt-key-32-chars-minimum
+ADMIN_KEY=admin-nomosx-secure-key-2026
+CRON_SECRET=cron-nomosx-webhook-secret-2026
 
-# === EMAIL (optionnel, pour digests) ===
+# === REDIS (Upstash) ===
+UPSTASH_REDIS_REST_URL=https://xxx.upstash.io
+UPSTASH_REDIS_REST_TOKEN=AYyVAAIncDFl...
+
+# === EMAIL ===
 EMAIL_PROVIDER=resend
-EMAIL_FROM=nomosx@example.com
-RESEND_API_KEY=re_...
+FROM_EMAIL=noreply@nomosx.com
+RESEND_API_KEY=re_gr7fKc9T_N44HbXahfGwtbj8xuAornxAY
 
-# === UNPAYWALL (optionnel, pour enrichir OA) ===
+# === PROVIDERS ===
+GOOGLE_CSE_API_KEY=AIzaSyBqGDe5CwvmhtVcebCVz0nrXu28qPPhZS8
+GOOGLE_CSE_CX=052848175e3404dc6
+LINKUP_API_KEY=800bf484-ccbd-4b51-acdb-8a86d36f7a1e
 UNPAYWALL_EMAIL=your-email@example.com
+
+# === MONITORING ===
+SENTRY_DSN=
+SENTRY_ORG=nomosx
+SENTRY_PROJECT=nomosx-production
 
 # === Next.js ===
 NEXT_PUBLIC_APP_URL=http://localhost:3000
@@ -513,9 +573,33 @@ npm run worker
 
 ---
 
-## 🚢 Déploiement
+## Déploiement
 
-### Vercel (recommandé)
+### Netlify (Production)
+
+```bash
+# Variables d'environnement dans Netlify UI
+NODE_VERSION=20.19.0
+DATABASE_URL=postgresql://...
+OPENAI_API_KEY=sk-proj-...
+JWT_SECRET=...
+ADMIN_KEY=...
+# + toutes les autres variables .env
+
+# Build configuration (netlify.toml)
+[build]
+  command = "npm cache clean --force && npm install && npm run build"
+  publish = ".next"
+  functions = "netlify/functions"
+
+[build.environment]
+  NODE_VERSION = "20.19.0"
+  NPM_VERSION = "10"
+  SHARP_IGNORE_GLOBALVIPS = "1"
+  SHARP_GLOBAL_BASEDIR = "/opt/buildhome/.npm-global"
+```
+
+### Vercel (Alternative)
 
 ```bash
 # Install Vercel CLI

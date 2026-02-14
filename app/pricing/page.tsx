@@ -73,27 +73,27 @@ export default function PricingPage() {
             </p>
           </div>
 
-          {/* Two Pricing Tiers */}
-          <div className="grid md:grid-cols-2 gap-6 max-w-4xl mx-auto mb-24">
+          {/* Three Pricing Tiers */}
+          <div className="grid lg:grid-cols-3 md:grid-cols-2 gap-6 max-w-6xl mx-auto mb-24">
             
-            {/* Executive Plan */}
+            {/* FREE Plan */}
             <div className="rounded-2xl border border-white/[0.08] bg-gradient-to-br from-white/[0.03] to-white/[0.01] p-8 sm:p-10">
               <div className="text-center mb-8">
                 <div className="w-12 h-12 rounded-xl bg-white/[0.04] border border-white/[0.08] flex items-center justify-center mx-auto mb-4">
                   <FileText size={24} className="text-white/50" />
                 </div>
-                <h2 className="font-display text-xl font-light text-white/90 mb-3">Executive</h2>
+                <h2 className="font-display text-xl font-light text-white/90 mb-3">Free</h2>
                 <div className="flex items-baseline justify-center gap-1.5 mb-3">
-                  <span className="font-display text-4xl font-light text-white">15€</span>
+                  <span className="font-display text-4xl font-light text-white">0€</span>
                   <span className="text-sm text-white/30">/month</span>
                 </div>
                 <span className="text-[10px] tracking-wider uppercase text-white/25 px-3 py-1 rounded-full border border-white/[0.06]">
-                  30-day free trial
+                  Forever free
                 </span>
               </div>
 
               <div className="space-y-3 mb-8">
-                {["Executive Briefs (2-3 pages)", "Weekly newsletter", "Brief archives", "Decision-ready insights"].map(f => (
+                {["Weekly brief summaries", "Radar signals", "Public brief previews", "Newsletter access"].map(f => (
                   <div key={f} className="flex items-center gap-3">
                     <Check size={14} className="text-emerald-400/80 flex-shrink-0" />
                     <span className="text-sm text-white/60">{f}</span>
@@ -102,31 +102,31 @@ export default function PricingPage() {
               </div>
 
               <button
-                onClick={() => setShowAuthModal(true)}
+                onClick={() => router.push('/briefs')}
                 className="w-full py-3.5 rounded-xl border border-white/[0.1] text-sm font-medium text-white/70 hover:text-white hover:border-white/[0.2] hover:bg-white/[0.03] transition-all"
               >
-                Start free trial
+                Browse briefs
               </button>
             </div>
 
-            {/* Strategy Plan */}
+            {/* Executive Plan */}
             <div className="rounded-2xl border border-[#00D4FF]/20 bg-gradient-to-br from-[#00D4FF]/[0.04] to-[#3B82F6]/[0.02] p-8 sm:p-10 shadow-[0_0_40px_rgba(0,212,255,0.08)]">
               <div className="text-center mb-8">
                 <div className="w-14 h-14 rounded-xl bg-[#00D4FF]/10 border border-[#00D4FF]/20 flex items-center justify-center mx-auto mb-4 shadow-[0_0_20px_rgba(0,212,255,0.15)]">
-                  <Briefcase size={28} className="text-[#00D4FF]" />
+                  <FileText size={28} className="text-[#00D4FF]" />
                 </div>
-                <h2 className="font-display text-xl font-light text-white mb-3">Strategy</h2>
+                <h2 className="font-display text-xl font-light text-white mb-3">Executive</h2>
                 <div className="flex items-baseline justify-center gap-1.5 mb-3">
-                  <span className="font-display text-4xl font-light text-white">39€</span>
+                  <span className="font-display text-4xl font-light text-white">15€</span>
                   <span className="text-sm text-white/30">/month</span>
                 </div>
                 <span className="text-[10px] tracking-wider uppercase text-[#00D4FF]/50 px-3 py-1 rounded-full border border-[#00D4FF]/15">
-                  Everything + Strategic Reports
+                  Most popular
                 </span>
               </div>
 
               <div className="space-y-3 mb-8">
-                {["Everything in Executive", "Strategic Reports (10-15 pages)", "Methodology & debates", "Complete archives", "Long PDF exports"].map(f => (
+                {["Everything in Free", "Full briefs (2-3 pages)", "Complete archives", "Weekly newsletter", "Decision-ready insights", "Source citations"].map(f => (
                   <div key={f} className="flex items-center gap-3">
                     <Check size={14} className="text-emerald-400/80 flex-shrink-0" />
                     <span className="text-sm text-white/60">{f}</span>
@@ -142,6 +142,39 @@ export default function PricingPage() {
                   Start free trial
                   <ArrowRight size={14} className="transition-transform group-hover:translate-x-0.5" />
                 </span>
+              </button>
+            </div>
+
+            {/* Strategy Plan */}
+            <div className="rounded-2xl border border-white/[0.08] bg-gradient-to-br from-white/[0.03] to-white/[0.01] p-8 sm:p-10">
+              <div className="text-center mb-8">
+                <div className="w-12 h-12 rounded-xl bg-white/[0.04] border border-white/[0.08] flex items-center justify-center mx-auto mb-4">
+                  <Briefcase size={24} className="text-white/50" />
+                </div>
+                <h2 className="font-display text-xl font-light text-white/90 mb-3">Strategy</h2>
+                <div className="flex items-baseline justify-center gap-1.5 mb-3">
+                  <span className="font-display text-4xl font-light text-white">39€</span>
+                  <span className="text-sm text-white/30">/month</span>
+                </div>
+                <span className="text-[10px] tracking-wider uppercase text-white/25 px-3 py-1 rounded-full border border-white/[0.06]">
+                  For teams
+                </span>
+              </div>
+
+              <div className="space-y-3 mb-8">
+                {["Everything in Executive", "Strategic reports (10-15 pages)", "Studio research tool", "Harvard Council insights", "Custom verticals", "Priority support"].map(f => (
+                  <div key={f} className="flex items-center gap-3">
+                    <Check size={14} className="text-emerald-400/80 flex-shrink-0" />
+                    <span className="text-sm text-white/60">{f}</span>
+                  </div>
+                ))}
+              </div>
+
+              <button
+                onClick={() => setShowAuthModal(true)}
+                className="w-full py-3.5 rounded-xl border border-white/[0.1] text-sm font-medium text-white/70 hover:text-white hover:border-white/[0.2] hover:bg-white/[0.03] transition-all"
+              >
+                Start free trial
               </button>
             </div>
           </div>

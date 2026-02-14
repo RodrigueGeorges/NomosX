@@ -113,19 +113,19 @@ const DEMO_SOURCES = [
 ];
 
 const DEMO_AUTHORS = [
-  { name: 'Dr. Emma Chen', orcid: '0000-0001-2345-6789' },
-  { name: 'Prof. Michael Schmidt', orcid: '0000-0002-3456-7890' },
-  { name: 'Dr. Sarah Johnson', orcid: '0000-0003-4567-8901' },
-  { name: 'Prof. David Lee', orcid: '0000-0004-5678-9012' },
-  { name: 'Dr. Anna Kowalski', orcid: '0000-0005-6789-0123' },
+  { name: 'Dr. Emma Chen', orcid: '0000-0001-2345-6789', normalizedName: 'emma chen' },
+  { name: 'Prof. Michael Schmidt', orcid: '0000-0002-3456-7890', normalizedName: 'michael schmidt' },
+  { name: 'Dr. Sarah Johnson', orcid: '0000-0003-4567-8901', normalizedName: 'sarah johnson' },
+  { name: 'Prof. David Lee', orcid: '0000-0004-5678-9012', normalizedName: 'david lee' },
+  { name: 'Dr. Anna Kowalski', orcid: '0000-0005-6789-0123', normalizedName: 'anna kowalski' },
 ];
 
 const DEMO_INSTITUTIONS = [
-  { name: 'MIT', rorId: 'https://ror.org/042nb2s44' },
-  { name: 'Stanford University', rorId: 'https://ror.org/00f54p054' },
-  { name: 'Max Planck Institute', rorId: 'https://ror.org/01hhn8329' },
-  { name: 'University of Tokyo', rorId: 'https://ror.org/057zh3y96' },
-  { name: 'ETH Zurich', rorId: 'https://ror.org/05a28rw58' },
+  { name: 'MIT', rorId: 'https://ror.org/042nb2s44', normalizedName: 'mit' },
+  { name: 'Stanford University', rorId: 'https://ror.org/00f54p054', normalizedName: 'stanford university' },
+  { name: 'Max Planck Institute', rorId: 'https://ror.org/01hhn8329', normalizedName: 'max planck institute' },
+  { name: 'University of Tokyo', rorId: 'https://ror.org/057zh3y96', normalizedName: 'university of tokyo' },
+  { name: 'ETH Zurich', rorId: 'https://ror.org/05a28rw58', normalizedName: 'eth zurich' },
 ];
 
 async function main() {
