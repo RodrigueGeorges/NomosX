@@ -1,5 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { runFullPipeline } from '@/lib/agent/pipeline-v2';
+import type { Providers } from '@/lib/agent/pipeline-v2';
 
 /**
  * POST /api/demo/generate
@@ -19,7 +20,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Demo mode: limited providers for speed
-    const demoProviders = ['openalex', 'arxiv', 'pubmed', 'nature', 'science'];
+    const demoProviders: Providers = ['openalex', 'arxiv', 'pubmed', 'nature', 'science'];
     
     console.log(`[Demo] Starting pipeline for topic: "${topic}"`);
     
