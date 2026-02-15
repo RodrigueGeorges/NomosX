@@ -12,7 +12,12 @@ import {
   Shield, 
   Scale, 
   Leaf, 
-  Calculator
+  Calculator,
+  Briefcase,
+  Lock,
+  BarChart3,
+  Activity,
+  Target
 } from 'lucide-react';
 import AdvancedResearcherAvatar from '@/components/AdvancedResearcherAvatar';
 import { RESEARCHERS } from '@/lib/researchers';
@@ -66,7 +71,7 @@ export default function DashboardPage() {
 
   const fetchDashboardData = async () => {
     try {
-      const [subscriptionRes, briefsRes, researchersRes] = await Promise.all([
+      const [subscriptionRes, briefsRes] = await Promise.all([
         fetch('/api/subscription/status'),
         fetch('/api/user/briefs/recent')
       ]);
@@ -572,7 +577,7 @@ function StrategyDashboard({ subscription, recentBriefs, researcherStatus, route
           {[
             { label: "Studio Questions", value: `${subscription.studioUsed}/∞`, icon: Brain },
             { label: "Briefs Available", value: "Unlimited", icon: FileText },
-            { label: "Custom Verticals", value: "Unlimited", icon: Target },
+            { label: "Custom Verticals", value: "Unlimited", icon: Scale },
             { label: "Council Access", value: "Full", icon: Users },
           ].map((stat, index) => (
             <div key={index} className="rounded-xl border border-purple-400/20 bg-purple-400/5 p-4">
