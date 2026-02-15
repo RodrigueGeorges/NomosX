@@ -1152,7 +1152,7 @@ export const DEFAULT_ACADEMIC_PROVIDERS: Providers = [
 
 export async function runFullPipeline(
   query: string, 
-  providers: Providers = ['openalex', 'arxiv', 'pubmed', 'nature', 'science'],
+  providers: Providers = ['openalex', 'arxiv', 'pubmed', 'crossref', 'semanticscholar'],
   options: {
     mode?: 'brief' | 'strategic';
     maxSources?: number;

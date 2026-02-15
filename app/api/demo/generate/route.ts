@@ -20,7 +20,7 @@ export async function POST(req: NextRequest) {
     }
 
     // Demo mode: limited providers for speed
-    const demoProviders: Providers = ['openalex', 'arxiv', 'pubmed', 'nature', 'science'];
+    const demoProviders: Providers = ['openalex', 'arxiv', 'pubmed', 'crossref', 'semanticscholar'];
     
     console.log(`[Demo] Starting pipeline for topic: "${topic}"`);
     
