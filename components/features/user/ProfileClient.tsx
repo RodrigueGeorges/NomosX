@@ -64,7 +64,7 @@ export function ProfileClient() {
     lastName: 'Dupont',
     phone: '+33 6 12 34 56 78',
     company: 'NomosX Corp',
-    jobTitle: 'Directeur de la Recherche',
+    jobTitle: 'Director of Research',
     timezone: 'Europe/Paris',
     language: 'fr',
     role: 'admin',
@@ -116,7 +116,7 @@ export function ProfileClient() {
   }
 
   const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat('fr-FR', {
+    return new Intl.DateTimeFormat('en-US', {
       day: 'numeric',
       month: 'long',
       year: 'numeric'
@@ -126,28 +126,28 @@ export function ProfileClient() {
   const getPlanColor = (plan: string) => {
     switch (plan) {
       case 'free':
-        return 'bg-gray-100 text-gray-800'
+        return 'bg-white/10 text-white/50'
       case 'professional':
-        return 'bg-blue-100 text-blue-800'
+        return 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/30'
       case 'enterprise':
-        return 'bg-purple-100 text-purple-800'
+        return 'bg-violet-500/20 text-violet-300 border border-violet-500/30'
       case 'custom':
-        return 'bg-green-100 text-green-800'
+        return 'bg-emerald-500/20 text-emerald-300 border border-emerald-500/30'
       default:
-        return 'bg-gray-100 text-gray-800'
+        return 'bg-white/10 text-white/50'
     }
   }
 
   const getRoleColor = (role: string) => {
     switch (role) {
       case 'user':
-        return 'bg-blue-100 text-blue-800'
+        return 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/30'
       case 'admin':
-        return 'bg-orange-100 text-orange-800'
+        return 'bg-orange-500/20 text-orange-300 border border-orange-500/30'
       case 'superadmin':
-        return 'bg-red-100 text-red-800'
+        return 'bg-red-500/20 text-red-300 border border-red-500/30'
       default:
-        return 'bg-gray-100 text-gray-800'
+        return 'bg-white/10 text-white/50'
     }
   }
 
@@ -160,10 +160,10 @@ export function ProfileClient() {
             <div>
               <CardTitle className="flex items-center gap-2">
                 <User className="h-5 w-5" />
-                Informations personnelles
+                Personal Information
               </CardTitle>
               <CardDescription>
-                Gérez vos informations de base
+                Manage your basic information
               </CardDescription>
             </div>
             <div className="flex items-center gap-2">
@@ -172,7 +172,7 @@ export function ProfileClient() {
               </Badge>
               <Badge className={getRoleColor(profile.role)}>
                 {profile.role === 'superadmin' ? 'Super Admin' : 
-                 profile.role === 'admin' ? 'Admin' : 'Utilisateur'}
+                 profile.role === 'admin' ? 'Admin' : 'User'}
               </Badge>
             </div>
           </div>
@@ -181,19 +181,19 @@ export function ProfileClient() {
           {editingProfile ? (
             <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
               <div>
-                <Label htmlFor="firstName">Prénom</Label>
+                <Label htmlFor="firstName">First Name</Label>
                 <Input
                   id="firstName"
                   defaultValue={profile.firstName}
-                  placeholder="Votre prénom"
+                  placeholder="Your first name"
                 />
               </div>
               <div>
-                <Label htmlFor="lastName">Nom</Label>
+                <Label htmlFor="lastName">Last Name</Label>
                 <Input
                   id="lastName"
                   defaultValue={profile.lastName}
-                  placeholder="Votre nom"
+                  placeholder="Your last name"
                 />
               </div>
               <div>
@@ -206,31 +206,31 @@ export function ProfileClient() {
                 />
               </div>
               <div>
-                <Label htmlFor="phone">Téléphone</Label>
+                <Label htmlFor="phone">Phone</Label>
                 <Input
                   id="phone"
                   defaultValue={profile.phone}
-                  placeholder="Votre numéro de téléphone"
+                  placeholder="Your phone number"
                 />
               </div>
               <div>
-                <Label htmlFor="company">Entreprise</Label>
+                <Label htmlFor="company">Company</Label>
                 <Input
                   id="company"
                   defaultValue={profile.company}
-                  placeholder="Votre entreprise"
+                  placeholder="Your company"
                 />
               </div>
               <div>
-                <Label htmlFor="jobTitle">Poste</Label>
+                <Label htmlFor="jobTitle">Job Title</Label>
                 <Input
                   id="jobTitle"
                   defaultValue={profile.jobTitle}
-                  placeholder="Votre poste"
+                  placeholder="Your job title"
                 />
               </div>
               <div className="md:col-span-2">
-                <Label htmlFor="timezone">Fuseau horaire</Label>
+                <Label htmlFor="timezone">Timezone</Label>
                 <Select defaultValue={profile.timezone}>
                   <SelectTrigger>
                     <SelectValue />
@@ -255,7 +255,7 @@ export function ProfileClient() {
                   </div>
                   {profile.emailVerified && (
                     <Badge variant="secondary" className="text-green-600">
-                      Vérifié
+                      Verified
                     </Badge>
                   )}
                 </div>
@@ -264,7 +264,7 @@ export function ProfileClient() {
                     <Phone className="h-5 w-5 text-neutral-500" />
                     <div>
                       <div className="font-medium">{profile.phone}</div>
-                      <div className="text-sm text-neutral-600">Téléphone</div>
+                      <div className="text-sm text-neutral-600">Phone</div>
                     </div>
                   </div>
                 )}
@@ -274,7 +274,7 @@ export function ProfileClient() {
                   <User className="h-5 w-5 text-neutral-500" />
                   <div>
                     <div className="font-medium">{profile.name}</div>
-                    <div className="text-sm text-neutral-600">Nom complet</div>
+                    <div className="text-sm text-neutral-600">Full name</div>
                   </div>
                 </div>
                 {profile.company && (
@@ -282,7 +282,7 @@ export function ProfileClient() {
                     <Building className="h-5 w-5 text-neutral-500" />
                     <div>
                       <div className="font-medium">{profile.company}</div>
-                      <div className="text-sm text-neutral-600">Entreprise</div>
+                      <div className="text-sm text-neutral-600">Company</div>
                     </div>
                   </div>
                 )}
@@ -291,8 +291,8 @@ export function ProfileClient() {
                 <div className="flex items-center gap-3">
                   <Calendar className="h-5 w-5 text-neutral-500" />
                   <div>
-                    <div className="font-medium">Membre depuis le {formatDate(profile.createdAt)}</div>
-                    <div className="text-sm text-neutral-600">Dernière connexion: {formatDate(profile.lastLoginAt)}</div>
+                    <div className="font-medium">Member since {formatDate(profile.createdAt)}</div>
+                    <div className="text-sm text-neutral-600">Last login: {formatDate(profile.lastLoginAt)}</div>
                   </div>
                 </div>
               </div>
@@ -303,15 +303,15 @@ export function ProfileClient() {
             {editingProfile ? (
               <>
                 <Button onClick={handleSaveProfile} disabled={saving}>
-                  {saving ? 'Sauvegarde...' : 'Sauvegarder'}
+                  {saving ? 'Saving...' : 'Save'}
                 </Button>
                 <Button variant="outline" onClick={() => setEditingProfile(false)}>
-                  Annuler
+                  Cancel
                 </Button>
               </>
             ) : (
               <Button onClick={() => setEditingProfile(true)}>
-                Modifier le profil
+                Edit Profile
               </Button>
             )}
           </div>
@@ -326,7 +326,7 @@ export function ProfileClient() {
             Notifications
           </CardTitle>
           <CardDescription>
-            Gérez vos préférences de notification
+            Manage your notification preferences
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
@@ -335,19 +335,19 @@ export function ProfileClient() {
               <div>
                 <div className="font-medium capitalize">
                   {key === 'email' ? 'Emails' :
-                   key === 'push' ? 'Notifications push' :
+                   key === 'push' ? 'Push notifications' :
                    key === 'newsletter' ? 'Newsletter' :
-                   key === 'updates' ? 'Mises à jour produit' :
-                   key === 'security' ? 'Alertes de sécurité' :
+                   key === 'updates' ? 'Product updates' :
+                   key === 'security' ? 'Security alerts' :
                    key === 'marketing' ? 'Marketing' : key}
                 </div>
                 <div className="text-sm text-neutral-600">
-                  {key === 'email' ? 'Recevoir des notifications par email' :
-                   key === 'push' ? 'Recevoir des notifications push dans le navigateur' :
-                   key === 'newsletter' ? 'Recevoir la newsletter hebdomadaire' :
-                   key === 'updates' ? 'Être informé des nouvelles fonctionnalités' :
-                   key === 'security' ? 'Alertes importantes de sécurité' :
-                   key === 'marketing' ? 'Offres promotionnelles et marketing' : ''}
+                  {key === 'email' ? 'Receive notifications by email' :
+                   key === 'push' ? 'Receive push notifications in the browser' :
+                   key === 'newsletter' ? 'Receive the weekly newsletter' :
+                   key === 'updates' ? 'Be notified of new features' :
+                   key === 'security' ? 'Important security alerts' :
+                   key === 'marketing' ? 'Promotional and marketing offers' : ''}
                 </div>
               </div>
               <button
@@ -374,62 +374,62 @@ export function ProfileClient() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Palette className="h-5 w-5" />
-            Préférences
+            Preferences
           </CardTitle>
           <CardDescription>
-            Personnalisez votre expérience
+            Customize your experience
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
             <div>
-              <Label>Thème</Label>
+              <Label>Theme</Label>
               <Select value={preferences.theme} onValueChange={(value) => handlePreferenceChange('theme', value)}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="light">Clair</SelectItem>
-                  <SelectItem value="dark">Sombre</SelectItem>
-                  <SelectItem value="system">Système</SelectItem>
+                  <SelectItem value="light">Light</SelectItem>
+                  <SelectItem value="dark">Dark</SelectItem>
+                  <SelectItem value="system">System</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div>
-              <Label>Langue</Label>
+              <Label>Language</Label>
               <Select value={preferences.language} onValueChange={(value) => handlePreferenceChange('language', value)}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="fr">Français</SelectItem>
                   <SelectItem value="en">English</SelectItem>
-                  <SelectItem value="es">Español</SelectItem>
+                  <SelectItem value="fr">French</SelectItem>
+                  <SelectItem value="es">Spanish</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div>
-              <Label>Format de date</Label>
+              <Label>Date Format</Label>
               <Select value={preferences.dateFormat} onValueChange={(value) => handlePreferenceChange('dateFormat', value)}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="DD/MM/YYYY">JJ/MM/AAAA</SelectItem>
-                  <SelectItem value="MM/DD/YYYY">MM/JJ/AAAA</SelectItem>
-                  <SelectItem value="YYYY-MM-DD">AAAA-MM-JJ</SelectItem>
+                  <SelectItem value="DD/MM/YYYY">DD/MM/YYYY</SelectItem>
+                  <SelectItem value="MM/DD/YYYY">MM/DD/YYYY</SelectItem>
+                  <SelectItem value="YYYY-MM-DD">YYYY-MM-DD</SelectItem>
                 </SelectContent>
               </Select>
             </div>
             <div>
-              <Label>Format d'heure</Label>
+              <Label>Time Format</Label>
               <Select value={preferences.timeFormat} onValueChange={(value) => handlePreferenceChange('timeFormat', value)}>
                 <SelectTrigger>
                   <SelectValue />
                 </SelectTrigger>
                 <SelectContent>
-                  <SelectItem value="24h">24 heures</SelectItem>
-                  <SelectItem value="12h">12 heures</SelectItem>
+                  <SelectItem value="24h">24-hour</SelectItem>
+                  <SelectItem value="12h">12-hour</SelectItem>
                 </SelectContent>
               </Select>
             </div>
@@ -442,34 +442,34 @@ export function ProfileClient() {
         <CardHeader>
           <CardTitle className="flex items-center gap-2">
             <Shield className="h-5 w-5" />
-            Sécurité
+            Security
           </CardTitle>
           <CardDescription>
-            Gérez la sécurité de votre compte
+            Manage your account security
           </CardDescription>
         </CardHeader>
         <CardContent className="space-y-4">
           <div className="space-y-4">
             <div className="flex items-center justify-between p-4 border rounded-lg">
               <div>
-                <div className="font-medium">Mot de passe</div>
-                <div className="text-sm text-neutral-600">Dernière modification: Il y a 3 mois</div>
+                <div className="font-medium">Password</div>
+                <div className="text-sm text-neutral-600">Last changed: 3 months ago</div>
               </div>
-              <Button variant="outline">Modifier</Button>
+              <Button variant="outline">Change</Button>
             </div>
             <div className="flex items-center justify-between p-4 border rounded-lg">
               <div>
-                <div className="font-medium">Authentification à deux facteurs</div>
-                <div className="text-sm text-neutral-600">Non configurée</div>
+                <div className="font-medium">Two-factor authentication</div>
+                <div className="text-sm text-neutral-600">Not configured</div>
               </div>
-              <Button variant="outline">Configurer</Button>
+              <Button variant="outline">Configure</Button>
             </div>
             <div className="flex items-center justify-between p-4 border rounded-lg">
               <div>
-                <div className="font-medium">Sessions actives</div>
-                <div className="text-sm text-neutral-600">3 sessions actives</div>
+                <div className="font-medium">Active sessions</div>
+                <div className="text-sm text-neutral-600">3 active sessions</div>
               </div>
-              <Button variant="outline">Gérer</Button>
+              <Button variant="outline">Manage</Button>
             </div>
           </div>
         </CardContent>

@@ -44,7 +44,7 @@ export default function ClaimCard({ claim, onViewEvidence }: ClaimCardProps) {
   const type = claim.claimType ?? "factual";
 
   return (
-    <div className="bg-white/[0.02] border border-white/10 rounded-xl p-5 hover:border-cyan-500/30 transition-all duration-300 group">
+    <div className="bg-white/[0.02] border border-white/10 rounded-xl p-5 hover:border-indigo-500/30 transition-all duration-300 group">
       {/* Header */}
       <div className="flex items-start justify-between gap-4 mb-3">
         <div className="flex gap-2 flex-wrap">
@@ -86,7 +86,7 @@ export default function ClaimCard({ claim, onViewEvidence }: ClaimCardProps) {
         <div className="flex items-center gap-4 text-sm text-white/50">
           <span>Evidence: {claim.evidenceCount ?? 0}</span>
           {claim.trustScore !== undefined && (
-            <span className="text-cyan-400">Trust: {Math.round(claim.trustScore * 100)}%</span>
+            <span className="text-indigo-400">Trust: {Math.round(claim.trustScore * 100)}%</span>
           )}
           {claim.confidence !== undefined && (
             <span>Confidence: {Math.round(claim.confidence * 100)}%</span>
@@ -96,9 +96,9 @@ export default function ClaimCard({ claim, onViewEvidence }: ClaimCardProps) {
         {onViewEvidence && (
           <button
             onClick={() => onViewEvidence(claim.id)}
-            className="text-sm text-cyan-400 hover:text-cyan-300 font-medium transition-colors"
+            className="text-sm text-indigo-400 hover:text-indigo-300 font-medium transition-colors"
           >
-            Voir l'evidence →
+            View evidence →
           </button>
         )}
       </div>

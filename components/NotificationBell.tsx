@@ -116,7 +116,7 @@ export default function NotificationBell({ userId }: NotificationBellProps) {
     switch (priority) {
       case 'high': return 'text-red-400 bg-red-500/10';
       case 'medium': return 'text-orange-400 bg-orange-500/10';
-      default: return 'text-cyan-400 bg-cyan-500/10';
+      default: return 'text-indigo-400 bg-indigo-500/10';
     }
   };
 
@@ -171,7 +171,7 @@ export default function NotificationBell({ userId }: NotificationBellProps) {
               {unreadCount > 0 && (
                 <button
                   onClick={markAllAsRead}
-                  className="text-sm text-cyan-400 hover:underline"
+                  className="text-sm text-indigo-400 hover:underline"
                 >
                   Mark all as read
                 </button>
@@ -215,7 +215,7 @@ export default function NotificationBell({ userId }: NotificationBellProps) {
                               {notification.title}
                             </p>
                             {!notification.isRead && (
-                              <div className="w-2 h-2 bg-cyan-500 rounded-full flex-shrink-0 mt-1" />
+                              <div className="w-2 h-2 bg-indigo-500 rounded-full flex-shrink-0 mt-1" />
                             )}
                           </div>
 

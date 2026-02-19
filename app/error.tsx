@@ -30,26 +30,26 @@ export default function Error({
             </svg>
           </div>
           <span className="text-3xl font-bold text-white">
-            Nomos<span className="text-cyan-400">X</span>
+            Nomos<span className="text-indigo-400">X</span>
           </span>
         </div>
 
         <h1 className="text-2xl font-bold text-white mb-3">
-          Une erreur est survenue
+          Something went wrong
         </h1>
 
         <p className="text-white/60 mb-8 leading-relaxed">
-          Quelque chose s&apos;est mal passé. Veuillez réessayer ou revenir à l&apos;accueil.
+          An unexpected error occurred. Please try again or return to the home page.
         </p>
 
         <div className="flex flex-col sm:flex-row gap-3 justify-center">
           <Button variant="ai" onClick={() => reset()}>
             <RefreshCw size={18} className="mr-2" />
-            Réessayer
+            Try again
           </Button>
           <Button variant="ghost" onClick={() => router.push("/")}>
             <Home size={18} className="mr-2" />
-            Retour à l&apos;accueil
+            Back to home
           </Button>
         </div>
       </div>

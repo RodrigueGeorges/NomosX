@@ -1,5 +1,5 @@
 /**
- * Utils - Fonctions utilitaires OpenClaw
+ * Utils - NomosX utility functions
  */
 
 import { type ClassValue, clsx } from 'clsx';
@@ -10,11 +10,11 @@ export function cn(...inputs: ClassValue[]) {
 }
 
 /**
- * Formate une date en format lisible
+ * Format a date in readable format
  */
 export function formatDate(date: Date | string): string {
   const d = new Date(date)
-  return d.toLocaleDateString('fr-FR', {
+  return d.toLocaleDateString('en-US', {
     day: 'numeric',
     month: 'long',
     year: 'numeric'
@@ -22,17 +22,17 @@ export function formatDate(date: Date | string): string {
 }
 
 /**
- * Formate un montant en euros
+ * Format a price amount
  */
 export function formatPrice(amount: number): string {
-  return new Intl.NumberFormat('fr-FR', {
+  return new Intl.NumberFormat('en-US', {
     style: 'currency',
     currency: 'EUR'
   }).format(amount)
 }
 
 /**
- * Génère un slug à partir d'une chaîne
+ * Generate a slug from a string
  */
 export function slugify(text: string): string {
   return text
@@ -43,7 +43,7 @@ export function slugify(text: string): string {
 }
 
 /**
- * Valide un email
+ * Validate an email address
  */
 export function isValidEmail(email: string): boolean {
   const emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/
@@ -51,7 +51,7 @@ export function isValidEmail(email: string): boolean {
 }
 
 /**
- * Tronque un texte avec des ellipses
+ * Truncate text with ellipsis
  */
 export function truncateText(text: string, maxLength: number): string {
   if (text.length <= maxLength) return text
@@ -59,7 +59,7 @@ export function truncateText(text: string, maxLength: number): string {
 }
 
 /**
- * Calcule le temps de lecture estimé
+ * Calculate estimated reading time
  */
 export function calculateReadingTime(content: string): number {
   const wordsPerMinute = 200
@@ -68,7 +68,7 @@ export function calculateReadingTime(content: string): number {
 }
 
 /**
- * Génère une couleur aléatoire
+ * Generate a random color
  */
 export function generateRandomColor(): string {
   const colors = [
@@ -79,7 +79,7 @@ export function generateRandomColor(): string {
 }
 
 /**
- * Déboute une fonction
+ * Debounce a function
  */
 export function debounce<T extends (...args: any[]) => any>(
   func: T,
@@ -93,35 +93,35 @@ export function debounce<T extends (...args: any[]) => any>(
 }
 
 /**
- * Vérifie si un objet est vide
+ * Check if an object is empty
  */
 export function isEmpty(obj: any): boolean {
   return Object.keys(obj).length === 0
 }
 
 /**
- * Clone profondément un objet
+ * Deep clone an object
  */
 export function deepClone<T>(obj: T): T {
   return JSON.parse(JSON.stringify(obj))
 }
 
 /**
- * Génère un ID unique
+ * Generate a unique ID
  */
 export function generateId(): string {
   return Math.random().toString(36).substr(2, 9)
 }
 
 /**
- * Retarde l'exécution
+ * Delay execution
  */
 export function delay(ms: number): Promise<void> {
   return new Promise(resolve => setTimeout(resolve, ms))
 }
 
 /**
- * Vérifie si une URL est valide
+ * Check if a URL is valid
  */
 export function isValidUrl(url: string): boolean {
   try {
@@ -133,14 +133,14 @@ export function isValidUrl(url: string): boolean {
 }
 
 /**
- * Formate un nombre avec séparateurs
+ * Format a number with separators
  */
 export function formatNumber(num: number): string {
-  return new Intl.NumberFormat('fr-FR').format(num)
+  return new Intl.NumberFormat('en-US').format(num)
 }
 
 /**
- * Obtient les initiales d'un nom
+ * Get initials from a name
  */
 export function getInitials(name: string): string {
   return name

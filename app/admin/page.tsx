@@ -94,7 +94,7 @@ export default function AdminCommandCenter() {
   const totalPendingSignals = pendingSignals.length;
   const heldSignals = pendingSignals.filter(s => s.status === "HELD").length;
   const systemStatus = totalPendingSignals > 0 ? "Monitoring" : "Silent";
-  const statusColor = totalPendingSignals > 0 ? "text-cyan-400" : "text-white/40";
+  const statusColor = totalPendingSignals > 0 ? "text-indigo-400" : "text-white/40";
 
   return (
     <Shell>
@@ -103,11 +103,11 @@ export default function AdminCommandCenter() {
         <div className="mb-10">
           <div className="flex items-center justify-between mb-6">
             <div className="flex items-center gap-4">
-              <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-cyan-500/10 to-blue-500/5 border border-cyan-500/20 flex items-center justify-center shadow-[0_0_20px_rgba(0,212,255,0.15)]">
-                <Activity size={32} className="text-cyan-400" />
+              <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-indigo-500/10 to-violet-500/5 border border-indigo-500/20 flex items-center justify-center shadow-[0_0_20px_rgba(99,102,241,0.15)]">
+                <Activity size={32} className="text-indigo-400" />
               </div>
               <div>
-                <div className="text-xs text-cyan-400/60 tracking-[0.25em] uppercase mb-1">
+                <div className="text-xs text-indigo-400/60 tracking-[0.25em] uppercase mb-1">
                   Admin
                 </div>
                 <h1 className="text-4xl font-light tracking-tight text-white/95">Command Center</h1>
@@ -158,7 +158,7 @@ export default function AdminCommandCenter() {
               </div>
               <div className="w-full bg-background/5 rounded-full h-1.5 overflow-hidden">
                 <div 
-                  className="h-full bg-gradient-to-r from-emerald-500 to-cyan-500 transition-all"
+                  className="h-full bg-gradient-to-r from-emerald-500 to-indigo-500 transition-all"
                   style={{ 
                     width: `${Math.min(100, ((subscription?.weeklyPublicationCount || 0) / (subscription?.weeklyPublicationMax || 3)) * 100)}%` 
                   }}
@@ -194,7 +194,7 @@ export default function AdminCommandCenter() {
                 <Zap size={18} className="text-amber-400" />
                 Signals Inbox
               </h2>
-              <Link href="/signals" className="text-sm text-cyan-400 hover:text-cyan-300 flex items-center gap-1 transition-all duration-200">
+              <Link href="/signals" className="text-sm text-indigo-400 hover:text-indigo-300 flex items-center gap-1 transition-all duration-200">
                 View all <ArrowRight size={14} />
               </Link>
             </div>
@@ -222,7 +222,7 @@ export default function AdminCommandCenter() {
                           <span className="text-sm font-bold text-amber-400">{signal.scores.priority}</span>
                         </div>
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm text-white truncate group-hover:text-cyan-400 transition-colors">{signal.title}</p>
+                          <p className="text-sm text-white truncate group-hover:text-indigo-300 transition-colors">{signal.title}</p>
                           <div className="flex items-center gap-2 text-xs text-white/40 mt-0.5">
                             {signal.vertical && <span>{signal.vertical.name}</span>}
                             <span>•</span>
@@ -237,7 +237,7 @@ export default function AdminCommandCenter() {
                             )}
                           </div>
                         </div>
-                        <ArrowRight size={14} className="text-white/20 group-hover:text-cyan-400 transition-colors" />
+                        <ArrowRight size={14} className="text-white/20 group-hover:text-indigo-400 transition-colors" />
                       </div>
                     </CardContent>
                   </Card>
@@ -253,7 +253,7 @@ export default function AdminCommandCenter() {
                 <Archive size={18} className="text-emerald-400" />
                 Editorial Snapshot
               </h2>
-              <Link href="/publications" className="text-sm text-cyan-400 hover:text-cyan-300 flex items-center gap-1 transition-all duration-200">
+              <Link href="/publications" className="text-sm text-indigo-400 hover:text-indigo-300 flex items-center gap-1 transition-all duration-200">
                 View all <ArrowRight size={14} />
               </Link>
             </div>
@@ -279,7 +279,7 @@ export default function AdminCommandCenter() {
                       <div className="flex items-center gap-3">
                         <TrustScoreBadge score={pub.trustScore} size="sm" />
                         <div className="flex-1 min-w-0">
-                          <p className="text-sm text-white truncate group-hover:text-cyan-400 transition-colors">{pub.title}</p>
+                          <p className="text-sm text-white truncate group-hover:text-indigo-300 transition-colors">{pub.title}</p>
                           <div className="flex items-center gap-2 text-xs text-white/40 mt-0.5">
                             {pub.vertical && <span>{pub.vertical.name}</span>}
                             <span>•</span>

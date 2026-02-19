@@ -18,7 +18,7 @@ const taglines = [
   {
     primary: "The Research Department Every Leader Needs",
     secondary: "Strategic Intelligence That Shapes Industries",
-    description: "Get the research rigor of McKinsey at 1% of the cost"
+    description: "Institutional-grade research delivered at the speed of a decision"
   },
   {
     primary: "From Academic Noise to Strategic Clarity",
@@ -107,8 +107,8 @@ export default function Tagline({
       {/* Icon */}
       {showIcon && (
         <div className="flex justify-center">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-[#00D4FF]/10 to-[#7C3AED]/5 border border-[#00D4FF]/20 flex items-center justify-center">
-            <Brain className="text-[#00D4FF]" size={24} />
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500/10 to-violet-500/5 border border-indigo-500/20 flex items-center justify-center">
+            <Brain className="text-indigo-400" size={24} />
           </div>
         </div>
       )}
@@ -148,7 +148,7 @@ export default function Tagline({
       {/* CTA for impact variant */}
       {variant === 'impact' && (
         <div className="flex flex-col sm:flex-row gap-4 justify-center pt-4">
-          <button className="group px-8 py-4 rounded-xl bg-gradient-to-r from-[#00D4FF]/20 to-[#3B82F6]/20 border border-[#00D4FF]/20 text-white font-medium hover:border-[#00D4FF]/40 transition-all shadow-[0_0_30px_rgba(0,212,255,0.15)]">
+          <button className="group px-8 py-4 rounded-xl bg-gradient-to-r from-indigo-500/20 to-violet-500/20 border border-indigo-500/20 text-white font-medium hover:border-indigo-500/40 transition-all shadow-[0_0_30px_rgba(99,102,241,0.15)]">
             <span className="flex items-center justify-center gap-2">
               Get Strategic Intelligence
               <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
@@ -169,7 +169,7 @@ export default function Tagline({
               className={cn(
                 "w-2 h-2 rounded-full transition-all duration-300",
                 index === currentTagline
-                  ? "bg-[#00D4FF] w-8"
+                  ? "bg-indigo-400 w-8"
                   : "bg-white/20"
               )}
             />
@@ -196,13 +196,13 @@ export function ValueProposition({ tier = 'TRIAL', compact = false }: ValuePropo
       },
       {
         icon: <Brain size={20} />,
-        title: "Get research rigor at 1% of consulting costs",
-        description: "8 PhD researchers providing the analysis that used to require six-figure retainers"
+        title: "Institutional-grade analysis without the six-figure retainer",
+        description: "8 PhD-calibrated researchers delivering the analysis that used to require elite consulting firms"
       },
       {
         icon: <Sparkles size={20} />,
         title: "Never miss a strategic shift again",
-        description: "Continuous monitoring of 200,000+ academic sources for emerging trends"
+        description: "Continuous monitoring of 250M+ academic sources for emerging strategic shifts"
       }
     ],
     EXECUTIVE: [
@@ -248,7 +248,7 @@ export function ValueProposition({ tier = 'TRIAL', compact = false }: ValuePropo
       <div className="grid md:grid-cols-3 gap-6">
         {tierProps.map((prop, index) => (
           <div key={index} className="text-center">
-            <div className="w-12 h-12 rounded-xl bg-[#00D4FF]/10 border border-[#00D4FF]/20 flex items-center justify-center mx-auto mb-4">
+            <div className="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center mx-auto mb-4">
               {prop.icon}
             </div>
             <h3 className="font-medium text-white/90 mb-2">{prop.title}</h3>
@@ -263,7 +263,7 @@ export function ValueProposition({ tier = 'TRIAL', compact = false }: ValuePropo
     <div className="space-y-8">
       {tierProps.map((prop, index) => (
         <div key={index} className="flex items-start gap-4">
-          <div className="w-12 h-12 rounded-xl bg-[#00D4FF]/10 border border-[#00D4FF]/20 flex items-center justify-center flex-shrink-0">
+          <div className="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center flex-shrink-0">
             {prop.icon}
           </div>
           <div>

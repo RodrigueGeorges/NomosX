@@ -10,8 +10,8 @@ import { Card,CardContent,CardDescription,CardHeader,CardTitle } from '@/compone
 import { cn } from '@/lib/utils';
 
 export const metadata: Metadata = {
-  title: 'Abonnement | NomosX',
-  description: 'Gérez votre abonnement NomosX',
+  title: 'Subscription | NomosX',
+  description: 'Manage your NomosX subscription',
 }
 
 export default function SubscriptionPage() {
@@ -21,31 +21,31 @@ export default function SubscriptionPage() {
         {/* Header */}
         <div>
           <h1 className="text-4xl font-bold text-gradient mb-2">
-            Mon abonnement
+            My Subscription
           </h1>
           <p className="text-neutral-600">
-            Gérez votre abonnement et vos informations de paiement
+            Manage your subscription and payment information
           </p>
         </div>
 
         {/* Subscription Details */}
-        <Suspense fallback={<div>Chargement de votre abonnement...</div>}>
+        <Suspense fallback={<div>Loading your subscription...</div>}>
           <SubscriptionClient />
         </Suspense>
 
         {/* Billing History */}
         <Card>
           <CardHeader>
-            <CardTitle>Historique des factures</CardTitle>
+            <CardTitle>Billing History</CardTitle>
             <CardDescription>
-              Consultez et téléchargez vos factures précédentes
+              View and download your previous invoices
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="text-center py-8 text-neutral-500">
-              <p>Aucune facture trouvée</p>
+              <p>No invoices found</p>
               <p className="text-sm mt-2">
-                Vos factures apparaîtront ici dès que votre premier paiement sera traité
+                Your invoices will appear here once your first payment is processed
               </p>
             </div>
           </CardContent>
@@ -54,16 +54,16 @@ export default function SubscriptionPage() {
         {/* Payment Methods */}
         <Card>
           <CardHeader>
-            <CardTitle>Méthodes de paiement</CardTitle>
+            <CardTitle>Payment Methods</CardTitle>
             <CardDescription>
-              Gérez vos cartes bancaires et méthodes de paiement
+              Manage your payment cards and methods
             </CardDescription>
           </CardHeader>
           <CardContent>
             <div className="text-center py-8 text-neutral-500">
-              <p>Aucune méthode de paiement enregistrée</p>
+              <p>No payment method on file</p>
               <button className="mt-4 text-primary hover:underline transition-all duration-200">
-                Ajouter une méthode de paiement
+                Add a payment method
               </button>
             </div>
           </CardContent>

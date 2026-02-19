@@ -65,11 +65,11 @@ export function SubscriptionClient() {
       currency: 'EUR',
       interval: 'month',
       features: [
-        'Newsletters illimitées',
-        '10 briefs par mois',
-        'Stockage de 50GB',
-        'Support prioritaire',
-        'Templates premium'
+        'Unlimited newsletters',
+        '10 briefs per month',
+        '50GB storage',
+        'Priority support',
+        'Premium templates'
       ]
     },
     cancelAtPeriodEnd: false
@@ -106,28 +106,28 @@ export function SubscriptionClient() {
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'active':
-        return 'bg-green-100 text-green-800'
+        return 'bg-green-500/20 text-green-300 border border-green-500/30'
       case 'canceled':
-        return 'bg-red-100 text-red-800'
+        return 'bg-red-500/20 text-red-300 border border-red-500/30'
       case 'past_due':
-        return 'bg-yellow-100 text-yellow-800'
+        return 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/30'
       case 'trialing':
-        return 'bg-blue-100 text-blue-800'
+        return 'bg-indigo-500/20 text-indigo-300 border border-indigo-500/30'
       default:
-        return 'bg-gray-100 text-gray-800'
+        return 'bg-white/10 text-white/50'
     }
   }
 
   const getStatusText = (status: string) => {
     switch (status) {
       case 'active':
-        return 'Actif'
+        return 'Active'
       case 'canceled':
-        return 'Annulé'
+        return 'Canceled'
       case 'past_due':
-        return 'En retard'
+        return 'Past due'
       case 'trialing':
-        return 'Période d\'essai'
+        return 'Trial'
       default:
         return status
     }
@@ -147,7 +147,7 @@ export function SubscriptionClient() {
   }
 
   const formatDate = (date: Date) => {
-    return new Intl.DateTimeFormat('fr-FR', {
+    return new Intl.DateTimeFormat('en-US', {
       day: 'numeric',
       month: 'long',
       year: 'numeric'
@@ -155,7 +155,7 @@ export function SubscriptionClient() {
   }
 
   const formatPrice = (amount: number, currency: string) => {
-    return new Intl.NumberFormat('fr-FR', {
+    return new Intl.NumberFormat('en-US', {
       style: 'currency',
       currency
     }).format(amount)
@@ -169,15 +169,15 @@ export function SubscriptionClient() {
           <div className="flex items-center justify-between">
             <div>
               <CardTitle className="flex items-center gap-2">
-                Abonnement actuel
+                Current Subscription
                 <Badge className={getStatusColor(subscription.status)}>
                   {getStatusText(subscription.status)}
                 </Badge>
               </CardTitle>
               <CardDescription>
                 {subscription.cancelAtPeriodEnd 
-                  ? `Votre abonnement sera annulé le ${formatDate(subscription.currentPeriodEnd)}`
-                  : `Prochain renouvellement le ${formatDate(subscription.currentPeriodEnd)}`
+                  ? `Your subscription will be canceled on ${formatDate(subscription.currentPeriodEnd)}`
+                  : `Next renewal on ${formatDate(subscription.currentPeriodEnd)}`
                 }
               </CardDescription>
             </div>
@@ -186,7 +186,7 @@ export function SubscriptionClient() {
                 {formatPrice(subscription.plan.price, subscription.plan.currency)}
               </div>
               <div className="text-sm text-neutral-600">
-                par {subscription.plan.interval === 'month' ? 'mois' : 'an'}
+                per {subscription.plan.interval === 'month' ? 'month' : 'year'}
               </div>
             </div>
           </div>
@@ -206,36 +206,36 @@ export function SubscriptionClient() {
           
           <div className="flex gap-3 pt-4 border-t">
             <Button variant="outline" size="sm">
-              Changer de plan
+              Change plan
             </Button>
             <Dialog open={showCancelDialog} onOpenChange={setShowCancelDialog}>
               <DialogTrigger asChild>
-                <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700">
-                  Annuler l'abonnement
+                <Button variant="outline" size="sm" className="text-red-400 hover:text-red-300">
+                  Cancel subscription
                 </Button>
               </DialogTrigger>
               <DialogContent>
                 <DialogHeader>
-                  <DialogTitle>Annuler votre abonnement</DialogTitle>
+                  <DialogTitle>Cancel your subscription</DialogTitle>
                   <DialogDescription>
-                    Êtes-vous sûr de vouloir annuler votre abonnement ? 
-                    Vous continuerez à avoir accès aux fonctionnalités jusqu'à la fin de la période facturée.
+                    Are you sure you want to cancel your subscription? 
+                    You will continue to have access to features until the end of the billing period.
                   </DialogDescription>
                 </DialogHeader>
                 <div className="space-y-4">
-                  <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+                  <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4">
                     <div className="flex items-start gap-3">
-                      <AlertCircle className="h-5 w-5 text-yellow-600 mt-0.5" />
+                      <AlertCircle className="h-5 w-5 text-yellow-400 mt-0.5" />
                       <div className="text-sm">
-                        <p className="font-medium text-yellow-800">Important</p>
-                        <p className="text-yellow-700 mt-1">
-                          Après l'annulation, vous perdrez l'accès à :
+                        <p className="font-medium text-yellow-300">Important</p>
+                        <p className="text-yellow-400/80 mt-1">
+                          After cancellation, you will lose access to:
                         </p>
-                        <ul className="mt-2 list-disc list-inside text-yellow-700">
-                          <li>Newsletters illimitées</li>
-                          <li>Briefs personnalisés</li>
-                          <li>Support prioritaire</li>
-                          <li>Templates premium</li>
+                        <ul className="mt-2 list-disc list-inside text-yellow-400/80">
+                          <li>Unlimited newsletters</li>
+                          <li>Custom briefs</li>
+                          <li>Priority support</li>
+                          <li>Premium templates</li>
                         </ul>
                       </div>
                     </div>
@@ -247,14 +247,14 @@ export function SubscriptionClient() {
                       onClick={() => setShowCancelDialog(false)}
                       disabled={cancelling}
                     >
-                      Annuler
+                      Go back
                     </Button>
                     <Button
                       variant="destructive"
                       onClick={handleCancelSubscription}
                       disabled={cancelling}
                     >
-                      {cancelling ? 'Annulation...' : 'Confirmer l\'annulation'}
+                      {cancelling ? 'Canceling...' : 'Confirm cancellation'}
                     </Button>
                   </div>
                 </div>
@@ -269,14 +269,14 @@ export function SubscriptionClient() {
         <CardHeader>
           <div className="flex items-center justify-between">
             <div>
-              <CardTitle>Méthodes de paiement</CardTitle>
+              <CardTitle>Payment Methods</CardTitle>
               <CardDescription>
-                Gérez vos cartes bancaires et méthodes de paiement
+                Manage your payment cards and methods
               </CardDescription>
             </div>
             <Button size="sm" className="flex items-center gap-2">
               <Plus className="h-4 w-4" />
-              Ajouter
+              Add
             </Button>
           </div>
         </CardHeader>
@@ -284,9 +284,9 @@ export function SubscriptionClient() {
           {paymentMethods.length === 0 ? (
             <div className="text-center py-8 text-neutral-500">
               <CreditCard className="h-12 w-12 mx-auto mb-4 text-neutral-300" />
-              <p>Aucune méthode de paiement enregistrée</p>
+              <p>No payment method on file</p>
               <Button variant="outline" className="mt-4">
-                Ajouter une méthode de paiement
+                Add a payment method
               </Button>
             </div>
           ) : (
@@ -307,18 +307,18 @@ export function SubscriptionClient() {
                       </div>
                       {method.expiryMonth && method.expiryYear && (
                         <div className="text-sm text-neutral-600">
-                          Expire {method.expiryMonth.toString().padStart(2, '0')}/{method.expiryYear}
+                          Expires {method.expiryMonth.toString().padStart(2, '0')}/{method.expiryYear}
                         </div>
                       )}
                     </div>
                     {method.isDefault && (
-                      <Badge variant="secondary">Par défaut</Badge>
+                      <Badge variant="secondary">Default</Badge>
                     )}
                   </div>
                   <div className="flex items-center gap-2">
                     {!method.isDefault && (
                       <Button variant="outline" size="sm">
-                        Définir par défaut
+                        Set as default
                       </Button>
                     )}
                     <Button variant="outline" size="sm" className="text-red-600 hover:text-red-700">
@@ -335,17 +335,17 @@ export function SubscriptionClient() {
       {/* Billing History */}
       <Card>
         <CardHeader>
-          <CardTitle>Historique des factures</CardTitle>
+          <CardTitle>Billing History</CardTitle>
           <CardDescription>
-            Consultez et téléchargez vos factures précédentes
+            View and download your previous invoices
           </CardDescription>
         </CardHeader>
         <CardContent>
           {invoices.length === 0 ? (
             <div className="text-center py-8 text-neutral-500">
-              <p>Aucune facture trouvée</p>
+              <p>No invoices found</p>
               <p className="text-sm mt-2">
-                Vos factures apparaîtront ici dès que votre premier paiement sera traité
+                Your invoices will appear here once your first payment is processed
               </p>
             </div>
           ) : (
@@ -370,14 +370,14 @@ export function SubscriptionClient() {
                         className={cn(
                           "text-xs",
                           invoice.status === 'paid'
-                            ? "bg-green-100 text-green-800"
+                            ? 'bg-green-500/20 text-green-300 border border-green-500/30'
                             : invoice.status === 'open'
-                            ? "bg-yellow-100 text-yellow-800"
-                            : "bg-gray-100 text-gray-800"
+                            ? 'bg-yellow-500/20 text-yellow-300 border border-yellow-500/30'
+                            : 'bg-white/10 text-white/50"'
                         )}
                       >
-                        {invoice.status === 'paid' ? 'Payée' : 
-                         invoice.status === 'open' ? 'En attente' : invoice.status}
+                        {invoice.status === 'paid' ? 'Paid' : 
+                         invoice.status === 'open' ? 'Pending' : invoice.status}
                       </Badge>
                     </div>
                     <Button variant="outline" size="sm">

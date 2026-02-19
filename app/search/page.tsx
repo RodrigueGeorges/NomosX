@@ -104,7 +104,7 @@ export default function SearchPage() {
           <div>
             <div className="flex items-center gap-4 mb-6">
               <div className="relative group">
-                <div className="absolute -inset-1 bg-gradient-to-r from-accent/40 via-cyan-500/40 to-accent/40 rounded-2xl blur opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
+                <div className="absolute -inset-1 bg-gradient-to-r from-accent/40 via-indigo-500/40 to-accent/40 rounded-2xl blur opacity-0 group-hover:opacity-100 transition-all duration-500"></div>
                 <div className="relative p-3 rounded-2xl bg-accent/10 border border-accent/20 transition-transform group-hover:scale-105">
                   <Search size={32} className="text-accent" strokeWidth={1.5} />
                 </div>

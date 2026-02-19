@@ -61,10 +61,10 @@ export default function AdvancedResearcherAvatar({
   };
 
   const statusColors = {
-    idle: 'bg-gray-400',
+    idle: 'bg-white/30',
     analyzing: 'bg-green-400',
     debating: 'bg-yellow-400',
-    synthesizing: 'bg-blue-400'
+    synthesizing: 'bg-indigo-400'
   };
 
   return (
@@ -87,8 +87,8 @@ export default function AdvancedResearcherAvatar({
         {showPhoto ? (
           <div className="w-full h-full relative">
             {/* Photo Placeholder */}
-            <div className="w-full h-full bg-gradient-to-br from-[#00D4FF]/20 to-[#7C3AED]/10 flex items-center justify-center">
-              <IconComponent size={size === 'xl' ? 24 : size === 'lg' ? 20 : 16} className={researcher.colorHex} />
+            <div className="w-full h-full bg-gradient-to-br from-indigo-500/20 to-violet-500/10 flex items-center justify-center">
+              <IconComponent size={size === 'xl' ? 24 : size === 'lg' ? 20 : 16} style={{ color: researcher.colorHex }} />
             </div>
             
             {/* Initials Overlay */}
@@ -103,7 +103,7 @@ export default function AdvancedResearcherAvatar({
           </div>
         ) : (
           <div className="text-center">
-            <IconComponent size={size === 'xl' ? 24 : size === 'lg' ? 20 : 16} className={researcher.colorHex} />
+            <IconComponent size={size === 'xl' ? 24 : size === 'lg' ? 20 : 16} style={{ color: researcher.colorHex }} />
             <div className="mt-1">
               <span className="font-bold text-xs" style={{ color: researcher.colorHex }}>
                 {researcher.initials}

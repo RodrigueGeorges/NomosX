@@ -27,52 +27,56 @@ export default function PublicNav({ currentPage, onSignInClick, isAuthenticated 
   ];
 
   return (
-    <nav className="relative z-20">
-      <div className="max-w-7xl mx-auto px-6 sm:px-8 h-20 flex items-center justify-between">
+    <nav className="sticky top-0 z-50 w-full">
+      <div className="absolute inset-0 bg-[#09090b]/80 backdrop-blur-xl border-b border-white/[0.06]" />
+      <div className="relative max-w-7xl mx-auto px-6 sm:px-8 h-16 flex items-center justify-between">
+        {/* Logo */}
         <div 
-          className="flex items-center gap-3 cursor-pointer group"
+          className="flex items-center gap-2.5 cursor-pointer group"
           onClick={() => router.push("/")}
         >
-          <div className="w-9 h-9 rounded-xl bg-gradient-to-br from-[#00D4FF]/15 to-[#7C3AED]/10 border border-white/[0.08] flex items-center justify-center group-hover:border-[#00D4FF]/20 transition-all">
-            <span className="font-display text-base font-medium nx-gradient-text">N</span>
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shadow-lg shadow-indigo-500/20 group-hover:shadow-indigo-500/40 transition-all duration-300">
+            <span className="text-sm font-bold text-white">N</span>
           </div>
-          <span className="font-display text-lg font-medium tracking-tight">
-            Nomos<span className="text-[#00D4FF]">X</span>
+          <span className="font-display text-[15px] font-semibold tracking-tight text-white/90">
+            NomosX
           </span>
         </div>
         
-        <div className="flex items-center gap-6">
+        {/* Nav Links */}
+        <div className="hidden md:flex items-center gap-1">
           {navLinks.map(link => (
             <button
               key={link.page}
               onClick={() => router.push(link.href)}
-              className={`text-sm transition-colors hidden sm:block ${
+              className={`px-3 py-1.5 rounded-lg text-[13px] font-medium transition-all duration-200 ${
                 currentPage === link.page
-                  ? "text-white/80"
-                  : "text-white/40 hover:text-white/80"
+                  ? "text-white bg-white/[0.08]"
+                  : "text-white/50 hover:text-white/80 hover:bg-white/[0.04]"
               }`}
             >
               {link.label}
             </button>
           ))}
-          {isAuthenticated ? (
-            <button 
-              onClick={() => router.push("/dashboard")}
-              className="px-4 py-2 rounded-xl bg-white/[0.06] border border-white/[0.08] text-sm font-medium text-white hover:bg-white/[0.1] hover:border-white/[0.12] transition-all"
-            >
-              Open Think Tank
-            </button>
-          ) : (
-            <button 
-              onClick={onSignInClick}
-              className="px-4 py-2 rounded-xl bg-gradient-to-r from-[#00D4FF]/20 to-[#3B82F6]/20 border border-[#00D4FF]/20 text-sm font-medium text-white hover:border-[#00D4FF]/40 transition-all shadow-[0_0_20px_rgba(0,212,255,0.1)]"
-            >
-              Get Started
-            </button>
-          )}
         </div>
+
+        {/* CTA */}
+        {isAuthenticated ? (
+          <button 
+            onClick={() => router.push("/dashboard")}
+            className="px-4 py-2 rounded-lg bg-white/[0.08] border border-white/[0.08] text-[13px] font-medium text-white hover:bg-white/[0.12] transition-all duration-200"
+          >
+            Open Dashboard
+          </button>
+        ) : (
+          <button 
+            onClick={onSignInClick}
+            className="px-4 py-2 rounded-lg bg-indigo-500 text-[13px] font-medium text-white hover:bg-indigo-400 transition-all duration-200 shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40"
+          >
+            Start Free
+          </button>
+        )}
       </div>
-      <div className="nx-divider" />
     </nav>
   );
 }

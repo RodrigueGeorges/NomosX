@@ -69,8 +69,8 @@ export async function GET(req: NextRequest) {
       width: 80px;
       height: 80px;
       margin: 0 auto 30px;
-      background: rgba(0, 212, 255, 0.1);
-      border: 2px solid rgba(0, 212, 255, 0.3);
+      background: rgba(99, 102, 241, 0.1);
+      border: 2px solid rgba(99, 102, 241, 0.3);
       border-radius: 50%;
       display: flex;
       align-items: center;
@@ -81,7 +81,7 @@ export async function GET(req: NextRequest) {
       font-size: 28px;
       font-weight: 300;
       margin-bottom: 20px;
-      color: #00D4FF;
+      color: #6366F1;
     }
     p {
       font-size: 16px;
@@ -92,7 +92,7 @@ export async function GET(req: NextRequest) {
     .button {
       display: inline-block;
       padding: 12px 30px;
-      background: linear-gradient(135deg, #00D4FF 0%, #4A7FE0 100%);
+      background: linear-gradient(135deg, #6366F1 0%, #7C3AED 100%);
       color: #ffffff;
       text-decoration: none;
       border-radius: 6px;

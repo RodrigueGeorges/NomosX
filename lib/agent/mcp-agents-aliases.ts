@@ -119,3 +119,33 @@ export { filterByRelevance } from './relevance-scorer';
 
 // Cadence & Governance
 export { cadenceEnforcer } from './cadence-enforcer';
+
+// Editorial Gate (signal + draft publication readiness)
+export { editorialGate, evaluatePendingSignals, submitDraftToGate } from './editorial-gate';
+
+// Radar Agent (high-novelty source cards)
+export { generateRadarCards, getMacroContext } from './radar-agent';
+
+// Macro Refresh (Eurostat/ECB/INSEE macro series)
+export { refreshMacroSeries, type MacroRefreshResult } from './macro-refresh';
+
+// Strategic Report Renderer (HTML for strategic reports)
+export { renderStrategicReportHTML } from './strategic-report-renderer';
+
+// Domain Classifier (auto-classify sources into domains)
+export { classifySourceDomains, classifyBatchSources, classifyUnclassifiedSources } from './domain-classifier';
+
+// Researcher Ownership (domain expert editorial owners + pipeline tier selection)
+export {
+  RESEARCHER_REGISTRY,
+  detectOwners,
+  getPrimaryOwner,
+  selectPipelineTier,
+  getResearcherAgenda,
+  getThinkTankAgenda,
+  requestResearcherSignOff,
+  type ResearcherOwner,
+  type AgendaItem,
+  type ResearcherSignOff,
+  type PipelineTier,
+} from './researcher-ownership';

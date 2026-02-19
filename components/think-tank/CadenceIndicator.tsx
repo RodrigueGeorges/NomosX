@@ -87,7 +87,7 @@ export default function CadenceIndicator({
             className={`h-full rounded-full transition-all duration-500 ${
               isDailyAtLimit ? "bg-red-500" : 
               isDailyNearLimit ? "bg-amber-500" : 
-              "bg-gradient-to-r from-cyan-500 to-blue-500"
+              "bg-gradient-to-r from-indigo-500 to-violet-500"
             }`}
             style={{ width: `${Math.min(dailyPercentage, 100)}%` }}
           />
@@ -108,7 +108,7 @@ export default function CadenceIndicator({
           <div 
             className={`h-full rounded-full transition-all duration-500 ${
               isWeeklyNearLimit ? "bg-amber-500" : 
-              "bg-gradient-to-r from-emerald-500 to-cyan-500"
+              "bg-gradient-to-r from-emerald-500 to-indigo-500"
             }`}
             style={{ width: `${Math.min(weeklyPercentage, 100)}%` }}
           />
@@ -118,10 +118,10 @@ export default function CadenceIndicator({
       {/* Next Window */}
       {nextWindow && (
         <div className="flex items-center justify-between pt-3 border-t border-white/[0.06]">
-          <span className="text-xs text-white/40">Prochaine fenêtre</span>
+          <span className="text-xs text-white/40">Prochaine fenêtre de publication</span>
           <div className="flex items-center gap-1.5">
-            <Clock size={12} className="text-cyan-400" />
-            <span className="text-xs font-medium text-cyan-400">{timeToWindow}</span>
+            <Clock size={12} className="text-indigo-400" />
+            <span className="text-xs font-medium text-indigo-400">{timeToWindow}</span>
           </div>
         </div>
       )}

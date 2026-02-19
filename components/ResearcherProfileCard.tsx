@@ -65,7 +65,7 @@ export default function ResearcherProfileCard({
   const isLimited = tier === 'TRIAL';
 
   return (
-    <div className="group relative rounded-2xl border border-white/[0.08] bg-gradient-to-br from-white/[0.03] to-white/[0.01] p-6 hover:border-[#00D4FF]/20 transition-all duration-300">
+    <div className="group relative rounded-2xl border border-white/[0.08] bg-gradient-to-br from-white/[0.03] to-white/[0.01] p-6 hover:border-indigo-500/20 transition-all duration-300">
       {/* Status Indicator */}
       <div className="absolute top-4 right-4 flex items-center gap-2">
         <div className={cn(
@@ -79,7 +79,7 @@ export default function ResearcherProfileCard({
       <div className="flex items-start gap-4 mb-6">
         <div className="relative">
           {/* Avatar */}
-          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-[#00D4FF]/10 to-[#7C3AED]/5 border border-[#00D4FF]/20 flex items-center justify-center">
+          <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500/10 to-violet-500/5 border border-indigo-500/20 flex items-center justify-center">
             {researcher.avatar ? (
               <img 
                 src={`/avatars/${researcher.id}.jpg`}
@@ -87,7 +87,7 @@ export default function ResearcherProfileCard({
                 className="w-full h-full rounded-2xl object-cover"
               />
             ) : (
-              <span className="text-lg font-semibold text-[#00D4FF]">
+              <span className="text-lg font-semibold text-indigo-300">
                 {researcher.initials}
               </span>
             )}
@@ -108,7 +108,7 @@ export default function ResearcherProfileCard({
             {researcher.title}
           </p>
           <div className="flex items-center gap-2">
-            <span className="text-xs text-[#00D4FF]/80 font-medium">
+            <span className="text-xs text-indigo-300/80 font-medium">
               {researcher.domain}
             </span>
             <span className="text-xs text-white/30">•</span>
@@ -136,7 +136,7 @@ export default function ResearcherProfileCard({
           </div>
 
           {/* Quote */}
-          <div className="border-l-2 border-[#00D4FF]/30 pl-4">
+          <div className="border-l-2 border-indigo-500/30 pl-4">
             <p className="text-sm text-white/50 italic">
               "{researcher.quote}"
             </p>
@@ -147,11 +147,11 @@ export default function ResearcherProfileCard({
             <div>
               <div className="flex items-center justify-between mb-2">
                 <span className="text-xs text-white/40">Current Analysis</span>
-                <span className="text-xs text-[#00D4FF]">{researcher.progress}%</span>
+                <span className="text-xs text-indigo-400">{researcher.progress}%</span>
               </div>
               <div className="w-full bg-white/[0.1] rounded-full h-2">
                 <div 
-                  className="bg-gradient-to-r from-[#00D4FF] to-[#3B82F6] h-2 rounded-full transition-all duration-300"
+                  className="bg-gradient-to-r from-indigo-500 to-violet-500 h-2 rounded-full transition-all duration-300"
                   style={{ width: `${researcher.progress}%` }}
                 />
               </div>
@@ -173,8 +173,8 @@ export default function ResearcherProfileCard({
       {!isLimited && researcher.currentTask && (
         <div className="rounded-xl border border-white/[0.06] bg-white/[0.02] p-4">
           <div className="flex items-center gap-2 mb-2">
-            <Activity size={14} className="text-[#00D4FF]" />
-            <span className="text-xs font-medium text-[#00D4FF]">Current Task</span>
+            <Activity size={14} className="text-indigo-400" />
+            <span className="text-xs font-medium text-indigo-400">Current Task</span>
           </div>
           <p className="text-sm text-white/40">
             {researcher.currentTask}
@@ -184,12 +184,12 @@ export default function ResearcherProfileCard({
 
       {/* Upgrade Prompt (TRIAL) */}
       {isLimited && (
-        <div className="rounded-xl border border-[#00D4FF]/20 bg-[#00D4FF]/5 p-4">
+        <div className="rounded-xl border border-indigo-500/20 bg-indigo-500/5 p-4">
           <div className="text-center">
-            <p className="text-xs text-[#00D4FF]/80 mb-2">
+            <p className="text-xs text-indigo-300/80 mb-2">
               Full researcher profiles available in Executive tier
             </p>
-            <button className="text-xs text-[#00D4FF] hover:text-[#00D4FF]/80 transition-colors">
+            <button className="text-xs text-indigo-400 hover:text-indigo-400/80 transition-colors">
               Upgrade to unlock →
             </button>
           </div>
@@ -272,7 +272,7 @@ export function CouncilRoom({ researchers, tier = 'EXECUTIVE' }: CouncilRoomProp
           <p className="text-white/40 mb-4">
             Want to see the full council in action?
           </p>
-          <button className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#00D4FF]/20 to-[#3B82F6]/20 border border-[#00D4FF]/20 text-white font-medium hover:border-[#00D4FF]/40 transition-all">
+          <button className="px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-500/20 to-violet-500/20 border border-indigo-500/20 text-white font-medium hover:border-indigo-500/40 transition-all">
             Upgrade to Executive
           </button>
         </div>

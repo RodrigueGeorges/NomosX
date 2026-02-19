@@ -93,7 +93,7 @@ export default function SmartSuggestions({ analysisId, currentQuestion, onSelect
 
   const getTypeColor = (type: string) => {
     switch (type) {
-      case 'follow_up': return 'text-cyan-400 bg-cyan-500/10 border-cyan-500/20';
+      case 'follow_up': return 'text-indigo-300 bg-indigo-500/10 border-indigo-500/20';
       case 'related': return 'text-purple-400 bg-purple-500/10 border-purple-500/20';
       case 'trend': return 'text-green-400 bg-green-500/10 border-green-500/20';
       case 'deep_dive': return 'text-orange-400 bg-orange-500/10 border-orange-500/20';
@@ -104,7 +104,7 @@ export default function SmartSuggestions({ analysisId, currentQuestion, onSelect
   if (isLoading) {
     return (
       <div className="flex items-center gap-2 p-4 bg-neutral-900 rounded-xl border border-neutral-800">
-        <div className="w-4 h-4 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin" />
+        <div className="w-4 h-4 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
         <span className="text-sm text-neutral-400">Loading suggestions...</span>
       </div>
     );

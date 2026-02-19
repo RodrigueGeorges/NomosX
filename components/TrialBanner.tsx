@@ -21,9 +21,9 @@ export default function TrialBanner({ daysRemaining, onDismiss }: TrialBannerPro
   };
 
   const urgency = daysRemaining <= 3 ? "high" : daysRemaining <= 7 ? "medium" : "low";
-  const bgColor = urgency === "high" ? "bg-rose-500/10" : urgency === "medium" ? "bg-amber-500/10" : "bg-cyan-500/10";
-  const borderColor = urgency === "high" ? "border-rose-500/30" : urgency === "medium" ? "border-amber-500/30" : "border-cyan-500/30";
-  const textColor = urgency === "high" ? "text-rose-400" : urgency === "medium" ? "text-amber-400" : "text-cyan-400";
+  const bgColor = urgency === "high" ? "bg-rose-500/10" : urgency === "medium" ? "bg-amber-500/10" : "bg-indigo-500/10";
+  const borderColor = urgency === "high" ? "border-rose-500/30" : urgency === "medium" ? "border-amber-500/30" : "border-indigo-500/30";
+  const textColor = urgency === "high" ? "text-rose-400" : urgency === "medium" ? "text-amber-400" : "text-indigo-400";
 
   return (
     <div className={`${bgColor} ${borderColor} border rounded-lg p-4 mb-6 relative`}>

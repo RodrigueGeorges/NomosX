@@ -58,7 +58,7 @@ export async function GET(req: NextRequest) {
           progress: 5
         });
 
-        const smartSelection = selectSmartProviders(question);
+        const smartSelection = await selectSmartProviders(question).catch(() => null) ?? { providers: ["openalex", "crossref", "semanticscholar"], quantity: 30, reasoning: "fallback", estimatedTime: 30 };
         
         sendEvent(controller, 'progress', {
           step: 'smart-selection',

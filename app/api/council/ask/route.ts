@@ -45,10 +45,12 @@ export async function POST(req: Request) {
   const q = validation.data.question.trim();
 
   // ✅ PIPELINE INTELLIGENT : Scout → Index → Rank (comme Brief)
-  const smartSelection = selectSmartProviders(q);
-  
+  const smartSelection = await selectSmartProviders(q).catch(() => null);
+  const scoutProviders = (smartSelection?.providers ?? ["openalex", "crossref", "semanticscholar"]) as any;
+  const scoutQty = smartSelection?.quantity ?? 30;
+
   // Scout : Collecter sources pertinentes
-  const scoutResult = await scout(q, smartSelection.providers, smartSelection.quantity);
+  const scoutResult = await scout(q, scoutProviders, scoutQty);
   
   // Index : Enrichir les sources
   if (scoutResult.sourceIds.length > 0) {

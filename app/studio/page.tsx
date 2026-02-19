@@ -146,8 +146,8 @@ function StudioPageContent() {
       <Shell>
         <div className="flex items-center justify-center min-h-96">
           <div className="text-center max-w-md">
-            <div className="w-16 h-16 rounded-xl bg-[#00D4FF]/10 border border-[#00D4FF]/20 flex items-center justify-center mx-auto mb-4">
-              <Layers size={32} className="text-[#00D4FF]" />
+            <div className="w-16 h-16 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center mx-auto mb-4">
+              <Layers size={32} className="text-indigo-400" />
             </div>
             <h2 className="font-display text-2xl font-light text-white mb-4">
               Studio requires <span className="nx-gradient-text">Strategy</span> tier
@@ -157,7 +157,7 @@ function StudioPageContent() {
             </p>
             <button
               onClick={() => router.push('/pricing')}
-              className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#00D4FF]/20 to-[#3B82F6]/20 border border-[#00D4FF]/20 text-white font-medium hover:border-[#00D4FF]/40 transition-all"
+              className="px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-500/20 to-violet-500/20 border border-indigo-500/20 text-white font-medium hover:border-indigo-500/40 transition-all"
             >
               Upgrade to Strategy
             </button>
@@ -184,7 +184,7 @@ function StudioPageContent() {
       key: 'Enter',
       meta: true,
       action: () => !streamingBrief.loading && !streamingCouncil.loading && question.trim() && handleGenerate(),
-      description: 'Générer',
+      description: 'Generate',
       category: 'action'
     }
   ]);
@@ -353,11 +353,11 @@ function StudioPageContent() {
         {/* Header */}
         <div className="mb-10">
           <div className="flex items-center gap-3 sm:gap-4 mb-3">
-            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br from-cyan-500/10 to-blue-500/5 border border-cyan-500/20 flex items-center justify-center shadow-[0_0_20px_rgba(0,212,255,0.2)]">
-              <PenTool size={24} className="sm:w-7 sm:h-7 text-cyan-400" />
+            <div className="w-12 h-12 sm:w-14 sm:h-14 rounded-xl bg-gradient-to-br from-indigo-500/10 to-violet-500/5 border border-indigo-500/20 flex items-center justify-center shadow-[0_0_20px_rgba(99,102,241,0.2)]">
+              <PenTool size={24} className="sm:w-7 sm:h-7 text-indigo-400" />
             </div>
             <div>
-              <div className="text-xs text-cyan-400/60 tracking-[0.25em] uppercase mb-1">
+              <div className="text-xs text-indigo-300/70 tracking-[0.25em] uppercase mb-1">
                 Propose to Think Tank
               </div>
               <h1 className="text-4xl sm:text-4xl md:text-4xl font-light tracking-tight text-white/95">Publication Studio</h1>
@@ -405,14 +405,14 @@ function StudioPageContent() {
                       className={`
                         p-4 rounded-xl text-left transition-all
                         ${isSelected 
-                          ? 'bg-cyan-500/10 border-2 border-cyan-500/40 shadow-[0_0_20px_rgba(0,212,255,0.1)]' 
+                          ? 'bg-indigo-500/10 border-2 border-indigo-500/40 shadow-[0_0_20px_rgba(99,102,241,0.1)]' 
                           : 'bg-background/[0.02] border border-white/10 hover:border-white/20'
                         }
                       `}
                     >
                       <div className="flex items-center gap-3 mb-2">
-                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${isSelected ? 'bg-cyan-500/20' : 'bg-background/5'}`}>
-                          <Icon size={20} className={isSelected ? 'text-cyan-400' : 'text-white/40'} />
+                        <div className={`w-10 h-10 rounded-lg flex items-center justify-center ${isSelected ? 'bg-indigo-500/20' : 'bg-background/5'}`}>
+                          <Icon size={20} className={isSelected ? 'text-indigo-300' : 'text-white/40'} />
                         </div>
                         <div>
                           <div className={`font-medium ${isSelected ? 'text-white' : 'text-white/70'}`}>{type.label}</div>
@@ -465,7 +465,7 @@ function StudioPageContent() {
               onChange={(e) => setQuestion(e.target.value)}
               placeholder="What question deserves institutional publication?"
               rows={4}
-              className="mb-4 bg-background/[0.03] border-white/10 focus:border-cyan-500/50 text-base resize-none"
+              className="mb-4 bg-background/[0.03] border-white/10 focus:border-indigo-500/50 text-base resize-none"
               disabled={isLoading}
               onKeyDown={(e) => {
                 if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
@@ -477,7 +477,7 @@ function StudioPageContent() {
 
             {/* Intent Detection */}
             {detectedIntent && detectedIntent.confidence > 0.6 && (
-              <div className="mb-4 text-xs text-cyan-400/70 flex items-center gap-1.5">
+              <div className="mb-4 text-xs text-indigo-300/80 flex items-center gap-1.5">
                 <Sparkles size={12} />
                 Suggested format: {detectedIntent.type === "brief" ? "Executive Brief" : "Strategic Report"} ({Math.round(detectedIntent.confidence * 100)}%)
               </div>
@@ -521,7 +521,7 @@ function StudioPageContent() {
           <div className="mb-8">
             <ProgressBar 
               progress={typeof streamingBrief.progress === 'number' ? streamingBrief.progress : (typeof streamingCouncil.progress === 'number' ? streamingCouncil.progress : 0)}
-              message={streamingBrief.loading ? 'Génération du draft...' : 'Délibération en cours...'}
+              message={streamingBrief.loading ? 'Generating draft...' : 'Deliberation in progress...'}
             />
           </div>
         )}
@@ -531,7 +531,7 @@ function StudioPageContent() {
           <div className="space-y-6 animate-fade-in">
             <div className="flex items-center justify-between mb-4">
               <div className="flex items-center gap-3">
-                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center">
+                <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center">
                   <FileText size={20} className="text-white" />
                 </div>
                 <div>
@@ -573,10 +573,10 @@ function StudioPageContent() {
             </div>
 
             <div className="grid sm:grid-cols-2 gap-3 sm:gap-4">
-              <Card variant="default" className="border-l-4 border-l-cyan-500/50 bg-background/[0.02]">
+              <Card variant="default" className="border-l-4 border-l-indigo-500/50 bg-background/[0.02]">
                 <CardHeader>
                   <div className="flex items-center gap-2">
-                    <DollarSign size={16} className="text-cyan-400" />
+                    <DollarSign size={16} className="text-indigo-400" />
                     <h3 className="text-base font-semibold text-white">Economic</h3>
                   </div>
                 </CardHeader>
@@ -625,7 +625,7 @@ function StudioPageContent() {
             <Card variant="default" className="bg-background/[0.02]">
               <CardHeader>
                 <div className="flex items-center gap-2">
-                  <Sparkles size={18} className="text-cyan-400" />
+                  <Sparkles size={18} className="text-indigo-400" />
                   <h3 className="text-4xl font-semibold text-white">Synthesis</h3>
                 </div>
               </CardHeader>
@@ -640,7 +640,7 @@ function StudioPageContent() {
         {!isLoading && !briefResult && !councilResult && (
           <div className="space-y-8">
             <div className="text-center py-8">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center mx-auto mb-4">
                 <PenTool size={32} className="text-white" />
               </div>
               <h3 className="text-4xl font-semibold text-white mb-2">Create a publication</h3>
@@ -669,8 +669,8 @@ export default function StudioPage() {
       <Shell>
         <div className="flex items-center justify-center min-h-screen">
           <div className="text-center">
-            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-cyan-400 mx-auto mb-4"></div>
-            <p className="text-white/50">Chargement...</p>
+            <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-400 mx-auto mb-4"></div>
+            <p className="text-white/50">Loading...</p>
           </div>
         </div>
       </Shell>

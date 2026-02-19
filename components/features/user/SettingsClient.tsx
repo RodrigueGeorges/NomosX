@@ -67,7 +67,7 @@ export function SettingsClient() {
   const [settings, setSettings] = useState<SystemSettings>({
     general: {
       siteName: 'NomosX',
-      siteDescription: 'Intelligence Artificielle pour Think Tanks',
+      siteDescription: 'Artificial Intelligence for Think Tanks',
       contactEmail: 'contact@nomosx.ai',
       supportEmail: 'support@nomosx.ai',
       defaultLanguage: 'fr',
@@ -136,11 +136,11 @@ export function SettingsClient() {
   }
 
   const tabs = [
-    { id: 'general', label: 'Général', icon: Settings },
+    { id: 'general', label: 'General', icon: Settings },
     { id: 'email', label: 'Email', icon: Mail },
-    { id: 'security', label: 'Sécurité', icon: Shield },
+    { id: 'security', label: 'Security', icon: Shield },
     { id: 'notifications', label: 'Notifications', icon: Bell },
-    { id: 'features', label: 'Fonctionnalités', icon: Zap }
+    { id: 'features', label: 'Features', icon: Zap }
   ] as const
 
   return (
@@ -175,15 +175,15 @@ export function SettingsClient() {
         {activeTab === 'general' && (
           <Card>
             <CardHeader>
-              <CardTitle>Paramètres généraux</CardTitle>
+              <CardTitle>General Settings</CardTitle>
               <CardDescription>
-                Configurez les informations de base de votre plateforme
+                Configure the basic information for your platform
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="siteName">Nom du site</Label>
+                  <Label htmlFor="siteName">Site Name</Label>
                   <Input
                     id="siteName"
                     value={settings.general.siteName}
@@ -191,7 +191,7 @@ export function SettingsClient() {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="contactEmail">Email de contact</Label>
+                  <Label htmlFor="contactEmail">Contact Email</Label>
                   <Input
                     id="contactEmail"
                     type="email"
@@ -200,7 +200,7 @@ export function SettingsClient() {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="supportEmail">Email de support</Label>
+                  <Label htmlFor="supportEmail">Support Email</Label>
                   <Input
                     id="supportEmail"
                     type="email"
@@ -209,21 +209,21 @@ export function SettingsClient() {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="defaultLanguage">Langue par défaut</Label>
+                  <Label htmlFor="defaultLanguage">Default Language</Label>
                   <Select value={settings.general.defaultLanguage} onValueChange={(value) => updateSetting('general', 'defaultLanguage', value)}>
                     <SelectTrigger>
                       <SelectValue />
                     </SelectTrigger>
                     <SelectContent>
-                      <SelectItem value="fr">Français</SelectItem>
+                      <SelectItem value="fr">French</SelectItem>
                       <SelectItem value="en">English</SelectItem>
-                      <SelectItem value="es">Español</SelectItem>
+                      <SelectItem value="es">Spanish</SelectItem>
                     </SelectContent>
                   </Select>
                 </div>
               </div>
               <div>
-                <Label htmlFor="siteDescription">Description du site</Label>
+                <Label htmlFor="siteDescription">Site Description</Label>
                 <Textarea
                   id="siteDescription"
                   value={settings.general.siteDescription}
@@ -239,15 +239,15 @@ export function SettingsClient() {
         {activeTab === 'email' && (
           <Card>
             <CardHeader>
-              <CardTitle>Configuration email</CardTitle>
+              <CardTitle>Email Configuration</CardTitle>
               <CardDescription>
-                Configurez les paramètres d'envoi d'emails
+                Configure your email sending settings
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="emailProvider">Fournisseur email</Label>
+                  <Label htmlFor="emailProvider">Email Provider</Label>
                   <Select value={settings.email.provider} onValueChange={(value) => updateSetting('email', 'provider', value)}>
                     <SelectTrigger>
                       <SelectValue />
@@ -260,7 +260,7 @@ export function SettingsClient() {
                   </Select>
                 </div>
                 <div>
-                  <Label htmlFor="fromEmail">Email d'envoi</Label>
+                  <Label htmlFor="fromEmail">From Email</Label>
                   <Input
                     id="fromEmail"
                     type="email"
@@ -269,7 +269,7 @@ export function SettingsClient() {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="fromName">Nom d'envoi</Label>
+                  <Label htmlFor="fromName">From Name</Label>
                   <Input
                     id="fromName"
                     value={settings.email.fromName}
@@ -277,7 +277,7 @@ export function SettingsClient() {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="replyTo">Email de réponse</Label>
+                  <Label htmlFor="replyTo">Reply-To Email</Label>
                   <Input
                     id="replyTo"
                     type="email"
@@ -289,10 +289,10 @@ export function SettingsClient() {
               
               {settings.email.provider === 'smtp' && (
                 <div className="border-t pt-4">
-                  <h4 className="font-medium mb-4">Configuration SMTP</h4>
+                  <h4 className="font-medium mb-4">SMTP Configuration</h4>
                   <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                     <div>
-                      <Label htmlFor="smtpHost">Hôte SMTP</Label>
+                      <Label htmlFor="smtpHost">SMTP Host</Label>
                       <Input
                         id="smtpHost"
                         value={settings.email.smtpHost || ''}
@@ -301,7 +301,7 @@ export function SettingsClient() {
                       />
                     </div>
                     <div>
-                      <Label htmlFor="smtpPort">Port SMTP</Label>
+                      <Label htmlFor="smtpPort">SMTP Port</Label>
                       <Input
                         id="smtpPort"
                         type="number"
@@ -311,7 +311,7 @@ export function SettingsClient() {
                       />
                     </div>
                     <div>
-                      <Label htmlFor="smtpUser">Utilisateur SMTP</Label>
+                      <Label htmlFor="smtpUser">SMTP User</Label>
                       <Input
                         id="smtpUser"
                         value={settings.email.smtpUser || ''}
@@ -319,7 +319,7 @@ export function SettingsClient() {
                       />
                     </div>
                     <div>
-                      <Label htmlFor="smtpPassword">Mot de passe SMTP</Label>
+                      <Label htmlFor="smtpPassword">SMTP Password</Label>
                       <Input
                         id="smtpPassword"
                         type="password"
@@ -331,15 +331,15 @@ export function SettingsClient() {
                 </div>
               )}
 
-              <div className="flex items-center justify-between p-4 bg-blue-50 rounded-lg">
+              <div className="flex items-center justify-between p-4 bg-indigo-500/5 border border-indigo-500/20 rounded-lg">
                 <div className="flex items-center gap-3">
-                  <Mail className="h-5 w-5 text-blue-600" />
+                  <Mail className="h-5 w-5 text-indigo-400" />
                   <div>
-                    <div className="font-medium text-blue-900">Test email</div>
-                    <div className="text-sm text-blue-700">Envoyer un email de test pour vérifier la configuration</div>
+                    <div className="font-medium">Test email</div>
+                    <div className="text-sm text-white/40">Send a test email to verify your configuration</div>
                   </div>
                 </div>
-                <Button variant="outline">Envoyer un test</Button>
+                <Button variant="outline">Send test</Button>
               </div>
             </CardContent>
           </Card>
@@ -349,17 +349,17 @@ export function SettingsClient() {
         {activeTab === 'security' && (
           <Card>
             <CardHeader>
-              <CardTitle>Paramètres de sécurité</CardTitle>
+              <CardTitle>Security Settings</CardTitle>
               <CardDescription>
-                Configurez les options de sécurité de votre plateforme
+                Configure the security options for your platform
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="font-medium">Authentification à deux facteurs</div>
-                    <div className="text-sm text-neutral-600">Exiger 2FA pour tous les utilisateurs</div>
+                    <div className="font-medium">Two-factor authentication</div>
+                    <div className="text-sm text-neutral-600">Require 2FA for all users</div>
                   </div>
                   <Switch
                     checked={settings.security.twoFactorEnabled}
@@ -368,8 +368,8 @@ export function SettingsClient() {
                 </div>
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="font-medium">Vérification email obligatoire</div>
-                    <div className="text-sm text-neutral-600">Les utilisateurs doivent vérifier leur email</div>
+                    <div className="font-medium">Mandatory email verification</div>
+                    <div className="text-sm text-neutral-600">Users must verify their email address</div>
                   </div>
                   <Switch
                     checked={settings.security.requireEmailVerification}
@@ -380,7 +380,7 @@ export function SettingsClient() {
               
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                 <div>
-                  <Label htmlFor="sessionTimeout">Délai d'expiration de session (heures)</Label>
+                  <Label htmlFor="sessionTimeout">Session timeout (hours)</Label>
                   <Input
                     id="sessionTimeout"
                     type="number"
@@ -389,7 +389,7 @@ export function SettingsClient() {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="maxLoginAttempts">Tentatives de connexion max</Label>
+                  <Label htmlFor="maxLoginAttempts">Max login attempts</Label>
                   <Input
                     id="maxLoginAttempts"
                     type="number"
@@ -398,7 +398,7 @@ export function SettingsClient() {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="lockoutDuration">Durée de verrouillage (minutes)</Label>
+                  <Label htmlFor="lockoutDuration">Lockout duration (minutes)</Label>
                   <Input
                     id="lockoutDuration"
                     type="number"
@@ -407,7 +407,7 @@ export function SettingsClient() {
                   />
                 </div>
                 <div>
-                  <Label htmlFor="passwordMinLength">Longueur min. mot de passe</Label>
+                  <Label htmlFor="passwordMinLength">Min. password length</Label>
                   <Input
                     id="passwordMinLength"
                     type="number"
@@ -424,17 +424,17 @@ export function SettingsClient() {
         {activeTab === 'notifications' && (
           <Card>
             <CardHeader>
-              <CardTitle>Paramètres de notification</CardTitle>
+              <CardTitle>Notification Settings</CardTitle>
               <CardDescription>
-                Configurez les notifications système et marketing
+                Configure system and marketing notifications
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="font-medium">Notifications email</div>
-                    <div className="text-sm text-neutral-600">Activer les notifications par email</div>
+                    <div className="font-medium">Email notifications</div>
+                    <div className="text-sm text-neutral-600">Enable email notifications</div>
                   </div>
                   <Switch
                     checked={settings.notifications.emailNotifications}
@@ -443,8 +443,8 @@ export function SettingsClient() {
                 </div>
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="font-medium">Notifications push</div>
-                    <div className="text-sm text-neutral-600">Activer les notifications push</div>
+                    <div className="font-medium">Push notifications</div>
+                    <div className="text-sm text-neutral-600">Enable push notifications</div>
                   </div>
                   <Switch
                     checked={settings.notifications.pushNotifications}
@@ -454,7 +454,7 @@ export function SettingsClient() {
                 <div className="flex items-center justify-between">
                   <div>
                     <div className="font-medium">Newsletter</div>
-                    <div className="text-sm text-neutral-600">Autoriser les newsletters</div>
+                    <div className="text-sm text-neutral-600">Allow newsletters</div>
                   </div>
                   <Switch
                     checked={settings.notifications.newsletterEnabled}
@@ -463,8 +463,8 @@ export function SettingsClient() {
                 </div>
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="font-medium">Emails marketing</div>
-                    <div className="text-sm text-neutral-600">Envoyer des emails promotionnels</div>
+                    <div className="font-medium">Marketing emails</div>
+                    <div className="text-sm text-neutral-600">Send promotional emails</div>
                   </div>
                   <Switch
                     checked={settings.notifications.marketingEmails}
@@ -473,8 +473,8 @@ export function SettingsClient() {
                 </div>
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="font-medium">Alertes de sécurité</div>
-                    <div className="text-sm text-neutral-600">Notifier en cas d'activité suspecte</div>
+                    <div className="font-medium">Security alerts</div>
+                    <div className="text-sm text-neutral-600">Notify on suspicious activity</div>
                   </div>
                   <Switch
                     checked={settings.notifications.securityAlerts}
@@ -490,17 +490,17 @@ export function SettingsClient() {
         {activeTab === 'features' && (
           <Card>
             <CardHeader>
-              <CardTitle>Fonctionnalités</CardTitle>
+              <CardTitle>Features</CardTitle>
               <CardDescription>
-                Activez ou désactivez les fonctionnalités de la plateforme
+                Enable or disable platform features
               </CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-4">
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="font-medium">Fonctionnalités bêta</div>
-                    <div className="text-sm text-neutral-600">Accès aux fonctionnalités expérimentales</div>
+                    <div className="font-medium">Beta features</div>
+                    <div className="text-sm text-neutral-600">Access to experimental features</div>
                   </div>
                   <Switch
                     checked={settings.features.betaFeatures}
@@ -509,8 +509,8 @@ export function SettingsClient() {
                 </div>
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="font-medium">Analytics avancés</div>
-                    <div className="text-sm text-neutral-600">Rapports détaillés et analyses avancées</div>
+                    <div className="font-medium">Advanced analytics</div>
+                    <div className="text-sm text-neutral-600">Detailed reports and advanced analysis</div>
                   </div>
                   <Switch
                     checked={settings.features.advancedAnalytics}
@@ -519,8 +519,8 @@ export function SettingsClient() {
                 </div>
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="font-medium">Branding personnalisé</div>
-                    <div className="text-sm text-neutral-600">Personnalisation de l'interface</div>
+                    <div className="font-medium">Custom branding</div>
+                    <div className="text-sm text-neutral-600">Interface customization</div>
                   </div>
                   <Switch
                     checked={settings.features.customBranding}
@@ -529,8 +529,8 @@ export function SettingsClient() {
                 </div>
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="font-medium">Accès API</div>
-                    <div className="text-sm text-neutral-600">API REST et webhooks</div>
+                    <div className="font-medium">API access</div>
+                    <div className="text-sm text-neutral-600">REST API and webhooks</div>
                   </div>
                   <Switch
                     checked={settings.features.apiAccess}
@@ -539,8 +539,8 @@ export function SettingsClient() {
                 </div>
                 <div className="flex items-center justify-between">
                   <div>
-                    <div className="font-medium">Intégrations</div>
-                    <div className="text-sm text-neutral-600">Intégrations tierces</div>
+                    <div className="font-medium">Integrations</div>
+                    <div className="text-sm text-neutral-600">Third-party integrations</div>
                   </div>
                   <Switch
                     checked={settings.features.integrations}
@@ -555,10 +555,10 @@ export function SettingsClient() {
         {/* Save Button */}
         <div className="flex justify-end gap-3">
           <Button variant="outline" onClick={() => setShowRestartDialog(true)}>
-            Redémarrer le système
+            Restart system
           </Button>
           <Button onClick={handleSave} disabled={saving}>
-            {saving ? 'Sauvegarde...' : 'Sauvegarder les paramètres'}
+            {saving ? 'Saving...' : 'Save settings'}
           </Button>
         </div>
       </div>
@@ -567,19 +567,19 @@ export function SettingsClient() {
       <Dialog open={showRestartDialog} onOpenChange={setShowRestartDialog}>
         <DialogContent>
           <DialogHeader>
-            <DialogTitle>Redémarrer le système</DialogTitle>
+            <DialogTitle>Restart system</DialogTitle>
             <DialogDescription>
-              Êtes-vous sûr de vouloir redémarrer le système ? Cela entraînera une interruption temporaire du service.
+              Are you sure you want to restart the system? This will cause a temporary service interruption.
             </DialogDescription>
           </DialogHeader>
           <div className="space-y-4">
-            <div className="bg-yellow-50 border border-yellow-200 rounded-lg p-4">
+            <div className="bg-yellow-500/10 border border-yellow-500/30 rounded-lg p-4">
               <div className="flex items-start gap-3">
-                <AlertTriangle className="h-5 w-5 text-yellow-600 mt-0.5" />
+                <AlertTriangle className="h-5 w-5 text-yellow-400 mt-0.5" />
                 <div className="text-sm">
-                  <p className="font-medium text-yellow-800">Attention</p>
-                  <p className="text-yellow-700 mt-1">
-                    Le redémarrage prendra environ 2-3 minutes. Pendant ce temps, la plateforme sera inaccessible.
+                  <p className="font-medium text-yellow-300">Warning</p>
+                  <p className="text-yellow-400/80 mt-1">
+                    The restart will take approximately 2-3 minutes. During this time, the platform will be unavailable.
                   </p>
                 </div>
               </div>
@@ -587,10 +587,10 @@ export function SettingsClient() {
             
             <div className="flex gap-3 justify-end">
               <Button variant="outline" onClick={() => setShowRestartDialog(false)}>
-                Annuler
+                Cancel
               </Button>
               <Button variant="destructive" onClick={handleRestart}>
-                Redémarrer
+                Restart
               </Button>
             </div>
           </div>

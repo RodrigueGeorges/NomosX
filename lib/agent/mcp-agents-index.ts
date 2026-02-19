@@ -21,6 +21,10 @@ import {
   strategicAnalystAgent,
   enhanceQuery,
   rerankSources,
+  generateSearchQueries,
+  filterByRelevance,
+  cosineSimilarity,
+  cadenceEnforcer,
   // V3 Intelligence Agents — Phase 1
   analystMultiPass,
   readerAgentV3,
@@ -45,6 +49,7 @@ import {
   // V4 Autonomous Agents
   primeContext,
   createPipelineState,
+  recordDecision,
   assessAfterScout,
   assessAfterReader,
   assessAfterAnalyst,
@@ -83,7 +88,64 @@ import {
   batchEnrichEntities,
   validateInstitution,
   validatePerson,
+  // Editorial Gate
+  editorialGate,
+  evaluatePendingSignals,
+  submitDraftToGate,
+  // Radar + Macro
+  generateRadarCards,
+  getMacroContext,
+  refreshMacroSeries,
+  // Strategic Renderer
+  renderStrategicReportHTML,
+  // Domain Classifier
+  classifySourceDomains,
+  classifyBatchSources,
+  classifyUnclassifiedSources,
+  // Researcher Ownership
+  RESEARCHER_REGISTRY,
+  detectOwners,
+  getPrimaryOwner,
+  selectPipelineTier,
+  getResearcherAgenda,
+  getThinkTankAgenda,
+  requestResearcherSignOff,
 } from './mcp-agents-aliases';
+
+// V7 Autonomous Intelligence — Agent Memory, Researcher Identity, Devil's Advocate
+import {
+  buildMemoryInjection,
+  recordAgentPerformance,
+  computeCalibration,
+  extractLessons,
+  storeLesson,
+  autoDetectFailureModes,
+} from './agent-memory';
+import { loadCalibratedThresholds } from './orchestrator';
+import {
+  buildResearcherProfile,
+  storeResearcherPosition,
+  storePrediction,
+  storeExpertAnalysisMemory,
+  detectPositionEvolution,
+} from './researcher-identity';
+import {
+  runDevilsAdvocate,
+} from './devils-advocate';
+import { runPredictionAuditor } from './prediction-auditor';
+import {
+  recordProviderCall,
+  isProviderHealthy,
+  getHealthyProviders,
+  getProviderHealthReport,
+  resetProvider,
+} from './provider-health-tracker';
+import {
+  recordSourceUsage,
+  updateSourceReputations,
+  getTopReputationSources,
+  getSourceReputationReport,
+} from './source-reputation-agent';
 
 export const mcpAgents = {
   // Core pipeline agents
@@ -129,6 +191,7 @@ export const mcpAgents = {
   // V4 Autonomous Agents
   primeContext,
   createPipelineState,
+  recordDecision,
   assessAfterScout,
   assessAfterReader,
   assessAfterAnalyst,
@@ -172,6 +235,60 @@ export const mcpAgents = {
   validateInstitution,
   validatePerson,
 
+  // Editorial Gate (signal + draft publication readiness)
+  editorialGate,
+  evaluatePendingSignals,
+  submitDraftToGate,
+
+  // Radar + Macro
+  generateRadarCards,
+  getMacroContext,
+  refreshMacroSeries,
+
+  // Strategic Renderer
+  renderStrategicReportHTML,
+
+  // Domain Classifier
+  classifySourceDomains,
+  classifyBatchSources,
+  classifyUnclassifiedSources,
+
+  // Researcher Ownership — domain expert editorial owners + pipeline tier selection
+  RESEARCHER_REGISTRY,
+  detectOwners,
+  getPrimaryOwner,
+  selectPipelineTier,
+  getResearcherAgenda,
+  getThinkTankAgenda,
+  requestResearcherSignOff,
+
+  // V7 Autonomous Intelligence — Self-Learning & Adversarial Gate
+  buildMemoryInjection,
+  recordAgentPerformance,
+  computeCalibration,
+  extractLessons,
+  storeLesson,
+  autoDetectFailureModes,
+  loadCalibratedThresholds,
+  buildResearcherProfile,
+  storeResearcherPosition,
+  storePrediction,
+  storeExpertAnalysisMemory,
+  detectPositionEvolution,
+  runDevilsAdvocate,
+
+  // V8 Self-Improving Infrastructure
+  runPredictionAuditor,
+  recordProviderCall,
+  isProviderHealthy,
+  getHealthyProviders,
+  getProviderHealthReport,
+  resetProvider,
+  recordSourceUsage,
+  updateSourceReputations,
+  getTopReputationSources,
+  getSourceReputationReport,
+
   // Pipeline orchestration
   runFullPipeline,
   runStrategicPipeline,
@@ -185,6 +302,10 @@ export const mcpAgents = {
   // Utility
   enhanceQuery,
   rerankSources,
+  generateSearchQueries,
+  filterByRelevance,
+  cosineSimilarity,
+  cadenceEnforcer,
 };
 
 export type {
@@ -201,5 +322,17 @@ export type {
   AutoPublisherConfig, AutoPublisherOutput, PublicationResult, AutoPublisherLineage,
   SignalDetectorOutput, PublicationGeneratorOutput, SmartProviderSelection,
   KGEntity, KGSearchResult, KGEntityEnrichment,
+  MacroRefreshResult,
+  ResearcherOwner, AgendaItem, ResearcherSignOff, PipelineTier,
 } from './mcp-agents-aliases';
+
+export type {
+  AgentPerformanceRecord, AgentLesson, AgentCalibration, MemoryInjection, FailureMode,
+} from './agent-memory';
+export type {
+  ResearcherPosition, PredictionRecord, ResearcherProfile, PositionUpdate,
+} from './researcher-identity';
+export type {
+  AdvocateChallenge, AdvocateReport, ChallengeType, InstitutionComparison, ComparisonScore,
+} from './devils-advocate';
 export default mcpAgents;

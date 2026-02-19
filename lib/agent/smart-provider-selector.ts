@@ -7,6 +7,8 @@
  * Best Practices 2026: Context-aware, intelligent defaults
  */
 
+import { prisma } from '../db';
+
 // All providers available in the pipeline (54 total)
 export type Provider = 
   // TIER 1: Academic Core (always active)
@@ -167,37 +169,61 @@ export function estimateComplexity(question: string): "simple" | "moderate" | "c
 }
 
 /**
- * Intelligently selects providers and quantities
+ * P2-L: Load historically best-performing providers for a domain from AgentAuditLog.
+ * Returns a map of provider → avg quality score from past runs.
  */
-export function selectSmartProviders(question: string): SmartSelection {
-  // 1. Detect domain
+async function loadProviderPerformance(domain: string): Promise<Map<string, number>> {
+  const perfMap = new Map<string, number>();
+  try {
+    const logs = await prisma.agentAuditLog.findMany({
+      where: {
+        agent: { in: ["analyst", "strategic-analyst", "publication-generator"] },
+        timestamp: { gte: new Date(Date.now() - 90 * 24 * 60 * 60 * 1000) },
+      },
+      select: { metadata: true },
+      take: 50,
+    });
+
+    for (const log of logs) {
+      const meta = log.metadata as any;
+      if (meta?.providerScores && typeof meta.providerScores === "object") {
+        for (const [provider, score] of Object.entries(meta.providerScores)) {
+          const current = perfMap.get(provider) || 0;
+          const count = perfMap.get(`${provider}__count`) || 0;
+          perfMap.set(provider, (current * count + Number(score)) / (count + 1));
+          perfMap.set(`${provider}__count`, count + 1);
+        }
+      }
+    }
+  } catch { /* non-fatal */ }
+  return perfMap;
+}
+
+/**
+ * Intelligently selects providers and quantities.
+ * P2-L: Now async — boosts providers with strong historical performance.
+ */
+export async function selectSmartProviders(question: string): Promise<SmartSelection> {
   const domain = detectDomain(question);
-  
-  // 2. Select providers
-  const providers = DOMAIN_PROVIDER_MAP[domain] || DOMAIN_PROVIDER_MAP.default;
-  
-  // 3. Estimate complexity
+  const baseProviders = DOMAIN_PROVIDER_MAP[domain] || DOMAIN_PROVIDER_MAP.default;
+
+  // P2-L: Load historical performance and reorder providers
+  const perfMap = await loadProviderPerformance(domain);
+  const providers = [...baseProviders].sort((a, b) => {
+    const scoreA = perfMap.get(a) || 50;
+    const scoreB = perfMap.get(b) || 50;
+    return scoreB - scoreA;
+  });
+
   const complexity = estimateComplexity(question);
-  
-  // 4. Adjust quantity based on complexity (increased for multi-provider strategy)
-  const baseQuantity = {
-    simple: 20,   // was 12, now 20 for better coverage
-    moderate: 30, // was 18, now 30
-    complex: 40,  // was 25, now 40
-  }[complexity];
-  
+  const baseQuantity = { simple: 20, moderate: 30, complex: 40 }[complexity];
   const quantityPerProvider = Math.ceil(baseQuantity / providers.length);
-  
-  // 5. Estimate time and sources (adjusted for parallel processing)
-  const estimatedTime = {
-    simple: "45-60s",   // More providers but parallel
-    moderate: "60-90s",
-    complex: "90-120s",
-  }[complexity];
-  
+  const estimatedTime = { simple: "45-60s", moderate: "60-90s", complex: "90-120s" }[complexity];
   const estimatedSources = baseQuantity;
-  
-  // 6. Generate reasoning
+
+  const topPerformers = providers.filter(p => (perfMap.get(p) || 0) > 60).slice(0, 3);
+  const perfNote = topPerformers.length > 0 ? ` (boosted: ${topPerformers.join(", ")} from history)` : "";
+
   const domainLabel = {
     health: "Santé & Médecine",
     medical: "Médecine",

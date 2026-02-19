@@ -75,9 +75,9 @@ export default function BriefsPage() {
         {/* Background */}
         <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
           <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1400px] h-[900px]">
-            <div className="absolute inset-0 bg-gradient-to-b from-[#00D4FF]/[0.06] via-[#3B82F6]/[0.03] to-transparent blur-3xl" />
+            <div className="absolute inset-0 bg-gradient-to-b from-indigo-500/[0.06] via-violet-500/[0.03] to-transparent blur-3xl" />
           </div>
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(0,212,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,212,255,0.02)_1px,transparent_1px)] bg-[size:80px_80px]" />
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(99,102,241,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(99,102,241,0.02)_1px,transparent_1px)] bg-[size:80px_80px]" />
         </div>
 
         {/* Header */}
@@ -94,7 +94,7 @@ export default function BriefsPage() {
               </div>
               <button
                 onClick={() => setShowAuthModal(true)}
-                className="px-6 py-3 rounded-xl bg-gradient-to-r from-[#00D4FF]/20 to-[#3B82F6]/20 border border-[#00D4FF]/20 text-white font-medium hover:border-[#00D4FF]/40 transition-all"
+                className="px-6 py-3 rounded-xl bg-gradient-to-r from-indigo-500/20 to-violet-500/20 border border-indigo-500/20 text-white font-medium hover:border-indigo-500/40 transition-all"
               >
                 Get full access
               </button>
@@ -114,7 +114,7 @@ export default function BriefsPage() {
                   placeholder="Search briefs..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-white/[0.08] bg-white/[0.02] text-white placeholder-white/40 focus:border-[#00D4FF]/40 focus:outline-none transition-all"
+                  className="w-full pl-10 pr-4 py-2.5 rounded-xl border border-white/[0.08] bg-white/[0.02] text-white placeholder-white/40 focus:border-indigo-500/40 focus:outline-none transition-all"
                 />
               </div>
 
@@ -131,7 +131,7 @@ export default function BriefsPage() {
                     className={cn(
                       "px-4 py-2 rounded-lg border text-sm font-medium transition-all",
                       filterType === filter.value
-                        ? "border-[#00D4FF]/40 bg-[#00D4FF]/10 text-[#00D4FF]"
+                        ? "border-indigo-500/40 bg-indigo-500/10 text-indigo-300"
                         : "border-white/[0.08] text-white/60 hover:border-white/[0.2]"
                     )}
                   >
@@ -158,7 +158,7 @@ export default function BriefsPage() {
                     setSearchTerm('');
                     setFilterType('all');
                   }}
-                  className="text-[#00D4FF] hover:text-[#00D4FF]/80 transition-colors"
+                  className="text-indigo-400 hover:text-indigo-400/80 transition-colors"
                 >
                   Clear filters
                 </button>
@@ -167,11 +167,11 @@ export default function BriefsPage() {
               <>
                 <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6 mb-8">
                   {filteredBriefs.map((brief) => (
-                    <div key={brief.id} className="group rounded-2xl border border-white/[0.08] bg-gradient-to-br from-white/[0.03] to-white/[0.01] p-6 hover:border-[#00D4FF]/20 transition-all duration-300">
+                    <div key={brief.id} className="group rounded-2xl border border-white/[0.08] bg-gradient-to-br from-white/[0.03] to-white/[0.01] p-6 hover:border-indigo-500/20 transition-all duration-300">
                       {/* Type Badge */}
                       <div className="flex items-center gap-2 mb-3">
-                        <div className="w-2 h-2 rounded-full bg-[#00D4FF]"></div>
-                        <span className="text-xs text-[#00D4FF]/60 uppercase tracking-wider">
+                        <div className="w-2 h-2 rounded-full bg-indigo-400"></div>
+                        <span className="text-xs text-indigo-400/60 uppercase tracking-wider">
                           {brief.type === 'STRATEGIC_REPORT' ? 'Strategic Report' : 'Executive Brief'}
                         </span>
                         <div className="ml-auto flex items-center gap-2 text-xs text-white/30">
@@ -181,7 +181,7 @@ export default function BriefsPage() {
                       </div>
 
                       {/* Title */}
-                      <h3 className="font-display text-lg font-light text-white/90 mb-3 line-clamp-2 group-hover:text-[#00D4FF]/80 transition-colors">
+                      <h3 className="font-display text-lg font-light text-white/90 mb-3 line-clamp-2 group-hover:text-indigo-300/80 transition-colors">
                         {brief.title}
                       </h3>
 
@@ -218,7 +218,7 @@ export default function BriefsPage() {
                       {/* CTA */}
                       <button
                         onClick={() => handleReadFull(brief.id)}
-                        className="w-full py-2.5 rounded-lg border border-[#00D4FF]/20 bg-[#00D4FF]/5 text-[#00D4FF] font-medium hover:bg-[#00D4FF]/10 transition-all group-hover:border-[#00D4FF]/40"
+                        className="w-full py-2.5 rounded-lg border border-indigo-500/20 bg-indigo-500/5 text-indigo-300 font-medium hover:bg-indigo-500/10 transition-all group-hover:border-indigo-500/40"
                       >
                         <span className="flex items-center justify-center gap-2">
                           Read full brief
@@ -239,7 +239,7 @@ export default function BriefsPage() {
                         className={cn(
                           "w-10 h-10 rounded-lg border text-sm font-medium transition-all",
                           page === pageNum
-                            ? "border-[#00D4FF]/40 bg-[#00D4FF]/10 text-[#00D4FF]"
+                            ? "border-indigo-500/40 bg-indigo-500/10 text-indigo-300"
                             : "border-white/[0.08] text-white/60 hover:border-white/[0.2]"
                         )}
                       >
@@ -257,7 +257,7 @@ export default function BriefsPage() {
         <div className="relative z-10 border-t border-white/[0.06]">
           <div className="max-w-4xl mx-auto px-4 sm:px-6 py-16">
             <div className="text-center p-10 sm:p-16 rounded-3xl border border-white/[0.08] bg-gradient-to-br from-white/[0.02] to-white/[0.01]">
-              <div className="text-xs text-[#00D4FF]/50 tracking-[0.25em] uppercase mb-6">
+              <div className="text-xs text-indigo-400/50 tracking-[0.25em] uppercase mb-6">
                 UNLOCK FULL INTELLIGENCE
               </div>
               
@@ -290,7 +290,7 @@ export default function BriefsPage() {
               
               <button
                 onClick={() => setShowAuthModal(true)}
-                className="group px-8 py-4 rounded-xl bg-gradient-to-r from-[#00D4FF]/20 to-[#3B82F6]/20 border border-[#00D4FF]/20 text-white font-medium hover:border-[#00D4FF]/40 transition-all shadow-[0_0_30px_rgba(0,212,255,0.15)]"
+                className="group px-8 py-4 rounded-xl bg-gradient-to-r from-indigo-500/20 to-violet-500/20 border border-indigo-500/20 text-white font-medium hover:border-indigo-500/40 transition-all shadow-[0_0_30px_rgba(99,102,241,0.15)]"
               >
                 <span className="flex items-center justify-center gap-2">
                   Start 30-day free trial
@@ -300,9 +300,9 @@ export default function BriefsPage() {
               
               <div className="flex items-center justify-center gap-6 mt-8 text-xs text-white/40">
                 <span>Executive: €15/month</span>
-                <div className="w-1 h-1 rounded-full bg-[#00D4FF]/40" />
+                <div className="w-1 h-1 rounded-full bg-indigo-400/40" />
                 <span>Strategy: €39/month</span>
-                <div className="w-1 h-1 rounded-full bg-[#00D4FF]/40" />
+                <div className="w-1 h-1 rounded-full bg-indigo-400/40" />
                 <span>No credit card required</span>
               </div>
             </div>

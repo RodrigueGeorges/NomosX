@@ -127,7 +127,7 @@ export default function ClaimFeedback({ claimId, onFeedbackSubmitted }: ClaimFee
 
           <button
             onClick={() => setShowDetailedForm(true)}
-            className="text-xs text-cyan-400 hover:underline"
+            className="text-xs text-indigo-400 hover:underline"
           >
             Provide detailed feedback
           </button>
@@ -188,7 +188,7 @@ export default function ClaimFeedback({ claimId, onFeedbackSubmitted }: ClaimFee
             <button
               type="submit"
               disabled={isSubmitting || !rating || !feedbackType}
-              className="flex-1 px-4 py-2 bg-cyan-500 hover:bg-cyan-600 text-white rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              className="flex-1 px-4 py-2 bg-indigo-600 hover:bg-indigo-700 text-white rounded-lg font-medium transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
             >
               {isSubmitting ? 'Submitting...' : 'Submit Feedback'}
             </button>

@@ -14,6 +14,7 @@
 import { prisma } from '../db';
 import { queryKnowledgeGraph, getLongitudinalInsights } from './knowledge-graph';
 import { embedText, embedBatch, cosineSimilarity } from './semantic-engine';
+import { trendAnalyzer } from './trend-analyzer';
 
 // ============================================================================
 // TYPES
@@ -34,6 +35,9 @@ export interface PrimedContext {
   whatChanged: string[];       // Key changes since last coverage
   newSince: string[];          // New concepts not in prior briefs
   revisitReasons: string[];    // Why this topic deserves fresh analysis
+
+  // P1-F: Live trend breaks from Trend Analyzer
+  trendBreaks: string[];       // Active trend breaks detected in last 6 months
 
   // Injected prompt block (ready to paste into ANALYST system prompt)
   contextBlock: string;
@@ -81,17 +85,19 @@ export async function primeContext(
 
   console.log(`[CONTEXT PRIMER] Priming context for: "${query.slice(0, 80)}..."`);
 
-  // ── STEP 1: Query Knowledge Graph + Longitudinal Insights (parallel) ──
+  // ── STEP 1: Query Knowledge Graph + Longitudinal Insights + Trend Analyzer (parallel) ──
   let knownConcepts: ConceptSummary[] = [];
   let emergingTrends: string[] = [];
   let activeControversies: string[] = [];
+  let trendBreaks: string[] = [];
   let kgCost = 0;
 
   try {
-    // Run KG query and longitudinal insights in parallel
-    const [kgResult, insights] = await Promise.all([
+    // P1-F: Run KG query, longitudinal insights, AND trend analyzer in parallel
+    const [kgResult, insights, trendResult] = await Promise.all([
       queryKnowledgeGraph(query, { limit: maxConcepts, minSimilarity: 0.5 }),
       getLongitudinalInsights({ minOccurrences: 2, limit: 10 }),
+      trendAnalyzer({ lookbackMonths: 6, minSources: 5 }).catch(() => ({ trends: [] })),
     ]);
 
     knownConcepts = kgResult.concepts.map(c => ({
@@ -111,13 +117,23 @@ export async function primeContext(
       .filter(i => i.trend === "contested")
       .map(i => i.summary);
 
+    // P1-F: Extract trend breaks relevant to query
+    trendBreaks = (trendResult.trends || [])
+      .filter((t: any) => {
+        const trendText = `${t.topic || ""} ${t.description || ""}`.toLowerCase();
+        const queryWords = query.toLowerCase().split(/\s+/).filter(w => w.length > 4);
+        return queryWords.some(w => trendText.includes(w));
+      })
+      .slice(0, 5)
+      .map((t: any) => t.description || t.topic || String(t));
+
     // Update trends in known concepts
     for (const concept of knownConcepts) {
       const insight = insights.find(i => i.concept === concept.name);
       if (insight) concept.trend = insight.trend;
     }
 
-    console.log(`[CONTEXT PRIMER] KG: ${knownConcepts.length} concepts, ${emergingTrends.length} trends, ${activeControversies.length} controversies`);
+    console.log(`[CONTEXT PRIMER] KG: ${knownConcepts.length} concepts, ${emergingTrends.length} trends, ${activeControversies.length} controversies, ${trendBreaks.length} trend breaks`);
   } catch (err) {
     console.warn("[CONTEXT PRIMER] Knowledge Graph query failed (continuing without):", err);
   }
@@ -216,6 +232,7 @@ export async function primeContext(
     knownConcepts,
     emergingTrends,
     activeControversies,
+    trendBreaks,
     priorBriefs,
     lastCoverageDate,
     coverageGap,
@@ -225,12 +242,13 @@ export async function primeContext(
   });
 
   const durationMs = Date.now() - start;
-  console.log(`[CONTEXT PRIMER] ✅ Context primed in ${durationMs}ms (${knownConcepts.length} concepts, ${priorBriefs.length} prior briefs)`);
+  console.log(`[CONTEXT PRIMER] ✅ Context primed in ${durationMs}ms (${knownConcepts.length} concepts, ${priorBriefs.length} prior briefs, ${trendBreaks.length} trend breaks)`);
 
   return {
     knownConcepts,
     emergingTrends,
     activeControversies,
+    trendBreaks,
     priorBriefs,
     lastCoverageDate,
     coverageGap,
@@ -251,6 +269,7 @@ function buildContextBlock(ctx: {
   knownConcepts: ConceptSummary[];
   emergingTrends: string[];
   activeControversies: string[];
+  trendBreaks: string[];
   priorBriefs: PriorBriefSummary[];
   lastCoverageDate: Date | null;
   coverageGap: number;
@@ -310,6 +329,15 @@ function buildContextBlock(ctx: {
     sections.push("\n## Active Controversies (address explicitly)");
     for (const controversy of ctx.activeControversies) {
       sections.push(`- ${controversy}`);
+    }
+  }
+
+  // P1-F: Live trend breaks
+  if (ctx.trendBreaks.length > 0) {
+    sections.push("\n## ⚡ Live Trend Breaks (detected in last 6 months — high priority)");
+    sections.push("These are statistically significant shifts in the evidence base. Address them explicitly.");
+    for (const trend of ctx.trendBreaks) {
+      sections.push(`- ${trend}`);
     }
   }
 

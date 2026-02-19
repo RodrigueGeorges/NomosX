@@ -132,7 +132,7 @@ export default function StreamingAnalysis({ runId, onComplete, onError }: Stream
   if (!result) {
     return (
       <div className="flex items-center gap-3 p-6">
-        <div className="w-6 h-6 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin" />
+        <div className="w-6 h-6 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
         <span className="text-neutral-400">Initializing analysis...</span>
       </div>
     );
@@ -145,12 +145,12 @@ export default function StreamingAnalysis({ runId, onComplete, onError }: Stream
         <div className="space-y-3">
           <div className="flex items-center justify-between text-sm">
             <span className="text-neutral-400">{result.progress.currentStep}</span>
-            <span className="text-cyan-400 font-medium">{result.progress.percentage}%</span>
+            <span className="text-indigo-400 font-medium">{result.progress.percentage}%</span>
           </div>
           
           <div className="h-2 bg-neutral-800 rounded-full overflow-hidden">
             <div 
-              className="h-full bg-gradient-to-r from-cyan-500 to-purple-500 transition-all duration-500 ease-out"
+              className="h-full bg-gradient-to-r from-indigo-500 to-violet-500 transition-all duration-500 ease-out"
               style={{ width: `${result.progress.percentage}%` }}
             />
           </div>
@@ -159,7 +159,7 @@ export default function StreamingAnalysis({ runId, onComplete, onError }: Stream
             {result.progress.completedSteps.map((step, idx) => (
               <div 
                 key={idx}
-                className="px-3 py-1 bg-cyan-500/20 text-cyan-400 text-xs rounded-full flex items-center gap-2"
+                className="px-3 py-1 bg-indigo-500/20 text-indigo-300 text-xs rounded-full flex items-center gap-2"
               >
                 <svg className="w-3 h-3" fill="currentColor" viewBox="0 0 20 20">
                   <path fillRule="evenodd" d="M16.707 5.293a1 1 0 010 1.414l-8 8a1 1 0 01-1.414 0l-4-4a1 1 0 011.414-1.414L8 12.586l7.293-7.293a1 1 0 011.414 0z" clipRule="evenodd" />
@@ -188,7 +188,7 @@ export default function StreamingAnalysis({ runId, onComplete, onError }: Stream
           <h3 className="text-xl font-bold text-white flex items-center gap-2">
             Claims
             {isStreaming && (
-              <span className="text-sm text-cyan-400 animate-pulse">
+              <span className="text-sm text-indigo-400 animate-pulse">
                 (updating...)
               </span>
             )}

@@ -78,9 +78,12 @@ export async function POST(req: NextRequest) {
           try {
             console.log(`[Generate Briefs Cron] [EDITORIAL] Generating: "${proposal.topic}"`);
 
+            const smartSel = proposal.suggestedProviders.length > 0
+              ? null
+              : await selectSmartProviders(proposal.topic).catch(() => null);
             const providers = proposal.suggestedProviders.length > 0
               ? proposal.suggestedProviders as any[]
-              : selectSmartProviders(proposal.topic).providers;
+              : (smartSel?.providers ?? []) as any[];
 
             const pipelineMode = proposal.suggestedFormat === "strategic" ? "strategic" : "brief";
 

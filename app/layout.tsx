@@ -5,7 +5,7 @@ import { ToastContainer } from '@/components/ui/Toast';
 import { AuthProvider } from '@/hooks/useAuth';
 import { QueryProvider } from '@/components/providers/QueryProvider';
 
-// Configuration des polices
+// Font configuration
 const inter = Inter({
   subsets: ['latin'],
   variable: '--font-primary',
@@ -30,11 +30,11 @@ const jetbrainsMono = JetBrains_Mono({
 export const metadata = {
   metadataBase: new URL(process.env.NEXT_PUBLIC_APP_URL || 'http://localhost:3000'),
   title: {
-    default: "NomosX — Think Tank Agentique",
+    default: "NomosX — The Autonomous Think Tank",
     template: "%s | NomosX"
   },
-  description: "10 agents IA analysent 28M+ publications académiques et génèrent des analyses multi-perspectives en 60 secondes. De la recherche à la décision stratégique.",
-  keywords: ["think tank", "IA", "intelligence artificielle", "recherche académique", "analyse stratégique", "aide à la décision"],
+  description: "8 AI researchers analyze 250M+ academic publications and deliver source-grounded strategic analysis in 60 seconds. From research to strategic decision.",
+  keywords: ["think tank", "AI", "artificial intelligence", "academic research", "strategic analysis", "decision intelligence", "autonomous research"],
   authors: [{ name: "NomosX" }],
   creator: "NomosX",
   icons: {
@@ -48,21 +48,21 @@ export const metadata = {
   },
   openGraph: {
     type: 'website',
-    locale: 'fr_FR',
+    locale: 'en_US',
     siteName: 'NomosX',
     title: 'NomosX — The Autonomous Think Tank',
-    description: '10 AI agents analyze 28M+ academic publications and generate multi-perspective analyses in 60 seconds.',
+    description: '8 AI researchers analyze 250M+ academic publications and deliver source-grounded strategic analysis in 60 seconds.',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'NomosX — The Autonomous Think Tank',
-    description: '10 AI agents analyze 28M+ academic publications and generate multi-perspective analyses in 60 seconds.',
+    description: '8 AI researchers analyze 250M+ academic publications and deliver source-grounded strategic analysis in 60 seconds.',
   },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {
   return (
-    <html lang="fr" className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable}`} suppressHydrationWarning>
+    <html lang="en" className={`${inter.variable} ${spaceGrotesk.variable} ${jetbrainsMono.variable}`} suppressHydrationWarning>
       <body className="font-primary">
         <QueryProvider>
           <AuthProvider>

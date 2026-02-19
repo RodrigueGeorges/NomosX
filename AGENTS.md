@@ -948,16 +948,149 @@ interface QuantitativeData {
 
 ---
 
-## 🔄 V3 Pipeline Flow
+---
+
+## 🧬 V7 — Autonomous Intelligence Layer
+
+These three agents transform NomosX from a sophisticated pipeline into a **genuinely self-improving research entity**. Each agent accumulates memory, evolves its reasoning, and challenges its own outputs before publication.
+
+---
+
+### 16. AGENT MEMORY
+
+**File**: `lib/agent/agent-memory.ts`
+
+**Purpose**: Persistent learning system — every agent accumulates a performance history that feeds back into its own prompts, creating a genuine improvement loop without fine-tuning.
+
+**Key Functions**:
+- `recordAgentPerformance(record)` — Store trust/quality scores, failure modes, lessons per agent per domain
+- `computeCalibration(agentId, domain)` — Compute confidence adjustment, preferred providers, recurring failure modes from history
+- `buildMemoryInjection(agentId, domain)` — Build a "what I've learned" prompt block injected into agent system prompts
+- `extractLessons(agentId, question, output, feedback)` — LLM-generated lessons from past failures
+- `storeLesson(agentId, lesson, runId)` — Persist lesson to `AgentAuditLog`
+- `autoDetectFailureModes(metrics)` — Detect overconfidence, citation gaps, provider bias without human feedback
+
+**FailureModes tracked**:
+`overconfident`, `underconfident`, `citation_gaps`, `missed_contradiction`, `shallow_methodology`, `ignored_confounders`, `stale_framing`, `provider_bias`, `scope_creep`, `false_consensus`
+
+**Calibration**: Adjusts confidence claims by up to ±20 points based on historical over/underconfidence. Raises quality thresholds for domains with poor track records.
+
+**Prompt Injection Format**:
+```
+=== YOUR PERFORMANCE MEMORY ===
+Your track record (last N analyses):
+- Average trust score: 72/100
+- Performance trend: IMPROVING
+⚠️  CALIBRATION: You have been systematically OVERCONFIDENT. Reduce confidence by ~12 points.
+🔴 YOUR RECURRING FAILURE MODES:
+- You leave claims uncited. Every factual assertion needs a [SRC-N] reference.
+📚 LESSONS FROM YOUR PAST ANALYSES:
+- On climate policy: always check if carbon price levels are comparable across studies
+=== END PERFORMANCE MEMORY ===
+```
+
+**Storage**: `AgentAuditLog` table (actions: `PERFORMANCE_RECORD`, `LESSON_LEARNED`)
+
+**Determinism**: ✅ Calibration is deterministic; ⚠️ Lesson extraction uses LLM (temp=0.2)
+
+---
+
+### 17. RESEARCHER IDENTITY
+
+**File**: `lib/agent/researcher-identity.ts`
+
+**Purpose**: Each PhD researcher accumulates a persistent intellectual identity — prior positions, prediction track records, and the ability to explicitly evolve their views when new evidence contradicts past stances.
+
+**Key Functions**:
+- `storeResearcherPosition(position)` — Persist a researcher's stance on a topic after each analysis
+- `storePrediction(prediction)` — Track falsifiable predictions with probability + timeframe
+- `buildResearcherProfile(expertId, currentTopic)` — Retrieve semantically relevant prior positions + prediction accuracy
+- `detectPositionEvolution(expertId, topic, newStance, priorPositions)` — LLM detects if researcher has changed position and why
+- `storeExpertAnalysisMemory(expertId, question, analysis, runId)` — Called automatically after `runExpertCouncil()`
+
+**Identity Block injected into system prompt**:
+```
+=== YOUR INTELLECTUAL HISTORY ===
+You have completed 23 prior analyses.
+Your average confidence level: 68/100
+Prediction track record: 7/11 resolved predictions correct (64% accuracy)
+
+## Your Prior Positions on Related Topics
+[2025-11-14] On "carbon tax effectiveness in high-inequality contexts":
+  Stance: Carbon taxes underperform in high-inequality contexts due to regressive burden
+  Confidence: 72/100
+  Key arguments: Distributional effects outweigh efficiency gains; compensatory mechanisms rarely implemented
+
+IMPORTANT: If new evidence CONFIRMS your prior positions, say so explicitly.
+If new evidence CONTRADICTS your prior positions, acknowledge the shift and explain why.
+Do NOT silently contradict your past self. Intellectual evolution must be explicit.
+=== END INTELLECTUAL HISTORY ===
+```
+
+**Semantic retrieval**: Prior positions are embedded and matched semantically to the current topic (cosine similarity ≥ 0.5)
+
+**Storage**: `AgentAuditLog` table (actions: `POSITION_STORED`, `PREDICTION_STORED`)
+
+**Determinism**: ⚠️ Semi-deterministic (embedding + LLM evolution detection)
+
+---
+
+### 18. DEVIL'S ADVOCATE
+
+**File**: `lib/agent/devils-advocate.ts`
+
+**Purpose**: Permanent adversarial gate — every publication faces a dedicated agent whose sole purpose is to find what is wrong, overstated, missing, or intellectually dishonest. Operates at the **epistemic level**, not just writing quality.
+
+**Inspired by**: CIA Red Team methodology, Kahneman's pre-mortem, adversarial peer review at Nature/Science.
+
+**Key Function**: `runDevilsAdvocate(question, analysisContent, sources, options)`
+
+**Three parallel challenge tracks**:
+1. **Epistemic Challenge** — Are conclusions actually supported? Logical flaws, unsupported claims, false consensus
+2. **Strategic Challenge** — Would this survive hostile expert scrutiny? Missing stakeholders, implementation gaps, future vulnerabilities
+3. **Institution Benchmark** — How does this compare to McKinsey/Brookings/RAND/France Stratégie?
+
+**ChallengeTypes**:
+`overstated_conclusion`, `missing_counterevidence`, `false_consensus`, `causation_from_correlation`, `selection_bias`, `temporal_fallacy`, `ecological_fallacy`, `straw_man`, `appeal_to_authority`, `missing_stakeholder`, `implementation_gap`, `unknown_unknowns`, `institutional_bias`, `recency_bias`
+
+**Verdict logic**:
+- `publish` — No fatal flaws, ≤2 major issues
+- `revise` — 3+ major issues
+- `major_revision` — 1 fatal flaw
+- `reject` — 2+ fatal flaws
+
+**Output includes**:
+- `killShot` — The single argument that could most damage the analysis's credibility
+- `hostileExpertReview` — What a McKinsey senior partner would say to dismiss this
+- `futureVulnerabilities` — What could make this look naive in 2 years
+- `vsInstitutionBenchmark` — Scores vs McKinsey (0-100), Brookings, RAND, France Stratégie
+- `recommendation` — Actionable publication decision
+
+**Pipeline integration**: Runs as step 13 in both `runFullPipeline()` and `runStrategicPipeline()`, after Critical Loop V2, before Publisher. Non-blocking (failures don't stop publication). Automatically feeds results into Agent Memory for learning.
+
+**Determinism**: ⚠️ Semi-deterministic (3 parallel LLM calls, temp=0.2-0.4)
+
+---
+
+## 🔄 V7 Pipeline Flow
 
 ```
 SCOUT → INDEX → EMBED → DEDUP → RANK → READER V3 → ANALYST V3 → GUARD → EDITOR
                   ↑                        ↑              ↑
            Semantic vectors         PDF full-text    3-pass analysis
+                                                         ↑
+                                               [AGENT MEMORY injected]
+                                               [RESEARCHER IDENTITY injected]
 
-→ CITATION VERIFIER → CRITICAL LOOP V2 → DEBATE → META-ANALYSIS → PUBLISHER → KNOWLEDGE GRAPH
-         ↑                    ↑               ↑            ↑                          ↑
-   Semantic validation   Iterative rewrite  Steel-man   Effect sizes          Concept extraction
+→ CITATION VERIFIER → CRITICAL LOOP V2 → DEBATE → META-ANALYSIS
+         ↑                    ↑               ↑            ↑
+   Semantic validation   Iterative rewrite  Steel-man   Effect sizes
+
+→ DEVIL'S ADVOCATE → PUBLISHER → KNOWLEDGE GRAPH
+         ↑                              ↑
+  Epistemic gate +            Concept extraction
+  Institution benchmark +
+  Memory recording
 ```
 
-**Agents v3.0** — PhD-level autonomous research system with iterative self-correction, adversarial debate, statistical meta-analysis, and persistent institutional memory.
+**Agents v7.0** — Self-improving autonomous research system. Each PhD researcher remembers their past positions and calibrates their confidence. Every publication is challenged by a permanent adversarial agent before release. The system learns from every run — getting measurably better over time.

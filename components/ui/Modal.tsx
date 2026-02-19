@@ -76,7 +76,7 @@ export function Modal({
               <button
                 onClick={onClose}
                 className="p-2 rounded-lg hover:bg-panel2 transition-colors"
-                aria-label="Fermer"
+                aria-label="Close"
               >
                 <X size={20} />
               </button>

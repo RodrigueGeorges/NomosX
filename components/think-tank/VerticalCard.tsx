@@ -105,7 +105,7 @@ export default function VerticalCard({ vertical }: VerticalCardProps) {
               className={`h-full rounded-full transition-all duration-500 ${
                 isAtLimit ? "bg-red-500" : 
                 isNearLimit ? "bg-amber-500" : 
-                "bg-gradient-to-r from-cyan-500 to-blue-500"
+                "bg-gradient-to-r from-indigo-500 to-violet-500"
               }`}
               style={{ width: `${Math.min(cadencePercentage, 100)}%` }}
             />

@@ -13,6 +13,7 @@
  */
 
 import { callLLM } from '../llm/unified-llm';
+import { computeCalibration } from './agent-memory';
 
 // ============================================================================
 // TYPES
@@ -63,6 +64,9 @@ export interface PipelineState {
 
   // History of decisions
   decisions: OrchestratorDecision[];
+
+  // Calibrated thresholds (from AgentMemory — overrides static THRESHOLDS when set)
+  thresholds?: typeof THRESHOLDS;
 }
 
 // ============================================================================
@@ -94,6 +98,49 @@ const THRESHOLDS = {
   MAX_ITERATIONS: 3,
 };
 
+/**
+ * Load calibrated thresholds from AgentMemory.
+ * Falls back to static THRESHOLDS if no history exists.
+ * Called once per pipeline run to avoid repeated DB queries.
+ */
+export async function loadCalibratedThresholds(domain?: string): Promise<typeof THRESHOLDS> {
+  try {
+    const [analystCal, scoutCal] = await Promise.all([
+      computeCalibration("analyst", domain as any, 90),
+      computeCalibration("strategic-analyst", domain as any, 90),
+    ]);
+
+    // Use the better-performing agent's calibration
+    const bestCal = analystCal.totalRuns >= scoutCal.totalRuns ? analystCal : scoutCal;
+
+    if (bestCal.totalRuns < 3) {
+      // Not enough history — use static thresholds
+      return THRESHOLDS;
+    }
+
+    // Adjust MIN_TRUST_SCORE based on historical average
+    // If agent consistently scores 80+, raise the bar; if struggling, keep it achievable
+    const adjustedTrustScore = Math.max(
+      55,
+      Math.min(80, bestCal.avgTrustScore > 0 ? Math.round(bestCal.avgTrustScore * 0.85) : THRESHOLDS.MIN_TRUST_SCORE)
+    );
+
+    // Adjust MIN_AVG_QUALITY based on calibration
+    const adjustedQuality = Math.max(
+      45,
+      Math.min(70, bestCal.minQualityThreshold)
+    );
+
+    return {
+      ...THRESHOLDS,
+      MIN_TRUST_SCORE: adjustedTrustScore,
+      MIN_AVG_QUALITY: adjustedQuality,
+    };
+  } catch {
+    return THRESHOLDS;
+  }
+}
+
 // ============================================================================
 // CHECKPOINT EVALUATORS
 // ============================================================================
@@ -102,13 +149,14 @@ const THRESHOLDS = {
  * Checkpoint 1: After SCOUT — Are sources sufficient?
  */
 export function assessAfterScout(state: PipelineState): OrchestratorDecision {
+  const T = state.thresholds ?? THRESHOLDS;
   const isStrategic = state.maxIterations > 1;
-  const minSources = isStrategic ? THRESHOLDS.MIN_SOURCES_STRATEGIC : THRESHOLDS.MIN_SOURCES;
-  const minDiversity = isStrategic ? THRESHOLDS.MIN_PROVIDER_DIVERSITY_STRATEGIC : THRESHOLDS.MIN_PROVIDER_DIVERSITY;
+  const minSources = isStrategic ? T.MIN_SOURCES_STRATEGIC : T.MIN_SOURCES;
+  const minDiversity = isStrategic ? T.MIN_PROVIDER_DIVERSITY_STRATEGIC : T.MIN_PROVIDER_DIVERSITY;
 
   // Not enough sources
   if (state.sourcesFound < minSources) {
-    if (state.iteration >= THRESHOLDS.MAX_ITERATIONS) {
+    if (state.iteration >= T.MAX_ITERATIONS) {
       return {
         action: "PROCEED",
         reason: `Only ${state.sourcesFound} sources found (min: ${minSources}), but max iterations reached. Proceeding with available data.`,
@@ -117,13 +165,13 @@ export function assessAfterScout(state: PipelineState): OrchestratorDecision {
     return {
       action: "RE_SCOUT",
       reason: `Only ${state.sourcesFound} sources found (min: ${minSources}). Broadening search.`,
-      params: { newTerms: [] }, // Will be filled by LLM
+      params: { newTerms: [] },
     };
   }
 
   // Low provider diversity
   if (state.providerDiversity < minDiversity) {
-    if (state.iteration >= THRESHOLDS.MAX_ITERATIONS) {
+    if (state.iteration >= T.MAX_ITERATIONS) {
       return {
         action: "PROCEED",
         reason: `Low provider diversity (${state.providerDiversity}/${minDiversity}), but max iterations reached.`,
@@ -137,10 +185,10 @@ export function assessAfterScout(state: PipelineState): OrchestratorDecision {
   }
 
   // Low average quality
-  if (state.avgQualityScore < THRESHOLDS.MIN_AVG_QUALITY && state.iteration < THRESHOLDS.MAX_ITERATIONS) {
+  if (state.avgQualityScore < T.MIN_AVG_QUALITY && state.iteration < T.MAX_ITERATIONS) {
     return {
       action: "RE_SCOUT",
-      reason: `Average quality ${state.avgQualityScore.toFixed(0)} below threshold ${THRESHOLDS.MIN_AVG_QUALITY}. Searching for higher-quality sources.`,
+      reason: `Average quality ${state.avgQualityScore.toFixed(0)} below threshold ${T.MIN_AVG_QUALITY}. Searching for higher-quality sources.`,
       params: { newTerms: [] },
     };
   }
@@ -155,13 +203,14 @@ export function assessAfterScout(state: PipelineState): OrchestratorDecision {
  * Checkpoint 2: After READER — Is extracted content sufficient?
  */
 export function assessAfterReader(state: PipelineState): OrchestratorDecision {
+  const T = state.thresholds ?? THRESHOLDS;
   const abstractCoverage = state.sourcesFound > 0
     ? state.sourcesWithAbstract / state.sourcesFound
     : 0;
 
   // Very low abstract coverage
-  if (abstractCoverage < THRESHOLDS.MIN_ABSTRACT_COVERAGE) {
-    if (state.iteration >= THRESHOLDS.MAX_ITERATIONS) {
+  if (abstractCoverage < T.MIN_ABSTRACT_COVERAGE) {
+    if (state.iteration >= T.MAX_ITERATIONS) {
       return {
         action: "PROCEED",
         reason: `Low abstract coverage (${(abstractCoverage * 100).toFixed(0)}%), but max iterations reached.`,
@@ -169,8 +218,8 @@ export function assessAfterReader(state: PipelineState): OrchestratorDecision {
     }
     return {
       action: "DEEPEN",
-      reason: `Only ${(abstractCoverage * 100).toFixed(0)}% of sources have abstracts (min: ${THRESHOLDS.MIN_ABSTRACT_COVERAGE * 100}%). Attempting full-text extraction.`,
-      params: { sourceIds: [] }, // Will be filled with sources missing abstracts
+      reason: `Only ${(abstractCoverage * 100).toFixed(0)}% of sources have abstracts (min: ${T.MIN_ABSTRACT_COVERAGE * 100}%). Attempting full-text extraction.`,
+      params: { sourceIds: [] },
     };
   }
 
@@ -184,8 +233,9 @@ export function assessAfterReader(state: PipelineState): OrchestratorDecision {
  * Checkpoint 3: After ANALYST — Is analysis quality sufficient?
  */
 export function assessAfterAnalyst(state: PipelineState): OrchestratorDecision {
+  const T = state.thresholds ?? THRESHOLDS;
   // Low confidence from analyst
-  if (state.analystConfidence === "low" && state.iteration < THRESHOLDS.MAX_ITERATIONS) {
+  if (state.analystConfidence === "low" && state.iteration < T.MAX_ITERATIONS) {
     return {
       action: "RE_ANALYZE",
       reason: "Analyst confidence is LOW. Re-analyzing with narrower focus.",
@@ -194,8 +244,8 @@ export function assessAfterAnalyst(state: PipelineState): OrchestratorDecision {
   }
 
   // Low citation coverage
-  if (state.citationCoverage !== null && state.citationCoverage < THRESHOLDS.MIN_CITATION_COVERAGE) {
-    if (state.iteration >= THRESHOLDS.MAX_ITERATIONS) {
+  if (state.citationCoverage !== null && state.citationCoverage < T.MIN_CITATION_COVERAGE) {
+    if (state.iteration >= T.MAX_ITERATIONS) {
       return {
         action: "PROCEED",
         reason: `Citation coverage ${(state.citationCoverage * 100).toFixed(0)}% below threshold, but max iterations reached.`,
@@ -203,7 +253,7 @@ export function assessAfterAnalyst(state: PipelineState): OrchestratorDecision {
     }
     return {
       action: "RE_ANALYZE",
-      reason: `Citation coverage only ${(state.citationCoverage * 100).toFixed(0)}% (min: ${THRESHOLDS.MIN_CITATION_COVERAGE * 100}%). Re-analyzing with stronger citation requirements.`,
+      reason: `Citation coverage only ${(state.citationCoverage * 100).toFixed(0)}% (min: ${T.MIN_CITATION_COVERAGE * 100}%). Re-analyzing with stronger citation requirements.`,
       params: { focus: "Ensure every claim is backed by at least one [SRC-N] citation." },
     };
   }
@@ -218,16 +268,17 @@ export function assessAfterAnalyst(state: PipelineState): OrchestratorDecision {
  * Checkpoint 4: After CRITICAL LOOP — Final quality gate
  */
 export function assessAfterCriticalLoop(state: PipelineState): OrchestratorDecision {
-  if (state.trustScore !== null && state.trustScore < THRESHOLDS.MIN_TRUST_SCORE) {
-    if (state.iteration >= THRESHOLDS.MAX_ITERATIONS) {
+  const T = state.thresholds ?? THRESHOLDS;
+  if (state.trustScore !== null && state.trustScore < T.MIN_TRUST_SCORE) {
+    if (state.iteration >= T.MAX_ITERATIONS) {
       return {
         action: "PROCEED",
-        reason: `Trust score ${state.trustScore} below ${THRESHOLDS.MIN_TRUST_SCORE}, but max iterations reached. Publishing with disclaimer.`,
+        reason: `Trust score ${state.trustScore} below ${T.MIN_TRUST_SCORE}, but max iterations reached. Publishing with disclaimer.`,
       };
     }
     return {
       action: "DEBATE",
-      reason: `Trust score ${state.trustScore} below ${THRESHOLDS.MIN_TRUST_SCORE}. Triggering adversarial debate to strengthen weak points.`,
+      reason: `Trust score ${state.trustScore} below ${T.MIN_TRUST_SCORE}. Triggering adversarial debate to strengthen weak points.`,
       params: { debateTopic: state.query },
     };
   }
@@ -305,6 +356,7 @@ export function createPipelineState(
     knownConceptCount: 0,
     priorBriefCount: 0,
     decisions: [],
+    thresholds: undefined,
   };
 }
 

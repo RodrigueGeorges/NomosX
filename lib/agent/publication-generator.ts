@@ -12,6 +12,8 @@ import { callLLM } from '../llm/unified-llm';
 import { runCriticalLoopV2 } from './critical-loop-v2';
 import { verifyCitations } from './citation-verifier';
 import { debateAgent } from './debate-agent';
+import { runDevilsAdvocate } from './devils-advocate';
+import { recordAgentPerformance, autoDetectFailureModes } from './agent-memory';
 import { recordPublication } from './cadence-enforcer';
 import { AgentRole, assertPermission } from '../governance/index';
 
@@ -366,18 +368,81 @@ export async function generatePublication(
       debateResult = await debateAgent(signal.title, sources, undefined, html);
       agentStats.push({ name: "debate-agent", durationMs: Date.now() - dbStart, costUsd: debateResult.costUsd, status: "ok" });
       totalCost += debateResult.costUsd;
+      console.log(`[PUBLICATION_GENERATOR] Debate: dominant=${debateResult.dominantThesis?.slice(0, 60)}, confidence=${debateResult.confidenceInDominant}`);
     } catch (err) {
       console.warn(`[PUBLICATION_GENERATOR] Debate agent failed (continuing):`, err);
       agentStats.push({ name: "debate-agent", durationMs: 0, costUsd: 0, status: "error" });
     }
 
-    // ── STEP 5: Calculate trust score ──
+    // ── STEP 5: DEVIL'S ADVOCATE — Final epistemic gate (P0-A + P0-C) ──
+    // Passes debate context so DA knows what counter-arguments already exist
+    const publication_placeholder_id = `signal-${signal.id}-${Date.now()}`;
+    let daReport: any = null;
+    try {
+      const daStart = Date.now();
+      // Build debate context to inject into DA (P0-C: Debate → DA context sharing)
+      const debateContext = debateResult ? [
+        `Debate dominant thesis: ${debateResult.dominantThesis}`,
+        `Counter-position: ${debateResult.position2?.label || "N/A"}`,
+        `Confidence in dominant: ${debateResult.confidenceInDominant}/100`,
+        `Steel-man already addressed: ${debateResult.synthesis?.slice(0, 200) || "N/A"}`,
+      ].join("\n") : undefined;
+
+      daReport = await runDevilsAdvocate(
+        signal.title,
+        html,
+        sources.map(s => ({ title: s.title, provider: s.provider, year: s.year ?? undefined })),
+        { mode: "brief", debateContext }
+      );
+      agentStats.push({ name: "devils-advocate", durationMs: Date.now() - daStart, costUsd: daReport.costUsd, status: "ok" });
+      totalCost += daReport.costUsd;
+      console.log(`[PUBLICATION_GENERATOR] Devil's Advocate: verdict=${daReport.verdict}, strength=${daReport.overallStrength}/100, publishability=${daReport.publishabilityScore}/100`);
+
+      // Record performance for AgentMemory learning
+      const failureModes = autoDetectFailureModes({
+        confidenceGiven: 70,
+        trustScore: criticalLoopResult.compositeScore,
+        citationCoverage,
+        contradictionsFound: daReport.fatalChallenges.length,
+        sourceDiversity: new Set(sources.map((s: any) => s.provider)).size,
+        findingsCount: sources.length,
+      });
+      await recordAgentPerformance({
+        agentId: "publication-generator",
+        runId: publication_placeholder_id,
+        question: signal.title,
+        trustScore: daReport.publishabilityScore,
+        qualityScore: daReport.overallStrength,
+        confidenceGiven: 70,
+        confidenceActual: daReport.overallStrength,
+        citationCoverage,
+        findingsCount: sources.length,
+        failureModes,
+        lessonsLearned: [],
+      }).catch(err => console.warn(`[PUBLICATION_GENERATOR] AgentMemory record failed:`, err));
+    } catch (err) {
+      console.warn(`[PUBLICATION_GENERATOR] Devil's Advocate failed (continuing):`, err);
+      agentStats.push({ name: "devils-advocate", durationMs: 0, costUsd: 0, status: "error" });
+    }
+
+    // ── STEP 6: Calculate trust score (DA publishabilityScore takes priority) ──
     const avgSourceQuality = sources.reduce((sum, s) => sum + (s.qualityScore || 0), 0) / sources.length;
-    const trustScore = Math.round(
+    const rawTrustScore = Math.round(
       criticalLoopResult.compositeScore * 0.5 +
       avgSourceQuality * 0.3 +
       (citationCoverage * 100) * 0.2
     );
+    // Devil's Advocate publishabilityScore is more rigorous — use it when available
+    const trustScore = daReport?.publishabilityScore ?? rawTrustScore;
+
+    // DA verdict gate: reject = don't publish, major_revision = human review
+    const daBlocked = daReport?.verdict === "reject";
+    const daNeedsReview = daReport?.verdict === "major_revision" || daReport?.verdict === "revise";
+    const needsHumanReview = criticalLoopResult.needsHumanReview || daNeedsReview || daBlocked;
+
+    if (daBlocked) {
+      console.warn(`[PUBLICATION_GENERATOR] ⛔ Devil's Advocate REJECTED: ${daReport.fatalChallenges.length} fatal flaw(s). Sending to human review.`);
+    }
 
     const finishedAt = new Date();
     const lineage: PipelineLineage = {
@@ -386,10 +451,10 @@ export async function generatePublication(
       durationMs: finishedAt.getTime() - startedAt.getTime(),
       agents: agentStats,
       totalCostUsd: totalCost,
-      version: "v3.1",
+      version: "v4.0",
     };
 
-    // ── STEP 6: Persist publication with lineage ──
+    // ── STEP 7: Persist publication with lineage ──
     const publication = await prisma.thinkTankPublication.create({
       data: {
         verticalId: signal.verticalId,
@@ -409,18 +474,32 @@ export async function generatePublication(
             confidenceInDominant: debateResult.confidenceInDominant,
             synthesisQuality: debateResult.debateQuality?.synthesisQuality,
           } : null,
+          devilsAdvocate: daReport ? {
+            verdict: daReport.verdict,
+            overallStrength: daReport.overallStrength,
+            publishabilityScore: daReport.publishabilityScore,
+            fatalChallenges: daReport.fatalChallenges.length,
+            majorChallenges: daReport.majorChallenges.length,
+            killShot: daReport.killShot,
+            vsInstitutions: daReport.vsInstitutionBenchmark?.overall,
+          } : null,
           lineage,
         },
-        publishedAt: criticalLoopResult.needsHumanReview ? null : new Date()
+        publishedAt: needsHumanReview ? null : new Date()
       }
     });
 
     // Record publication for cadence if published
-    if (!criticalLoopResult.needsHumanReview) {
+    if (!needsHumanReview) {
       await recordPublication(signal.verticalId);
       await prisma.signal.update({
         where: { id: signal.id },
         data: { status: "PUBLISHED" }
+      });
+    } else if (daBlocked) {
+      await prisma.signal.update({
+        where: { id: signal.id },
+        data: { status: "REJECTED" }
       });
     }
 

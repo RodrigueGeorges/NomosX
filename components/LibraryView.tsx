@@ -86,7 +86,7 @@ export default function LibraryView({ userId, onSelectBrief }: LibraryViewProps)
   if (isLoading) {
     return (
       <div className="flex items-center justify-center p-12">
-        <div className="w-8 h-8 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin" />
+        <div className="w-8 h-8 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -106,7 +106,7 @@ export default function LibraryView({ userId, onSelectBrief }: LibraryViewProps)
             onClick={() => setView('all')}
             className={`px-4 py-2 rounded-lg font-medium transition-all ${
               view === 'all'
-                ? 'bg-cyan-500 text-white'
+                ? 'bg-indigo-600 text-white'
                 : 'bg-neutral-900 text-neutral-400 hover:bg-neutral-800'
             }`}
           >
@@ -116,7 +116,7 @@ export default function LibraryView({ userId, onSelectBrief }: LibraryViewProps)
             onClick={() => setView('topics')}
             className={`px-4 py-2 rounded-lg font-medium transition-all ${
               view === 'topics'
-                ? 'bg-cyan-500 text-white'
+                ? 'bg-indigo-600 text-white'
                 : 'bg-neutral-900 text-neutral-400 hover:bg-neutral-800'
             }`}
           >
@@ -157,7 +157,7 @@ export default function LibraryView({ userId, onSelectBrief }: LibraryViewProps)
                 onClick={() => setSelectedTopic(selectedTopic === topic.id ? null : topic.id)}
                 className={`p-4 rounded-xl border transition-all text-left ${
                   selectedTopic === topic.id
-                    ? 'bg-cyan-500/20 border-cyan-500'
+                    ? 'bg-indigo-500/20 border-indigo-500'
                     : 'bg-neutral-900 border-neutral-800 hover:border-neutral-700'
                 }`}
               >
@@ -170,7 +170,7 @@ export default function LibraryView({ userId, onSelectBrief }: LibraryViewProps)
           {selectedTopic && (
             <button
               onClick={() => setSelectedTopic(null)}
-              className="text-sm text-cyan-400 hover:underline"
+              className="text-sm text-indigo-400 hover:underline"
             >
               ← Show all topics
             </button>
@@ -193,19 +193,19 @@ export default function LibraryView({ userId, onSelectBrief }: LibraryViewProps)
             <button
               key={brief.id}
               onClick={() => onSelectBrief?.(brief.id)}
-              className="p-5 bg-neutral-900 hover:bg-neutral-800 rounded-xl border border-neutral-800 hover:border-cyan-500/50 transition-all text-left group"
+              className="p-5 bg-neutral-900 hover:bg-neutral-800 rounded-xl border border-neutral-800 hover:border-indigo-500/50 transition-all text-left group"
             >
               {/* Topic Tag */}
               {brief.topic && (
                 <div className="mb-3">
-                  <span className="inline-flex items-center gap-2 px-3 py-1 bg-cyan-500/20 text-cyan-400 text-xs rounded-full">
+                  <span className="inline-flex items-center gap-2 px-3 py-1 bg-indigo-500/20 text-indigo-400 text-xs rounded-full">
                     {brief.topic.name}
                   </span>
                 </div>
               )}
 
               {/* Question */}
-              <h3 className="text-white font-semibold line-clamp-2 group-hover:text-cyan-400 transition-colors mb-3">
+              <h3 className="text-white font-semibold line-clamp-2 group-hover:text-indigo-300 transition-colors mb-3">
                 {brief.question}
               </h3>
 

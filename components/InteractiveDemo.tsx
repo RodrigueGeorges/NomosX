@@ -1,284 +1,225 @@
 "use client";
 
-import React, { useState } from 'react';
-import { Loader2, Play, CheckCircle, AlertCircle, TrendingUp, Users, Target } from 'lucide-react';
+import React, { useState, useEffect, useRef } from 'react';
+import { CheckCircle, Search, Brain, Shield, FileText, ChevronRight } from 'lucide-react';
 
-interface DemoState {
-  status: 'idle' | 'running' | 'completed' | 'error';
-  topic: string;
-  result?: {
-    duration: string;
-    sourcesFound: number;
-    sourcesUsed: number;
-    trustScore: number;
-    qualityScore: number;
-    summary: string;
-    keyFindings: string[];
-    researcherInsights: string[];
-    councilDecision: string;
-  };
-  error?: string;
-}
+const DEMO_TOPICS = [
+  "Impact of AI regulation on innovation",
+  "Carbon pricing mechanisms in emerging markets",
+  "Digital health adoption post-pandemic",
+  "Supply chain resilience strategies",
+];
+
+const PIPELINE_STEPS = [
+  { id: 1, icon: Search,      label: "SCOUT",    detail: "Scanning 250M+ academic sources",          duration: 1800 },
+  { id: 2, icon: Brain,       label: "INDEX",    detail: "Enriching authors & institutions via ROR",  duration: 1400 },
+  { id: 3, icon: Brain,       label: "RANK",     detail: "Scoring relevance & quality",              duration: 1000 },
+  { id: 4, icon: Brain,       label: "READER",   detail: "Extracting claims, methods & results",     duration: 1600 },
+  { id: 5, icon: Brain,       label: "ANALYST",  detail: "Synthesising strategic insights",          duration: 2200 },
+  { id: 6, icon: Shield,      label: "GUARD",    detail: "Validating citations & evidence",          duration: 900  },
+  { id: 7, icon: FileText,    label: "EDITOR",   detail: "Rendering executive brief",                duration: 800  },
+];
+
+const DEMO_RESULT = {
+  sources: 34,
+  used: 12,
+  quality: 91,
+  findings: [
+    "Regulatory clarity accelerates private R&D investment by 18–24%",
+    "Jurisdictions with sandbox frameworks attract 3× more AI startups",
+    "Compliance costs disproportionately burden SMEs vs. incumbents",
+  ],
+  summary:
+    "Evidence converges on a nuanced picture: stringent ex-ante rules dampen short-term innovation velocity, while principles-based frameworks with regulatory sandboxes produce superior long-run outcomes. The EU AI Act's risk-tiered approach is emerging as the de-facto global benchmark.",
+};
+
+type Phase = "typewriter" | "pipeline" | "result" | "idle";
 
 export default function InteractiveDemo() {
-  const [demoState, setDemoState] = useState<DemoState>({
-    status: 'idle',
-    topic: ''
-  });
+  const [topicIndex, setTopicIndex]     = useState(0);
+  const [displayed, setDisplayed]       = useState("");
+  const [phase, setPhase]               = useState<Phase>("typewriter");
+  const [activeStep, setActiveStep]     = useState(0);
+  const [completedSteps, setCompleted]  = useState<number[]>([]);
+  const cycleRef                        = useRef<ReturnType<typeof setTimeout> | null>(null);
 
-  const [inputTopic, setInputTopic] = useState('');
+  const topic = DEMO_TOPICS[topicIndex];
 
-  const runDemo = async () => {
-    if (!inputTopic.trim()) return;
+  const clearCycle = () => {
+    if (cycleRef.current) clearTimeout(cycleRef.current);
+  };
 
-    setDemoState({
-      status: 'running',
-      topic: inputTopic
-    });
+  const startCycle = () => {
+    clearCycle();
+    setDisplayed("");
+    setPhase("typewriter");
+    setActiveStep(0);
+    setCompleted([]);
+  };
 
-    try {
-      const response = await fetch('/api/demo/generate', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ topic: inputTopic, mode: 'quick' })
-      });
+  useEffect(() => {
+    startCycle();
+    return clearCycle;
+  }, [topicIndex]);
 
-      const result = await response.json();
+  useEffect(() => {
+    if (phase !== "typewriter") return;
 
-      if (!response.ok) {
-        throw new Error(result.error || 'Demo failed');
-      }
-
-      setDemoState({
-        status: 'completed',
-        topic: inputTopic,
-        result
-      });
-
-    } catch (error) {
-      setDemoState({
-        status: 'error',
-        topic: inputTopic,
-        error: error instanceof Error ? error.message : 'Unknown error'
-      });
+    if (displayed.length < topic.length) {
+      cycleRef.current = setTimeout(() => {
+        setDisplayed(topic.slice(0, displayed.length + 1));
+      }, 38);
+    } else {
+      cycleRef.current = setTimeout(() => setPhase("pipeline"), 600);
     }
-  };
 
-  const resetDemo = () => {
-    setDemoState({ status: 'idle', topic: '' });
-    setInputTopic('');
-  };
+    return clearCycle;
+  }, [phase, displayed, topic]);
+
+  useEffect(() => {
+    if (phase !== "pipeline") return;
+
+    if (activeStep >= PIPELINE_STEPS.length) {
+      cycleRef.current = setTimeout(() => setPhase("result"), 400);
+      return;
+    }
+
+    const step = PIPELINE_STEPS[activeStep];
+    cycleRef.current = setTimeout(() => {
+      setCompleted((prev) => [...prev, step.id]);
+      setActiveStep((s) => s + 1);
+    }, step.duration);
+
+    return clearCycle;
+  }, [phase, activeStep]);
+
+  useEffect(() => {
+    if (phase !== "result") return;
+    cycleRef.current = setTimeout(() => {
+      setTopicIndex((i) => (i + 1) % DEMO_TOPICS.length);
+    }, 6000);
+    return clearCycle;
+  }, [phase]);
 
   return (
     <div className="w-full max-w-4xl mx-auto">
-      {/* Demo Header */}
-      <div className="text-center mb-12">
-        <h3 className="nx-heading-2 text-white/95 mb-4">
-          See the AI Council in Action
-        </h3>
-        <p className="nx-body text-white/60 max-w-2xl mx-auto">
-          Watch our 8 AI researchers analyze 25+ academic sources in real-time to generate strategic insights.
-        </p>
-      </div>
+      <div className="rounded-2xl border border-white/[0.08] bg-gradient-to-br from-white/[0.03] to-white/[0.01] overflow-hidden">
 
-      {/* Demo Interface */}
-      <div className="nx-card p-8">
-        {demoState.status === 'idle' && (
-          <div className="space-y-6">
-            {/* Input Section */}
-            <div>
-              <label className="block text-sm font-medium text-white/70 mb-3">
-                Enter a research topic
-              </label>
-              <div className="flex gap-3">
-                <input
-                  type="text"
-                  value={inputTopic}
-                  onChange={(e) => setInputTopic(e.target.value)}
-                  placeholder="e.g., AI regulation, carbon pricing, digital health..."
-                  className="flex-1 px-4 py-3 bg-[#0C0C12] border border-white/[0.08] rounded-lg text-white placeholder-white/40 focus:outline-none focus:border-[#00D4FF]/50 transition-colors"
-                  onKeyPress={(e) => e.key === 'Enter' && runDemo()}
-                />
-                <button
-                  onClick={runDemo}
-                  disabled={!inputTopic.trim()}
-                  className="px-6 py-3 bg-gradient-to-r from-[#00D4FF]/20 to-[#3B82F6]/20 border border-[#00D4FF]/20 text-white rounded-lg hover:border-[#00D4FF]/40 transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center gap-2"
-                >
-                  <Play size={16} />
-                  Run Demo
-                </button>
-              </div>
-            </div>
+        {/* Terminal header bar */}
+        <div className="flex items-center gap-2 px-5 py-3 border-b border-white/[0.06] bg-white/[0.02]">
+          <div className="w-2.5 h-2.5 rounded-full bg-red-500/60" />
+          <div className="w-2.5 h-2.5 rounded-full bg-yellow-500/60" />
+          <div className="w-2.5 h-2.5 rounded-full bg-green-500/60" />
+          <span className="ml-3 text-xs text-white/30 font-mono tracking-wider">NomosX — Autonomous Research Pipeline</span>
+        </div>
 
-            {/* Example Topics */}
-            <div className="flex flex-wrap gap-2">
-              {['AI Regulation', 'Carbon Pricing', 'Digital Health', 'Supply Chain', 'Climate Tech'].map((topic) => (
-                <button
-                  key={topic}
-                  onClick={() => setInputTopic(topic)}
-                  className="px-3 py-1 text-sm bg-white/[0.04] border border-white/[0.08] rounded-full text-white/60 hover:border-[#00D4FF]/30 hover:text-[#00D4FF] transition-all"
-                >
-                  {topic}
-                </button>
-              ))}
+        <div className="p-6 sm:p-8 space-y-6">
+
+          {/* Query line */}
+          <div className="flex items-start gap-3">
+            <span className="text-indigo-400/60 font-mono text-sm mt-0.5 shrink-0">$</span>
+            <div className="flex-1">
+              <p className="text-xs text-white/30 font-mono mb-1 uppercase tracking-widest">Research Query</p>
+              <p className="text-white/90 font-light text-base sm:text-lg leading-snug min-h-[1.75rem]">
+                {displayed}
+                {phase === "typewriter" && (
+                  <span className="inline-block w-0.5 h-4 bg-indigo-400 ml-0.5 animate-pulse align-middle" />
+                )}
+              </p>
             </div>
           </div>
-        )}
 
-        {demoState.status === 'running' && (
-          <div className="space-y-8">
-            {/* Running Animation */}
-            <div className="text-center py-12">
-              <div className="relative inline-flex items-center justify-center">
-                <Loader2 className="w-12 h-12 text-[#00D4FF] animate-spin" />
-                <div className="absolute inset-0 rounded-full border-2 border-[#00D4FF]/20 animate-ping" />
-              </div>
-              
-              <div className="mt-6 space-y-2">
-                <p className="text-white/90 font-medium">
-                  AI Council is analyzing "{demoState.topic}"
-                </p>
-                <p className="text-white/60 text-sm">
-                  Scanning academic sources, evaluating evidence, synthesizing insights...
-                </p>
-              </div>
-
-              {/* Progress Steps */}
-              <div className="mt-8 space-y-3 max-w-md mx-auto">
-                {[
-                  { step: 'Scanning 25+ academic sources', icon: Target, active: true },
-                  { step: '8 AI researchers evaluating evidence', icon: Users, active: true },
-                  { step: 'Harvard Council quality review', icon: CheckCircle, active: true },
-                  { step: 'Generating strategic brief', icon: TrendingUp, active: false }
-                ].map((item, i) => (
-                  <div key={i} className="flex items-center gap-3 text-sm">
-                    <item.icon 
-                      size={16} 
-                      className={`${
-                        item.active ? 'text-[#00D4FF] animate-pulse' : 'text-white/20'
-                      }`} 
-                    />
-                    <span className={item.active ? 'text-white/80' : 'text-white/40'}>
-                      {item.step}
+          {/* Pipeline steps */}
+          {(phase === "pipeline" || phase === "result") && (
+            <div className="space-y-2">
+              {PIPELINE_STEPS.map((step, i) => {
+                const done    = completedSteps.includes(step.id);
+                const running = phase === "pipeline" && activeStep === i && !done;
+                const Icon    = step.icon;
+                return (
+                  <div
+                    key={step.id}
+                    className={`flex items-center gap-3 px-4 py-2.5 rounded-lg transition-all duration-300 ${
+                      done    ? "bg-indigo-500/5 border border-indigo-500/10" :
+                      running ? "bg-white/[0.04] border border-white/[0.08]" :
+                                "opacity-30"
+                    }`}
+                  >
+                    <div className={`w-6 h-6 rounded-full flex items-center justify-center shrink-0 ${
+                      done    ? "bg-indigo-500/20" :
+                      running ? "bg-white/[0.08]" : "bg-white/[0.04]"
+                    }`}>
+                      {done ? (
+                        <CheckCircle size={12} className="text-indigo-400" />
+                      ) : (
+                        <Icon size={12} className={running ? "text-white/60 animate-pulse" : "text-white/20"} />
+                      )}
+                    </div>
+                    <span className={`text-xs font-mono tracking-widest w-16 shrink-0 ${done ? "text-indigo-400" : running ? "text-white/60" : "text-white/20"}`}>
+                      {step.label}
                     </span>
+                    <span className={`text-xs ${done ? "text-white/50" : running ? "text-white/40" : "text-white/20"}`}>
+                      {step.detail}
+                    </span>
+                    {running && (
+                      <div className="ml-auto flex gap-0.5">
+                        {[0,1,2].map(d => (
+                          <div key={d} className="w-1 h-1 rounded-full bg-indigo-400/60 animate-bounce" style={{ animationDelay: `${d * 150}ms` }} />
+                        ))}
+                      </div>
+                    )}
+                    {done && (
+                      <span className="ml-auto text-xs text-indigo-400/40 font-mono">✓</span>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
+          )}
+
+          {/* Result card */}
+          {phase === "result" && (
+            <div className="rounded-xl border border-indigo-500/20 bg-indigo-500/[0.04] p-5 space-y-4 animate-in fade-in duration-500">
+              <div className="flex items-center justify-between">
+                <div className="flex items-center gap-2">
+                  <CheckCircle size={14} className="text-green-400" />
+                  <span className="text-xs font-medium text-green-400 uppercase tracking-wider">Brief Generated</span>
+                </div>
+                <div className="flex items-center gap-4 text-xs text-white/40">
+                  <span>{DEMO_RESULT.sources} sources scanned</span>
+                  <span>{DEMO_RESULT.used} used</span>
+                  <span className="text-indigo-300">{DEMO_RESULT.quality}% quality</span>
+                </div>
+              </div>
+
+              <div className="space-y-2">
+                {DEMO_RESULT.findings.map((f, i) => (
+                  <div key={i} className="flex items-start gap-2">
+                    <ChevronRight size={12} className="text-indigo-400/60 mt-0.5 shrink-0" />
+                    <span className="text-sm text-white/60">{f}</span>
                   </div>
                 ))}
               </div>
-            </div>
-          </div>
-        )}
 
-        {demoState.status === 'completed' && demoState.result && (
-          <div className="space-y-8">
-            {/* Success Header */}
-            <div className="text-center">
-              <div className="inline-flex items-center gap-2 px-4 py-2 bg-green-500/10 border border-green-500/20 rounded-full text-green-400 text-sm mb-4">
-                <CheckCircle size={16} />
-                Analysis Complete
-              </div>
-              <h4 className="text-xl font-light text-white/90 mb-2">
-                Strategic Brief Generated
-              </h4>
-              <p className="text-white/60 text-sm">
-                Topic: "{demoState.topic}" • Completed in {demoState.result.duration}
+              <p className="text-xs text-white/40 leading-relaxed border-t border-white/[0.06] pt-3">
+                {DEMO_RESULT.summary}
               </p>
             </div>
+          )}
 
-            {/* Results Grid */}
-            <div className="grid md:grid-cols-2 gap-6">
-              {/* Metrics */}
-              <div className="space-y-4">
-                <h5 className="text-sm font-medium text-white/70 mb-3">Analysis Metrics</h5>
-                <div className="space-y-3">
-                  <div className="flex justify-between items-center">
-                    <span className="text-white/60 text-sm">Sources Found</span>
-                    <span className="text-[#00D4FF] font-medium">{demoState.result.sourcesFound}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-white/60 text-sm">Sources Used</span>
-                    <span className="text-[#00D4FF] font-medium">{demoState.result.sourcesUsed}</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-white/60 text-sm">Trust Score</span>
-                    <span className="text-[#00D4FF] font-medium">{demoState.result.trustScore}%</span>
-                  </div>
-                  <div className="flex justify-between items-center">
-                    <span className="text-white/60 text-sm">Quality Score</span>
-                    <span className="text-[#00D4FF] font-medium">{demoState.result.qualityScore}%</span>
-                  </div>
-                </div>
-              </div>
-
-              {/* Key Findings */}
-              <div className="space-y-4">
-                <h5 className="text-sm font-medium text-white/70 mb-3">Key Findings</h5>
-                <div className="space-y-2">
-                  {demoState.result.keyFindings.map((finding, i) => (
-                    <div key={i} className="flex items-start gap-2">
-                      <div className="w-1.5 h-1.5 rounded-full bg-[#00D4FF] mt-2 flex-shrink-0" />
-                      <span className="text-white/60 text-sm">{finding}</span>
-                    </div>
-                  ))}
-                </div>
-              </div>
-            </div>
-
-            {/* Summary */}
-            <div className="space-y-4">
-              <h5 className="text-sm font-medium text-white/70 mb-3">Executive Summary</h5>
-              <p className="text-white/60 text-sm leading-relaxed">
-                {demoState.result.summary}
-              </p>
-            </div>
-
-            {/* Council Decision */}
-            <div className="flex items-center justify-between p-4 bg-[#00D4FF]/5 border border-[#00D4FF]/10 rounded-lg">
-              <div className="flex items-center gap-3">
-                <CheckCircle size={20} className="text-green-400" />
-                <div>
-                  <p className="text-white/90 font-medium">Harvard Council Decision</p>
-                  <p className="text-white/60 text-sm">{demoState.result.councilDecision}</p>
-                </div>
-              </div>
-            </div>
-
-            {/* Action Buttons */}
-            <div className="flex gap-3 justify-center">
+          {/* Topic selector dots */}
+          <div className="flex items-center justify-center gap-2 pt-2">
+            {DEMO_TOPICS.map((_, i) => (
               <button
-                onClick={resetDemo}
-                className="px-6 py-3 border border-white/[0.1] text-white/70 hover:text-white hover:border-white/[0.2] transition-all rounded-lg"
-              >
-                Try Another Topic
-              </button>
-              <button
-                onClick={() => window.location.href = '/pricing'}
-                className="px-6 py-3 bg-gradient-to-r from-[#00D4FF]/20 to-[#3B82F6]/20 border border-[#00D4FF]/20 text-white rounded-lg hover:border-[#00D4FF]/40 transition-all"
-              >
-                Get Full Access
-              </button>
-            </div>
+                key={i}
+                onClick={() => setTopicIndex(i)}
+                className={`w-1.5 h-1.5 rounded-full transition-all duration-300 ${
+                  i === topicIndex ? "bg-indigo-400 w-4" : "bg-white/20 hover:bg-white/40"
+                }`}
+              />
+            ))}
           </div>
-        )}
-
-        {demoState.status === 'error' && (
-          <div className="text-center py-12">
-            <div className="inline-flex items-center justify-center w-12 h-12 bg-red-500/10 border border-red-500/20 rounded-full mb-4">
-              <AlertCircle size={24} className="text-red-400" />
-            </div>
-            <h4 className="text-lg font-light text-white/90 mb-2">
-              Demo Failed
-            </h4>
-            <p className="text-white/60 text-sm mb-6">
-              {demoState.error}
-            </p>
-            <button
-              onClick={resetDemo}
-              className="px-6 py-3 border border-white/[0.1] text-white/70 hover:text-white hover:border-white/[0.2] transition-all rounded-lg"
-            >
-              Try Again
-            </button>
-          </div>
-        )}
+        </div>
       </div>
     </div>
   );

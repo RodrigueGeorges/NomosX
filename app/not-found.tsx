@@ -13,7 +13,7 @@ export default function NotFound() {
       <div className="text-center max-w-md">
         {/* Logo */}
         <div className="flex items-center justify-center gap-3 mb-8">
-          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center">
+          <div className="w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center">
             <svg width="28" height="28" viewBox="0 0 24 24" fill="none">
               <circle cx="12" cy="12" r="3" fill="white"/>
               <circle cx="12" cy="4" r="2" fill="white" opacity="0.7"/>
@@ -23,21 +23,21 @@ export default function NotFound() {
             </svg>
           </div>
           <span className="text-3xl font-bold text-white">
-            Nomos<span className="text-cyan-400">X</span>
+            Nomos<span className="text-indigo-400">X</span>
           </span>
         </div>
 
         {/* 404 */}
-        <div className="text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-blue-400 to-cyan-400 mb-4">
+        <div className="text-8xl font-bold text-transparent bg-clip-text bg-gradient-to-r from-indigo-400 to-violet-400 mb-4">
           404
         </div>
 
         <h1 className="text-2xl font-bold text-white mb-3">
-          Page introuvable
+          Page not found
         </h1>
 
         <p className="text-white/60 mb-8 leading-relaxed">
-          La page que vous recherchez n'existe pas ou a été déplacée.
+          The page you are looking for does not exist or has been moved.
         </p>
 
         {/* Actions */}
@@ -47,14 +47,14 @@ export default function NotFound() {
             onClick={() => router.push("/")}
           >
             <Home size={18} className="mr-2" />
-            Retour à l'accueil
+            Back to home
           </Button>
           <Button 
             variant="ghost" 
             onClick={() => router.back()}
           >
             <ArrowLeft size={18} className="mr-2" />
-            Page précédente
+            Previous page
           </Button>
         </div>
       </div>

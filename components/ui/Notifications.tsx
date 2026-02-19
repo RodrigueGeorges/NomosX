@@ -21,10 +21,10 @@ export function Notifications() {
           className={cn(
             "max-w-sm rounded-lg border p-4 shadow-lg",
             "animate-in slide-in-from-right-full",
-            notification.type === 'success' && "border-green-200 bg-green-50 text-green-800",
-            notification.type === 'error' && "border-red-200 bg-red-50 text-red-800",
-            notification.type === 'warning' && "border-yellow-200 bg-yellow-50 text-yellow-800",
-            notification.type === 'info' && "border-blue-200 bg-blue-50 text-blue-800"
+            notification.type === 'success' && "border-green-500/30 bg-green-500/10 text-green-300",
+            notification.type === 'error' && "border-red-500/30 bg-red-500/10 text-red-300",
+            notification.type === 'warning' && "border-yellow-500/30 bg-yellow-500/10 text-yellow-300",
+            notification.type === 'info' && "border-indigo-500/30 bg-indigo-500/10 text-indigo-300"
           )}
         >
           <div className="flex items-center justify-between">

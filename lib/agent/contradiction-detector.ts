@@ -14,6 +14,7 @@
 import { prisma } from '@/lib/db';
 import { callLLM } from '@/lib/llm/unified-llm';
 import { AgentRole,assertPermission } from '@/lib/governance/index';
+import { embedText } from './semantic-engine';
 
 // ============================================================================
 // TYPES
@@ -98,7 +99,7 @@ export async function contradictionDetector(
   
   console.log(`[CONTRADICTION_DETECTOR] Found ${contradictions.length} contradictions`);
   
-  // Store contradictions in database
+  // Store contradictions in database + Knowledge Graph (P1-E)
   for (const contradiction of contradictions) {
     await prisma.contradiction.create({
       data: {
@@ -112,6 +113,12 @@ export async function contradictionDetector(
         status: "NEW"
       }
     });
+
+    // P1-E: Persist contradiction as ConceptRelation in Knowledge Graph
+    // This allows future Context Primer to surface known contradictions
+    storeContradictionInKG(contradiction).catch(err =>
+      console.warn(`[CONTRADICTION_DETECTOR] KG store failed (non-blocking):`, err)
+    );
   }
   
   return {
@@ -119,6 +126,72 @@ export async function contradictionDetector(
     contradictionsFound: contradictions.length,
     contradictions
   };
+}
+
+// ============================================================================
+// P1-E: KNOWLEDGE GRAPH PERSISTENCE
+// ============================================================================
+
+async function storeContradictionInKG(contradiction: ContradictionResult): Promise<void> {
+  try {
+    // Embed both claims to create concept nodes
+    const [emb1, emb2] = await Promise.all([
+      embedText(contradiction.claim1.slice(0, 500)),
+      embedText(contradiction.claim2.slice(0, 500)),
+    ]);
+
+    // Upsert concept node for claim 1
+    const node1 = await prisma.conceptNode.upsert({
+      where: { id: `contradiction-${contradiction.sourceId1}-${contradiction.claim1.slice(0, 50).replace(/\s+/g, '-')}` },
+      create: {
+        id: `contradiction-${contradiction.sourceId1}-${contradiction.claim1.slice(0, 50).replace(/\s+/g, '-')}`,
+        name: contradiction.claim1.slice(0, 200),
+        type: "claim",
+        description: contradiction.claim1.slice(0, 500),
+        briefIds: { set: [contradiction.sourceId1] },
+        embedding: emb1,
+        confidence: contradiction.confidence,
+        occurrenceCount: 1,
+        lastSeen: new Date(),
+      },
+      update: { occurrenceCount: { increment: 1 }, lastSeen: new Date() },
+    });
+
+    // Upsert concept node for claim 2
+    const node2 = await prisma.conceptNode.upsert({
+      where: { id: `contradiction-${contradiction.sourceId2}-${contradiction.claim2.slice(0, 50).replace(/\s+/g, '-')}` },
+      create: {
+        id: `contradiction-${contradiction.sourceId2}-${contradiction.claim2.slice(0, 50).replace(/\s+/g, '-')}`,
+        name: contradiction.claim2.slice(0, 200),
+        type: "claim",
+        description: contradiction.claim2.slice(0, 500),
+        briefIds: { set: [contradiction.sourceId2] },
+        embedding: emb2,
+        confidence: contradiction.confidence,
+        occurrenceCount: 1,
+        lastSeen: new Date(),
+      },
+      update: { occurrenceCount: { increment: 1 }, lastSeen: new Date() },
+    });
+
+    // Create contradicts relation between the two nodes
+    await prisma.conceptRelation.upsert({
+      where: { fromConceptId_toConceptId_type: { fromConceptId: node1.id, toConceptId: node2.id, type: "contradicts" } },
+      create: {
+        fromConceptId: node1.id,
+        toConceptId: node2.id,
+        type: "contradicts",
+        strength: contradiction.confidence / 100,
+        evidence: { set: [contradiction.explanation.slice(0, 500)] },
+      },
+      update: { strength: contradiction.confidence / 100, evidence: { set: [contradiction.explanation.slice(0, 500)] } },
+    });
+
+    console.log(`[CONTRADICTION_DETECTOR] KG: stored contradiction relation (${contradiction.contradictionType}, ${contradiction.confidence}%)`);
+  } catch (err) {
+    // Non-fatal — KG storage is best-effort
+    console.warn(`[CONTRADICTION_DETECTOR] KG persistence failed:`, err);
+  }
 }
 
 // ============================================================================

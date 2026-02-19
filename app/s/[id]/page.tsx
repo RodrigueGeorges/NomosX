@@ -11,7 +11,7 @@ export default async function SharedBrief({ params }: { params: Promise<{ id: st
     <div className="min-h-screen bg-[#0A0A0B] text-white">
       <div className="max-w-4xl mx-auto px-4 py-12">
         <div className="flex items-center gap-3 mb-8">
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center">
+          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center">
             <span className="text-xs font-bold text-white">N</span>
           </div>
           <span className="text-sm text-white/50">NomosX — Shared Brief</span>

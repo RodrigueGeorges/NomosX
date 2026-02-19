@@ -49,8 +49,8 @@ const TYPE_LABELS: Record<string, { label: string; color: string; isPremium?: bo
   POLICY_NOTE: { label: "EXECUTIVE", color: "bg-slate-500/10 text-slate-400 border-slate-500/20", isPremium: false },
   
   // Primary formats - STRATEGY (premium only)
-  STRATEGIC_REPORT: { label: "STRATEGY", color: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20", isPremium: true },
-  DOSSIER: { label: "STRATEGY", color: "bg-cyan-500/10 text-cyan-400 border-cyan-500/20", isPremium: true },
+  STRATEGIC_REPORT: { label: "STRATEGY", color: "bg-indigo-500/10 text-indigo-300 border-indigo-500/20", isPremium: true },
+  DOSSIER: { label: "STRATEGY", color: "bg-indigo-500/10 text-indigo-300 border-indigo-500/20", isPremium: true },
 };
 
 const STATUS_CONFIG: Record<EditorialStatus, { label: string; icon: React.ElementType; color: string }> = {
@@ -151,7 +151,7 @@ export default function PublicationsPage() {
         {/* Stats Bar */}
         <div className="grid grid-cols-4 gap-3 mb-8">
           {[
-            { value: publications.length, label: "Total", color: "#00D4FF" },
+            { value: publications.length, label: "Total", color: "#818cf8" },
             { value: publishedCount, label: "Published", color: "#10B981" },
             { value: heldCount, label: "Held", color: "#F59E0B" },
             { value: silentCount, label: "Silences", color: "rgba(255,255,255,0.3)" },
@@ -173,7 +173,7 @@ export default function PublicationsPage() {
                 value={searchQuery}
                 onChange={(e) => setSearchQuery(e.target.value)}
                 placeholder="Search publications..."
-                className="pl-10 bg-background/[0.03] border-white/10 focus:border-cyan-500/50"
+                className="pl-10 bg-background/[0.03] border-white/10 focus:border-indigo-500/50"
               />
             </div>
           </div>
@@ -182,7 +182,7 @@ export default function PublicationsPage() {
           <select
             value={typeFilter}
             onChange={(e) => setTypeFilter(e.target.value)}
-            className="px-4 py-2 rounded-lg bg-background/[0.03] border border-white/10 text-sm text-white/80 focus:outline-none focus:border-cyan-500/50"
+            className="px-4 py-2 rounded-lg bg-background/[0.03] border border-white/10 text-sm text-white/80 focus:outline-none focus:border-indigo-500/50"
           >
             <option value="ALL" className="bg-[#111113]">All types</option>
             {Object.entries(TYPE_LABELS).map(([key, { label }]) => (
@@ -194,7 +194,7 @@ export default function PublicationsPage() {
           <select
             value={statusFilter}
             onChange={(e) => setStatusFilter(e.target.value as EditorialStatus | "ALL")}
-            className="px-4 py-2 rounded-lg bg-background/[0.03] border border-white/10 text-sm text-white/80 focus:outline-none focus:border-cyan-500/50"
+            className="px-4 py-2 rounded-lg bg-background/[0.03] border border-white/10 text-sm text-white/80 focus:outline-none focus:border-indigo-500/50"
           >
             <option value="ALL" className="bg-[#111113]">All statuses</option>
             <option value="PUBLISHED" className="bg-[#111113]">Published</option>
@@ -224,7 +224,7 @@ export default function PublicationsPage() {
         ) : filteredPublications.length === 0 ? (
           <Card variant="default" className="bg-background/[0.02] border-white/10">
             <CardContent className="pt-16 pb-16 text-center">
-              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-cyan-500/20 flex items-center justify-center mx-auto mb-4">
+              <div className="w-16 h-16 rounded-2xl bg-gradient-to-br from-emerald-500/20 to-indigo-500/20 flex items-center justify-center mx-auto mb-4">
                 <Archive size={32} className="text-emerald-400/50" />
               </div>
               <h3 className="font-display text-lg font-medium text-white mb-2">No publications yet</h3>
@@ -249,7 +249,7 @@ export default function PublicationsPage() {
                 <Card 
                   key={pub.id}
                   variant="default"
-                  className={`group hover:border-cyan-500/30 hover:bg-background/[0.04] transition-all duration-300 bg-background/[0.02] border-white/10 cursor-pointer ${
+                  className={`group hover:border-indigo-500/30 hover:bg-background/[0.04] transition-all duration-300 bg-background/[0.02] border-white/10 cursor-pointer ${
                     typeConfig.isPremium && !hasStrategyAccess ? "opacity-75" : ""
                   }`}
                   onClick={() => handlePublicationClick(pub)}
@@ -268,7 +268,7 @@ export default function PublicationsPage() {
                             {researcher && (
                               <ResearcherBadge researcher={researcher} size="sm" />
                             )}
-                            <h3 className="text-base font-medium text-white line-clamp-1 group-hover:text-cyan-400 transition-colors">
+                            <h3 className="text-base font-medium text-white line-clamp-1 group-hover:text-indigo-300 transition-colors">
                               {pub.title}
                             </h3>
                           </div>
@@ -304,7 +304,7 @@ export default function PublicationsPage() {
                           </span>
                           <span className="flex items-center gap-1">
                             <Clock size={12} />
-                            {new Date(pub.createdAt).toLocaleDateString("fr-FR", {
+                            {new Date(pub.createdAt).toLocaleDateString("en-US", {
                               day: "numeric",
                               month: "short",
                               year: "numeric"

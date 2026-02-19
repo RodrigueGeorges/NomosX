@@ -15,8 +15,8 @@ import { selectSmartProviders } from '@/lib/agent/smart-provider-selector';
 import { scout } from '@/lib/agent/pipeline-v2';
 import { indexAgent } from '@/lib/agent/index-agent';
 import { rank } from '@/lib/agent/pipeline-v2';
-import { readerAgent } from '@/lib/agent/reader-agent';
-import { analystAgent } from '@/lib/agent/analyst-agent';
+import { readerAgentV3 } from '@/lib/agent/reader-agent-v3';
+import { analystAgentV3 } from '@/lib/agent/analyst-multipass';
 import { renderBriefHTML } from '@/lib/agent/pipeline-v2';
 import { enhanceQuestion } from '@/lib/ai/question-enhancer';
 import { getSession } from '@/lib/auth';
@@ -104,7 +104,7 @@ export async function GET(req: NextRequest) {
           progress: 5
         });
 
-        const smartSelection = selectSmartProviders(searchQuery);
+        const smartSelection = await selectSmartProviders(searchQuery).catch(() => null) ?? { providers: ["openalex", "crossref", "semanticscholar"], quantity: 30, reasoning: "fallback", estimatedTime: 30 };
         
         sendEvent(controller, 'progress', {
           step: 'smart-selection',
@@ -167,7 +167,7 @@ export async function GET(req: NextRequest) {
           progress: 65
         });
 
-        const readings = await readerAgent(topSources);
+        const readings = await readerAgentV3(topSources);
         
         sendEvent(controller, 'progress', {
           step: 'reader',
@@ -182,7 +182,7 @@ export async function GET(req: NextRequest) {
           progress: 80
         });
 
-        const analysis = await analystAgent(question, topSources, readings);
+        const analysis = await analystAgentV3(question, topSources, readings);
         
         sendEvent(controller, 'progress', {
           step: 'analyst',

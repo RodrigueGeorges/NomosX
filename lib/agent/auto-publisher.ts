@@ -20,16 +20,21 @@
  */
 
 import { prisma } from '../db';
-import { scout, rank, runPipeline, runStrategicPipeline } from './pipeline-v2';
+import { scout, rank, runPipeline } from './pipeline-v2';
 import { signalDetector } from './signal-detector';
 import { trendAnalyzer } from './trend-analyzer';
 import { contradictionDetector } from './contradiction-detector';
 import { planEditorialAgenda, EditorialProposal, EditorialAgenda } from './editorial-planner';
 import { generatePublication } from './publication-generator';
-import { selectSmartProviders, detectDomain } from './smart-provider-selector';
-import { runHarvardCouncil } from './review-board';
+import { selectSmartProviders } from './smart-provider-selector';
 import { extractAndStoreConcepts } from './knowledge-graph';
 import { AgentRole, assertPermission } from '../governance/index';
+import {
+  getPrimaryOwner,
+  selectPipelineTier,
+  requestResearcherSignOff,
+  type PipelineTier,
+} from './researcher-ownership';
 
 // ============================================================================
 // TYPES
@@ -56,6 +61,10 @@ export interface AutoPublisherConfig {
   verticalSlugs?: string[];
   /** Dry run mode — plan but don't publish */
   dryRun?: boolean;
+  /** Max LLM cost per run in USD (safety cap) */
+  maxCostUsd?: number;
+  /** Force pipeline tier: standard | premium | strategic */
+  forceTier?: PipelineTier;
 }
 
 export interface PublicationResult {
@@ -127,6 +136,8 @@ const DEFAULT_CONFIG: Required<AutoPublisherConfig> = {
   enableKnowledgeGraph: true,
   verticalSlugs: [],
   dryRun: false,
+  maxCostUsd: 50,
+  forceTier: undefined as unknown as PipelineTier,
 };
 
 // ============================================================================
@@ -218,6 +229,7 @@ export async function autoPublisher(
   console.log("[AUTO-PUBLISHER] Phase 3: Publication execution...");
 
   let published = 0;
+  const runningCostUsd = { value: totalCostUsd };
 
   // Strategy A: Editorial auto-commissions
   if (agenda?.autoCommission && agenda.autoCommission.length > 0) {
@@ -225,9 +237,10 @@ export async function autoPublisher(
       if (published >= effectiveMax) break;
       if (proposal.confidence < cfg.minEditorialConfidence) continue;
 
-      const result = await executePublication(proposal, cfg);
+      const result = await executePublication(proposal, cfg, runningCostUsd);
       results.push(result);
       totalCostUsd += result.costUsd;
+      runningCostUsd.value = totalCostUsd;
 
       if (result.status === "published") published++;
     }
@@ -235,10 +248,11 @@ export async function autoPublisher(
 
   // Strategy B: Signal-based (fill remaining slots)
   if (published < effectiveMax) {
-    const signalResults = await executeSignalPublications(effectiveMax - published, cfg);
+    const signalResults = await executeSignalPublications(effectiveMax - published, cfg, runningCostUsd);
     for (const result of signalResults) {
       results.push(result);
       totalCostUsd += result.costUsd;
+      runningCostUsd.value = totalCostUsd;
       if (result.status === "published") published++;
     }
   }
@@ -331,12 +345,14 @@ async function runProactiveScan(cfg: Required<AutoPublisherConfig>): Promise<Non
   for (const vertical of verticals) {
     try {
       const searchQuery = vertical.description || vertical.name;
-      const smartSelection = selectSmartProviders(searchQuery);
+      const smartSelection = await selectSmartProviders(searchQuery).catch(() => null);
+      const scoutProviders = (smartSelection?.providers ?? ["openalex", "crossref", "semanticscholar"]) as any;
+      const scoutQty = smartSelection ? Math.ceil(smartSelection.quantity / scoutProviders.length) : 20;
 
       const scoutResult = await scout(
         searchQuery,
-        smartSelection.providers,
-        Math.ceil(smartSelection.quantity / smartSelection.providers.length)
+        scoutProviders,
+        scoutQty
       );
 
       if (scoutResult.sourceIds?.length) {
@@ -393,14 +409,43 @@ async function runProactiveScan(cfg: Required<AutoPublisherConfig>): Promise<Non
 
 async function executePublication(
   proposal: EditorialProposal,
-  cfg: Required<AutoPublisherConfig>
+  cfg: Required<AutoPublisherConfig>,
+  runningCostUsd: { value: number }
 ): Promise<PublicationResult> {
   const pubStart = Date.now();
+
+  // Budget cap — abort before starting if already over limit
+  if (cfg.maxCostUsd > 0 && runningCostUsd.value >= cfg.maxCostUsd) {
+    console.warn(`[AUTO-PUBLISHER] Budget cap reached ($${runningCostUsd.value.toFixed(2)} >= $${cfg.maxCostUsd}) — skipping "${proposal.topic}"`);
+    return {
+      topic: proposal.topic,
+      strategy: "editorial",
+      trustScore: 0,
+      wordCount: 0,
+      costUsd: 0,
+      durationMs: 0,
+      providers: [],
+      status: "failed",
+      error: `Budget cap $${cfg.maxCostUsd} reached`,
+    };
+  }
+
+  // Researcher ownership — detect domain owner + select pipeline tier
+  const owner = getPrimaryOwner(proposal.topic);
+  const tier = cfg.forceTier ?? selectPipelineTier(
+    proposal.topic,
+    proposal.suggestedFormat,
+    owner
+  );
+
+  const smartSel = proposal.suggestedProviders.length > 0
+    ? null
+    : await selectSmartProviders(proposal.topic).catch(() => null);
   const providers = proposal.suggestedProviders.length > 0
     ? proposal.suggestedProviders
-    : selectSmartProviders(proposal.topic).providers;
+    : (smartSel?.providers ?? owner.providers.slice(0, 5));
 
-  console.log(`[AUTO-PUBLISHER] Executing: "${proposal.topic}" (${proposal.suggestedFormat}, ${providers.length} providers)`);
+  console.log(`[AUTO-PUBLISHER] Executing: "${proposal.topic}" | tier=${tier} | owner=${owner.name} | providers=${providers.length}`);
 
   if (cfg.dryRun) {
     return {
@@ -416,7 +461,7 @@ async function executePublication(
   }
 
   try {
-    const isStrategic = proposal.suggestedFormat === "strategic";
+    const isStrategic = proposal.suggestedFormat === "strategic" || tier === "strategic";
     const pipelineMode = isStrategic ? "strategic" : "brief";
 
     const result = await runPipeline(
@@ -425,6 +470,10 @@ async function executePublication(
       {
         providers: providers as any[],
         perProvider: isStrategic ? 25 : 20,
+        enableHarvardCouncil: tier !== "standard",
+        enableDebate: tier !== "standard",
+        enableMetaAnalysis: tier === "strategic",
+        enableDevilsAdvocate: tier !== "standard",
       }
     );
 
@@ -445,15 +494,40 @@ async function executePublication(
     // Get the brief to check trust score
     const brief = await prisma.brief.findUnique({
       where: { id: result.briefId },
-      select: { trustScore: true, html: true, question: true },
+      select: { trustScore: true, html: true, question: true, lineage: true },
     });
 
     const trustScore = brief?.trustScore || result.stats?.trustScore || 0;
     const wordCount = result.stats?.wordCount || countWords(brief?.html || "");
 
-    // Quality gate: check trust score
-    if (trustScore < cfg.minTrustScore) {
-      console.log(`[AUTO-PUBLISHER] Quality gate failed: trust ${trustScore} < ${cfg.minTrustScore} — sending to review`);
+    // Quality gate: prefer Devil's Advocate publishabilityScore over raw trustScore
+    // The DA score is more rigorous — it accounts for epistemic flaws, not just citation coverage
+    const lineage = (brief?.lineage as any) || {};
+    const daScore = lineage?.devilsAdvocate?.publishabilityScore;
+    const daVerdict = lineage?.devilsAdvocate?.verdict;
+    const effectiveScore = daScore !== undefined ? daScore : trustScore;
+
+    if (daVerdict === "reject") {
+      console.log(`[AUTO-PUBLISHER] Devil's Advocate REJECTED: "${proposal.topic}" — fatal epistemic flaws detected`);
+      return {
+        topic: proposal.topic,
+        strategy: "editorial",
+        briefId: result.briefId,
+        trustScore: effectiveScore,
+        wordCount,
+        costUsd: result.stats?.totalCostUsd || 0,
+        durationMs: Date.now() - pubStart,
+        providers,
+        status: "failed",
+        error: `Devil's Advocate rejected: ${lineage?.devilsAdvocate?.fatalChallenges} fatal flaw(s)`,
+      };
+    }
+
+    if (effectiveScore < cfg.minTrustScore || daVerdict === "major_revision") {
+      const reason = daVerdict === "major_revision"
+        ? `Devil's Advocate: major_revision required`
+        : `score ${effectiveScore} < threshold ${cfg.minTrustScore}`;
+      console.log(`[AUTO-PUBLISHER] Quality gate failed: ${reason} — sending to review`);
 
       // Create publication in DRAFT status
       const vertical = await prisma.vertical.findFirst({ where: { isActive: true } });
@@ -465,8 +539,8 @@ async function executePublication(
             title: proposal.topic,
             html: brief?.html || "",
             wordCount,
-            trustScore,
-            qualityScore: trustScore,
+            trustScore: effectiveScore,
+            qualityScore: effectiveScore,
             citationCoverage: 0.8,
             claimCount: 0,
             factClaimCount: 0,
@@ -479,6 +553,7 @@ async function executePublication(
               confidence: proposal.confidence,
               autoPublisherRun: true,
               qualityGateFailed: true,
+              devilsAdvocateVerdict: daVerdict,
             },
           },
         });
@@ -488,7 +563,7 @@ async function executePublication(
           strategy: "editorial",
           publicationId: pub.id,
           briefId: result.briefId,
-          trustScore,
+          trustScore: effectiveScore,
           wordCount,
           costUsd: result.stats?.totalCostUsd || 0,
           durationMs: Date.now() - pubStart,
@@ -498,7 +573,54 @@ async function executePublication(
       }
     }
 
-    // Quality gate passed — publish
+    // Researcher Sign-Off — domain expert reviews before publication
+    let signOffDecision: "approve" | "revise" | "reject" = "approve";
+    let signOffCost = 0;
+    try {
+      const signOff = await requestResearcherSignOff(
+        proposal.topic,
+        brief?.html || "",
+        effectiveScore
+      );
+      signOffDecision = signOff.decision;
+      signOffCost = signOff.costUsd;
+      console.log(`[AUTO-PUBLISHER] ${signOff.researcherName} sign-off: ${signOffDecision} (confidence: ${signOff.confidenceInDecision})`);
+      if (signOff.concerns.length > 0) {
+        console.log(`[AUTO-PUBLISHER] Concerns: ${signOff.concerns.join(" | ")}`);
+      }
+      if (signOffDecision === "reject") {
+        return {
+          topic: proposal.topic,
+          strategy: "editorial",
+          briefId: result.briefId,
+          trustScore: effectiveScore,
+          wordCount,
+          costUsd: (result.stats?.totalCostUsd || 0) + signOffCost,
+          durationMs: Date.now() - pubStart,
+          providers,
+          status: "failed",
+          error: `${signOff.researcherName} rejected: ${signOff.verdict}`,
+        };
+      }
+      if (signOffDecision === "revise") {
+        console.log(`[AUTO-PUBLISHER] ${signOff.researcherName} requests revision — sending to review`);
+        return {
+          topic: proposal.topic,
+          strategy: "editorial",
+          briefId: result.briefId,
+          trustScore: effectiveScore,
+          wordCount,
+          costUsd: (result.stats?.totalCostUsd || 0) + signOffCost,
+          durationMs: Date.now() - pubStart,
+          providers,
+          status: "review",
+        };
+      }
+    } catch (err: any) {
+      console.warn(`[AUTO-PUBLISHER] Researcher sign-off failed (non-blocking): ${err.message}`);
+    }
+
+    // Quality gate passed + Editorial Gate approved — publish
     const vertical = await prisma.vertical.findFirst({ where: { isActive: true } });
     if (vertical) {
       const pub = await prisma.thinkTankPublication.create({
@@ -508,8 +630,8 @@ async function executePublication(
           title: proposal.topic,
           html: brief?.html || "",
           wordCount,
-          trustScore,
-          qualityScore: trustScore,
+          trustScore: effectiveScore,
+          qualityScore: effectiveScore,
           citationCoverage: 0.85,
           claimCount: 0,
           factClaimCount: 0,
@@ -522,21 +644,27 @@ async function executePublication(
             reason: proposal.reason,
             confidence: proposal.confidence,
             autoPublisherRun: true,
+            pipelineTier: tier,
+            researcherOwner: owner.name,
+            researcherDomain: owner.id,
+            researcherSignOff: signOffDecision,
+            devilsAdvocateVerdict: daVerdict,
+            devilsAdvocateScore: daScore,
             stats: result.stats,
           },
         },
       });
 
-      console.log(`[AUTO-PUBLISHER] ✅ Published: "${proposal.topic}" (trust: ${trustScore}, words: ${wordCount})`);
+      console.log(`[AUTO-PUBLISHER] ✅ Published: "${proposal.topic}" (score: ${effectiveScore}${daVerdict ? `, DA:${daVerdict}` : ""}, words: ${wordCount})`);
 
       return {
         topic: proposal.topic,
         strategy: "editorial",
         publicationId: pub.id,
         briefId: result.briefId,
-        trustScore,
+        trustScore: effectiveScore,
         wordCount,
-        costUsd: result.stats?.totalCostUsd || 0,
+        costUsd: (result.stats?.totalCostUsd || 0) + signOffCost,
         durationMs: Date.now() - pubStart,
         providers,
         status: "published",
@@ -574,7 +702,8 @@ async function executePublication(
 
 async function executeSignalPublications(
   maxSlots: number,
-  cfg: Required<AutoPublisherConfig>
+  cfg: Required<AutoPublisherConfig>,
+  runningCostUsd: { value: number }
 ): Promise<PublicationResult[]> {
   const results: PublicationResult[] = [];
 
@@ -598,6 +727,10 @@ async function executeSignalPublications(
 
   for (const signal of recentSignals) {
     if (results.filter(r => r.status === "published").length >= maxSlots) break;
+    if (cfg.maxCostUsd > 0 && runningCostUsd.value >= cfg.maxCostUsd) {
+      console.warn(`[AUTO-PUBLISHER] Budget cap reached — stopping signal publications`);
+      break;
+    }
 
     const pubStart = Date.now();
 
@@ -736,7 +869,7 @@ function buildOutput(
       finishedAt: finishedAt.toISOString(),
       config: cfg,
       phases,
-      version: "v1.0.0",
+      version: "v2.0.0",
     },
   };
 }

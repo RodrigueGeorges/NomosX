@@ -8,9 +8,9 @@ interface AgenticNodeProps {
   className?: string;
 }
 
-export default function AgenticNode({ color = "cyan", className = "" }: AgenticNodeProps) {
+export default function AgenticNode({ color = "blue", className = "" }: AgenticNodeProps) {
   const colorMap = {
-    cyan: "bg-cyan-400",
+    cyan: "bg-indigo-400",
     blue: "bg-blue-400",
     emerald: "bg-emerald-400",
     purple: "bg-purple-400"

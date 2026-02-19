@@ -16,6 +16,8 @@
  */
 
 import { callLLM } from '../llm/unified-llm';
+import { buildMemoryInjection } from './agent-memory';
+import { buildResearcherProfile, storeExpertAnalysisMemory } from './researcher-identity';
 
 // ============================================================================
 // TYPES
@@ -286,14 +288,32 @@ export async function runExpertAnalysis(
   domain: DomainExpertise,
   question: string,
   sourceContext: string,
-  sourceCount: number
+  sourceCount: number,
+  runId?: string
 ): Promise<ExpertAnalysis> {
   const start = Date.now();
   const persona = EXPERT_PERSONAS[domain];
 
+  // Inject Agent Memory + Researcher Identity into system prompt
+  let enrichedSystemPrompt = persona.systemPrompt;
+  try {
+    const [memory, profile] = await Promise.all([
+      buildMemoryInjection(`phd:${domain}`, domain, { maxLessons: 4, lookbackDays: 90 }),
+      buildResearcherProfile(domain, question, 180),
+    ]);
+    if (memory.promptBlock) {
+      enrichedSystemPrompt = `${persona.systemPrompt}\n\n${memory.promptBlock}`;
+    }
+    if (profile.identityBlock) {
+      enrichedSystemPrompt = `${enrichedSystemPrompt}\n\n${profile.identityBlock}`;
+    }
+  } catch (err) {
+    console.warn(`[PhD COUNCIL] Memory injection failed for ${domain} (non-blocking):`, err);
+  }
+
   const result = await callLLM({
     messages: [
-      { role: "system", content: persona.systemPrompt },
+      { role: "system", content: enrichedSystemPrompt },
       {
         role: "user",
         content: `RESEARCH QUESTION: "${question}"
@@ -339,13 +359,14 @@ CRITICAL: Every factual claim MUST cite [SRC-N]. Be calibrated — if evidence i
     temperature: 0.2,
     maxTokens: 4500,
     jsonMode: true,
+    enableCache: true, // P1-I: Cache PhD analyses — same expert + similar topic = reuse
   });
 
   const durationMs = Date.now() - start;
 
   try {
     const parsed = JSON.parse(result.content);
-    return {
+    const analysis: ExpertAnalysis = {
       expertId: domain,
       expertName: persona.name,
       keyFindings: parsed.keyFindings || [],
@@ -369,6 +390,18 @@ CRITICAL: Every factual claim MUST cite [SRC-N]. Be calibrated — if evidence i
       costUsd: result.costUsd,
       durationMs,
     };
+
+    // Store analysis in researcher identity memory (non-blocking)
+    if (runId) {
+      storeExpertAnalysisMemory(domain, question, {
+        keyFindings: analysis.keyFindings,
+        predictions: analysis.predictions,
+        confidence: analysis.confidence,
+        dissent: analysis.dissent,
+      }, runId).catch(err => console.warn(`[PhD COUNCIL] Identity store failed:`, err));
+    }
+
+    return analysis;
   } catch {
     return {
       expertId: domain,
@@ -479,7 +512,7 @@ export async function runExpertCouncil(
   question: string,
   sourceContext: string,
   sourceCount: number,
-  options?: { experts?: DomainExpertise[]; strategic?: boolean }
+  options?: { experts?: DomainExpertise[]; strategic?: boolean; runId?: string }
 ): Promise<{
   analyses: ExpertAnalysis[];
   totalCostUsd: number;
@@ -490,9 +523,9 @@ export async function runExpertCouncil(
 
   console.log(`[PhD COUNCIL] Running ${experts.length} domain experts in parallel: ${experts.join(", ")}`);
 
-  // Run all experts in parallel
+  // Run all experts in parallel (with memory + identity injection)
   const results = await Promise.allSettled(
-    experts.map(domain => runExpertAnalysis(domain, question, sourceContext, sourceCount))
+    experts.map(domain => runExpertAnalysis(domain, question, sourceContext, sourceCount, options?.runId))
   );
 
   const analyses: ExpertAnalysis[] = [];

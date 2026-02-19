@@ -18,6 +18,7 @@
 
 import { callLLM } from '../llm/unified-llm';
 import Sentry from '@sentry/nextjs';
+import { loadCalibratedThresholds } from './orchestrator';
 import {
   CriticalLoopResult,
   MethodologyJudgment,
@@ -309,7 +310,15 @@ export async function runCriticalLoopV2(
   input: CriticalLoopV2Input
 ): Promise<CriticalLoopV2Result> {
   const maxIterations = input.maxIterations ?? 2;
-  const publishThreshold = input.publishThreshold ?? 65;
+  // P1-D: Use calibrated threshold from AgentMemory if available
+  let publishThreshold = input.publishThreshold ?? 65;
+  try {
+    const calibrated = await loadCalibratedThresholds();
+    if (calibrated.MIN_TRUST_SCORE !== 65) {
+      publishThreshold = calibrated.MIN_TRUST_SCORE;
+      console.log(`[CriticalLoop V2] Using calibrated threshold: ${publishThreshold} (from AgentMemory)`);
+    }
+  } catch { /* use static threshold */ }
   let currentHtml = input.draftHtml;
   let totalCost = 0;
   const history: CriticalLoopV2Result['iterationHistory'] = [];

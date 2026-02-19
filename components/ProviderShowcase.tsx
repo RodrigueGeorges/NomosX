@@ -118,11 +118,11 @@ export default function ProviderShowcase() {
     <div className="w-full py-16 overflow-hidden bg-gradient-to-b from-transparent via-white/[0.02] to-transparent">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 mb-10">
         <div className="text-center">
-          <p className="text-xs text-cyan-400/60 tracking-[0.25em] uppercase mb-3 font-medium">
+          <p className="text-xs text-indigo-400/60 tracking-[0.25em] uppercase mb-3 font-medium">
             Trusted Sources
           </p>
           <h3 className="text-2xl sm:text-3xl font-light text-white/90 mb-2">
-            Built on <span className="text-cyan-400 font-medium">institutional-grade research</span>
+            Built on <span className="text-indigo-400 font-medium">institutional-grade research</span>
           </h3>
           <p className="text-sm text-white/50 max-w-2xl mx-auto">
             Academic journals • Institutional databases • Leading think tanks

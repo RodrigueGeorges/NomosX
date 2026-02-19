@@ -42,20 +42,20 @@ interface SignalCardProps {
 }
 
 const SIGNAL_TYPE_CONFIG: Record<string, { icon: any; label: string; color: string }> = {
-  NEW_EVIDENCE: { icon: Zap, label: "Nouvelle évidence", color: "#22D3EE" },
+  NEW_EVIDENCE: { icon: Zap, label: "New Evidence", color: "#818cf8" },
   CONTRADICTION: { icon: AlertTriangle, label: "Contradiction", color: "#F59E0B" },
-  TREND_BREAK: { icon: TrendingUp, label: "Rupture", color: "#8B5CF6" },
-  DATA_RELEASE: { icon: Database, label: "Données", color: "#10B981" },
-  POLICY_CHANGE: { icon: FileText, label: "Politique", color: "#3B82F6" },
-  METHODOLOGY_SHIFT: { icon: Zap, label: "Méthodologie", color: "#EC4899" }
+  TREND_BREAK: { icon: TrendingUp, label: "Trend Break", color: "#8B5CF6" },
+  DATA_RELEASE: { icon: Database, label: "Data Release", color: "#10B981" },
+  POLICY_CHANGE: { icon: FileText, label: "Policy Change", color: "#3B82F6" },
+  METHODOLOGY_SHIFT: { icon: Zap, label: "Methodology Shift", color: "#EC4899" }
 };
 
 const STATUS_CONFIG: Record<string, { variant: "default" | "success" | "warning" | "error" | "ai"; label: string }> = {
-  NEW: { variant: "ai", label: "Nouveau" },
-  HELD: { variant: "warning", label: "En attente" },
-  PUBLISHED: { variant: "success", label: "Publié" },
-  REJECTED: { variant: "error", label: "Rejeté" },
-  EXPIRED: { variant: "default", label: "Expiré" }
+  NEW: { variant: "ai", label: "New" },
+  HELD: { variant: "warning", label: "Held" },
+  PUBLISHED: { variant: "success", label: "Published" },
+  REJECTED: { variant: "error", label: "Rejected" },
+  EXPIRED: { variant: "default", label: "Expired" }
 };
 
 export default function SignalCard({ signal, compact = false }: SignalCardProps) {
@@ -64,7 +64,7 @@ export default function SignalCard({ signal, compact = false }: SignalCardProps)
   const TypeIcon = typeConfig.icon;
 
   const priorityColor = signal.scores.priority >= 80 ? "text-emerald-400" :
-                        signal.scores.priority >= 65 ? "text-cyan-400" :
+                        signal.scores.priority >= 65 ? "text-indigo-300" :
                         signal.scores.priority >= 50 ? "text-amber-400" : "text-red-400";
 
   const timeAgo = formatTimeAgo(new Date(signal.detectedAt));
@@ -127,17 +127,17 @@ export default function SignalCard({ signal, compact = false }: SignalCardProps)
 
         {/* Scores */}
         <div className="grid grid-cols-4 gap-2 mb-4">
-          <ScoreBar label="Nouveauté" value={signal.scores.novelty} />
+          <ScoreBar label="Novelty" value={signal.scores.novelty} />
           <ScoreBar label="Impact" value={signal.scores.impact} />
-          <ScoreBar label="Confiance" value={signal.scores.confidence} />
-          <ScoreBar label="Urgence" value={signal.scores.urgency} />
+          <ScoreBar label="Confidence" value={signal.scores.confidence} />
+          <ScoreBar label="Urgency" value={signal.scores.urgency} />
         </div>
 
         {/* Footer */}
         <div className="flex items-center justify-between pt-3 border-t border-white/[0.06]">
           <span className="text-xs text-white/40">{signal.sourceCount} sources</span>
           <div className="flex items-center gap-2">
-            <span className="text-xs text-white/50">Priorité</span>
+            <span className="text-xs text-white/50">Priority</span>
             <span className={`text-lg font-bold ${priorityColor}`}>
               {signal.scores.priority}
             </span>
@@ -150,7 +150,7 @@ export default function SignalCard({ signal, compact = false }: SignalCardProps)
 
 function ScoreBar({ label, value }: { label: string; value: number }) {
   const color = value >= 80 ? "bg-emerald-500" :
-                value >= 60 ? "bg-cyan-500" :
+                value >= 60 ? "bg-indigo-500" :
                 value >= 40 ? "bg-amber-500" : "bg-red-500";
 
   return (
@@ -178,6 +178,6 @@ function formatTimeAgo(date: Date): string {
 
   if (diffMins < 60) return `${diffMins}min`;
   if (diffHours < 24) return `${diffHours}h`;
-  if (diffDays < 7) return `${diffDays}j`;
-  return date.toLocaleDateString("fr-FR", { day: "numeric", month: "short" });
+  if (diffDays < 7) return `${diffDays}d`;
+  return date.toLocaleDateString("en-US", { day: "numeric", month: "short" });
 }

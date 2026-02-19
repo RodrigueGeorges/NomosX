@@ -19,7 +19,7 @@ import {
   Activity,
   Target
 } from 'lucide-react';
-import AdvancedResearcherAvatar from '@/components/AdvancedResearcherAvatar';
+import HexResearcherAvatar from '@/components/HexResearcherAvatar';
 import { RESEARCHERS } from '@/lib/researchers';
 import { cn } from '@/lib/utils';
 
@@ -122,12 +122,12 @@ export default function DashboardPage() {
       <div className="min-h-screen bg-[#06060A] flex items-center justify-center">
         <div className="text-center">
           <div className="w-16 h-16 mx-auto mb-6 relative">
-            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#00D4FF]/20 to-[#7C3AED]/10 blur-xl" />
+            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-indigo-500/20 to-violet-500/10 blur-xl" />
             <div className="relative w-full h-full rounded-full bg-[#0C0C12] border border-white/10 flex items-center justify-center">
               <span className="font-display text-2xl font-light nx-gradient-text">N</span>
             </div>
           </div>
-          <div className="w-8 h-8 mx-auto border-2 border-[#00D4FF]/20 border-t-[#00D4FF] rounded-full animate-spin" />
+          <div className="w-8 h-8 mx-auto border-2 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin" />
         </div>
       </div>
     );
@@ -170,9 +170,9 @@ function TrialDashboard({ subscription, recentBriefs, router }: {
       {/* Background */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1400px] h-[900px]">
-          <div className="absolute inset-0 bg-gradient-to-b from-[#00D4FF]/[0.06] via-[#3B82F6]/[0.03] to-transparent blur-3xl" />
+          <div className="absolute inset-0 bg-gradient-to-b from-indigo-500/[0.06] via-violet-500/[0.03] to-transparent blur-3xl" />
         </div>
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(0,212,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,212,255,0.02)_1px,transparent_1px)] bg-[size:80px_80px]" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(99,102,241,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(99,102,241,0.02)_1px,transparent_1px)] bg-[size:80px_80px]" />
       </div>
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-8">
@@ -193,10 +193,10 @@ function TrialDashboard({ subscription, recentBriefs, router }: {
 
         {/* Upgrade Hero */}
         <div className="relative overflow-hidden mb-12">
-          <div className="absolute inset-0 bg-gradient-to-br from-[#00D4FF]/10 via-[#3B82F6]/5 to-[#7C3AED]/10 rounded-3xl blur-2xl" />
+          <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/10 via-violet-500/5 to-purple-500/10 rounded-3xl blur-2xl" />
           
           <div className="relative text-center p-12 sm:p-16 rounded-3xl border border-white/[0.08] bg-gradient-to-br from-white/[0.02] to-white/[0.01]">
-            <div className="text-xs text-[#00D4FF]/50 tracking-wider uppercase mb-6">
+            <div className="text-xs text-indigo-400/50 tracking-wider uppercase mb-6">
               UNLOCK STRATEGIC INTELLIGENCE
             </div>
             
@@ -214,7 +214,7 @@ function TrialDashboard({ subscription, recentBriefs, router }: {
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
               <button
                 onClick={() => router.push('/pricing')}
-                className="group px-8 py-4 rounded-xl bg-gradient-to-r from-[#00D4FF]/20 to-[#3B82F6]/20 border border-[#00D4FF]/20 text-white font-medium hover:border-[#00D4FF]/40 transition-all shadow-[0_0_30px_rgba(0,212,255,0.15)]"
+                className="group px-8 py-4 rounded-xl bg-gradient-to-r from-indigo-500/20 to-violet-500/20 border border-indigo-500/20 text-white font-medium hover:border-indigo-500/40 transition-all shadow-[0_0_30px_rgba(99,102,241,0.15)]"
               >
                 <span className="flex items-center justify-center gap-2">
                   Get Full Access
@@ -231,9 +231,9 @@ function TrialDashboard({ subscription, recentBriefs, router }: {
             
             <div className="flex items-center justify-center gap-6 text-xs text-white/40">
               <span>Executive: €15/month</span>
-              <div className="w-1 h-1 rounded-full bg-[#00D4FF]/40" />
+              <div className="w-1 h-1 rounded-full bg-indigo-400/40" />
               <span>Strategy: €39/month</span>
-              <div className="w-1 h-1 rounded-full bg-[#00D4FF]/40" />
+              <div className="w-1 h-1 rounded-full bg-indigo-400/40" />
               <span>30-day free trial</span>
             </div>
           </div>
@@ -247,7 +247,7 @@ function TrialDashboard({ subscription, recentBriefs, router }: {
             </h2>
             <button
               onClick={() => router.push('/briefs')}
-              className="text-[#00D4FF] hover:text-[#00D4FF]/80 transition-colors text-sm"
+              className="text-indigo-400 hover:text-indigo-400/80 transition-colors text-sm"
             >
               View all →
             </button>
@@ -255,10 +255,10 @@ function TrialDashboard({ subscription, recentBriefs, router }: {
           
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-6">
             {recentBriefs.slice(0, 6).map((brief) => (
-              <div key={brief.id} className="group rounded-2xl border border-white/[0.08] bg-gradient-to-br from-white/[0.03] to-white/[0.01] p-6 hover:border-[#00D4FF]/20 transition-all duration-300">
+              <div key={brief.id} className="group rounded-2xl border border-white/[0.08] bg-gradient-to-br from-white/[0.03] to-white/[0.01] p-6 hover:border-indigo-500/20 transition-all duration-300">
                 <div className="flex items-center gap-2 mb-3">
-                  <div className="w-2 h-2 rounded-full bg-[#00D4FF]"></div>
-                  <span className="text-xs text-[#00D4FF]/60 uppercase tracking-wider">
+                  <div className="w-2 h-2 rounded-full bg-indigo-400"></div>
+                  <span className="text-xs text-indigo-400/60 uppercase tracking-wider">
                     {brief.type === 'STRATEGIC_REPORT' ? 'Strategic Report' : brief.type === 'EXECUTIVE_BRIEF' ? 'Executive Brief' : 'Summary Brief'}
                   </span>
                   {brief.trending && (
@@ -266,7 +266,7 @@ function TrialDashboard({ subscription, recentBriefs, router }: {
                   )}
                 </div>
                 
-                <h3 className="font-display text-lg font-light text-white/90 mb-3 line-clamp-2 group-hover:text-[#00D4FF]/80 transition-colors">
+                <h3 className="font-display text-lg font-light text-white/90 mb-3 line-clamp-2 group-hover:text-indigo-300/80 transition-colors">
                   {brief.title}
                 </h3>
                 
@@ -277,7 +277,7 @@ function TrialDashboard({ subscription, recentBriefs, router }: {
                 
                 <button
                   onClick={() => router.push('/pricing')}
-                  className="w-full py-2.5 rounded-lg border border-[#00D4FF]/20 bg-[#00D4FF]/5 text-[#00D4FF] font-medium hover:bg-[#00D4FF]/10 transition-all"
+                  className="w-full py-2.5 rounded-lg border border-indigo-500/20 bg-indigo-500/5 text-indigo-300 font-medium hover:bg-indigo-500/10 transition-all"
                 >
                   Unlock full brief
                 </button>
@@ -312,10 +312,10 @@ function TrialDashboard({ subscription, recentBriefs, router }: {
               <div className="flex items-start gap-4 mb-4">
                 <div className={cn(
                   "w-12 h-12 rounded-xl flex items-center justify-center",
-                  feature.locked ? "bg-white/[0.05]" : "bg-[#00D4FF]/10"
+                  feature.locked ? "bg-white/[0.05]" : "bg-indigo-500/10"
                 )}>
                   <feature.icon size={20} className={cn(
-                    feature.locked ? "text-white/30" : "text-[#00D4FF]"
+                    feature.locked ? "text-white/30" : "text-indigo-400"
                   )} />
                 </div>
                 <div className="flex-1">
@@ -357,9 +357,9 @@ function ExecutiveDashboard({ subscription, recentBriefs, researcherStatus, rout
       {/* Background */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1400px] h-[900px]">
-          <div className="absolute inset-0 bg-gradient-to-b from-[#00D4FF]/[0.06] via-[#3B82F6]/[0.03] to-transparent blur-3xl" />
+          <div className="absolute inset-0 bg-gradient-to-b from-indigo-500/[0.06] via-violet-500/[0.03] to-transparent blur-3xl" />
         </div>
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(0,212,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,212,255,0.02)_1px,transparent_1px)] bg-[size:80px_80px]" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(99,102,241,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(99,102,241,0.02)_1px,transparent_1px)] bg-[size:80px_80px]" />
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-8">
@@ -372,8 +372,8 @@ function ExecutiveDashboard({ subscription, recentBriefs, researcherStatus, rout
             <p className="text-white/40">Executive briefs and strategic insights from our autonomous think tank</p>
           </div>
           <div className="flex items-center gap-4">
-            <div className="px-4 py-2 rounded-full border border-[#00D4FF]/20 bg-[#00D4FF]/10">
-              <span className="text-[#00D4FF] text-sm font-medium">EXECUTIVE</span>
+            <div className="px-4 py-2 rounded-full border border-indigo-500/20 bg-indigo-500/10">
+              <span className="text-indigo-300 text-sm font-medium">EXECUTIVE</span>
             </div>
             <button
               onClick={() => router.push('/studio')}
@@ -390,12 +390,12 @@ function ExecutiveDashboard({ subscription, recentBriefs, researcherStatus, rout
           {[
             { label: "Briefs Available", value: "Unlimited", icon: FileText },
             { label: "Weekly Usage", value: `${subscription.weeklyUsed}/∞`, icon: BarChart3 },
-            { label: "Research Sources", value: "200K+", icon: Brain },
+            { label: "Research Sources", value: "250M+", icon: Brain },
             { label: "Council Members", value: "8", icon: Users },
           ].map((stat, index) => (
             <div key={index} className="rounded-xl border border-white/[0.08] bg-white/[0.02] p-4">
               <div className="flex items-center gap-3 mb-2">
-                <stat.icon size={16} className="text-[#00D4FF]/60" />
+                <stat.icon size={16} className="text-indigo-400/60" />
                 <span className="text-xs text-white/40">{stat.label}</span>
               </div>
               <div className="text-lg font-light text-white/90">{stat.value}</div>
@@ -413,7 +413,7 @@ function ExecutiveDashboard({ subscription, recentBriefs, researcherStatus, rout
               </h2>
               <button
                 onClick={() => router.push('/briefs')}
-                className="text-[#00D4FF] hover:text-[#00D4FF]/80 transition-colors text-sm"
+                className="text-indigo-400 hover:text-indigo-400/80 transition-colors text-sm"
               >
                 View all →
               </button>
@@ -421,12 +421,12 @@ function ExecutiveDashboard({ subscription, recentBriefs, researcherStatus, rout
             
             <div className="space-y-4">
               {recentBriefs.map((brief) => (
-                <div key={brief.id} className="group rounded-2xl border border-white/[0.08] bg-gradient-to-br from-white/[0.03] to-white/[0.01] p-6 hover:border-[#00D4FF]/20 transition-all duration-300">
+                <div key={brief.id} className="group rounded-2xl border border-white/[0.08] bg-gradient-to-br from-white/[0.03] to-white/[0.01] p-6 hover:border-indigo-500/20 transition-all duration-300">
                   <div className="flex items-start justify-between mb-4">
                     <div className="flex-1">
                       <div className="flex items-center gap-2 mb-3">
-                        <div className="w-2 h-2 rounded-full bg-[#00D4FF]"></div>
-                        <span className="text-xs text-[#00D4FF]/60 uppercase tracking-wider">
+                        <div className="w-2 h-2 rounded-full bg-indigo-400"></div>
+                        <span className="text-xs text-indigo-400/60 uppercase tracking-wider">
                           {brief.type === 'STRATEGIC_REPORT' ? 'Strategic Report' : 
                            brief.type === 'EXECUTIVE_BRIEF' ? 'Executive Brief' : 'Summary Brief'}
                         </span>
@@ -434,7 +434,7 @@ function ExecutiveDashboard({ subscription, recentBriefs, researcherStatus, rout
                         {brief.critical && <AlertTriangle size={12} className="text-red-400" />}
                       </div>
                       
-                      <h3 className="font-display text-xl font-light text-white/90 mb-3 group-hover:text-[#00D4FF]/80 transition-colors">
+                      <h3 className="font-display text-xl font-light text-white/90 mb-3 group-hover:text-indigo-300/80 transition-colors">
                         {brief.title}
                       </h3>
                       
@@ -447,7 +447,7 @@ function ExecutiveDashboard({ subscription, recentBriefs, researcherStatus, rout
                     
                     <button
                       onClick={() => router.push(`/briefs/${brief.id}`)}
-                      className="px-4 py-2 rounded-lg border border-[#00D4FF]/20 bg-[#00D4FF]/5 text-[#00D4FF] font-medium hover:bg-[#00D4FF]/10 transition-all"
+                      className="px-4 py-2 rounded-lg border border-indigo-500/20 bg-indigo-500/5 text-indigo-300 font-medium hover:bg-indigo-500/10 transition-all"
                     >
                       Read Brief
                     </button>
@@ -468,15 +468,15 @@ function ExecutiveDashboard({ subscription, recentBriefs, researcherStatus, rout
                 {researcherStatus.slice(0, 4).map((researcher) => (
                   <div key={researcher.id} className="flex items-center gap-3">
                     {researcher.researcher ? (
-                      <AdvancedResearcherAvatar 
-                        researcher={researcher.researcher} 
-                        size="md" 
+                      <HexResearcherAvatar
+                        researcher={researcher.researcher}
+                        size="md"
                         showStatus={true}
                         status={researcher.status}
                       />
                     ) : (
-                      <div className="w-10 h-10 rounded-full bg-[#00D4FF]/10 border border-[#00D4FF]/20 flex items-center justify-center">
-                        <span className="text-xs font-medium text-[#00D4FF]">{researcher.initials}</span>
+                      <div className="w-10 h-10 rounded-full bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center">
+                        <span className="text-xs font-medium text-indigo-300">{researcher.initials}</span>
                       </div>
                     )}
                     <div className="flex-1 min-w-0">
@@ -486,8 +486,8 @@ function ExecutiveDashboard({ subscription, recentBriefs, researcherStatus, rout
                           "w-2 h-2 rounded-full",
                           researcher.status === 'analyzing' ? "bg-green-400" :
                           researcher.status === 'debating' ? "bg-yellow-400" :
-                          researcher.status === 'synthesizing' ? "bg-blue-400" :
-                          "bg-gray-400"
+                          researcher.status === 'synthesizing' ? "bg-indigo-400" :
+                          "bg-white/30"
                         )} />
                       </div>
                       <div className="text-xs text-white/40 truncate">{researcher.currentTask}</div>
@@ -500,17 +500,17 @@ function ExecutiveDashboard({ subscription, recentBriefs, researcherStatus, rout
                 <div className="text-center">
                   <p className="text-xs text-white/40 mb-3">Council analyzing emerging trends</p>
                   <div className="flex items-center justify-center gap-2">
-                    <Activity size={12} className="text-[#00D4FF]" />
-                    <span className="text-xs text-[#00D4FF]">Live analysis in progress</span>
+                    <Activity size={12} className="text-indigo-400" />
+                    <span className="text-xs text-indigo-400">Live analysis in progress</span>
                   </div>
                 </div>
               </div>
             </div>
 
             {/* Upgrade Prompt */}
-            <div className="mt-6 rounded-2xl border border-[#00D4FF]/20 bg-gradient-to-br from-[#00D4FF]/[0.04] to-[#3B82F6]/[0.02] p-6">
+            <div className="mt-6 rounded-2xl border border-indigo-500/20 bg-gradient-to-br from-indigo-500/[0.04] to-violet-500/[0.02] p-6">
               <div className="text-center">
-                <Briefcase size={24} className="text-[#00D4FF] mx-auto mb-3" />
+                <Briefcase size={24} className="text-indigo-400 mx-auto mb-3" />
                 <h3 className="font-display text-lg font-light text-white mb-2">
                   Need Custom Research?
                 </h3>
@@ -519,7 +519,7 @@ function ExecutiveDashboard({ subscription, recentBriefs, researcherStatus, rout
                 </p>
                 <button
                   onClick={() => router.push('/pricing')}
-                  className="w-full py-2.5 rounded-lg border border-[#00D4FF]/20 bg-[#00D4FF]/5 text-[#00D4FF] font-medium hover:bg-[#00D4FF]/10 transition-all"
+                  className="w-full py-2.5 rounded-lg border border-indigo-500/20 bg-indigo-500/5 text-indigo-300 font-medium hover:bg-indigo-500/10 transition-all"
                 >
                   Upgrade to Strategy
                 </button>
@@ -544,9 +544,9 @@ function StrategyDashboard({ subscription, recentBriefs, researcherStatus, route
       {/* Background */}
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1400px] h-[900px]">
-          <div className="absolute inset-0 bg-gradient-to-b from-[#00D4FF]/[0.06] via-[#3B82F6]/[0.03] to-transparent blur-3xl" />
+          <div className="absolute inset-0 bg-gradient-to-b from-indigo-500/[0.06] via-violet-500/[0.03] to-transparent blur-3xl" />
         </div>
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(0,212,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,212,255,0.02)_1px,transparent_1px)] bg-[size:80px_80px]" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(99,102,241,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(99,102,241,0.02)_1px,transparent_1px)] bg-[size:80px_80px]" />
       </div>
 
       <div className="relative z-10 max-w-7xl mx-auto px-4 sm:px-6 py-8">
@@ -654,9 +654,18 @@ function StrategyDashboard({ subscription, recentBriefs, researcherStatus, route
               <div className="space-y-4">
                 {researcherStatus.map((researcher) => (
                   <div key={researcher.id} className="flex items-center gap-3">
-                    <div className="w-10 h-10 rounded-full bg-purple-400/10 border border-purple-400/20 flex items-center justify-center">
-                      <span className="text-xs font-medium text-purple-400">{researcher.initials}</span>
-                    </div>
+                    {researcher.researcher ? (
+                      <HexResearcherAvatar
+                        researcher={researcher.researcher}
+                        size="md"
+                        showStatus={true}
+                        status={researcher.status}
+                      />
+                    ) : (
+                      <div className="w-10 h-10 rounded-full bg-purple-400/10 border border-purple-400/20 flex items-center justify-center">
+                        <span className="text-xs font-medium text-purple-400">{researcher.initials}</span>
+                      </div>
+                    )}
                     <div className="flex-1 min-w-0">
                       <div className="flex items-center gap-2 mb-1">
                         <span className="text-sm font-medium text-white/90 truncate">{researcher.name}</span>
@@ -664,8 +673,8 @@ function StrategyDashboard({ subscription, recentBriefs, researcherStatus, route
                           "w-2 h-2 rounded-full",
                           researcher.status === 'analyzing' ? "bg-green-400" :
                           researcher.status === 'debating' ? "bg-orange-400" :
-                          researcher.status === 'synthesizing' ? "bg-blue-400" :
-                          "bg-gray-400"
+                          researcher.status === 'synthesizing' ? "bg-indigo-400" :
+                          "bg-white/30"
                         )} />
                       </div>
                       <div className="text-xs text-white/40 truncate">

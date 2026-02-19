@@ -1,11 +1,11 @@
-/**
+﻿/**
  * NomosX Unified Agentic Pipeline
  * 
  * SINGLE SOURCE OF TRUTH for all pipeline operations.
  * Combines: 58+ providers, Redis caching, query enhancement,
  * Cohere reranking, batch ops, governance, lineage tracking.
  * 
- * SCOUT → INDEX → RANK → READER → ANALYST → EDITOR → GUARD → PUBLISHER
+ * SCOUT â†’ INDEX â†’ RANK â†’ READER â†’ ANALYST â†’ EDITOR â†’ GUARD â†’ PUBLISHER
  */
 
 import {  prisma  } from '../db';
@@ -26,11 +26,16 @@ import { metaAnalysisEngine } from './meta-analysis-engine';
 import { extractAndStoreConcepts } from './knowledge-graph';
 import { primeContext } from './context-primer';
 import { runHarvardCouncil } from './review-board';
-import { searchExtendedProviders, getExtendedProvidersForDomain, EXTENDED_PROVIDER_CATALOG } from '../providers/registry-bridge';
+import { buildMemoryInjection, recordAgentPerformance, autoDetectFailureModes, extractLessons, storeLesson } from './agent-memory';
+import { runDevilsAdvocate } from './devils-advocate';
+import { recordSourceUsage } from './source-reputation-agent';
+import { selectSmartProviders } from './smart-provider-selector';
+import { getHealthyProviders } from './provider-health-tracker';
+import { searchExtendedProviders, getExtendedProvidersForDomain } from '../providers/registry-bridge';
 import {
   createPipelineState, recordDecision,
   assessAfterScout, assessAfterReader, assessAfterAnalyst, assessAfterCriticalLoop,
-  generateExpandedTerms,
+  generateExpandedTerms, loadCalibratedThresholds,
   type PipelineState, type OrchestratorDecision,
 } from './orchestrator';
 
@@ -42,43 +47,33 @@ let redisConnected = false;
 try {
   // Dynamic require for optional Redis dependency
   const RedisModule = require('ioredis');
+  const hasRedisUrl = !!process.env.REDIS_URL;
   redis = new RedisModule(process.env.REDIS_URL || "redis://localhost:6379", {
     retryStrategy: (times: number) => {
-      // P2: Auto-reconnect with exponential backoff (max 2 seconds)
-      const delay = Math.min(times * 50, 2000);
-      console.log(`[Pipeline] Redis reconnecting... (attempt ${times}, delay ${delay}ms)`);
-      return delay;
+      // Stop retrying quickly if no REDIS_URL configured (local dev without Redis)
+      if (!hasRedisUrl && times > 2) return null;
+      if (times > 5) return null;
+      return Math.min(times * 200, 2000);
     },
-    maxRetriesPerRequest: 3,
-    enableReadyCheck: false,  // Don't wait for ready, use online status
-    lazyConnect: false
+    maxRetriesPerRequest: 1,
+    enableReadyCheck: false,
+    lazyConnect: true,
+    connectTimeout: 3000,
   });
-  
-  // P2: Add event handlers for monitoring
+
   redis.on('connect', () => {
     redisConnected = true;
-    console.log("[Pipeline] ✅ Redis connected for query caching");
+    console.log("[Pipeline] Redis connected for query caching");
   });
-  
-  redis.on('ready', () => {
-    console.log("[Pipeline] Redis ready (commands accepted)");
-  });
-  
-  redis.on('reconnecting', () => {
-    console.warn("[Pipeline] ⚠️  Redis reconnecting...");
-    redisConnected = false;
-  });
-  
+
   redis.on('error', (err: any) => {
     redisConnected = false;
-    console.error("[Pipeline] 🔴 Redis error:", err.message);
-    // Don't crash, just log and continue (fallback to live scout)
+    // Only log first error to avoid spam
+    if (!redisConnected) return;
+    console.warn("[Pipeline] Redis unavailable, caching disabled:", err.code || err.message);
   });
-  
-  redis.on('close', () => {
-    redisConnected = false;
-    console.warn("[Pipeline] Redis connection closed");
-  });
+
+  redis.on('close', () => { redisConnected = false; });
 } catch (err) {
   console.warn("[Pipeline] Redis not available, caching disabled (will continue without cache)");
 }
@@ -120,14 +115,14 @@ export async function invalidateScoutCache(query?: string): Promise<{ invalidate
       // Invalidate specific query
       const cacheKey = `scout:${hashQuery(query, [])}`;
       const deleted = await redis.del(cacheKey);
-      console.log(`[Cache P2] ✅ Invalidated cache for query: "${query}"`);
+      console.log(`[Cache P2] âœ… Invalidated cache for query: "${query}"`);
       invalidated = deleted || 0;
     } else {
       // Invalidate all scout cache (pattern: scout:*)
       const keys = await scanKeys("scout:*");
       if (keys.length > 0) {
         invalidated = await redis.del(...keys);
-        console.log(`[Cache P2] ✅ Invalidated ${invalidated} cache entries (all scout queries)`);
+        console.log(`[Cache P2] âœ… Invalidated ${invalidated} cache entries (all scout queries)`);
       }
     }
 
@@ -185,8 +180,8 @@ import { readerAgent } from "./reader-agent";
 import { analystAgent } from "./analyst-agent";
 import { strategicAnalystAgent, StrategicAnalysisOutput } from "./strategic-analyst-agent";
 import { renderStrategicReportHTML } from "./strategic-report-renderer";
-import { contradictionDetector, detectContradictionsInRecent } from "./contradiction-detector";
-import { trendAnalyzer, runWeeklyTrendAnalysis } from "./trend-analyzer";
+import { contradictionDetector } from "./contradiction-detector";
+import { trendAnalyzer } from "./trend-analyzer";
 import { signalDetector } from "./signal-detector";
 
 // Institutional providers imports
@@ -214,22 +209,22 @@ import {
   searchArchivesNationalesFR,
 } from "../providers/institutional";
 
-// Providers supportés par le pipeline
+// Providers supportÃ©s par le pipeline
 export type Providers = Array<
-  // Académiques
+  // AcadÃ©miques
   | "openalex" | "thesesfr" | "crossref" | "semanticscholar" 
   | "arxiv" | "hal" | "pubmed" | "base"
-  // Académiques — Extended Coverage
+  // AcadÃ©miques â€” Extended Coverage
   | "core" | "europepmc" | "doaj" | "ssrn" | "repec"
   // Institutionnels - Intelligence
   | "odni" | "cia-foia" | "nsa" | "uk-jic"
-  // Institutionnels - Défense
+  // Institutionnels - DÃ©fense
   | "nato" | "eeas" | "sgdsn" | "eda"
-  // Institutionnels - Économie
+  // Institutionnels - Ã‰conomie
   | "imf" | "worldbank" | "oecd" | "bis"
   // Institutionnels - Cyber
   | "nist" | "cisa" | "enisa"
-  // Institutionnels - Multilatéral
+  // Institutionnels - MultilatÃ©ral
   | "un" | "undp" | "unctad"
   // Institutionnels - Archives
   | "nara" | "uk-archives" | "archives-fr"
@@ -247,8 +242,8 @@ export type Providers = Array<
 /**
  * P0 FIX #3: SCOUT with Redis Cache Layer (24h TTL)
  * Reduces API calls for repeated queries by 50%
- * Performance: 30s → <200ms on cache hit
- * Cost savings: $100/day → $50/day
+ * Performance: 30s â†’ <200ms on cache hit
+ * Cost savings: $100/day â†’ $50/day
  */
 export async function scout(query: string, providers: Providers, perProvider = 50) {
   // Governance: Assert SCOUT permissions
@@ -262,7 +257,7 @@ export async function scout(query: string, providers: Providers, perProvider = 5
     try {
       const cached = await redis.get(cacheKey);
       if (cached) {
-        console.log(`[SCOUT] ✅ Cache HIT for "${query}"`);
+        console.log(`[SCOUT] âœ… Cache HIT for "${query}"`);
         const data = JSON.parse(cached);
         return { ...data, cached: true };
       }
@@ -296,13 +291,13 @@ export async function scout(query: string, providers: Providers, perProvider = 5
 /**
  * SCOUT: Unified implementation with query enhancement + reranking
  *
- * Pipeline: Query Enhancement → Multi-Query Search (58+ providers)
- *           → Dedup → Relevance Filter → Cohere Rerank → Unpaywall → Batch Upsert
+ * Pipeline: Query Enhancement â†’ Multi-Query Search (58+ providers)
+ *           â†’ Dedup â†’ Relevance Filter â†’ Cohere Rerank â†’ Unpaywall â†’ Batch Upsert
  */
 async function scoutImpl(query: string, providers: Providers, perProvider = 50) {
   const startTime = Date.now();
 
-  // ── STEP 0: QUERY ENHANCEMENT (LLM-powered) ──
+  // â”€â”€ STEP 0: QUERY ENHANCEMENT (LLM-powered) â”€â”€
   let enhanced: EnhancedQuery | null = null;
   let searchQueries = [query];
   try {
@@ -317,7 +312,7 @@ async function scoutImpl(query: string, providers: Providers, perProvider = 50) 
 
   const pool: any[] = [];
 
-  // ── STEP 1: MULTI-QUERY PARALLEL SEARCH (58+ providers) ──
+  // â”€â”€ STEP 1: MULTI-QUERY PARALLEL SEARCH (58+ providers) â”€â”€
   // Theses handled separately due to HAL bridge enrichment
   let thesesResults: any[] = [];
   if (providers.includes("thesesfr")) {
@@ -342,7 +337,7 @@ async function scoutImpl(query: string, providers: Providers, perProvider = 50) 
   for (const sq of searchQueries) {
     const promises: Promise<any[]>[] = [];
 
-    // ACADÉMIQUES
+    // ACADÃ‰MIQUES
     if (providers.includes("openalex")) promises.push(searchOpenAlex(sq, perProvider));
     if (providers.includes("crossref")) promises.push(searchCrossref(sq, Math.min(50, perProvider)));
     if (providers.includes("semanticscholar")) promises.push(searchSemanticScholar(sq, Math.min(50, perProvider)));
@@ -351,7 +346,7 @@ async function scoutImpl(query: string, providers: Providers, perProvider = 50) 
     if (providers.includes("pubmed")) promises.push(searchPubMed(sq, Math.min(50, perProvider)));
     if (providers.includes("base")) promises.push(searchBASE(sq, Math.min(50, perProvider)));
 
-    // ACADÉMIQUES — EXTENDED COVERAGE
+    // ACADÃ‰MIQUES â€” EXTENDED COVERAGE
     if (providers.includes("core")) promises.push(searchCORE(sq, Math.min(30, perProvider)));
     if (providers.includes("europepmc")) promises.push(searchEuropePMC(sq, Math.min(30, perProvider)));
     if (providers.includes("doaj")) promises.push(searchDOAJ(sq, Math.min(30, perProvider)));
@@ -364,13 +359,13 @@ async function scoutImpl(query: string, providers: Providers, perProvider = 50) 
     if (providers.includes("nsa")) promises.push(searchNSA(sq, Math.min(10, perProvider)));
     if (providers.includes("uk-jic")) promises.push(searchUKJIC(sq, Math.min(10, perProvider)));
 
-    // INSTITUTIONNELS - DÉFENSE
+    // INSTITUTIONNELS - DÃ‰FENSE
     if (providers.includes("nato")) promises.push(searchNATO(sq, Math.min(15, perProvider)));
     if (providers.includes("eeas")) promises.push(searchEEAS(sq, Math.min(15, perProvider)));
     if (providers.includes("sgdsn")) promises.push(searchSGDSN(sq, Math.min(10, perProvider)));
     if (providers.includes("eda")) promises.push(searchEDA(sq, Math.min(10, perProvider)));
 
-    // INSTITUTIONNELS - ÉCONOMIE
+    // INSTITUTIONNELS - Ã‰CONOMIE
     if (providers.includes("imf")) promises.push(searchIMF(sq, Math.min(15, perProvider)));
     if (providers.includes("worldbank")) promises.push(searchWorldBank(sq, Math.min(15, perProvider)));
     if (providers.includes("oecd")) promises.push(searchOECD(sq, Math.min(15, perProvider)));
@@ -384,7 +379,7 @@ async function scoutImpl(query: string, providers: Providers, perProvider = 50) 
     // INSTITUTIONNELS - THINK TANKS (TODO: Implement when available)
     // Think tanks Google CSE providers not implemented yet
 
-    // INSTITUTIONNELS - MULTILATÉRAL
+    // INSTITUTIONNELS - MULTILATÃ‰RAL
     if (providers.includes("un")) promises.push(searchUN(sq, Math.min(15, perProvider)));
     if (providers.includes("undp")) promises.push(searchUNDP(sq, Math.min(15, perProvider)));
     if (providers.includes("unctad")) promises.push(searchUNCTAD(sq, Math.min(15, perProvider)));
@@ -402,7 +397,7 @@ async function scoutImpl(query: string, providers: Providers, perProvider = 50) 
 
   pool.push(...thesesResults);
 
-  // ── STEP 1b: EXTENDED REGISTRY PROVIDERS (class-based bridge) ──
+  // â”€â”€ STEP 1b: EXTENDED REGISTRY PROVIDERS (class-based bridge) â”€â”€
   // Automatically include relevant extended providers based on query domain
   try {
     const queryForDomain = searchQueries[0] || query;
@@ -449,7 +444,7 @@ async function scoutImpl(query: string, providers: Providers, perProvider = 50) 
   const rawCount = pool.length;
   console.log(`[SCOUT] Raw results: ${rawCount} sources from ${searchQueries.length} query variations`);
 
-  // ── STEP 2: DEDUPLICATION (by DOI then normalized title) ──
+  // â”€â”€ STEP 2: DEDUPLICATION (by DOI then normalized title) â”€â”€
   const seen = new Map<string, any>();
   const titleIndex = new Map<string, boolean>();
   for (const s of pool) {
@@ -469,7 +464,7 @@ async function scoutImpl(query: string, providers: Providers, perProvider = 50) 
   const deduped = Array.from(seen.values());
   console.log(`[SCOUT] After dedup: ${deduped.length}/${rawCount}`);
 
-  // ── STEP 3: RELEVANCE FILTERING + COHERE RERANKING ──
+  // â”€â”€ STEP 3: RELEVANCE FILTERING + COHERE RERANKING â”€â”€
   let finalPool = deduped;
   if (enhanced && deduped.length > 10) {
     try {
@@ -493,7 +488,7 @@ async function scoutImpl(query: string, providers: Providers, perProvider = 50) 
     }
   }
 
-  // ── STEP 4: BATCH UNPAYWALL ENRICHMENT ──
+  // â”€â”€ STEP 4: BATCH UNPAYWALL ENRICHMENT â”€â”€
   const needsUnpaywall = finalPool.filter(s => !s.pdfUrl && s.doi);
   if (needsUnpaywall.length > 0) {
     const CHUNK_SIZE = 10;
@@ -512,7 +507,7 @@ async function scoutImpl(query: string, providers: Providers, perProvider = 50) 
     console.log(`[SCOUT] Enriched ${needsUnpaywall.length} sources with Unpaywall (batched)`);
   }
 
-  // ── STEP 5: BATCH UPSERT (Prisma $transaction) ──
+  // â”€â”€ STEP 5: BATCH UPSERT (Prisma $transaction) â”€â”€
   const BATCH_SIZE = 50;
   const sourceIds: string[] = [];
   let upserted = 0;
@@ -520,6 +515,11 @@ async function scoutImpl(query: string, providers: Providers, perProvider = 50) 
   for (let i = 0; i < finalPool.length; i += BATCH_SIZE) {
     const batch = finalPool.slice(i, i + BATCH_SIZE);
     const ops = batch.map(s => {
+      // Ensure every source has a stable ID before upsert
+      if (!s.id) {
+        const slug = (s.doi || s.url || s.title || "unknown").replace(/[^a-z0-9]/gi, "-").slice(0, 60).toLowerCase();
+        s.id = `${s.provider}:${slug}`;
+      }
       const qualityScore = scoreSource({
         year: s.year ?? null,
         citationCount: s.citationCount ?? null,
@@ -560,7 +560,7 @@ async function scoutImpl(query: string, providers: Providers, perProvider = 50) 
   }
 
   const elapsed = Date.now() - startTime;
-  console.log(`[SCOUT] Done in ${elapsed}ms: ${rawCount} raw → ${deduped.length} dedup → ${finalPool.length} ranked → ${upserted} saved`);
+  console.log(`[SCOUT] Done in ${elapsed}ms: ${rawCount} raw â†’ ${deduped.length} dedup â†’ ${finalPool.length} ranked â†’ ${upserted} saved`);
   return { found: rawCount, upserted, sourceIds };
 }
 
@@ -672,7 +672,7 @@ export async function rank(
     // Note: Prisma doesn't support string length in where, we'll filter post-query
   }
 
-  // 1. Récupérer sources avec filtres
+  // 1. RÃ©cupÃ©rer sources avec filtres
   let allSources = await prisma.source.findMany({
     where: whereClause,
     include: {
@@ -702,7 +702,7 @@ export async function rank(
       take: limit * 2
     });
     allSources = relaxedSources;
-    console.log(`[RANK V3] Relaxed pool: ${allSources.length} sources (quality ≥50)`);
+    console.log(`[RANK V3] Relaxed pool: ${allSources.length} sources (quality â‰¥50)`);
   }
 
   if (allSources.length === 0) {
@@ -716,7 +716,7 @@ export async function rank(
     relevanceScore: calculateRelevanceScore(s, query)
   }));
 
-  // 3. Sélection diversifiée
+  // 3. SÃ©lection diversifiÃ©e
   const selected = selectDiverseSources(scored, {
     limit,
     maxPerProvider: options.maxPerProvider ?? 4,
@@ -783,13 +783,13 @@ function validateIntentSignals(signals?: any): any {
   
   // P2: Check for conflicting signals
   if (signals.seekingRecent && signals.seekingFoundational) {
-    console.warn("[Rank P2] ⚠️  Conflicting signals: seekingRecent + seekingFoundational detected");
+    console.warn("[Rank P2] âš ï¸  Conflicting signals: seekingRecent + seekingFoundational detected");
     console.warn("[Rank P2] Prioritizing recent research (2023+)");
     return { ...signals, seekingFoundational: false };
   }
   
   if (signals.seekingDebate && signals.seekingConsensus) {
-    console.warn("[Rank P2] ⚠️  Conflicting signals: seekingDebate + seekingConsensus detected");
+    console.warn("[Rank P2] âš ï¸  Conflicting signals: seekingDebate + seekingConsensus detected");
     console.warn("[Rank P2] Prioritizing consensus (highly-cited sources)");
     return { ...signals, seekingDebate: false };
   }
@@ -850,7 +850,7 @@ function rerankerByIntent(sources: any[], intentSignals?: any): any[] {
 }
 
 /**
- * Calcule un score composite basé sur qualité, nouveauté, récence
+ * Calcule un score composite basÃ© sur qualitÃ©, nouveautÃ©, rÃ©cence
  */
 function calculateCompositeScore(source: any, mode: string): number {
   const weights = {
@@ -868,12 +868,12 @@ function calculateCompositeScore(source: any, mode: string): number {
     qualityScore * weights.quality +
     noveltyScore * weights.novelty +
     recencyScore * weights.recency +
-    50 * weights.diversity  // Bonus diversité ajusté dynamiquement
+    50 * weights.diversity  // Bonus diversitÃ© ajustÃ© dynamiquement
   );
 }
 
 /**
- * Score de récence (0-100)
+ * Score de rÃ©cence (0-100)
  */
 function calculateRecencyScore(year: number | null): number {
   if (!year) return 0;
@@ -888,7 +888,7 @@ function calculateRecencyScore(year: number | null): number {
 }
 
 /**
- * Sélectionne des sources diversifiées
+ * SÃ©lectionne des sources diversifiÃ©es
  */
 function selectDiverseSources(sources: any[], options: any): any[] {
   const selected: any[] = [];
@@ -898,14 +898,14 @@ function selectDiverseSources(sources: any[], options: any): any[] {
   // Trier par score composite
   const sorted = sources.sort((a, b) => b.compositeScore - a.compositeScore);
   
-  // Première passe : remplir avec contraintes strictes
+  // PremiÃ¨re passe : remplir avec contraintes strictes
   for (const source of sorted) {
     if (selected.length >= options.limit) break;
     
     const providerCount = providerCounts.get(source.provider) || 0;
     const yearCount = yearCounts.get(source.year) || 0;
     
-    // Vérifier contraintes diversité
+    // VÃ©rifier contraintes diversitÃ©
     if (providerCount >= options.maxPerProvider) continue;
     if (yearCount >= options.maxPerYear) continue;
     
@@ -959,7 +959,7 @@ function selectDiverseSources(sources: any[], options: any): any[] {
 }
 
 /**
- * Log statistiques de diversité
+ * Log statistiques de diversitÃ©
  */
 function logDiversityStats(sources: any[]): void {
   if (sources.length === 0) return;
@@ -969,18 +969,18 @@ function logDiversityStats(sources: any[]): void {
   const avgQuality = Math.round(sources.reduce((sum, s) => sum + (s.qualityScore || 0), 0) / sources.length);
   
   console.log(`[RANK V2] Diversity:`);
-  console.log(`  • Providers: ${providers.length} (${providers.join(', ')})`);
+  console.log(`  â€¢ Providers: ${providers.length} (${providers.join(', ')})`);
   
   if (years.length > 0) {
     const minYear = Math.min(...years);
     const maxYear = Math.max(...years);
-    console.log(`  • Year span: ${minYear}-${maxYear}`);
+    console.log(`  â€¢ Year span: ${minYear}-${maxYear}`);
   }
   
-  console.log(`  • Avg quality: ${avgQuality}/100`);
+  console.log(`  â€¢ Avg quality: ${avgQuality}/100`);
   
   const frenchCount = sources.filter(s => s.provider === 'hal' || s.provider === 'thesesfr').length;
-  console.log(`  • French sources: ${frenchCount}/${sources.length}`);
+  console.log(`  â€¢ French sources: ${frenchCount}/${sources.length}`);
 }
 
 // ================================
@@ -1043,13 +1043,13 @@ export function renderBriefHTML(out: any, sources: any[]) {
   const srcHtml = sources
     .map((s: any, i: number) => {
       const authors = s.authors?.map((sa: any) => sa.author?.name).filter(Boolean).slice(0, 3).join(", ") || "Unknown";
-      return `<li><strong>SRC-${i + 1}</strong> — ${esc(s.title)} ${s.year ? `(${s.year})` : ""} <span style="color:#666">${esc(authors)}</span> <span style="color:#888;font-size:0.9em">[${esc(s.provider)}]</span></li>`;
+      return `<li><strong>SRC-${i + 1}</strong> â€” ${esc(s.title)} ${s.year ? `(${s.year})` : ""} <span style="color:#666">${esc(authors)}</span> <span style="color:#888;font-size:0.9em">[${esc(s.provider)}]</span></li>`;
     })
     .join("");
   
   return `
   <article style="max-width: 800px; margin: 0 auto; font-family: system-ui, -apple-system, sans-serif; line-height: 1.6;">
-    <div style="font-size:11px;color:#888;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.05em;">NomosX — The agentic think tank</div>
+    <div style="font-size:11px;color:#888;margin-bottom:12px;text-transform:uppercase;letter-spacing:0.05em;">NomosX â€” The agentic think tank</div>
     <h1 style="font-size:2em;margin-bottom:0.5em;font-weight:600;">${esc(out.title || "NomosX Research Brief")}</h1>
     ${section("Executive Summary", out.summary)}
     ${section("Consensus", out.consensus)}
@@ -1127,7 +1127,7 @@ function recordTransformation(
     ...metadata
   });
   
-  console.log(`[Lineage] ${step}: ${inputCount} → ${outputCount} (${durationMs}ms)`);
+  console.log(`[Lineage] ${step}: ${inputCount} â†’ ${outputCount} (${durationMs}ms)`);
 }
 
 /**
@@ -1144,43 +1144,103 @@ function exportLineageJSON(lineage: DataLineage): string {
 // FULL PIPELINE ORCHESTRATION
 // ================================
 
-// Default academic providers — covers STEM, social sciences, humanities, law, economics
+// Default academic providers â€” covers STEM, social sciences, humanities, law, economics
 export const DEFAULT_ACADEMIC_PROVIDERS: Providers = [
   "openalex", "crossref", "semanticscholar", "arxiv", "hal", "pubmed", "base",
   "core", "europepmc", "doaj", "ssrn", "repec",
 ];
 
-export async function runFullPipeline(
-  query: string, 
-  providers: Providers = ['openalex', 'arxiv', 'pubmed', 'crossref', 'semanticscholar'],
-  options: {
-    mode?: 'brief' | 'strategic';
-    maxSources?: number;
-    timeout?: number;
-    enableCaching?: boolean;
-  } = {}
-) {
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// SHARED PIPELINE CORE â€” single implementation for brief + strategic
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+
+interface PipelineCoreOptions {
+  isStrategic: boolean;
+  providers?: Providers;
+  perProvider?: number;
+  rankOptions?: RankOptions;
+  focusAreas?: string[];
+  targetAudience?: string;
+  urgencyContext?: string;
+  maxSources?: number;
+  // Pipeline tier controls — set by auto-publisher based on researcher ownership
+  enableHarvardCouncil?: boolean;  // default: true
+  enableDebate?: boolean;          // default: true
+  enableMetaAnalysis?: boolean;    // default: true (strategic only)
+  enableDevilsAdvocate?: boolean;  // default: true
+}
+
+async function runPipelineCore(query: string, opts: PipelineCoreOptions) {
+  const { isStrategic } = opts;
+  const label = isStrategic ? "[Strategic]" : "[Pipeline]";
   const stats: any = {};
   const pipelineStart = Date.now();
-  
+
+  // Tier flags — default all true, can be disabled for standard/premium tiers
+  const runHarvardCouncilStep = opts.enableHarvardCouncil !== false;
+  const runDebateStep = opts.enableDebate !== false;
+  const runMetaAnalysisStep = opts.enableMetaAnalysis !== false;
+  const runDevilsAdvocateStep = opts.enableDevilsAdvocate !== false;
+
+  // â”€â”€ Resolve providers: smart selection (async, history-aware) or explicit â”€â”€
+  let providers: Providers;
+  if (opts.providers && opts.providers.length > 0) {
+    providers = opts.providers;
+  } else if (isStrategic) {
+    const smart = await selectSmartProviders(query).catch(() => null);
+    providers = (smart?.providers as Providers | undefined) ?? [
+      ...DEFAULT_ACADEMIC_PROVIDERS,
+      "imf", "worldbank", "oecd", "brookings", "rand", "cnas",
+    ] as Providers;
+  } else {
+    const smart = await selectSmartProviders(query).catch(() => null);
+    providers = (smart?.providers as Providers | undefined) ?? DEFAULT_ACADEMIC_PROVIDERS;
+  }
+
+  // P3-K: Filter out blacklisted providers
+  const healthyProviders = getHealthyProviders(providers as string[]) as Providers;
+  if (healthyProviders.length < providers.length) {
+    console.log(`${label} PROVIDER HEALTH: ${providers.length - healthyProviders.length} providers skipped (circuit open)`);
+  }
+  providers = healthyProviders.length >= 3 ? healthyProviders : providers; // fallback if too many blacklisted
+
+  const perProvider = opts.perProvider ?? (isStrategic ? 30 : 25);
+
   // Create PipelineRun for persistent lineage tracking
   const pipelineRun = await prisma.pipelineRun.create({
-    data: { question: query, format: "brief", status: "RUNNING" },
+    data: { question: query, format: isStrategic ? "strategic" : "brief", status: "RUNNING" },
   });
 
   try {
-  // P1 FIX #3: Initialize lineage tracking
-  const briefId = `brief-${Date.now()}`;
+  const briefId = `${isStrategic ? "strategic" : "brief"}-${Date.now()}`;
   const lineage = createLineageTracker(briefId, query);
-  
-  // Initialize Orchestrator state
-  const orchState = createPipelineState(query, false);
 
-  // 0. CONTEXT PRIMER — Inject institutional memory
-  console.log(`[Pipeline] CONTEXT PRIMER: loading institutional memory`);
+  if (isStrategic) {
+    console.log(`\n${"â•".repeat(60)}`);
+    console.log(`  STRATEGIC REPORT PIPELINE`);
+    console.log(`  Query: "${query}"`);
+    console.log(`  PipelineRun: ${pipelineRun.id}`);
+    console.log(`${"â•".repeat(60)}\n`);
+  }
+
+  // Initialize Orchestrator state (with calibrated thresholds from AgentMemory)
+  const orchState = createPipelineState(query, isStrategic);
+  try {
+    const calibratedThresholds = await loadCalibratedThresholds();
+    orchState.thresholds = calibratedThresholds;
+    if (calibratedThresholds.MIN_TRUST_SCORE !== 65) {
+      console.log(`${label} ORCHESTRATOR: calibrated trust threshold = ${calibratedThresholds.MIN_TRUST_SCORE} (from AgentMemory)`);
+    }
+  } catch { /* use static thresholds */ }
+
+  // â”€â”€ STEP 0: CONTEXT PRIMER â€” Inject institutional memory + trend breaks â”€â”€
+  console.log(`${label} CONTEXT PRIMER: loading institutional memory`);
   let primedContext: Awaited<ReturnType<typeof primeContext>> | null = null;
   try {
-    primedContext = await primeContext(query);
+    primedContext = await primeContext(query, {
+      maxConcepts: isStrategic ? 20 : 15,
+      maxPriorBriefs: isStrategic ? 8 : 5,
+    });
     orchState.contextPrimed = true;
     orchState.knownConceptCount = primedContext.knownConcepts.length;
     orchState.priorBriefCount = primedContext.priorBriefs.length;
@@ -1188,28 +1248,25 @@ export async function runFullPipeline(
       knownConcepts: primedContext.knownConcepts.length,
       priorBriefs: primedContext.priorBriefs.length,
       emergingTrends: primedContext.emergingTrends.length,
+      trendBreaks: primedContext.trendBreaks?.length ?? 0,
       coverageGap: primedContext.coverageGap,
       durationMs: primedContext.durationMs,
     };
-    console.log(`[Pipeline] CONTEXT PRIMER: ${primedContext.knownConcepts.length} concepts, ${primedContext.priorBriefs.length} prior briefs, gap=${primedContext.coverageGap}d`);
+    console.log(`${label} CONTEXT PRIMER: ${primedContext.knownConcepts.length} concepts, ${primedContext.priorBriefs.length} prior briefs, ${primedContext.trendBreaks?.length ?? 0} trend breaks`);
   } catch (err) {
-    console.warn(`[Pipeline] CONTEXT PRIMER: failed (non-blocking):`, err);
+    console.warn(`${label} CONTEXT PRIMER: failed (non-blocking):`, err);
     stats.contextPrimer = { error: String(err) };
   }
 
-  // 1. SCOUT (with Orchestrator RE_SCOUT loop)
-  console.log(`[Pipeline] SCOUT: query="${query}"`);
-  let scoutResult: Awaited<ReturnType<typeof scout>>;
+  // â”€â”€ STEP 1: SCOUT (with Orchestrator RE_SCOUT loop) â”€â”€
+  console.log(`${label} SCOUT: query="${query}" (${providers.length} providers, ${perProvider}/provider)`);
   let allSourceIds: string[] = [];
-
-  // Initial scout - Demo mode optimization
   const scoutStart = Date.now();
-  const sourcesPerProvider = options.maxSources || (options.mode === 'brief' ? 25 : 50);
-  scoutResult = await scout(query, providers, sourcesPerProvider);
+  const scoutResult = await scout(query, providers, isStrategic ? Math.max(perProvider, 75) : perProvider);
   allSourceIds = [...scoutResult.sourceIds];
   recordTransformation(lineage, "scout", 1, scoutResult.sourceIds.length, Date.now() - scoutStart, {
     sourceIds: scoutResult.sourceIds,
-    filters: { providers }
+    filters: { providers },
   });
   stats.scout = scoutResult;
 
@@ -1222,90 +1279,138 @@ export async function runFullPipeline(
 
   // RE_SCOUT loop if needed
   if (scoutDecision.action === "RE_SCOUT" && orchState.iteration < orchState.maxIterations) {
-    console.log(`[Pipeline] ORCHESTRATOR: RE_SCOUT — ${scoutDecision.reason}`);
+    console.log(`${label} ORCHESTRATOR: RE_SCOUT â€” ${scoutDecision.reason}`);
     try {
       const expanded = await generateExpandedTerms(query, scoutResult.found, providers);
       stats.orchestrator.expandedTerms = expanded.terms;
+      const maxTerms = isStrategic ? 7 : 5;
       const extraResults = await Promise.allSettled(
-        expanded.terms.slice(0, 5).map(term => scout(term, providers, 25)) // Increased: 5 terms instead of 3, 25 sources instead of 10
+        expanded.terms.slice(0, maxTerms).map(term => scout(term, providers, isStrategic ? 30 : 25))
       );
       for (let i = 0; i < extraResults.length; i++) {
         const r = extraResults[i];
         if (r.status === "fulfilled") {
           allSourceIds.push(...r.value.sourceIds);
-          console.log(`[Pipeline] RE_SCOUT: "${expanded.terms[i]}" → +${r.value.found} sources`);
+          console.log(`${label} RE_SCOUT: "${expanded.terms[i]}" â†’ +${r.value.found} sources`);
         }
       }
       orchState.sourcesFound = allSourceIds.length;
     } catch (err) {
-      console.warn(`[Pipeline] RE_SCOUT: failed (non-blocking):`, err);
+      console.warn(`${label} RE_SCOUT: failed (non-blocking):`, err);
     }
   }
-  
-  // 2. INDEX
-  console.log(`[Pipeline] INDEX: ${allSourceIds.length} sources`);
+
+  // â”€â”€ STEP 2: INDEX â”€â”€
+  console.log(`${label} INDEX: ${allSourceIds.length} sources`);
   const indexResult = await index(allSourceIds);
   stats.index = indexResult;
 
-  // 2b. EMBED (semantic vectors for all new sources)
-  console.log(`[Pipeline] EMBED: generating semantic vectors...`);
+  // â”€â”€ STEP 2b: EMBED (semantic vectors) â”€â”€
+  console.log(`${label} EMBED: generating semantic vectors...`);
   try {
     const embedResult = await embedSourcesBatch(scoutResult.sourceIds);
     stats.embed = embedResult;
-    console.log(`[Pipeline] EMBED: ${embedResult.embedded} new, ${embedResult.skipped} cached`);
+    console.log(`${label} EMBED: ${embedResult.embedded} new, ${embedResult.skipped} cached`);
   } catch (err) {
-    console.warn(`[Pipeline] EMBED: failed (non-blocking):`, err);
+    console.warn(`${label} EMBED: failed (non-blocking):`, err);
     stats.embed = { error: String(err) };
   }
-  
-  // 3. Deduplicate
-  console.log(`[Pipeline] DEDUPLICATE`);
+
+  // â”€â”€ STEP 3: DEDUPLICATE â”€â”€
+  console.log(`${label} DEDUPLICATE`);
   const dedupeResult = await deduplicateSources();
   stats.dedupe = dedupeResult;
-  
-  // 4. RANK
-  console.log(`[Pipeline] RANK: top 12 by quality`);
-  const topSources = await rank(query, 12, "quality");
+
+  // â”€â”€ STEP 4: RANK â”€â”€
+  const rankOpts: RankOptions = isStrategic ? {
+    limit: 25,
+    mode: "balanced",
+    recentOnly: true,
+    requireAbstract: true,
+    minAbstractLength: 200,
+    minQuality: 65,
+    maxPerProvider: 6,
+    minProviderDiversity: 4,
+    ...opts.rankOptions,
+  } : { limit: 12, mode: "quality" };
+
+  console.log(`${label} RANK: top ${rankOpts.limit ?? 12} sources`);
+  const topSources = await rank(query, rankOpts);
   orchState.avgQualityScore = topSources.length > 0
     ? Math.round(topSources.reduce((sum: number, s: any) => sum + (s.qualityScore || 0), 0) / topSources.length)
     : 0;
   stats.rank = { count: topSources.length, avgQuality: orchState.avgQualityScore };
-  
-  // 5. READER V3 (full-text PDF + quantitative extraction)
-  console.log(`[Pipeline] READER V3: deep extraction from ${topSources.length} sources`);
-  const readings = await readerAgentV3(topSources, { enablePdf: true, maxConcurrency: 5 });
-  const fullTextCount = readings.filter(r => r.readingDepth === 'full_text').length;
+
+  // â”€â”€ STEP 5: READER V3 â”€â”€
+  console.log(`${label} READER V3: deep extraction from ${topSources.length} sources`);
+  const readings = await readerAgentV3(topSources, {
+    enablePdf: true,
+    maxConcurrency: 5,
+    timeout: isStrategic ? 25000 : undefined,
+  });
+  const fullTextCount = readings.filter(r => r.readingDepth === "full_text").length;
   const quantCount = readings.filter(r => r.quantitative.effectSizes.length > 0 || r.quantitative.sampleSizes.length > 0).length;
   stats.reader = { count: readings.length, fullText: fullTextCount, withQuantData: quantCount };
 
-  // Orchestrator checkpoint: assess reader output
   orchState.sourcesWithAbstract = readings.filter(r => r.claims.length > 0 || r.methods.length > 0).length;
   orchState.sourcesWithFullText = fullTextCount;
   const readerDecision = assessAfterReader(orchState);
   recordDecision(orchState, readerDecision);
   stats.orchestrator.decisions.push(readerDecision);
-  
-  // 6. ANALYST V3 (multi-pass: thematic → contradictions → synthesis)
-  // Inject Context Primer institutional memory into analyst
-  console.log(`[Pipeline] ANALYST V3: multi-pass synthesis`);
-  const analysis = await analystAgentV3(query, topSources, readings, {
-    contextBlock: primedContext?.contextBlock,
-  });
-  stats.analyst = { hasDebate: !!analysis.debate, passes: 3 };
 
-  // Orchestrator checkpoint: assess analysis quality
+  // â”€â”€ STEP 6: ANALYST (brief = V3 multi-pass, strategic = Strategic Analyst) â”€â”€
+  console.log(`${label} ANALYST: ${isStrategic ? "strategic synthesis" : "V3 multi-pass"}`);
+  // -- STEP 5b: AGENT MEMORY INJECTION -- inject past lessons into ANALYST --
+  const agentId = isStrategic ? "strategic-analyst" : "analyst";
+  let memoryBlock: string | undefined;
+  try {
+    const memInj = await buildMemoryInjection(agentId, undefined, { maxLessons: 5, lookbackDays: 90 });
+    if (memInj.topLessons.length > 0) {
+      memoryBlock = memInj.promptBlock;
+      stats.agentMemory = { lessons: memInj.topLessons.length, agentId };
+      console.log(`${label} AGENT MEMORY: ${memInj.topLessons.length} lessons injected into ${agentId}`);
+    }
+  } catch (err) {
+    console.warn(`${label} AGENT MEMORY: failed (non-blocking):`, err);
+  }
+  const fullContextBlock = [memoryBlock, primedContext?.contextBlock].filter(Boolean).join("\n\n---\n\n") || undefined;
+
+  let analysis: any;
+  if (isStrategic) {
+    analysis = await strategicAnalystAgent(query, topSources, readings, {
+      focusAreas: opts.focusAreas,
+      targetAudience: opts.targetAudience,
+      urgencyContext: [opts.urgencyContext, fullContextBlock].filter(Boolean).join("\n\n") || undefined,
+    });
+    stats.analyst = {
+      hasDebate: !!analysis.debate,
+      keyFindingsCount: analysis.keyFindings?.length || 0,
+      scenariosCount: analysis.scenarios?.length || 0,
+    };
+  } else {
+    analysis = await analystAgentV3(query, topSources, readings, {
+      contextBlock: fullContextBlock,
+    });
+    stats.analyst = { hasDebate: !!analysis.debate, passes: 3 };
+  }
+
   const analystDecision = assessAfterAnalyst(orchState);
   recordDecision(orchState, analystDecision);
   stats.orchestrator.decisions.push(analystDecision);
 
-  // 6b. HARVARD COUNCIL — PhD Expert Analysis + Adversarial Review + Synthesis
-  console.log(`[Pipeline] HARVARD COUNCIL: PhD expert analysis`);
+  // ── STEP 6b: HARVARD COUNCIL — PhD Expert Analysis ──
+  if (!runHarvardCouncilStep) {
+    console.log(`${label} HARVARD COUNCIL: skipped (tier=standard)`);
+    stats.harvardCouncil = { skipped: true };
+  } else
   try {
     const sourceCtx = topSources.map((s: any, i: number) =>
-      `[SRC-${i + 1}] ${s.title} (${s.year || "N/A"}) — ${(s.abstract || "").slice(0, 400)}`
+      `[SRC-${i + 1}] ${s.title} (${s.year || "N/A"}) â€” ${(s.abstract || "").slice(0, 400)}`
     ).join("\n\n");
-
-    const council = await runHarvardCouncil(query, sourceCtx, topSources.length);
+    const council = await runHarvardCouncil(query, sourceCtx, topSources.length, {
+      strategic: isStrategic,
+      runId: pipelineRun.id,
+    });
     stats.harvardCouncil = {
       experts: council.expertAnalyses.length,
       reviewers: council.reviews.length,
@@ -1319,52 +1424,55 @@ export async function runFullPipeline(
       costUsd: council.totalCostUsd,
       durationMs: council.totalDurationMs,
     };
-    // Inject council synthesis into the analysis for downstream rendering
     if (council.synthesis.executiveSummary) {
       (analysis as any)._harvardCouncil = council.synthesis;
     }
-    console.log(`[Pipeline] HARVARD COUNCIL: CEBM ${council.evidenceGrade.cebmLevel}, GRADE ${council.evidenceGrade.gradeCertainty}, ${council.expertAnalyses.length} experts, ${council.reviews.length} reviewers`);
+    console.log(`${label} HARVARD COUNCIL: CEBM ${council.evidenceGrade.cebmLevel}, GRADE ${council.evidenceGrade.gradeCertainty}, ${council.expertAnalyses.length} experts`);
   } catch (err) {
-    console.warn(`[Pipeline] HARVARD COUNCIL: failed (non-blocking):`, err);
+    console.warn(`${label} HARVARD COUNCIL: failed (non-blocking):`, err);
     stats.harvardCouncil = { error: String(err) };
   }
 
-  // 7. GUARD (format validation)
-  console.log(`[Pipeline] GUARD: validate citation format`);
+  // â”€â”€ STEP 7: CITATION GUARD â”€â”€
+  console.log(`${label} GUARD: validate citations`);
   const guard = citationGuard(analysis, topSources.length);
   stats.guard = guard;
-  
-  if (!guard.ok) {
+  if (!guard.ok && !isStrategic) {
     throw new Error(`Citation guard failed: ${guard.usedCount} citations, ${guard.invalid.length} invalid`);
+  } else if (!guard.ok) {
+    console.warn(`${label} Citation guard warning: ${guard.usedCount} citations, ${guard.invalid.length} invalid`);
   }
-  
-  // 8. EDITOR
-  console.log(`[Pipeline] EDITOR: render brief`);
-  let html = renderBriefHTML(analysis, topSources);
 
-  // 9. CITATION VERIFIER (semantic validation)
-  console.log(`[Pipeline] CITATION VERIFIER: semantic check`);
+  // â”€â”€ STEP 8: EDITOR â”€â”€
+  console.log(`${label} EDITOR: render HTML`);
+  let html = isStrategic
+    ? renderStrategicReportHTML(analysis, topSources)
+    : renderBriefHTML(analysis, topSources);
+  if (isStrategic) stats.htmlLength = html.length;
+
+  // â”€â”€ STEP 9: CITATION VERIFIER â”€â”€
+  console.log(`${label} CITATION VERIFIER: semantic check`);
   try {
-    const verification = await verifyCitations(html, topSources, { maxConcurrency: 3 });
+    const verification = await verifyCitations(html, topSources, { maxConcurrency: isStrategic ? 5 : 3 });
     stats.citationVerifier = {
       integrity: verification.overallIntegrity,
       supported: verification.supported,
       flagged: verification.flaggedClaims.length,
     };
-    console.log(`[Pipeline] CITATION VERIFIER: integrity ${verification.overallIntegrity}%`);
+    console.log(`${label} CITATION VERIFIER: integrity ${verification.overallIntegrity}%`);
   } catch (err) {
-    console.warn(`[Pipeline] CITATION VERIFIER: failed (non-blocking):`, err);
+    console.warn(`${label} CITATION VERIFIER: failed (non-blocking):`, err);
   }
 
-  // 10. CRITICAL LOOP V2 (iterative peer review + rewrite)
-  console.log(`[Pipeline] CRITICAL LOOP V2: iterative review`);
+  // â”€â”€ STEP 10: CRITICAL LOOP V2 â”€â”€
+  console.log(`${label} CRITICAL LOOP V2: iterative review`);
   try {
     const criticalResult = await runCriticalLoopV2({
       draftHtml: html,
       sources: topSources,
       readings,
       maxIterations: 2,
-      publishThreshold: 65,
+      publishThreshold: isStrategic ? 70 : 65,
     });
     stats.criticalLoop = {
       iterations: criticalResult.iterations,
@@ -1372,39 +1480,49 @@ export async function runFullPipeline(
       improvement: criticalResult.improvementDelta,
       needsHumanReview: criticalResult.needsHumanReview,
     };
-    // Use the rewritten HTML if it was improved
     if (criticalResult.improvementDelta > 0) {
       html = criticalResult.finalHtml;
-      console.log(`[Pipeline] CRITICAL LOOP V2: improved by +${criticalResult.improvementDelta} points`);
+      console.log(`${label} CRITICAL LOOP V2: improved by +${criticalResult.improvementDelta} points`);
     }
   } catch (err) {
-    console.warn(`[Pipeline] CRITICAL LOOP V2: failed (non-blocking):`, err);
+    console.warn(`${label} CRITICAL LOOP V2: failed (non-blocking):`, err);
   }
 
-  // Orchestrator checkpoint: assess after critical loop
   orchState.trustScore = stats.criticalLoop?.finalScore ?? null;
-  orchState.citationCoverage = stats.citationVerifier?.integrity ? stats.citationVerifier.integrity / 100 : null;
   const criticalDecision = assessAfterCriticalLoop(orchState);
   recordDecision(orchState, criticalDecision);
   stats.orchestrator.decisions.push(criticalDecision);
-  
-  // 11+12. DEBATE + META-ANALYSIS (parallel — independent of each other)
-  console.log(`[Pipeline] DEBATE + META-ANALYSIS: running in parallel`);
+
+  // ── STEP 11+12: DEBATE + META-ANALYSIS (parallel) ──
+  let debateContext: string | undefined;
+  if (!runDebateStep && !runMetaAnalysisStep) {
+    console.log(`${label} DEBATE + META-ANALYSIS: skipped (tier=standard)`);
+    stats.debate = { skipped: true };
+    stats.metaAnalysis = { skipped: true };
+  } else {
+  console.log(`${label} DEBATE + META-ANALYSIS: running in parallel`);
   const [debateResult, metaResult] = await Promise.allSettled([
-    debateAgent(query, topSources, readings),
-    metaAnalysisEngine(query, readings, topSources),
+    runDebateStep ? debateAgent(query, topSources, readings, isStrategic ? html : undefined) : Promise.reject("skipped"),
+    runMetaAnalysisStep ? metaAnalysisEngine(query, readings, topSources) : Promise.reject("skipped"),
   ]);
 
   if (debateResult.status === "fulfilled") {
     const debate = debateResult.value;
+    debateContext = [
+      `Debate dominant thesis: ${debate.dominantThesis}`,
+      `Counter-position: ${debate.position2?.label || "N/A"}`,
+      `Confidence in dominant: ${debate.confidenceInDominant}/100`,
+      `Steel-man already addressed: ${debate.synthesis?.slice(0, 200) || "N/A"}`,
+    ].join("\n");
     stats.debate = {
       confidenceInDominant: debate.confidenceInDominant,
       steelManStrength: debate.debateQuality.steelManStrength,
+      nuances: debate.nuances?.length ?? 0,
       costUsd: debate.costUsd,
     };
-    console.log(`[Pipeline] DEBATE: confidence=${debate.confidenceInDominant}%, steel-man=${debate.debateQuality.steelManStrength}`);
-  } else {
-    console.warn(`[Pipeline] DEBATE: failed (non-blocking):`, debateResult.reason);
+    console.log(`${label} DEBATE: confidence=${debate.confidenceInDominant}%, steel-man=${debate.debateQuality.steelManStrength}`);
+  } else if (debateResult.reason !== "skipped") {
+    console.warn(`${label} DEBATE: failed (non-blocking):`, debateResult.reason);
   }
 
   if (metaResult.status === "fulfilled") {
@@ -1414,43 +1532,133 @@ export async function runFullPipeline(
       pooledEffect: meta.recommended === "random" ? meta.randomEffects.value : meta.fixedEffect.value,
       I2: meta.heterogeneity.I2,
       biasDetected: meta.publicationBias.biasDetected,
+      forestPlotEntries: meta.forestPlot.length,
     };
-    console.log(`[Pipeline] META-ANALYSIS: k=${meta.k}, pooled d=${stats.metaAnalysis.pooledEffect}, I²=${meta.heterogeneity.I2}%`);
-  } else {
-    console.warn(`[Pipeline] META-ANALYSIS: failed (non-blocking):`, metaResult.reason);
+    console.log(`${label} META-ANALYSIS: k=${meta.k}, pooled d=${stats.metaAnalysis.pooledEffect}, IÂ²=${meta.heterogeneity.I2}%`);
+  } else if (metaResult.reason !== "skipped") {
+    console.warn(`${label} META-ANALYSIS: failed (non-blocking):`, metaResult.reason);
   }
+  } // end debate+meta block
 
-  // 13. PUBLISHER
-  console.log(`[Pipeline] PUBLISHER: save brief`);
+  // ── STEP 13: DEVIL'S ADVOCATE — Final epistemic gate ──
+  if (!runDevilsAdvocateStep) {
+    console.log(`${label} DEVIL'S ADVOCATE: skipped (tier=standard)`);
+    stats.devilsAdvocate = { skipped: true };
+  } else {
+  console.log(`${label} DEVIL'S ADVOCATE: challenging analysis`);
+  try {
+    const advocateReport = await runDevilsAdvocate(
+      query,
+      html,
+      topSources.map((s: any) => ({ title: s.title, provider: s.provider, year: s.year ?? undefined })),
+      {
+        mode: isStrategic ? "strategic" : "brief",
+        targetAudience: opts.targetAudience || (isStrategic ? "senior policymakers" : undefined),
+        debateContext, // P0-C: pass debate steel-man to avoid redundant challenges
+      }
+    );
+    stats.devilsAdvocate = {
+      verdict: advocateReport.verdict,
+      overallStrength: advocateReport.overallStrength,
+      publishabilityScore: advocateReport.publishabilityScore,
+      fatalChallenges: advocateReport.fatalChallenges.length,
+      majorChallenges: advocateReport.majorChallenges.length,
+      vsInstitutions: advocateReport.vsInstitutionBenchmark.overall,
+      ...(isStrategic && {
+        institutionScores: {
+          mckinsey: advocateReport.vsInstitutionBenchmark.mckinsey.score,
+          brookings: advocateReport.vsInstitutionBenchmark.brookings.score,
+          rand: advocateReport.vsInstitutionBenchmark.rand.score,
+          franceStrategie: advocateReport.vsInstitutionBenchmark.franceStrategie.score,
+        },
+        gaps: advocateReport.vsInstitutionBenchmark.gaps,
+      }),
+      costUsd: advocateReport.costUsd,
+    };
+    console.log(`${label} DEVIL'S ADVOCATE: verdict=${advocateReport.verdict}, strength=${advocateReport.overallStrength}/100`);
+    if (isStrategic) {
+      console.log(`${label} DEVIL'S ADVOCATE: vs McKinsey=${advocateReport.vsInstitutionBenchmark.mckinsey.score}, Brookings=${advocateReport.vsInstitutionBenchmark.brookings.score}, RAND=${advocateReport.vsInstitutionBenchmark.rand.score}`);
+    }
+
+    // Record performance for AgentMemory learning
+    const failureModes = autoDetectFailureModes({
+      confidenceGiven: isStrategic ? 75 : 70,
+      trustScore: stats.criticalLoop?.finalScore ?? 70,
+      citationCoverage: stats.citationVerifier?.integrity ? stats.citationVerifier.integrity / 100 : 0.7,
+      contradictionsFound: advocateReport.fatalChallenges.length,
+      sourceDiversity: orchState.providerDiversity,
+      findingsCount: topSources.length,
+    });
+    await recordAgentPerformance({
+      agentId,
+      runId: pipelineRun.id,
+      question: query,
+      trustScore: advocateReport.publishabilityScore,
+      qualityScore: advocateReport.overallStrength,
+      confidenceGiven: isStrategic ? 75 : 70,
+      confidenceActual: advocateReport.overallStrength,
+      citationCoverage: stats.citationVerifier?.integrity ? stats.citationVerifier.integrity / 100 : 0.7,
+      findingsCount: topSources.length,
+      failureModes,
+      lessonsLearned: [],
+    });
+
+    const qualityThreshold = isStrategic ? 80 : 75;
+    if (advocateReport.overallStrength < qualityThreshold && advocateReport.fatalChallenges.length > 0) {
+      const { lessons } = await extractLessons(agentId, query, html.slice(0, 500), {
+        trustScore: advocateReport.publishabilityScore,
+        qualityScore: advocateReport.overallStrength,
+        failureModes,
+      });
+      for (const lesson of lessons) {
+        await storeLesson(agentId, lesson, pipelineRun.id);
+      }
+    }
+  } catch (err) {
+    console.warn(`${label} DEVIL'S ADVOCATE: failed (non-blocking):`, err);
+    stats.devilsAdvocate = { error: String(err) };
+  }
+  } // end runDevilsAdvocateStep block
+
+  // â”€â”€ STEP 14: PUBLISHER â”€â”€
+  console.log(`${label} PUBLISHER: save ${isStrategic ? "strategic report" : "brief"}`);
+  const estimatedPages = isStrategic ? Math.round(html.length / 3000) : undefined;
   const brief = await prisma.brief.create({
     data: {
-      kind: "brief",
+      kind: isStrategic ? "strategic" : "brief",
       question: query,
       html,
-      sources: topSources.map((s) => s.id),
+      sources: topSources.map((s: any) => s.id),
       pipelineRunId: pipelineRun.id,
       lineage: stats,
       publicId: null,
     },
   });
-  
-  stats.brief = { id: brief.id };
+  stats.brief = { id: brief.id, ...(estimatedPages && { estimatedPages }) };
 
-  // 14. KNOWLEDGE GRAPH (post-publish concept extraction)
-  console.log(`[Pipeline] KNOWLEDGE GRAPH: extracting concepts`);
+  // â”€â”€ STEP 15: KNOWLEDGE GRAPH (post-publish concept extraction) â”€â”€
+  console.log(`${label} KNOWLEDGE GRAPH: extracting concepts`);
   try {
-    const kg = await extractAndStoreConcepts(brief.id, query, html, topSources.map(s => s.id));
-    stats.knowledgeGraph = {
-      concepts: kg.concepts.length,
-      relations: kg.relations.length,
-      costUsd: kg.costUsd,
-    };
-    console.log(`[Pipeline] KNOWLEDGE GRAPH: ${kg.concepts.length} concepts, ${kg.relations.length} relations`);
+    const kg = await extractAndStoreConcepts(brief.id, query, html, topSources.map((s: any) => s.id));
+    stats.knowledgeGraph = { concepts: kg.concepts.length, relations: kg.relations.length, costUsd: kg.costUsd };
+    console.log(`${label} KNOWLEDGE GRAPH: ${kg.concepts.length} concepts, ${kg.relations.length} relations`);
   } catch (err) {
-    console.warn(`[Pipeline] KNOWLEDGE GRAPH: failed (non-blocking):`, err);
+    console.warn(`${label} KNOWLEDGE GRAPH: failed (non-blocking):`, err);
   }
 
-  // Finalize PipelineRun with aggregated metrics (all agent costs)
+  // P3-M: Record source usage for reputation learning (non-blocking)
+  // Extract actually-cited source IDs from [SRC-N] references in HTML
+  const citedIndices = Array.from(new Set(
+    Array.from(html.matchAll(/\[SRC-(\d+)\]/g)).map(m => parseInt(m[1], 10) - 1)
+  )).filter(i => i >= 0 && i < topSources.length);
+  const citedSourceIds = citedIndices.map(i => (topSources[i] as any).id);
+  recordSourceUsage(
+    topSources.map((s: any) => s.id),
+    stats.criticalLoop?.finalScore ?? 0,
+    citedSourceIds,
+  ).catch(() => {});
+
+  // Finalize PipelineRun
   const totalCost = [
     stats.contextPrimer?.costUsd,
     stats.harvardCouncil?.costUsd,
@@ -1475,14 +1683,28 @@ export async function runFullPipeline(
       steps: { ...stats, orchestrator: { ...stats.orchestrator, decisions: orchState.decisions } },
     },
   });
-  
-  console.log(`[Pipeline] DONE: brief ${brief.id} | run ${pipelineRun.id} | $${totalCost.toFixed(4)} | ${durationMs}ms | ${orchState.decisions.length} orchestrator decisions`);
-  
-  return { briefId: brief.id, stats, pipelineRunId: pipelineRun.id };
+
+  if (isStrategic) {
+    console.log(`\n${"â•".repeat(60)}`);
+    console.log(`  âœ… STRATEGIC REPORT COMPLETE`);
+    console.log(`  Brief: ${brief.id} | Run: ${pipelineRun.id}`);
+    console.log(`  Sources: ${topSources.length} | Pages: ~${estimatedPages}`);
+    console.log(`  Cost: $${totalCost.toFixed(4)} | Duration: ${durationMs}ms`);
+    console.log(`  Orchestrator: ${orchState.decisions.length} decisions`);
+    console.log(`${"â•".repeat(60)}\n`);
+  } else {
+    console.log(`${label} DONE: brief ${brief.id} | run ${pipelineRun.id} | $${totalCost.toFixed(4)} | ${durationMs}ms | ${orchState.decisions.length} orchestrator decisions`);
+  }
+
+  return {
+    briefId: brief.id,
+    stats,
+    pipelineRunId: pipelineRun.id,
+    format: (isStrategic ? "strategic" : "brief") as ReportFormat,
+  };
 
   } catch (error: any) {
-    // Error boundary: mark PipelineRun as FAILED
-    console.error(`[Pipeline] FATAL: ${error.message}`);
+    console.error(`${label} FATAL: ${error.message}`);
     await prisma.pipelineRun.update({
       where: { id: pipelineRun.id },
       data: {
@@ -1491,10 +1713,37 @@ export async function runFullPipeline(
         durationMs: Date.now() - pipelineStart,
         steps: { ...stats, error: error.message },
       },
-    }).catch(() => {}); // Don't let the error handler itself fail
+    }).catch(() => {});
     throw error;
   }
 }
+
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// PUBLIC API â€” thin wrappers over the shared core
+// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+
+/**
+ * runFullPipeline â€” thin wrapper over runPipelineCore (brief mode)
+ * Kept for backward compatibility with existing callers.
+ */
+export async function runFullPipeline(
+  query: string,
+  providers: Providers = DEFAULT_ACADEMIC_PROVIDERS,
+  options: {
+    mode?: "brief" | "strategic";
+    maxSources?: number;
+    timeout?: number;
+    enableCaching?: boolean;
+  } = {}
+) {
+  return runPipelineCore(query, {
+    isStrategic: options.mode === "strategic",
+    providers: providers.length > 0 ? providers : undefined,
+    maxSources: options.maxSources,
+  });
+}
+
+// (legacy functions removed — see runPipelineCore() above)
 
 // ================================
 // STRATEGIC REPORT PIPELINE (10-15 pages)
@@ -1509,394 +1758,30 @@ export interface StrategicPipelineOptions {
   focusAreas?: string[];
   targetAudience?: string;
   urgencyContext?: string;
+  // Tier controls — set by auto-publisher based on researcher ownership
+  enableHarvardCouncil?: boolean;
+  enableDebate?: boolean;
+  enableMetaAnalysis?: boolean;
+  enableDevilsAdvocate?: boolean;
 }
 
 /**
- * Strategic Report Pipeline
- * Produces comprehensive 10-15 page reports with:
- * - More sources (up to 25)
- * - Deeper analysis
- * - Stakeholder impact
- * - Scenario planning
- * - Implementation roadmap
+ * runStrategicPipeline â€” thin wrapper over runPipelineCore (strategic mode)
+ * Kept for backward compatibility with existing callers.
  */
 export async function runStrategicPipeline(
   query: string,
   options: StrategicPipelineOptions = {}
 ) {
-  const {
-    providers = [
-      ...DEFAULT_ACADEMIC_PROVIDERS,
-      "imf", "worldbank", "oecd", "brookings", "rand", "cnas",
-    ] as Providers,
-    perProvider = 30,
-    rankOptions = {},
-    focusAreas,
-    targetAudience,
-    urgencyContext
-  } = options;
-
-  const stats: any = {};
-  const pipelineStart = Date.now();
-
-  // Create PipelineRun for persistent lineage tracking
-  const pipelineRun = await prisma.pipelineRun.create({
-    data: { question: query, format: "strategic", status: "RUNNING" },
+  return runPipelineCore(query, {
+    isStrategic: true,
+    providers: options.providers,
+    perProvider: options.perProvider,
+    rankOptions: options.rankOptions,
+    focusAreas: options.focusAreas,
+    targetAudience: options.targetAudience,
+    urgencyContext: options.urgencyContext,
   });
-
-  try {
-  const briefId = `strategic-${Date.now()}`;
-  const lineage = createLineageTracker(briefId, query);
-
-  // Initialize Orchestrator state (strategic = more iterations allowed)
-  const orchState = createPipelineState(query, true);
-
-  console.log(`\n${"═".repeat(60)}`);
-  console.log(`  STRATEGIC REPORT PIPELINE`);
-  console.log(`  Query: "${query}"`);
-  console.log(`  PipelineRun: ${pipelineRun.id}`);
-  console.log(`${"═".repeat(60)}\n`);
-
-  // 0. CONTEXT PRIMER — Inject institutional memory
-  console.log(`[Strategic] CONTEXT PRIMER: loading institutional memory`);
-  let primedContext: Awaited<ReturnType<typeof primeContext>> | null = null;
-  try {
-    primedContext = await primeContext(query, { maxConcepts: 20, maxPriorBriefs: 8 });
-    orchState.contextPrimed = true;
-    orchState.knownConceptCount = primedContext.knownConcepts.length;
-    orchState.priorBriefCount = primedContext.priorBriefs.length;
-    stats.contextPrimer = {
-      knownConcepts: primedContext.knownConcepts.length,
-      priorBriefs: primedContext.priorBriefs.length,
-      emergingTrends: primedContext.emergingTrends.length,
-      coverageGap: primedContext.coverageGap,
-      durationMs: primedContext.durationMs,
-    };
-    console.log(`[Strategic] CONTEXT PRIMER: ${primedContext.knownConcepts.length} concepts, ${primedContext.priorBriefs.length} prior briefs`);
-  } catch (err) {
-    console.warn(`[Strategic] CONTEXT PRIMER: failed (non-blocking):`, err);
-    stats.contextPrimer = { error: String(err) };
-  }
-
-  // 1. SCOUT (MAXIMUM sources for think tank level)
-  console.log(`[Strategic] SCOUT: query="${query}" (${perProvider}/provider)`);
-  let allSourceIds: string[] = [];
-  const scoutStart = Date.now();
-  const scoutResult = await scout(query, providers, Math.max(perProvider, 75)); // Minimum 75 sources per provider
-  allSourceIds = [...scoutResult.sourceIds];
-  recordTransformation(lineage, "scout", 1, scoutResult.sourceIds.length, Date.now() - scoutStart, {
-    sourceIds: scoutResult.sourceIds,
-    filters: { providers }
-  });
-  stats.scout = scoutResult;
-
-  // Orchestrator checkpoint: assess source quality
-  orchState.sourcesFound = scoutResult.found;
-  orchState.providerDiversity = new Set(allSourceIds.map(id => id.split(":")[0])).size;
-  const scoutDecision = assessAfterScout(orchState);
-  recordDecision(orchState, scoutDecision);
-  stats.orchestrator = { decisions: [scoutDecision] };
-
-  if (scoutDecision.action === "RE_SCOUT" && orchState.iteration < orchState.maxIterations) {
-    console.log(`[Strategic] ORCHESTRATOR: RE_SCOUT — ${scoutDecision.reason}`);
-    try {
-      const expanded = await generateExpandedTerms(query, scoutResult.found, providers);
-      stats.orchestrator.expandedTerms = expanded.terms;
-      const extraResults = await Promise.allSettled(
-        expanded.terms.slice(0, 7).map(term => scout(term, providers, 30)) // Strategic: 7 terms, 30 sources each
-      );
-      for (let i = 0; i < extraResults.length; i++) {
-        const r = extraResults[i];
-        if (r.status === "fulfilled") {
-          allSourceIds.push(...r.value.sourceIds);
-          console.log(`[Strategic] RE_SCOUT: "${expanded.terms[i]}" → +${r.value.found} sources`);
-        }
-      }
-      orchState.sourcesFound = allSourceIds.length;
-    } catch (err) {
-      console.warn(`[Strategic] RE_SCOUT: failed (non-blocking):`, err);
-    }
-  }
-
-  // 2. INDEX
-  console.log(`[Strategic] INDEX: ${allSourceIds.length} sources`);
-  const indexResult = await index(allSourceIds);
-  stats.index = indexResult;
-
-  // 2b. EMBED (semantic vectors)
-  console.log(`[Strategic] EMBED: generating semantic vectors...`);
-  try {
-    const embedResult = await embedSourcesBatch(scoutResult.sourceIds);
-    stats.embed = embedResult;
-    console.log(`[Strategic] EMBED: ${embedResult.embedded} new, ${embedResult.skipped} cached`);
-  } catch (err) {
-    console.warn(`[Strategic] EMBED: failed (non-blocking):`, err);
-    stats.embed = { error: String(err) };
-  }
-
-  // 3. Deduplicate
-  console.log(`[Strategic] DEDUPLICATE`);
-  const dedupeResult = await deduplicateSources();
-  stats.dedupe = dedupeResult;
-
-  // 4. RANK (more sources, with enhanced filtering)
-  const enhancedRankOptions: RankOptions = {
-    limit: 25, // More sources for strategic report
-    mode: "balanced",
-    recentOnly: true, // Focus on recent research
-    requireAbstract: true,
-    minAbstractLength: 200, // Need substantial abstracts
-    minQuality: 65,
-    maxPerProvider: 6,
-    minProviderDiversity: 4,
-    ...rankOptions
-  };
-
-  console.log(`[Strategic] RANK: top ${enhancedRankOptions.limit} with filters`);
-  const topSources = await rank(query, enhancedRankOptions);
-  orchState.avgQualityScore = topSources.length > 0
-    ? Math.round(topSources.reduce((sum: number, s: any) => sum + (s.qualityScore || 0), 0) / topSources.length)
-    : 0;
-  stats.rank = { count: topSources.length, avgQuality: orchState.avgQualityScore };
-
-  if (topSources.length < 5) {
-    console.warn(`[Strategic] Only ${topSources.length} sources - report may be limited`);
-  }
-
-  // 5. READER V3 (full-text PDF + quantitative extraction)
-  console.log(`[Strategic] READER V3: deep extraction from ${topSources.length} sources`);
-  const readings = await readerAgentV3(topSources, { enablePdf: true, maxConcurrency: 5, timeout: 25000 });
-  const fullTextCount = readings.filter(r => r.readingDepth === 'full_text').length;
-  const quantCount = readings.filter(r => r.quantitative.effectSizes.length > 0 || r.quantitative.sampleSizes.length > 0).length;
-  stats.reader = { count: readings.length, fullText: fullTextCount, withQuantData: quantCount };
-
-  // Orchestrator checkpoint: assess reader output
-  orchState.sourcesWithAbstract = readings.filter(r => r.claims.length > 0 || r.methods.length > 0).length;
-  orchState.sourcesWithFullText = fullTextCount;
-  const readerDecision = assessAfterReader(orchState);
-  recordDecision(orchState, readerDecision);
-  stats.orchestrator.decisions.push(readerDecision);
-
-  // 6. STRATEGIC ANALYST (comprehensive analysis + institutional memory)
-  console.log(`[Strategic] STRATEGIC ANALYST: synthesize comprehensive report`);
-  const analysis = await strategicAnalystAgent(query, topSources, readings, {
-    focusAreas,
-    targetAudience,
-    urgencyContext: [urgencyContext, primedContext?.contextBlock].filter(Boolean).join('\n\n') || undefined,
-  });
-  stats.analyst = { 
-    hasDebate: !!analysis.debate,
-    keyFindingsCount: analysis.keyFindings?.length || 0,
-    scenariosCount: analysis.scenarios?.length || 0
-  };
-
-  // 6b. HARVARD COUNCIL — PhD Expert Analysis + Adversarial Review + Synthesis
-  console.log(`[Strategic] HARVARD COUNCIL: PhD expert analysis`);
-  try {
-    const sourceCtx = topSources.map((s: any, i: number) =>
-      `[SRC-${i + 1}] ${s.title} (${s.year || "N/A"}) — ${(s.abstract || "").slice(0, 400)}`
-    ).join("\n\n");
-
-    const council = await runHarvardCouncil(query, sourceCtx, topSources.length, { strategic: true });
-    stats.harvardCouncil = {
-      experts: council.expertAnalyses.length,
-      reviewers: council.reviews.length,
-      evidenceLevel: council.evidenceGrade.cebmLevel,
-      gradeCertainty: council.evidenceGrade.gradeCertainty,
-      avgRigor: council.reviews.length > 0
-        ? Math.round(council.reviews.reduce((s, r) => s + r.overallRigor, 0) / council.reviews.length)
-        : 0,
-      predictions: council.synthesis.calibratedPredictions?.length || 0,
-      recommendations: council.synthesis.recommendations?.length || 0,
-      costUsd: council.totalCostUsd,
-      durationMs: council.totalDurationMs,
-    };
-    if (council.synthesis.executiveSummary) {
-      (analysis as any)._harvardCouncil = council.synthesis;
-    }
-    console.log(`[Strategic] HARVARD COUNCIL: CEBM ${council.evidenceGrade.cebmLevel}, GRADE ${council.evidenceGrade.gradeCertainty}, ${council.expertAnalyses.length} experts`);
-  } catch (err) {
-    console.warn(`[Strategic] HARVARD COUNCIL: failed (non-blocking):`, err);
-    stats.harvardCouncil = { error: String(err) };
-  }
-
-  // 7. CITATION GUARD
-  console.log(`[Strategic] GUARD: validate citations`);
-  const guard = citationGuard(analysis, topSources.length);
-  stats.guard = guard;
-
-  if (!guard.ok) {
-    console.warn(`[Strategic] Citation guard warning: ${guard.usedCount} citations, ${guard.invalid.length} invalid`);
-  }
-
-  // 8. STRATEGIC EDITOR (render comprehensive HTML)
-  console.log(`[Strategic] EDITOR: render strategic report HTML`);
-  let html = renderStrategicReportHTML(analysis, topSources);
-  stats.htmlLength = html.length;
-
-  // 9. CITATION VERIFIER (semantic validation)
-  console.log(`[Strategic] CITATION VERIFIER: semantic check`);
-  try {
-    const verification = await verifyCitations(html, topSources, { maxConcurrency: 5 });
-    stats.citationVerifier = {
-      integrity: verification.overallIntegrity,
-      supported: verification.supported,
-      flagged: verification.flaggedClaims.length,
-    };
-    console.log(`[Strategic] CITATION VERIFIER: integrity ${verification.overallIntegrity}%`);
-  } catch (err) {
-    console.warn(`[Strategic] CITATION VERIFIER: failed (non-blocking):`, err);
-  }
-
-  // 10. CRITICAL LOOP V2 (iterative peer review + rewrite)
-  console.log(`[Strategic] CRITICAL LOOP V2: iterative review`);
-  try {
-    const criticalResult = await runCriticalLoopV2({
-      draftHtml: html,
-      sources: topSources,
-      readings,
-      maxIterations: 2,
-      publishThreshold: 70, // Higher bar for strategic reports
-    });
-    stats.criticalLoop = {
-      iterations: criticalResult.iterations,
-      finalScore: criticalResult.compositeScore,
-      improvement: criticalResult.improvementDelta,
-      needsHumanReview: criticalResult.needsHumanReview,
-    };
-    if (criticalResult.improvementDelta > 0) {
-      html = criticalResult.finalHtml;
-      console.log(`[Strategic] CRITICAL LOOP V2: improved by +${criticalResult.improvementDelta} points`);
-    }
-  } catch (err) {
-    console.warn(`[Strategic] CRITICAL LOOP V2: failed (non-blocking):`, err);
-  }
-
-  // Orchestrator checkpoint: assess after critical loop
-  orchState.trustScore = stats.criticalLoop?.finalScore ?? null;
-  orchState.citationCoverage = stats.citationVerifier?.integrity ? stats.citationVerifier.integrity / 100 : null;
-  const criticalDecision = assessAfterCriticalLoop(orchState);
-  recordDecision(orchState, criticalDecision);
-  stats.orchestrator.decisions.push(criticalDecision);
-
-  // 11+12. DEBATE + META-ANALYSIS (parallel — independent of each other)
-  console.log(`[Strategic] DEBATE + META-ANALYSIS: running in parallel`);
-  const [debateResult, metaResult] = await Promise.allSettled([
-    debateAgent(query, topSources, readings, html),
-    metaAnalysisEngine(query, readings, topSources),
-  ]);
-
-  if (debateResult.status === "fulfilled") {
-    const debate = debateResult.value;
-    stats.debate = {
-      confidenceInDominant: debate.confidenceInDominant,
-      steelManStrength: debate.debateQuality.steelManStrength,
-      nuances: debate.nuances.length,
-      costUsd: debate.costUsd,
-    };
-    console.log(`[Strategic] DEBATE: confidence=${debate.confidenceInDominant}%, steel-man=${debate.debateQuality.steelManStrength}`);
-  } else {
-    console.warn(`[Strategic] DEBATE: failed (non-blocking):`, debateResult.reason);
-  }
-
-  if (metaResult.status === "fulfilled") {
-    const meta = metaResult.value;
-    stats.metaAnalysis = {
-      k: meta.k,
-      pooledEffect: meta.recommended === "random" ? meta.randomEffects.value : meta.fixedEffect.value,
-      I2: meta.heterogeneity.I2,
-      biasDetected: meta.publicationBias.biasDetected,
-      forestPlotEntries: meta.forestPlot.length,
-    };
-    console.log(`[Strategic] META-ANALYSIS: k=${meta.k}, pooled d=${stats.metaAnalysis.pooledEffect}, I²=${meta.heterogeneity.I2}%`);
-  } else {
-    console.warn(`[Strategic] META-ANALYSIS: failed (non-blocking):`, metaResult.reason);
-  }
-
-  // Estimate page count (rough: ~3000 chars per page)
-  const estimatedPages = Math.round(html.length / 3000);
-  console.log(`[Strategic] Estimated report length: ~${estimatedPages} pages`);
-
-  // 13. PUBLISHER
-  console.log(`[Strategic] PUBLISHER: save strategic report`);
-  const brief = await prisma.brief.create({
-    data: {
-      kind: "strategic",
-      question: query,
-      html,
-      sources: topSources.map((s) => s.id),
-      pipelineRunId: pipelineRun.id,
-      lineage: stats,
-      publicId: null,
-    },
-  });
-
-  stats.brief = { id: brief.id, estimatedPages };
-
-  // 14. KNOWLEDGE GRAPH (post-publish concept extraction)
-  console.log(`[Strategic] KNOWLEDGE GRAPH: extracting concepts`);
-  try {
-    const kg = await extractAndStoreConcepts(brief.id, query, html, topSources.map(s => s.id));
-    stats.knowledgeGraph = {
-      concepts: kg.concepts.length,
-      relations: kg.relations.length,
-      costUsd: kg.costUsd,
-    };
-    console.log(`[Strategic] KNOWLEDGE GRAPH: ${kg.concepts.length} concepts, ${kg.relations.length} relations`);
-  } catch (err) {
-    console.warn(`[Strategic] KNOWLEDGE GRAPH: failed (non-blocking):`, err);
-  }
-
-  // Finalize PipelineRun with aggregated metrics (all agent costs)
-  const totalCost = [
-    stats.contextPrimer?.costUsd,
-    stats.harvardCouncil?.costUsd,
-    stats.citationVerifier?.costUsd,
-    stats.debate?.costUsd,
-    stats.metaAnalysis?.costUsd,
-    stats.knowledgeGraph?.costUsd,
-  ].filter((v): v is number => typeof v === "number").reduce((a, b) => a + b, 0);
-
-  const durationMs = Date.now() - pipelineStart;
-  await prisma.pipelineRun.update({
-    where: { id: pipelineRun.id },
-    data: {
-      status: "COMPLETED",
-      finishedAt: new Date(),
-      durationMs,
-      totalCostUsd: totalCost,
-      sourcesFound: stats.scout?.found || 0,
-      sourcesRanked: stats.rank?.count || 0,
-      sourcesUsed: topSources.length,
-      trustScore: stats.criticalLoop?.finalScore,
-      steps: { ...stats, orchestrator: { ...stats.orchestrator, decisions: orchState.decisions } },
-    },
-  });
-
-  console.log(`\n${"\u2550".repeat(60)}`);
-  console.log(`  ✅ STRATEGIC REPORT COMPLETE`);
-  console.log(`  Brief: ${brief.id} | Run: ${pipelineRun.id}`);
-  console.log(`  Sources: ${topSources.length} | Pages: ~${estimatedPages}`);
-  console.log(`  Cost: $${totalCost.toFixed(4)} | Duration: ${durationMs}ms`);
-  console.log(`  Orchestrator: ${orchState.decisions.length} decisions`);
-  console.log(`${"\u2550".repeat(60)}\n`);
-
-  return { briefId: brief.id, stats, pipelineRunId: pipelineRun.id, format: "strategic" as ReportFormat };
-
-  } catch (error: any) {
-    // Error boundary: mark PipelineRun as FAILED
-    console.error(`[Strategic] FATAL: ${error.message}`);
-    await prisma.pipelineRun.update({
-      where: { id: pipelineRun.id },
-      data: {
-        status: "FAILED",
-        finishedAt: new Date(),
-        durationMs: Date.now() - pipelineStart,
-        steps: { ...stats, error: error.message },
-      },
-    }).catch(() => {});
-    throw error;
-  }
 }
 
 /**
@@ -1916,28 +1801,38 @@ function withTimeout<T>(promise: Promise<T>, timeoutMs: number, label: string): 
 }
 
 /**
- * Universal pipeline runner - choose format
+ * Universal pipeline runner â€” single entry point for all formats.
+ * Delegates directly to runPipelineCore with a timeout wrapper.
  */
 export async function runPipeline(
   query: string,
   format: ReportFormat = "brief",
   options: StrategicPipelineOptions = {}
 ) {
-  const timeoutMs = format === "strategic" || format === "dossier" ? 600_000 : 300_000;
-  const label = `runPipeline(${format})`;
+  const isStrategic = format === "strategic" || format === "dossier";
+  const timeoutMs = isStrategic ? 600_000 : 300_000;
 
-  return withTimeout(async function() {
-    switch (format) {
-      case "strategic":
-        return runStrategicPipeline(query, options);
-      case "dossier":
-        console.warn("[Pipeline] Dossier format not yet implemented, falling back to strategic");
-        return runStrategicPipeline(query, options);
-      case "brief":
-      default:
-        return runFullPipeline(query, options.providers || DEFAULT_ACADEMIC_PROVIDERS);
-    }
-  }(), timeoutMs, label);
+  if (format === "dossier") {
+    console.warn("[Pipeline] Dossier format not yet implemented, falling back to strategic");
+  }
+
+  return withTimeout(
+    runPipelineCore(query, {
+      isStrategic,
+      providers: options.providers,
+      perProvider: options.perProvider,
+      rankOptions: options.rankOptions,
+      focusAreas: options.focusAreas,
+      targetAudience: options.targetAudience,
+      urgencyContext: options.urgencyContext,
+      enableHarvardCouncil: options.enableHarvardCouncil,
+      enableDebate: options.enableDebate,
+      enableMetaAnalysis: options.enableMetaAnalysis,
+      enableDevilsAdvocate: options.enableDevilsAdvocate,
+    }),
+    timeoutMs,
+    `runPipeline(${format})`
+  );
 }
 
 // ================================
@@ -1964,9 +1859,9 @@ export async function runIntelligenceSweep(options?: {
 }> {
   const days = options?.days ?? 7;
   
-  console.log(`\n${"═".repeat(60)}`);
+  console.log(`\n${"â•".repeat(60)}`);
   console.log(`  INTELLIGENCE SWEEP (last ${days} days)`);
-  console.log(`${"═".repeat(60)}\n`);
+  console.log(`${"â•".repeat(60)}\n`);
   
   // 1. Get recent sources
   const since = new Date();
@@ -2002,12 +1897,12 @@ export async function runIntelligenceSweep(options?: {
     lookbackMonths: Math.max(3, Math.ceil(days / 30) * 2)
   });
   
-  console.log(`\n${"═".repeat(60)}`);
-  console.log(`  ✅ INTELLIGENCE SWEEP COMPLETE`);
+  console.log(`\n${"â•".repeat(60)}`);
+  console.log(`  âœ… INTELLIGENCE SWEEP COMPLETE`);
   console.log(`  Signals: ${signals.detected}`);
   console.log(`  Contradictions: ${contradictions.contradictionsFound}`);
   console.log(`  Trends: ${trends.trendsDetected}`);
-  console.log(`${"═".repeat(60)}\n`);
+  console.log(`${"â•".repeat(60)}\n`);
   
   return { signals, contradictions, trends };
 }

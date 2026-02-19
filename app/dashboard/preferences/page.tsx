@@ -121,11 +121,11 @@ export default function PreferencesPage() {
         {/* Header */}
         <div className="mb-10">
           <div className="flex items-center gap-4 mb-6">
-            <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-cyan-500/10 to-blue-500/5 border border-cyan-500/20 flex items-center justify-center shadow-[0_0_20px_rgba(0,212,255,0.15)]">
-              <SettingsIcon size={32} className="text-cyan-400" />
+            <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-indigo-500/10 to-violet-500/5 border border-indigo-500/20 flex items-center justify-center shadow-[0_0_20px_rgba(99,102,241,0.15)]">
+              <SettingsIcon size={32} className="text-indigo-400" />
             </div>
             <div>
-              <div className="text-xs text-cyan-400/60 tracking-[0.25em] uppercase mb-1">
+              <div className="text-xs text-indigo-300/70 tracking-[0.25em] uppercase mb-1">
                 Your Preferences
               </div>
               <h1 className="text-4xl font-light tracking-tight text-white/95">
@@ -153,7 +153,7 @@ export default function PreferencesPage() {
 
         {loading ? (
           <div className="py-20 text-center">
-            <Loader2 size={32} className="text-cyan-400 animate-spin mx-auto mb-3" />
+            <Loader2 size={32} className="text-indigo-400 animate-spin mx-auto mb-3" />
             <p className="text-white/40 text-sm">Loading preferences...</p>
           </div>
         ) : (
@@ -162,7 +162,7 @@ export default function PreferencesPage() {
             <section className="mb-8">
               <div className="mb-4">
                 <h2 className="text-4xl font-light text-white/95 flex items-center gap-2 mb-2">
-                  <Bell size={20} className="text-cyan-400" />
+                  <Bell size={20} className="text-indigo-400" />
                   Research Verticals
                 </h2>
                 <p className="text-sm text-white/60">
@@ -172,7 +172,7 @@ export default function PreferencesPage() {
 
               <div className="mb-4 p-4 rounded-lg bg-background/[0.02] border border-white/10">
                 <p className="text-sm text-white/70">
-                  <span className="text-cyan-400 font-medium">{selectedCount}</span> vertical
+                  <span className="text-indigo-300 font-medium">{selectedCount}</span> vertical
                   {selectedCount !== 1 ? "s" : ""} selected
                 </p>
               </div>
@@ -184,8 +184,8 @@ export default function PreferencesPage() {
                     variant="default"
                     className={`cursor-pointer transition-all ${
                       vertical.enabled
-                        ? "bg-cyan-500/10 border-cyan-500/40 shadow-[0_0_15px_rgba(0,212,255,0.2)]"
-                        : "bg-background/[0.02] border-white/10 hover:border-cyan-500/20"
+                        ? "bg-indigo-500/10 border-indigo-500/40 shadow-[0_0_15px_rgba(99,102,241,0.2)]"
+                        : "bg-background/[0.02] border-white/10 hover:border-indigo-500/20"
                     }`}
                     onClick={() => toggleVertical(vertical.id)}
                   >
@@ -194,12 +194,12 @@ export default function PreferencesPage() {
                         <div
                           className={`w-10 h-10 rounded-lg flex items-center justify-center flex-shrink-0 transition-all ${
                             vertical.enabled
-                              ? "bg-cyan-500/20 border border-cyan-500/40"
+                              ? "bg-indigo-500/20 border border-indigo-500/40"
                               : "bg-background/5 border border-white/10"
                           }`}
                         >
                           {vertical.enabled ? (
-                            <Check size={18} className="text-cyan-400" />
+                            <Check size={18} className="text-indigo-300" />
                           ) : (
                             <span className="text-4xl">{vertical.icon || "📊"}</span>
                           )}
@@ -207,7 +207,7 @@ export default function PreferencesPage() {
                         <div className="flex-1 min-w-0">
                           <h3
                             className={`text-sm font-medium mb-1 transition-colors ${
-                              vertical.enabled ? "text-cyan-400" : "text-white"
+                              vertical.enabled ? "text-indigo-300" : "text-white"
                             }`}
                           >
                             {vertical.name}
@@ -229,7 +229,7 @@ export default function PreferencesPage() {
             <section className="mb-8">
               <div className="mb-4">
                 <h2 className="text-4xl font-light text-white/95 flex items-center gap-2 mb-2">
-                  <Mail size={20} className="text-cyan-400" />
+                  <Mail size={20} className="text-indigo-400" />
                   Email Delivery
                 </h2>
                 <p className="text-sm text-white/60">
@@ -252,7 +252,7 @@ export default function PreferencesPage() {
                     <button
                       onClick={() => setEmailEnabled(!emailEnabled)}
                       className={`relative inline-flex h-6 w-11 items-center rounded-full transition-colors ${
-                        emailEnabled ? "bg-cyan-500" : "bg-background/10"
+                        emailEnabled ? "bg-indigo-500" : "bg-background/10"
                       }`}
                     >
                       <span
@@ -278,8 +278,8 @@ export default function PreferencesPage() {
                             onClick={() => setEmailFrequency(freq.value)}
                             className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                               emailFrequency === freq.value
-                                ? "bg-cyan-500/20 border border-cyan-500/40 text-cyan-400"
-                                : "bg-background/5 border border-white/10 text-white/60 hover:border-cyan-500/20"
+                                ? "bg-indigo-500/20 border border-indigo-500/40 text-indigo-300"
+                                : "bg-background/5 border border-white/10 text-white/60 hover:border-indigo-500/20"
                             }`}
                           >
                             {freq.label}

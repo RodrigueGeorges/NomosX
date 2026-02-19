@@ -86,7 +86,7 @@ export function renderWeeklyBriefEmail({
       color: #ffffff;
     }
     .logo-text-accent {
-      color: #00D4FF;
+      color: #6366F1;
     }
     .date-range {
       font-size: 12px;
@@ -97,8 +97,8 @@ export function renderWeeklyBriefEmail({
     .intro {
       margin-bottom: 30px;
       padding: 20px;
-      background: rgba(0, 212, 255, 0.05);
-      border: 1px solid rgba(0, 212, 255, 0.2);
+      background: rgba(99, 102, 241, 0.05);
+      border: 1px solid rgba(99, 102, 241, 0.2);
       border-radius: 8px;
     }
     .intro-text {
@@ -116,11 +116,11 @@ export function renderWeeklyBriefEmail({
     .vertical-tag {
       display: inline-block;
       padding: 4px 12px;
-      background: rgba(0, 212, 255, 0.1);
-      border: 1px solid rgba(0, 212, 255, 0.3);
+      background: rgba(99, 102, 241, 0.1);
+      border: 1px solid rgba(99, 102, 241, 0.3);
       border-radius: 12px;
       font-size: 11px;
-      color: #00D4FF;
+      color: #6366F1;
       text-transform: uppercase;
       letter-spacing: 0.05em;
     }
@@ -130,10 +130,10 @@ export function renderWeeklyBriefEmail({
     .vertical-header {
       font-size: 18px;
       font-weight: 500;
-      color: #00D4FF;
+      color: #6366F1;
       margin-bottom: 20px;
       padding-bottom: 10px;
-      border-bottom: 1px solid rgba(0, 212, 255, 0.2);
+      border-bottom: 1px solid rgba(99, 102, 241, 0.2);
     }
     .brief-card {
       margin-bottom: 20px;
@@ -144,7 +144,7 @@ export function renderWeeklyBriefEmail({
       transition: border-color 0.2s;
     }
     .brief-card:hover {
-      border-color: rgba(0, 212, 255, 0.3);
+      border-color: rgba(99, 102, 241, 0.3);
     }
     .brief-header {
       display: flex;
@@ -181,7 +181,7 @@ export function renderWeeklyBriefEmail({
     .read-button {
       display: inline-block;
       padding: 10px 20px;
-      background: linear-gradient(135deg, #00D4FF 0%, #4A7FE0 100%);
+      background: linear-gradient(135deg, #6366F1 0%, #7C3AED 100%);
       color: #ffffff;
       text-decoration: none;
       border-radius: 6px;
@@ -209,7 +209,7 @@ export function renderWeeklyBriefEmail({
       font-size: 12px;
     }
     .footer-link:hover {
-      color: #00D4FF;
+      color: #6366F1;
     }
     .footer-text {
       font-size: 11px;
@@ -227,7 +227,7 @@ export function renderWeeklyBriefEmail({
           <svg width="20" height="20" viewBox="0 0 120 120" fill="none">
             <defs>
               <linearGradient id="emailLogoGradient" x1="30%" y1="0%" x2="70%" y2="100%">
-                <stop offset="0%" style="stop-color:#00D4FF;stop-opacity:1" />
+                <stop offset="0%" style="stop-color:#6366F1;stop-opacity:1" />
                 <stop offset="100%" style="stop-color:#4A7FE0;stop-opacity:1" />
               </linearGradient>
             </defs>
@@ -236,7 +236,7 @@ export function renderWeeklyBriefEmail({
             <path d="M 87 35 L 60 60 L 33 85 L 27 80 L 60 53 L 87 28 Z" fill="url(#emailLogoGradient)" opacity="0.9"/>
             <path d="M 87 30 L 87 90 L 95 90 L 95 30 Z" fill="url(#emailLogoGradient)"/>
             <circle cx="60" cy="60" r="6" fill="white"/>
-            <circle cx="60" cy="60" r="3" fill="#00D4FF"/>
+            <circle cx="60" cy="60" r="3" fill="#6366F1"/>
           </svg>
         </div>
         <span class="logo-text">Nomos<span class="logo-text-accent">X</span></span>

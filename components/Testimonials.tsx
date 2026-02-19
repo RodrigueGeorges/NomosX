@@ -50,7 +50,7 @@ const categoryIcons = {
 };
 
 const categoryColors = {
-  strategic: "text-[#00D4FF]",
+  strategic: "text-indigo-400",
   financial: "text-green-400",
   research: "text-purple-400",
   regulatory: "text-orange-400"
@@ -78,12 +78,12 @@ export default function Testimonials() {
           return (
             <div
               key={index}
-              className="nx-card p-8 group hover:border-[#00D4FF]/20 transition-all duration-300"
+              className="nx-card p-8 group hover:border-indigo-500/20 transition-all duration-300"
             >
               {/* Header */}
               <div className="flex items-start justify-between mb-6">
                 <div className="flex items-center gap-3">
-                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-[#00D4FF]/10 to-[#7C3AED]/5 border border-white/[0.06] flex items-center justify-center">
+                  <div className="w-12 h-12 rounded-full bg-gradient-to-br from-indigo-500/10 to-violet-500/5 border border-white/[0.06] flex items-center justify-center">
                     <IconComponent size={20} className={colorClass} />
                   </div>
                   <div>
@@ -132,7 +132,7 @@ export default function Testimonials() {
           </div>
           <div className="w-px h-4 bg-white/[0.08]"></div>
           <div className="flex items-center gap-2">
-            <div className="w-2 h-2 rounded-full bg-[#00D4FF]"></div>
+            <div className="w-2 h-2 rounded-full bg-indigo-400"></div>
             <span className="text-sm text-white/60">98% Satisfaction Rate</span>
           </div>
           <div className="w-px h-4 bg-white/[0.08]"></div>

@@ -75,7 +75,7 @@ export default function ConversationHistory({ userId, onSelectAnalysis }: Conver
   const getStatusColor = (status: string) => {
     switch (status) {
       case 'COMPLETED': return 'text-green-400';
-      case 'RUNNING': return 'text-cyan-400';
+      case 'RUNNING': return 'text-indigo-400';
       case 'FAILED': return 'text-red-400';
       default: return 'text-neutral-400';
     }
@@ -84,7 +84,7 @@ export default function ConversationHistory({ userId, onSelectAnalysis }: Conver
   if (isLoading) {
     return (
       <div className="flex items-center justify-center p-8">
-        <div className="w-6 h-6 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin" />
+        <div className="w-6 h-6 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin" />
       </div>
     );
   }
@@ -104,7 +104,7 @@ export default function ConversationHistory({ userId, onSelectAnalysis }: Conver
           value={searchQuery}
           onChange={(e) => setSearchQuery(e.target.value)}
           placeholder="Search conversations..."
-          className="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-4 py-3 text-white placeholder-neutral-500 focus:border-cyan-500 focus:ring-1 focus:ring-cyan-500 outline-none transition-all"
+          className="w-full bg-neutral-900 border border-neutral-800 rounded-lg px-4 py-3 text-white placeholder-neutral-500 focus:border-indigo-500 focus:ring-1 focus:ring-indigo-500 outline-none transition-all"
         />
 
         <div className="flex gap-2">
@@ -114,7 +114,7 @@ export default function ConversationHistory({ userId, onSelectAnalysis }: Conver
               onClick={() => setFilter(f)}
               className={`px-4 py-2 rounded-lg text-sm font-medium transition-all ${
                 filter === f
-                  ? 'bg-cyan-500 text-white'
+                  ? 'bg-indigo-600 text-white'
                   : 'bg-neutral-900 text-neutral-400 hover:bg-neutral-800'
               }`}
             >
@@ -140,11 +140,11 @@ export default function ConversationHistory({ userId, onSelectAnalysis }: Conver
             <button
               key={analysis.id}
               onClick={() => onSelectAnalysis?.(analysis.id)}
-              className="w-full p-4 bg-neutral-900 hover:bg-neutral-800 rounded-xl border border-neutral-800 hover:border-cyan-500/50 transition-all text-left group"
+              className="w-full p-4 bg-neutral-900 hover:bg-neutral-800 rounded-xl border border-neutral-800 hover:border-indigo-500/50 transition-all text-left group"
             >
               <div className="flex items-start justify-between gap-4">
                 <div className="flex-1 min-w-0">
-                  <p className="text-white font-medium line-clamp-2 group-hover:text-cyan-400 transition-colors">
+                  <p className="text-white font-medium line-clamp-2 group-hover:text-indigo-300 transition-colors">
                     {analysis.question}
                   </p>
                   
@@ -174,7 +174,7 @@ export default function ConversationHistory({ userId, onSelectAnalysis }: Conver
 
       {/* Load More */}
       {filteredAnalyses.length >= 20 && (
-        <button className="w-full py-3 text-sm text-cyan-400 hover:text-cyan-300 transition-colors">
+        <button className="w-full py-3 text-sm text-indigo-400 hover:text-indigo-300 transition-colors">
           Load more...
         </button>
       )}

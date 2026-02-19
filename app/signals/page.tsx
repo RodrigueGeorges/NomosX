@@ -200,7 +200,7 @@ export default function SignalsPage() {
                 <Card 
                   key={signal.id}
                   variant="default"
-                  className="group hover:border-cyan-500/30 hover:bg-background/[0.04] transition-all duration-300 bg-background/[0.02] border-white/10 cursor-pointer"
+                  className="group hover:border-indigo-500/30 hover:bg-background/[0.04] transition-all duration-300 bg-background/[0.02] border-white/10 cursor-pointer"
                   onClick={() => handleSignalClick(signal)}
                 >
                   <CardContent className="pt-5 pb-5">
@@ -213,7 +213,7 @@ export default function SignalsPage() {
                       {/* Content */}
                       <div className="flex-1 min-w-0">
                         <div className="flex items-start justify-between gap-4 mb-2">
-                          <h3 className="text-base font-medium text-white line-clamp-1 group-hover:text-cyan-400 transition-colors">
+                          <h3 className="text-base font-medium text-white line-clamp-1 group-hover:text-indigo-300 transition-colors">
                             {signal.title}
                           </h3>
                           <div className="flex items-center gap-2 flex-shrink-0">
@@ -243,12 +243,12 @@ export default function SignalsPage() {
                           </span>
                           <span>{signal.sourceCount} sources</span>
                           <span>
-                            {new Date(signal.detectedAt).toLocaleDateString("fr-FR", {
+                            {new Date(signal.detectedAt).toLocaleDateString("en-US", {
                               day: "numeric",
                               month: "short"
                             })}
                           </span>
-                          <span className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity text-cyan-400 flex items-center gap-1">
+                          <span className="ml-auto opacity-0 group-hover:opacity-100 transition-opacity text-indigo-300 flex items-center gap-1">
                             Open in Studio <ArrowRight size={12} />
                           </span>
                         </div>

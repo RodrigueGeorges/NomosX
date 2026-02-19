@@ -15,7 +15,27 @@ import { prisma } from '../db';
 import { callLLM } from '../llm/unified-llm';
 import { getLongitudinalInsights } from './knowledge-graph';
 import { embedBatch, cosineSimilarity } from './semantic-engine';
-import { selectSmartProviders } from './smart-provider-selector';
+import { detectDomain } from './smart-provider-selector';
+
+// Sync domain → providers lookup (no DB needed for proposal building)
+const DOMAIN_PROVIDERS: Record<string, string[]> = {
+  health: ["openalex", "pubmed", "semanticscholar", "crossref", "worldbank"],
+  economics: ["openalex", "crossref", "worldbank", "imf", "oecd", "brookings"],
+  finance: ["openalex", "crossref", "worldbank", "imf", "bis", "brookings"],
+  climate: ["openalex", "crossref", "worldbank", "un", "oecd", "brookings"],
+  politics: ["openalex", "crossref", "hal", "un", "brookings", "rand", "cnas"],
+  law: ["openalex", "crossref", "hal", "un", "brookings", "rand"],
+  technology: ["semanticscholar", "openalex", "arxiv", "crossref", "cset", "ainow"],
+  ai: ["semanticscholar", "openalex", "arxiv", "crossref", "govai", "cset", "ainow"],
+  defense: ["openalex", "crossref", "nato", "rand", "cnas", "brookings"],
+  security: ["openalex", "crossref", "nato", "rand", "cnas", "cset"],
+  default: ["openalex", "semanticscholar", "crossref", "hal", "worldbank", "brookings", "rand"],
+};
+
+function getProvidersForTopic(topic: string): string[] {
+  const domain = detectDomain(topic);
+  return DOMAIN_PROVIDERS[domain] ?? DOMAIN_PROVIDERS.default;
+}
 
 // ============================================================================
 // TYPES
@@ -112,7 +132,7 @@ export async function planEditorialAgenda(
         priority: "high",
         confidence: 75,
         suggestedFormat: "brief",
-        suggestedProviders: selectSmartProviders(trend.concept).providers,
+        suggestedProviders: getProvidersForTopic(trend.concept),
         context: `Emerging trend: ${trend.summary}`,
         relatedBriefIds: [],
         estimatedNovelty: 80,
@@ -126,7 +146,7 @@ export async function planEditorialAgenda(
         priority: "high",
         confidence: 70,
         suggestedFormat: "strategic",
-        suggestedProviders: selectSmartProviders(controversy.concept).providers,
+        suggestedProviders: getProvidersForTopic(controversy.concept),
         context: `Active controversy with shifting positions: ${controversy.summary}`,
         relatedBriefIds: [],
         estimatedNovelty: 70,
@@ -182,7 +202,7 @@ export async function planEditorialAgenda(
           priority: "medium",
           confidence: 65,
           suggestedFormat: "brief",
-          suggestedProviders: selectSmartProviders(stale.question).providers,
+          suggestedProviders: getProvidersForTopic(stale.question),
           context: `Last covered ${daysSince} days ago (trust: ${stale.trustScore}). New data likely available.`,
           relatedBriefIds: [stale.id],
           estimatedNovelty: 50,
@@ -217,7 +237,7 @@ export async function planEditorialAgenda(
         priority: signal.priorityScore >= 90 ? "critical" : "high",
         confidence: signal.priorityScore,
         suggestedFormat: signal.priorityScore >= 90 ? "strategic" : "brief",
-        suggestedProviders: selectSmartProviders(signal.title).providers,
+        suggestedProviders: getProvidersForTopic(signal.title),
         context: `Signal from ${signal.vertical?.name || "unknown"}: ${signal.summary || signal.title}`,
         relatedBriefIds: [],
         estimatedNovelty: 85,
@@ -271,7 +291,7 @@ export async function planEditorialAgenda(
             priority: gap.priority === "high" ? "high" : "medium",
             confidence: 60,
             suggestedFormat: "brief",
-            suggestedProviders: selectSmartProviders(gap.topic).providers,
+            suggestedProviders: getProvidersForTopic(gap.topic),
             context: gap.reason,
             relatedBriefIds: [],
             estimatedNovelty: 90,

@@ -38,13 +38,13 @@ const billingPlans: BillingPlan[] = [
     name: 'Free',
     price: 0,
     interval: 'month',
-    description: 'Parfait pour découvrir NomosX',
+    description: 'Perfect for discovering NomosX',
     features: [
-      '3 newsletters par mois',
-      '1 brief par mois',
-      'Stockage de 1GB',
-      'Support communautaire',
-      'Accès aux templates de base'
+      '3 newsletters per month',
+      '1 brief per month',
+      '1GB storage',
+      'Community support',
+      'Access to basic templates'
     ],
     limits: {
       newsletters: 3,
@@ -60,15 +60,15 @@ const billingPlans: BillingPlan[] = [
     name: 'Professional',
     price: 49,
     interval: 'month',
-    description: 'Idéal pour les professionnels et petites équipes',
+    description: 'Ideal for professionals and small teams',
     features: [
-      'Newsletters illimitées',
-      '10 briefs par mois',
-      'Stockage de 50GB',
-      'Support prioritaire',
-      'Templates premium',
-      'Analytics avancées',
-      '5 membres d\'équipe'
+      'Unlimited newsletters',
+      '10 briefs per month',
+      '50GB storage',
+      'Priority support',
+      'Premium templates',
+      'Advanced analytics',
+      '5 team members'
     ],
     limits: {
       newsletters: -1,
@@ -85,18 +85,18 @@ const billingPlans: BillingPlan[] = [
     name: 'Enterprise',
     price: 199,
     interval: 'month',
-    description: 'Pour les grandes organisations',
+    description: 'For large organizations',
     features: [
-      'Newsletters illimitées',
-      'Briefs illimités',
-      'Stockage illimité',
-      'Support dédié 24/7',
-      'Templates personnalisés',
-      'Analytics enterprise',
-      'Membres d\'équipe illimités',
-      'API avancée',
-      'SLA garanti',
-      'Formation personnalisée'
+      'Unlimited newsletters',
+      'Unlimited briefs',
+      'Unlimited storage',
+      'Dedicated 24/7 support',
+      'Custom templates',
+      'Enterprise analytics',
+      'Unlimited team members',
+      'Advanced API',
+      'Guaranteed SLA',
+      'Personalized training'
     ],
     limits: {
       newsletters: -1,
@@ -112,16 +112,16 @@ const billingPlans: BillingPlan[] = [
     name: 'Custom',
     price: 0,
     interval: 'month',
-    description: 'Solution sur mesure pour vos besoins spécifiques',
+    description: 'Tailored solution for your specific needs',
     features: [
-      'Toutes les fonctionnalités Enterprise',
-      'Développement sur mesure',
-      'Intégrations personnalisées',
-      'Hébergement dédié',
-      'Account manager dédié',
-      'Formation sur site',
-      'Audit de sécurité',
-      'Conformité personnalisée'
+      'All Enterprise features',
+      'Custom development',
+      'Custom integrations',
+      'Dedicated hosting',
+      'Dedicated account manager',
+      'On-site training',
+      'Security audit',
+      'Custom compliance'
     ],
     limits: {
       newsletters: -1,
@@ -139,46 +139,45 @@ export function BillingPlansClient() {
   const [selectedPlan, setSelectedPlan] = useState<string>('professional')
 
   const getPlanPrice = (plan: BillingPlan) => {
-    if (plan.id === 'custom') return 'Sur devis'
+    if (plan.id === 'custom') return 'Custom quote'
     if (billingInterval === 'year' && plan.price > 0) {
-      const yearlyPrice = plan.price * 12 * 0.8 // 20% de réduction
-      return `€${yearlyPrice}/an`
+      const yearlyPrice = plan.price * 12 * 0.8
+      return `€${yearlyPrice}/year`
     }
-    return plan.price === 0 ? 'Gratuit' : `€${plan.price}/mois`
+    return plan.price === 0 ? 'Free' : `€${plan.price}/month`
   }
 
   const handlePlanSelect = (planId: string) => {
     setSelectedPlan(planId)
-    // Ici, ajouter la logique de redirection vers le checkout
-    console.log('Plan sélectionné:', planId)
+    console.log('Plan selected:', planId)
   }
 
   return (
     <div className="space-y-8">
       {/* Billing Toggle */}
       <div className="flex justify-center">
-        <div className="bg-neutral-100 rounded-lg p-1 flex">
+        <div className="bg-white/[0.06] rounded-lg p-1 flex">
           <button
             onClick={() => setBillingInterval('month')}
             className={cn(
               'px-4 py-2 rounded-md transition-colors',
               billingInterval === 'month'
-                ? 'bg-white text-primary shadow-sm'
-                : 'text-neutral-600 hover:text-neutral-900'
+                ? 'bg-white/10 text-white shadow-sm'
+                : 'text-white/50 hover:text-white/80'
             )}
           >
-            Mensuel
+            Monthly
           </button>
           <button
             onClick={() => setBillingInterval('year')}
             className={cn(
               'px-4 py-2 rounded-md transition-colors',
               billingInterval === 'year'
-                ? 'bg-white text-primary shadow-sm'
-                : 'text-neutral-600 hover:text-neutral-900'
+                ? 'bg-white/10 text-white shadow-sm'
+                : 'text-white/50 hover:text-white/80'
             )}
           >
-            Annuel <span className="text-green-600 text-sm">-20%</span>
+            Annual <span className="text-green-400 text-sm">-20%</span>
           </button>
         </div>
       </div>
@@ -197,7 +196,7 @@ export function BillingPlansClient() {
             {plan.popular && (
               <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
                 <Badge className="bg-primary text-white">
-                  Le plus populaire
+                  Most popular
                 </Badge>
               </div>
             )}
@@ -213,8 +212,8 @@ export function BillingPlansClient() {
                   {getPlanPrice(plan)}
                 </div>
                 {plan.id !== 'custom' && billingInterval === 'year' && plan.price > 0 && (
-                  <div className="text-sm text-green-600">
-                    Économisez €{(plan.price * 12 * 0.2).toFixed(0)}/an
+                  <div className="text-sm text-green-400">
+                    Save €{(plan.price * 12 * 0.2).toFixed(0)}/year
                   </div>
                 )}
               </div>
@@ -238,17 +237,17 @@ export function BillingPlansClient() {
                   'w-full',
                   plan.popular
                     ? 'bg-primary text-white hover:bg-primary/90'
-                    : 'bg-neutral-100 text-neutral-900 hover:bg-neutral-200'
+                    : 'bg-white/[0.06] text-white/80 hover:bg-white/[0.1]'
                 )}
                 variant={plan.popular ? 'primary' : 'ghost'}
               >
                 {plan.id === 'custom' 
-                  ? 'Contacter le commercial' 
+                  ? 'Contact sales' 
                   : selectedPlan === plan.id 
-                    ? 'Sélectionné' 
+                    ? 'Selected' 
                     : plan.price === 0 
-                      ? 'Commencer gratuitement' 
-                      : 'S\'abonner'
+                      ? 'Get started for free' 
+                      : 'Subscribe'
                 }
               </Button>
             </CardContent>
@@ -258,12 +257,12 @@ export function BillingPlansClient() {
 
       {/* Comparison Table */}
       <div className="mt-12">
-        <h3 className="text-2xl font-bold text-center mb-8">Comparaison des fonctionnalités</h3>
+        <h3 className="text-2xl font-bold text-center mb-8">Feature Comparison</h3>
         <div className="overflow-x-auto">
           <table className="w-full border-collapse">
             <thead>
               <tr className="border-b">
-                <th className="text-left p-4">Fonctionnalité</th>
+                <th className="text-left p-4">Feature</th>
                 {billingPlans.map((plan) => (
                   <th key={plan.id} className="text-center p-4">
                     {plan.name}
@@ -272,48 +271,48 @@ export function BillingPlansClient() {
               </tr>
             </thead>
             <tbody>
-              <tr className="border-b hover:bg-neutral-50">
+              <tr className="border-b hover:bg-white/[0.02]">
                 <td className="p-4 font-medium">Newsletters</td>
-                <td className="text-center p-4">3/mois</td>
-                <td className="text-center p-4">Illimité</td>
-                <td className="text-center p-4">Illimité</td>
-                <td className="text-center p-4">Illimité</td>
+                <td className="text-center p-4">3/month</td>
+                <td className="text-center p-4">Unlimited</td>
+                <td className="text-center p-4">Unlimited</td>
+                <td className="text-center p-4">Unlimited</td>
               </tr>
-              <tr className="border-b hover:bg-neutral-50">
+              <tr className="border-b hover:bg-white/[0.02]">
                 <td className="p-4 font-medium">Briefs</td>
-                <td className="text-center p-4">1/mois</td>
-                <td className="text-center p-4">10/mois</td>
-                <td className="text-center p-4">Illimité</td>
-                <td className="text-center p-4">Illimité</td>
+                <td className="text-center p-4">1/month</td>
+                <td className="text-center p-4">10/month</td>
+                <td className="text-center p-4">Unlimited</td>
+                <td className="text-center p-4">Unlimited</td>
               </tr>
-              <tr className="border-b hover:bg-neutral-50">
-                <td className="p-4 font-medium">Stockage</td>
+              <tr className="border-b hover:bg-white/[0.02]">
+                <td className="p-4 font-medium">Storage</td>
                 <td className="text-center p-4">1GB</td>
                 <td className="text-center p-4">50GB</td>
-                <td className="text-center p-4">Illimité</td>
-                <td className="text-center p-4">Illimité</td>
+                <td className="text-center p-4">Unlimited</td>
+                <td className="text-center p-4">Unlimited</td>
               </tr>
-              <tr className="border-b hover:bg-neutral-50">
+              <tr className="border-b hover:bg-white/[0.02]">
                 <td className="p-4 font-medium">Support</td>
                 <td className="text-center p-4">
-                  <Badge variant="outline">Communautaire</Badge>
+                  <Badge variant="outline">Community</Badge>
                 </td>
                 <td className="text-center p-4">
-                  <Badge variant="secondary">Prioritaire</Badge>
+                  <Badge variant="secondary">Priority</Badge>
                 </td>
                 <td className="text-center p-4">
-                  <Badge className="bg-primary text-white">Dédié 24/7</Badge>
+                  <Badge className="bg-primary text-white">Dedicated 24/7</Badge>
                 </td>
                 <td className="text-center p-4">
                   <Badge className="bg-primary text-white">Premium</Badge>
                 </td>
               </tr>
-              <tr className="hover:bg-neutral-50">
-                <td className="p-4 font-medium">Membres d\'équipe</td>
+              <tr className="hover:bg-white/[0.02]">
+                <td className="p-4 font-medium">Team members</td>
                 <td className="text-center p-4">1</td>
                 <td className="text-center p-4">5</td>
-                <td className="text-center p-4">Illimité</td>
-                <td className="text-center p-4">Illimité</td>
+                <td className="text-center p-4">Unlimited</td>
+                <td className="text-center p-4">Unlimited</td>
               </tr>
             </tbody>
           </table>

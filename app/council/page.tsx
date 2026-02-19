@@ -20,7 +20,7 @@ function CouncilRedirectInner() {
 
   return (
     <div className="text-center">
-      <div className="text-cyan-400 mb-4">Redirecting...</div>
+      <div className="text-indigo-400 mb-4">Redirecting...</div>
       <p className="text-white/50 text-sm">
         The Council page has been replaced by Studio
       </p>
@@ -37,7 +37,7 @@ export default function CouncilRedirect() {
     <div className="min-h-screen bg-[#0A0A0B] flex items-center justify-center">
       <Suspense fallback={
         <div className="text-center">
-          <div className="text-cyan-400 mb-4">Loading...</div>
+          <div className="text-indigo-400 mb-4">Loading...</div>
         </div>
       }>
         <CouncilRedirectInner />

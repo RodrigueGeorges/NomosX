@@ -497,7 +497,7 @@ export async function runHarvardCouncil(
   question: string,
   sourceContext: string,
   sourceCount: number,
-  options?: { experts?: DomainExpertise[]; strategic?: boolean }
+  options?: { experts?: DomainExpertise[]; strategic?: boolean; runId?: string }
 ): Promise<{
   synthesis: SynthesisReport;
   expertAnalyses: ExpertAnalysis[];
@@ -520,7 +520,7 @@ export async function runHarvardCouncil(
   // STEP 1 + 2: Run Expert Council + Evidence Grader in parallel
   console.log(`[HARVARD] Phase 1: Expert Council + Evidence Grading (parallel)`);
   const [councilResult, gradeResult] = await Promise.all([
-    runExpertCouncil(question, sourceContext, sourceCount, { experts: options?.experts, strategic: options?.strategic }),
+    runExpertCouncil(question, sourceContext, sourceCount, { experts: options?.experts, strategic: options?.strategic, runId: options?.runId }),
     gradeEvidence(question, sourceContext, sourceCount),
   ]);
 

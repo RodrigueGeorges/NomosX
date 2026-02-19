@@ -88,19 +88,21 @@ export async function POST(req: NextRequest) {
           || recentTopics[0]?.question
           || vertical.slug;
 
-        // Smart provider selection based on domain
-        const smartSelection = selectSmartProviders(searchQuery);
+        // Smart provider selection based on domain (async, history-aware)
+        const smartSelection = await selectSmartProviders(searchQuery).catch(() => null);
+        const scoutProviders = smartSelection?.providers ?? ["openalex", "crossref", "semanticscholar"];
+        const scoutQty = smartSelection ? Math.ceil(smartSelection.quantity / scoutProviders.length) : 20;
 
         const scoutResult = await scout(
           searchQuery,
-          smartSelection.providers,
-          Math.ceil(smartSelection.quantity / smartSelection.providers.length)
+          scoutProviders as any,
+          scoutQty
         );
 
         if (scoutResult.sourceIds && scoutResult.sourceIds.length > 0) {
           allNewSourceIds.push(...scoutResult.sourceIds);
           stats.sourcesIngested += scoutResult.upserted || 0;
-          console.log(`[AUTO-SCAN] ${vertical.name}: ${scoutResult.upserted || 0} new sources from ${smartSelection.providers.length} providers`);
+          console.log(`[AUTO-SCAN] ${vertical.name}: ${scoutResult.upserted || 0} new sources from ${scoutProviders.length} providers`);
         }
 
         stats.verticalsScanned++;

@@ -108,7 +108,7 @@ export default function PublicationDetailPage() {
     return (
       <Shell>
         <div className="flex items-center justify-center py-24">
-          <div className="w-8 h-8 border-2 border-[#00D4FF]/20 border-t-[#00D4FF] rounded-full animate-spin" />
+          <div className="w-8 h-8 border-2 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin" />
         </div>
       </Shell>
     );
@@ -122,7 +122,7 @@ export default function PublicationDetailPage() {
           <p className="text-white/40 text-sm mb-6">Publication not found</p>
           <button
             onClick={() => router.back()}
-            className="text-sm text-[#00D4FF]/60 hover:text-[#00D4FF] transition-colors inline-flex items-center gap-1.5"
+            className="text-sm text-indigo-400/60 hover:text-indigo-400 transition-colors inline-flex items-center gap-1.5"
           >
             <ArrowLeft size={14} /> Back
           </button>
@@ -155,9 +155,9 @@ export default function PublicationDetailPage() {
             <span
               className="text-[10px] font-semibold tracking-wider uppercase px-2.5 py-1 rounded-full border"
               style={{
-                backgroundColor: isStrategic ? 'rgba(124,58,237,0.1)' : 'rgba(0,212,255,0.1)',
-                color: isStrategic ? '#A78BFA' : '#00D4FF',
-                borderColor: isStrategic ? 'rgba(124,58,237,0.2)' : 'rgba(0,212,255,0.2)',
+                backgroundColor: isStrategic ? 'rgba(124,58,237,0.1)' : 'rgba(99,102,241,0.1)',
+                color: isStrategic ? '#A78BFA' : '#818CF8',
+                borderColor: isStrategic ? 'rgba(124,58,237,0.2)' : 'rgba(99,102,241,0.2)',
               }}
             >
               {TYPE_LABELS[publication.type] || publication.type}

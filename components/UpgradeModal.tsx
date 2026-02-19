@@ -45,7 +45,7 @@ export default function UpgradeModal({ isOpen, onClose, reason, message }: Upgra
 
   return (
     <div className="fixed inset-0 z-50 flex items-center justify-center p-4 bg-black/80 backdrop-blur-sm">
-      <Card variant="default" className="max-w-lg w-full bg-gradient-to-br from-cyan-500/5 to-blue-500/5 border-cyan-500/20 shadow-[0_0_60px_rgba(0,212,255,0.2)]">
+      <Card variant="default" className="max-w-lg w-full bg-gradient-to-br from-indigo-500/5 to-violet-500/5 border-indigo-500/20 shadow-[0_0_60px_rgba(99,102,241,0.2)]">
         <CardContent className="pt-8 pb-8 relative">
           <button
             onClick={onClose}
@@ -55,8 +55,8 @@ export default function UpgradeModal({ isOpen, onClose, reason, message }: Upgra
           </button>
 
           <div className="text-center mb-6">
-            <div className="w-16 h-16 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center mx-auto mb-4 shadow-[0_0_20px_rgba(0,212,255,0.2)]">
-              <Shield size={32} className="text-cyan-400" />
+            <div className="w-16 h-16 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center mx-auto mb-4 shadow-[0_0_20px_rgba(99,102,241,0.2)]">
+              <Shield size={32} className="text-indigo-400" />
             </div>
             <h2 className="text-2xl font-light text-white mb-2">{getTitle()}</h2>
             <p className="text-sm text-white/50">{getMessage()}</p>

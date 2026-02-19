@@ -53,7 +53,7 @@ export default function Shell({ children }: { children: React.ReactNode }) {
   // Redirect non-authenticated users to home
   useEffect(() => {
     if (!loading && !isAuthenticated) {
-      // Éviter les boucles de redirection
+      // Avoid redirect loops
       if (pathname !== "/") {
         router.push("/");
       }
@@ -78,10 +78,10 @@ export default function Shell({ children }: { children: React.ReactNode }) {
         {/* Background Futuriste */}
         <div className="fixed inset-0 pointer-events-none overflow-hidden">
           <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[1200px] h-[800px]">
-            <div className="absolute inset-0 bg-gradient-to-b from-cyan-500/8 via-blue-500/4 to-transparent blur-3xl" />
-            <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/6 via-transparent to-cyan-500/6 blur-3xl" />
+            <div className="absolute inset-0 bg-gradient-to-b from-indigo-500/8 via-violet-500/4 to-transparent blur-3xl" />
+            <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/6 via-transparent to-indigo-500/6 blur-3xl" />
           </div>
-          <div className="absolute inset-0 bg-[linear-gradient(rgba(0,212,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,212,255,0.02)_1px,transparent_1px)] bg-[size:80px_80px]" />
+          <div className="absolute inset-0 bg-[linear-gradient(rgba(99,102,241,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(99,102,241,0.02)_1px,transparent_1px)] bg-[size:80px_80px]" />
         </div>
         
         <div className="text-center relative z-10">
@@ -92,7 +92,7 @@ export default function Shell({ children }: { children: React.ReactNode }) {
                 <span className="text-slate-100 font-serif text-lg font-bold tracking-tight">N</span>
                 {/* Orbital elements */}
                 <div className="absolute inset-0 rounded-full border border-slate-600/30"></div>
-                <div className="absolute top-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-cyan-400 rounded-full opacity-60"></div>
+                <div className="absolute top-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-indigo-400 rounded-full opacity-60"></div>
                 <div className="absolute right-1 top-1/2 -translate-y-1/2 w-0.5 h-0.5 bg-slate-400 rounded-full opacity-40"></div>
                 <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-0.5 h-0.5 bg-slate-400 rounded-full opacity-40"></div>
                 <div className="absolute left-1 top-1/2 -translate-y-1/2 w-0.5 h-0.5 bg-slate-400 rounded-full opacity-40"></div>
@@ -105,8 +105,8 @@ export default function Shell({ children }: { children: React.ReactNode }) {
               </div>
             </div>
           <div className="relative w-12 h-12 mx-auto">
-            <div className="absolute inset-0 border-2 border-cyan-500/20 rounded-full"></div>
-            <div className="absolute inset-0 border-2 border-cyan-500 border-t-transparent rounded-full animate-spin"></div>
+            <div className="absolute inset-0 border-2 border-indigo-500/20 rounded-full"></div>
+            <div className="absolute inset-0 border-2 border-indigo-500 border-t-transparent rounded-full animate-spin"></div>
           </div>
         </div>
       </div>
@@ -119,12 +119,12 @@ export default function Shell({ children }: { children: React.ReactNode }) {
       <div className="fixed inset-0 pointer-events-none overflow-hidden z-0">
         {/* Mesh gradient principal */}
         <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1400px] h-[900px]">
-          <div className="absolute inset-0 bg-gradient-to-b from-cyan-500/8 via-blue-500/4 to-transparent blur-3xl" />
-          <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/6 via-transparent to-cyan-500/6 blur-3xl" />
+          <div className="absolute inset-0 bg-gradient-to-b from-indigo-500/8 via-violet-500/4 to-transparent blur-3xl" />
+          <div className="absolute inset-0 bg-gradient-to-tr from-purple-500/6 via-transparent to-indigo-500/6 blur-3xl" />
         </div>
         
         {/* Grid pattern subtil */}
-        <div className="absolute inset-0 bg-[linear-gradient(rgba(0,212,255,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(0,212,255,0.02)_1px,transparent_1px)] bg-[size:80px_80px]" />
+        <div className="absolute inset-0 bg-[linear-gradient(rgba(99,102,241,0.02)_1px,transparent_1px),linear-gradient(90deg,rgba(99,102,241,0.02)_1px,transparent_1px)] bg-[size:80px_80px]" />
         
         {/* Particles réseau agentique - Client only to avoid hydration mismatch */}
         {mounted && (
@@ -132,7 +132,7 @@ export default function Shell({ children }: { children: React.ReactNode }) {
             {[...Array(15)].map((_, i) => (
               <div 
                 key={i}
-                className="absolute w-1 h-1 rounded-full bg-cyan-400/20 animate-pulse"
+                className="absolute w-1 h-1 rounded-full bg-indigo-400/20 animate-pulse"
                 style={{
                   top: `${Math.random() * 100}%`,
                   left: `${Math.random() * 100}%`,
@@ -155,7 +155,7 @@ export default function Shell({ children }: { children: React.ReactNode }) {
               <span className="text-slate-100 font-serif text-sm font-bold tracking-tight">N</span>
               {/* Orbital elements */}
               <div className="absolute inset-0 rounded-full border border-slate-600/30"></div>
-              <div className="absolute top-0.5 left-1/2 -translate-x-1/2 w-1 h-1 bg-cyan-400 rounded-full opacity-60"></div>
+              <div className="absolute top-0.5 left-1/2 -translate-x-1/2 w-1 h-1 bg-indigo-400 rounded-full opacity-60"></div>
               <div className="absolute right-0.5 top-1/2 -translate-y-1/2 w-0.5 h-0.5 bg-slate-400 rounded-full opacity-40"></div>
               <div className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-0.5 h-0.5 bg-slate-400 rounded-full opacity-40"></div>
               <div className="absolute left-0.5 top-1/2 -translate-y-1/2 w-0.5 h-0.5 bg-slate-400 rounded-full opacity-40"></div>
@@ -197,8 +197,8 @@ export default function Shell({ children }: { children: React.ReactNode }) {
                 inline-flex items-center gap-2 whitespace-nowrap
                 transition-all duration-200
                 ${isActive("/pricing")
-                  ? 'text-cyan-400 bg-cyan-500/10'
-                  : 'text-cyan-400/70 hover:text-cyan-400 hover:bg-cyan-500/5'
+                  ? 'text-indigo-300 bg-indigo-500/10'
+                  : 'text-indigo-300/70 hover:text-indigo-300 hover:bg-indigo-500/5'
                 }
               `}
             >
@@ -230,7 +230,7 @@ export default function Shell({ children }: { children: React.ReactNode }) {
               <>
                 {/* User Badge (Desktop) */}
                 <div className="hidden lg:flex items-center gap-2 px-3 py-1.5 bg-white/[0.04] rounded-lg border border-white/[0.08]">
-                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center">
+                  <div className="w-6 h-6 rounded-full bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center">
                     <UserIcon size={14} className="text-white" strokeWidth={2.5} />
                   </div>
                   <span className="text-sm font-medium text-white/80">{user.name || user.email?.split('@')[0]}</span>
@@ -293,7 +293,7 @@ export default function Shell({ children }: { children: React.ReactNode }) {
               <div className="pt-4 border-t border-white/[0.08] space-y-2">
                 <div className="px-3 py-2 bg-white/[0.03] rounded-lg">
                   <div className="flex items-center gap-2 mb-1">
-                    <div className="w-6 h-6 rounded-full bg-gradient-to-br from-cyan-500 to-blue-600 flex items-center justify-center">
+                    <div className="w-6 h-6 rounded-full bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center">
                       <UserIcon size={14} className="text-white" strokeWidth={2.5} />
                     </div>
                     <span className="text-sm font-medium text-white/80">{user.name || user.email}</span>
@@ -327,7 +327,7 @@ export default function Shell({ children }: { children: React.ReactNode }) {
                 <span className="text-slate-100 font-serif text-xs font-bold tracking-tight">N</span>
                 {/* Orbital elements */}
                 <div className="absolute inset-0 rounded-full border border-slate-600/30"></div>
-                <div className="absolute top-0.5 left-1/2 -translate-x-1/2 w-0.5 h-0.5 bg-cyan-400 rounded-full opacity-60"></div>
+                <div className="absolute top-0.5 left-1/2 -translate-x-1/2 w-0.5 h-0.5 bg-indigo-400 rounded-full opacity-60"></div>
                 <div className="absolute right-0.5 top-1/2 -translate-y-1/2 w-0.5 h-0.5 bg-slate-400 rounded-full opacity-40"></div>
                 <div className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-0.5 h-0.5 bg-slate-400 rounded-full opacity-40"></div>
                 <div className="absolute left-0.5 top-1/2 -translate-y-1/2 w-0.5 h-0.5 bg-slate-400 rounded-full opacity-40"></div>

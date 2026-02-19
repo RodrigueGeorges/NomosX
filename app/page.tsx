@@ -1,16 +1,12 @@
 "use client";
 
-import React from 'react';
-import { useState, useEffect } from 'react';
+import React, { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import AuthModal from '@/components/AuthModal';
 import OnboardingModal from '@/components/OnboardingModal';
 import PublicNav from '@/components/PublicNav';
+import { Brain, Shield, Zap, Globe, BarChart3, TrendingUp, ArrowRight, CheckCircle, Clock, Sparkles, Search, FileText, Users } from 'lucide-react';
 import InteractiveDemo from '@/components/InteractiveDemo';
-import Testimonials from '@/components/Testimonials';
-import AdvancedResearcherAvatar from '@/components/AdvancedResearcherAvatar';
-import { RESEARCHERS } from '@/lib/researchers';
-import { ArrowRight, Loader2, CheckCircle } from 'lucide-react';
 
 export default function HomePage() {
   const router = useRouter();
@@ -19,669 +15,314 @@ export default function HomePage() {
   const [isAuthenticated, setIsAuthenticated] = useState(false);
   const [isLoading, setIsLoading] = useState(true);
   const [mounted, setMounted] = useState(false);
-  
-  const [email, setEmail] = useState("");
-  const [newsletterLoading, setNewsletterLoading] = useState(false);
-  const [liveStats, setLiveStats] = useState({
-  sourcesAnalyzed: "200K+",
-  briefsGenerated: "1,247",
-  researchersActive: "8",
-  costSavings: "1%"
-});
-
-useEffect(() => {
-  // Fetch live stats from API
-  fetch("/api/public/stats")
-    .then(res => res.json())
-    .then(data => {
-      setLiveStats({
-        sourcesAnalyzed: data.sourcesAnalyzed || "200K+",
-        briefsGenerated: data.briefsGenerated || "1,247",
-        researchersActive: data.researchersActive || "8",
-        costSavings: data.costSavings || "1%"
-      });
-    })
-    .catch(() => {
-      // Keep defaults if API fails
-    });
-}, []);
-
-  const [newsletterSuccess, setNewsletterSuccess] = useState(false);
-  const [newsletterError, setNewsletterError] = useState("");
 
   useEffect(() => {
-    fetch("/api/auth/me", { credentials: "include" })
-      .then(res => {
-        setIsAuthenticated(res.ok);
+    setMounted(true);
+    const checkAuth = async () => {
+      try {
+        const response = await fetch('/api/auth/me');
+        if (response.ok) {
+          setIsAuthenticated(true);
+        }
+      } catch (error) {
+        console.error('Auth check failed:', error);
+      } finally {
         setIsLoading(false);
-      })
-      .catch(() => {
-        setIsAuthenticated(false);
-        setIsLoading(false);
-      });
+      }
+    };
+    checkAuth();
   }, []);
 
-  useEffect(() => { setMounted(true); }, []);
-  
-  async function handleNewsletterSubmit(e: React.FormEvent) {
-    e.preventDefault();
-    if (!email.trim() || newsletterLoading) return;
-    setNewsletterLoading(true);
-    setNewsletterError("");
-    try {
-      const res = await fetch("/api/newsletter/subscribe", {
-        method: "POST",
-        headers: { "Content-Type": "application/json" },
-        body: JSON.stringify({ email: email.trim(), source: "homepage" }),
-      });
-      const data = await res.json();
-      if (res.ok && data.success) {
-        setNewsletterSuccess(true);
-        setEmail("");
-      } else {
-        setNewsletterError(data.error || "Something went wrong.");
-      }
-    } catch {
-      setNewsletterError("Network error. Please try again.");
-    } finally {
-      setNewsletterLoading(false);
-    }
-  }
+  const handleAuthSuccess = () => {
+    setIsAuthenticated(true);
+    setShowAuthModal(false);
+    setShowOnboardingModal(true);
+  };
 
-  // Loading
   if (isLoading) {
     return (
-      <div className="min-h-screen bg-[#06060A] flex items-center justify-center">
+      <div className="min-h-screen bg-[#09090b] text-white flex items-center justify-center">
         <div className="text-center">
-          <div className="w-16 h-16 mx-auto mb-6 relative">
-            <div className="absolute inset-0 rounded-full bg-gradient-to-br from-[#00D4FF]/20 to-[#7C3AED]/10 blur-xl" />
-            <div className="relative w-full h-full rounded-full bg-[#0C0C12] border border-white/10 flex items-center justify-center">
-              <span className="font-display text-2xl font-light nx-gradient-text">N</span>
-            </div>
+          <div className="w-12 h-12 mx-auto mb-6 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shadow-lg shadow-indigo-500/20">
+            <span className="text-lg font-bold text-white">N</span>
           </div>
-          <div className="w-8 h-8 mx-auto border-2 border-[#00D4FF]/20 border-t-[#00D4FF] rounded-full animate-spin" />
+          <div className="w-6 h-6 mx-auto border-2 border-indigo-500/30 border-t-indigo-500 rounded-full animate-spin" />
         </div>
       </div>
     );
   }
 
+  const features = [
+    {
+      icon: Clock,
+      title: "Analysis in 60 seconds",
+      description: "From complex question to structured brief with verifiable citations. Faster than an analyst sprint, stricter than a consultant deck.",
+      gradient: "from-indigo-500/10 to-indigo-500/5",
+      iconColor: "text-indigo-400",
+      borderHover: "hover:border-indigo-500/30",
+    },
+    {
+      icon: Shield,
+      title: "Zero hallucination policy",
+      description: "Citation Guard validates every source. Full traceability, institutional integrity, and evidence-first reasoning by default.",
+      gradient: "from-violet-500/10 to-violet-500/5",
+      iconColor: "text-violet-400",
+      borderHover: "hover:border-violet-500/30",
+    },
+    {
+      icon: TrendingUp,
+      title: "Weak signal detection",
+      description: "Automatic detection of emerging shifts before they become consensus. Anticipate strategic moves instead of reacting late.",
+      gradient: "from-emerald-500/10 to-emerald-500/5",
+      iconColor: "text-emerald-400",
+      borderHover: "hover:border-emerald-500/30",
+    },
+  ];
+
+  const pipeline = [
+    { icon: Search, label: "SCOUT", desc: "250M+ sources", color: "bg-indigo-500" },
+    { icon: BarChart3, label: "RANK", desc: "Quality selection", color: "bg-violet-500" },
+    { icon: FileText, label: "READER", desc: "Claim extraction", color: "bg-purple-500" },
+    { icon: Brain, label: "ANALYST", desc: "Strategic synthesis", color: "bg-fuchsia-500" },
+  ];
+
+  const stats = [
+    { value: "250M+", label: "Academic sources" },
+    { value: "8", label: "PhD perspectives" },
+    { value: "60s", label: "Analysis runtime" },
+    { value: "99.2%", label: "Citation precision" },
+  ];
+
+  const institutions = [
+    "MIT", "Stanford", "Oxford", "Johns Hopkins", "Georgetown", "Yale", "ETH Zürich", "Harvard"
+  ];
+
   return (
     <>
-      <div className="min-h-screen bg-[#06060A] text-[#F0F0F5] overflow-hidden">
+      <div className="min-h-screen bg-[#09090b] text-white overflow-hidden">
         
-        {/* ── Background Layers ── */}
+        {/* Background */}
         <div className="fixed inset-0 pointer-events-none">
-          {/* Radial glow */}
-          <div className="absolute top-0 left-1/2 -translate-x-1/2 w-[1200px] h-[800px]">
-            <div className="absolute inset-0 bg-gradient-to-b from-[#00D4FF]/[0.07] via-[#3B82F6]/[0.03] to-transparent blur-[100px]" />
-          </div>
-          {/* Secondary glow */}
-          <div className="absolute top-[40%] right-0 w-[600px] h-[600px]">
-            <div className="absolute inset-0 bg-gradient-to-bl from-[#7C3AED]/[0.04] to-transparent blur-[80px]" />
-          </div>
-          {/* Grid */}
-          <div className="absolute inset-0 nx-grid-bg opacity-40" />
-          {/* Noise */}
-          <div className="noise" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_80%_50%_at_50%_-20%,rgba(99,102,241,0.15),transparent_70%)]" />
+          <div className="absolute inset-0 bg-[radial-gradient(ellipse_50%_50%_at_80%_50%,rgba(139,92,246,0.08),transparent_70%)]" />
+          <div className="nx-grid-bg absolute inset-0 opacity-40" />
         </div>
 
         <div className="relative z-10">
 
-          {/* ══════════════════════════════════════════════════════════════════
-              NAV — Minimal, Fundamental-style
-              ══════════════════════════════════════════════════════════════════ */}
+          {/* Navigation */}
           <PublicNav 
             currentPage="home" 
             onSignInClick={() => setShowAuthModal(true)} 
             isAuthenticated={isAuthenticated} 
           />
 
-          {/* ══════════════════════════════════════════════════════════════════
-              HERO — "The Intelligence to Decide."
-              Fundamental-style: one phrase, massive impact, orbital animation
-              ══════════════════════════════════════════════════════════════════ */}
-          <section className="relative px-6 sm:px-8 pt-24 sm:pt-32 md:pt-40 pb-20 sm:pb-28 md:pb-36">
-            <div className="max-w-7xl mx-auto">
+          {/* Hero Section */}
+          <section className="relative px-6 sm:px-8 pt-20 sm:pt-28 pb-20">
+            <div className="max-w-5xl mx-auto text-center">
               
-              {/* Central orbital visualization */}
-              <div className="absolute top-20 left-1/2 -translate-x-1/2 w-[500px] h-[500px] sm:w-[600px] sm:h-[600px] pointer-events-none opacity-60">
-                {/* Outer ring */}
-                <div className="absolute inset-0 rounded-full border border-white/[0.04]" />
-                {/* Middle ring */}
-                <div className="absolute inset-[15%] rounded-full border border-white/[0.06]" />
-                {/* Inner ring */}
-                <div className="absolute inset-[30%] rounded-full border border-[#00D4FF]/[0.08]" />
-                {/* Core glow */}
-                <div className="absolute inset-[42%] rounded-full bg-gradient-to-br from-[#00D4FF]/10 to-[#7C3AED]/5 blur-xl" />
-                
-                {/* Orbiting researcher dots */}
-                {mounted && RESEARCHERS.slice(0, 6).map((r, i) => (
-                  <div 
-                    key={r.id}
-                    className="absolute top-1/2 left-1/2"
-                    style={{
-                      animation: `orbit ${18 + i * 3}s linear infinite`,
-                      animationDelay: `${i * -3}s`,
-                    }}
-                  >
-                    <div 
-                      className="w-2.5 h-2.5 sm:w-2 sm:h-2 rounded-full"
-                      style={{ 
-                        backgroundColor: r.colorHex,
-                        boxShadow: `0 0 16px ${r.colorHex}60`,
-                        animation: `counter-spin ${18 + i * 3}s linear infinite`,
-                        animationDelay: `${i * -3}s`,
-                      }}
-                    />
+              {/* Badge */}
+              <div className={`inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-indigo-500/20 bg-indigo-500/5 mb-8 ${mounted ? 'animate-fade-in' : 'opacity-0'}`}>
+                <div className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse-glow" />
+                <span className="text-xs text-indigo-300 font-medium tracking-wide">AUTONOMOUS THINK TANK</span>
+              </div>
+              
+              {/* Headline */}
+              <h1 className={`font-display text-5xl sm:text-6xl md:text-7xl font-semibold leading-[1.05] tracking-tight mb-6 ${mounted ? 'animate-fade-in delay-100' : 'opacity-0'}`}>
+                <span className="text-white">Institutional</span>
+                <br />
+                <span className="nx-gradient-text">research intelligence</span>
+                <br />
+                <span className="text-white/50">for decisive teams</span>
+              </h1>
+              
+              {/* Subtitle */}
+              <p className={`text-lg sm:text-xl text-white/50 max-w-2xl mx-auto mb-10 leading-relaxed font-light ${mounted ? 'animate-fade-in delay-200' : 'opacity-0'}`}>
+                8 AI researchers analyze 250M+ academic publications and deliver 
+                source-grounded strategic analysis in 60 seconds.
+              </p>
+              
+              {/* CTA */}
+              <div className={`flex flex-col sm:flex-row gap-3 justify-center mb-6 ${mounted ? 'animate-fade-in delay-300' : 'opacity-0'}`}>
+                <button 
+                  onClick={() => setShowAuthModal(true)}
+                  className="group px-6 py-3 rounded-lg bg-indigo-500 hover:bg-indigo-400 text-white font-medium text-sm transition-all duration-300 shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 flex items-center justify-center gap-2"
+                >
+                  Start free
+                  <ArrowRight size={16} className="group-hover:translate-x-0.5 transition-transform" />
+                </button>
+                <button 
+                  onClick={() => router.push('/methodology')}
+                  className="px-6 py-3 rounded-lg bg-white/[0.04] border border-white/[0.08] text-white/70 hover:text-white hover:bg-white/[0.08] hover:border-white/[0.12] font-medium text-sm transition-all duration-200"
+                >
+                  How it works
+                </button>
+              </div>
+
+              {/* Trust line */}
+              <p className={`text-xs text-white/30 ${mounted ? 'animate-fade-in delay-400' : 'opacity-0'}`}>
+                Free · No credit card · First analysis in 60s
+              </p>
+            </div>
+          </section>
+
+          {/* Stats bar */}
+          <section className={`relative px-6 sm:px-8 pb-20 ${mounted ? 'animate-fade-in delay-500' : 'opacity-0'}`}>
+            <div className="max-w-4xl mx-auto">
+              <div className="grid grid-cols-2 md:grid-cols-4 gap-px rounded-2xl overflow-hidden border border-white/[0.06]">
+                {stats.map((stat, i) => (
+                  <div key={i} className="bg-white/[0.02] px-6 py-8 text-center">
+                    <div className="text-2xl sm:text-3xl font-display font-semibold text-white mb-1">{stat.value}</div>
+                    <div className="text-xs text-white/40">{stat.label}</div>
                   </div>
                 ))}
               </div>
+            </div>
+          </section>
 
-              {/* Hero text */}
-              <div className="relative z-10 text-center max-w-5xl mx-auto">
-                {/* Eyebrow */}
-                <div className="animate-fade-in mb-8" style={{ animationDelay: '0.1s' }}>
-                  <span className="nx-label text-[#00D4FF]/60">Agentic Think Tank</span>
-                </div>
-
-                {/* Main headline */}
-                <h1 
-                  className="nx-display text-[clamp(2.5rem,7vw,5.5rem)] mb-8 animate-fade-in"
-                  style={{ animationDelay: '0.2s' }}
-                >
-                  <span className="nx-gradient-text-light">Where Research</span>
-                  <br />
-                  <span className="text-white/90">Becomes Strategy</span>
-                </h1>
-
-                {/* Sub-headline */}
-                <p 
-                  className="nx-body text-lg sm:text-xl max-w-2xl mx-auto mb-12 animate-fade-in"
-                  style={{ animationDelay: '0.4s' }}
-                >
-                  While competitors chase yesterday's news, our AI council analyzes 
-                  <span className="text-[#00D4FF] font-medium">200,000+ academic sources</span> to identify the 
-                  <span className="text-[#00D4FF] font-medium">strategic shifts</span> that will shape your industry next quarter.
+          {/* Pipeline Section */}
+          <section className="relative px-6 sm:px-8 py-20">
+            <div className="max-w-5xl mx-auto">
+              <div className="text-center mb-14">
+                <p className="text-xs text-indigo-400/80 font-medium tracking-[0.2em] uppercase mb-4">Agentic Pipeline</p>
+                <h2 className="font-display text-3xl sm:text-4xl font-semibold text-white mb-4">
+                  From question to brief in 4 stages
+                </h2>
+                <p className="text-base text-white/40 max-w-2xl mx-auto">
+                  Each agent has one mission. The pipeline transforms your question into decision-grade intelligence.
                 </p>
-
-                {/* CTA buttons */}
-                <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
-                  <button
-                    onClick={() => router.push('/briefs')}
-                    className="group px-8 py-4 rounded-xl border border-white/[0.1] text-white/70 hover:text-white hover:border-white/[0.2] hover:bg-white/[0.03] transition-all"
-                  >
-                    <span className="flex items-center justify-center gap-2">
-                      Browse Strategic Briefs
-                      <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
-                    </span>
-                  </button>
-                  <button
-                    onClick={() => setShowAuthModal(true)}
-                    className="group px-8 py-4 rounded-xl bg-gradient-to-r from-[#00D4FF]/20 to-[#3B82F6]/20 border border-[#00D4FF]/20 text-white font-medium hover:border-[#00D4FF]/40 transition-all shadow-[0_0_30px_rgba(0,212,255,0.15)]"
-                  >
-                    <span className="flex items-center justify-center gap-2">
-                      Get Full Access
-                      <ArrowRight size={16} className="transition-transform group-hover:translate-x-1" />
-                    </span>
-                  </button>
-                </div>
-
-                {/* Trust indicators */}
-                <div className="flex flex-col sm:flex-row items-center justify-center gap-6 text-sm text-white/30 animate-fade-in" style={{ animationDelay: '0.6s' }}>
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-green-400/60"></div>
-                    <span>No credit card required for FREE tier</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-[#00D4FF]/60"></div>
-                    <span>Cancel anytime</span>
-                  </div>
-                  <div className="flex items-center gap-2">
-                    <div className="w-2 h-2 rounded-full bg-purple-400/60"></div>
-                    <span>Enterprise-grade security</span>
-                  </div>
-                </div>
               </div>
-            </div>
-          </section>
 
-          {/* ══════════════════════════════════════════════════════════════════
-              METRICS BAR — Credibility through numbers
-              ══════════════════════════════════════════════════════════════════ */}
-          <section className="relative">
-            <div className="nx-divider" />
-            <div className="max-w-7xl mx-auto px-6 sm:px-8 py-16">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-8 md:gap-12">
-                {[
-                  { value: liveStats.briefsGenerated, label: "Strategic briefs generated" },
-                  { value: liveStats.researchersActive, label: "AI researchers active" },
-                  { value: liveStats.sourcesAnalyzed, label: "Sources analyzed daily" },
-                  { value: liveStats.costSavings, label: "Of traditional consulting costs" },
-                ].map((stat, i) => (
-                  <div key={i} className="text-center animate-fade-in" style={{ animationDelay: `${0.8 + i * 0.1}s` }}>
-                    <div className="font-display text-3xl sm:text-4xl font-light tracking-tight text-white mb-2">
-                      {stat.value}
+              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-4 gap-4">
+                {pipeline.map((step, i) => (
+                  <div key={i} className="group relative p-6 rounded-xl border border-white/[0.06] bg-white/[0.02] hover:bg-white/[0.04] hover:border-white/[0.12] transition-all duration-300">
+                    {/* Step number */}
+                    <div className="absolute top-4 right-4 text-[10px] font-mono text-white/20 font-medium">{String(i + 1).padStart(2, '0')}</div>
+                    
+                    <div className={`w-9 h-9 rounded-lg ${step.color} flex items-center justify-center mb-4 shadow-lg`}>
+                      <step.icon size={16} className="text-white" />
                     </div>
-                    <div className="nx-body-sm">{stat.label}</div>
+                    <h3 className="font-display text-sm font-semibold text-white mb-1">{step.label}</h3>
+                    <p className="text-xs text-white/40">{step.desc}</p>
+
+                    {/* Connector line */}
+                    {i < pipeline.length - 1 && (
+                      <div className="hidden lg:block absolute top-1/2 -right-2 w-4 h-px bg-gradient-to-r from-white/10 to-transparent" />
+                    )}
                   </div>
                 ))}
               </div>
             </div>
-            <div className="nx-divider" />
           </section>
 
-          {/* ══════════════════════════════════════════════════════════════════
-              SOCIAL PROOF — Recent activity & trust signals
-              ══════════════════════════════════════════════════════════════════ */}
-          <section className="relative">
-            <div className="nx-divider" />
-            <div className="max-w-7xl mx-auto px-6 sm:px-8 py-16">
+          {/* Live Demo Section */}
+          <section className="relative px-6 sm:px-8 py-20">
+            <div className="max-w-5xl mx-auto">
               <div className="text-center mb-12">
-                <span className="nx-label text-[#00D4FF]/50 mb-4 block">Live Activity</span>
-                <h2 className="nx-heading-2 text-white/95 mb-4">
-                  Trusted by decision-makers worldwide
+                <p className="text-xs text-indigo-400/80 font-medium tracking-[0.2em] uppercase mb-4">Live Demo</p>
+                <h2 className="font-display text-3xl sm:text-4xl font-semibold text-white mb-4">
+                  Watch the pipeline run
                 </h2>
-              </div>
-              
-              <div className="grid md:grid-cols-3 gap-8">
-                {/* Recent Briefs */}
-                <div className="nx-card p-6">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-2 h-2 rounded-full bg-green-400 animate-pulse"></div>
-                    <span className="text-sm text-white/60">Recently Published</span>
-                  </div>
-                  <div className="space-y-3">
-                    {[
-                      "AI Regulation: Global Trends",
-                      "Carbon Pricing Mechanisms",
-                      "Digital Health Adoption"
-                    ].map((title, i) => (
-                      <div key={i} className="flex items-center gap-2 text-sm text-white/40">
-                        <span className="text-[#00D4FF]">•</span>
-                        <span>{title}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Active Researchers */}
-                <div className="nx-card p-6">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-2 h-2 rounded-full bg-[#00D4FF] animate-pulse"></div>
-                    <span className="text-sm text-white/60">Research Council Active</span>
-                  </div>
-                  <div className="space-y-3">
-                    {RESEARCHERS.slice(0, 3).map((researcher, i) => (
-                      <div key={i} className="flex items-center gap-3">
-                        <div 
-                          className="w-2 h-2 rounded-full"
-                          style={{ backgroundColor: researcher.colorHex }}
-                        />
-                        <span className="text-sm text-white/40">{researcher.name}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-
-                {/* Global Reach */}
-                <div className="nx-card p-6">
-                  <div className="flex items-center gap-3 mb-4">
-                    <div className="w-2 h-2 rounded-full bg-purple-400 animate-pulse"></div>
-                    <span className="text-sm text-white/60">Global Analysis</span>
-                  </div>
-                  <div className="space-y-3">
-                    {[
-                      "North America: 42%",
-                      "Europe: 38%", 
-                      "Asia-Pacific: 20%"
-                    ].map((stat, i) => (
-                      <div key={i} className="flex items-center justify-between text-sm">
-                        <span className="text-white/40">{stat.split(":")[0]}</span>
-                        <span className="text-[#00D4FF]">{stat.split(":")[1]}</span>
-                      </div>
-                    ))}
-                  </div>
-                </div>
-              </div>
-            </div>
-            <div className="nx-divider" />
-          </section>
-
-          {/* ══════════════════════════════════════════════════════════════════
-              THE COUNCIL — 8 AI Researchers (the product identity)
-              ══════════════════════════════════════════════════════════════════ */}
-          <section className="relative py-24 sm:py-32">
-            <div className="max-w-7xl mx-auto px-6 sm:px-8">
-              {/* Section header */}
-              <div className="max-w-3xl mb-16 animate-fade-in-slow">
-                <span className="nx-label text-[#00D4FF]/50 mb-4 block">The Council</span>
-                <h2 className="nx-heading-1 text-white/95 mb-6">
-                  8 domain experts.<br />
-                  <span className="text-white/40">One institution.</span>
-                </h2>
-                <p className="nx-body text-lg">
-                  Each researcher brings a distinct analytical lens — from econometrics 
-                  to climate science. They evaluate, challenge, and synthesize — delivering 
-                  the rigor of a top-tier research institution, autonomously.
+                <p className="text-base text-white/40 max-w-2xl mx-auto">
+                  Every 10 seconds, a new research question is processed end-to-end — automatically.
                 </p>
               </div>
-
-              {/* Researcher grid */}
-              <div className="grid sm:grid-cols-2 lg:grid-cols-4 gap-6">
-                {RESEARCHERS.map((r, i) => (
-                  <div 
-                    key={r.id}
-                    className="nx-card p-6 group animate-fade-in hover:border-[#00D4FF]/20 transition-all duration-300"
-                    style={{ animationDelay: `${0.1 + i * 0.08}s` }}
-                  >
-                    <div className="flex flex-col items-center text-center">
-                      <AdvancedResearcherAvatar 
-                        researcher={r} 
-                        size="lg" 
-                        interactive={true}
-                        showStatus={true}
-                        status={['analyzing', 'debating', 'synthesizing', 'idle'][Math.floor(Math.random() * 4)] as any}
-                        className="mb-4"
-                      />
-                      <div className="min-w-0">
-                        <div className="text-sm font-medium text-white/90 truncate">{r.name}</div>
-                        <div className="text-xs text-white/30 truncate mb-2">{r.institution}</div>
-                      </div>
-                      <div className="text-xs font-medium" style={{ color: `${r.colorHex}90` }}>
-                        {r.domain}
-                      </div>
-                      <div className="text-xs text-white/20 leading-relaxed mt-2">
-                        {r.specialty}
-                      </div>
-                    </div>
-                  </div>
-                ))}
-              </div>
-            </div>
-          </section>
-
-          {/* ══════════════════════════════════════════════════════════════════
-              INTERACTIVE DEMO — See AI Council in Action
-              ══════════════════════════════════════════════════════════════════ */}
-          <section className="relative py-24 sm:py-32">
-            <div className="max-w-7xl mx-auto px-6 sm:px-8">
               <InteractiveDemo />
             </div>
           </section>
 
-          {/* ══════════════════════════════════════════════════════════════════
-              TESTIMONIALS — Social proof from industry leaders
-              ══════════════════════════════════════════════════════════════════ */}
-          <section className="relative py-24 sm:py-32">
-            <div className="nx-divider" />
-            <div className="max-w-7xl mx-auto px-6 sm:px-8">
-              <Testimonials />
-            </div>
-            <div className="nx-divider" />
-          </section>
-
-          {/* ══════════════════════════════════════════════════════════════════
-              HOW IT WORKS — Pipeline as product (Fundamental-style)
-              ══════════════════════════════════════════════════════════════════ */}
-          <section className="relative py-24 sm:py-32">
-            <div className="nx-divider" />
-            <div className="max-w-7xl mx-auto px-6 sm:px-8 pt-24">
-              
-              <div className="text-center mb-20">
-                <span className="nx-label text-[#00D4FF]/50 mb-4 block">How It Works</span>
-                <h2 className="nx-heading-1 text-white/95 mb-6">
-                  From noise to intelligence.
+          {/* Features Section */}
+          <section className="relative px-6 sm:px-8 py-20">
+            <div className="max-w-5xl mx-auto">
+              <div className="text-center mb-14">
+                <p className="text-xs text-indigo-400/80 font-medium tracking-[0.2em] uppercase mb-4">Why teams choose NomosX</p>
+                <h2 className="font-display text-3xl sm:text-4xl font-semibold text-white mb-4">
+                  Built for high-stakes decisions
                 </h2>
-                <p className="nx-body text-lg max-w-2xl mx-auto">
-                  A fully autonomous pipeline that transforms raw academic data into 
-                  institutional-grade publications — accessible to every decision-maker.
+                <p className="text-base text-white/40 max-w-2xl mx-auto">
+                  Strategic research should not be gated behind elite institutions.
                 </p>
               </div>
 
-              {/* Pipeline steps */}
-              <div className="grid md:grid-cols-3 gap-6 max-w-5xl mx-auto">
-                {[
-                  {
-                    step: "01",
-                    title: "Scout & Index",
-                    desc: "Continuously ingests from 53+ academic providers. Enriches with ORCID, ROR, and Knowledge Graph. Deduplicates and scores.",
-                    color: "#00D4FF",
-                  },
-                  {
-                    step: "02",
-                    title: "Analyze & Deliberate",
-                    desc: "Domain experts independently evaluate sources. Adversarial review challenges assumptions. Evidence is graded on Oxford CEBM scale.",
-                    color: "#3B82F6",
-                  },
-                  {
-                    step: "03",
-                    title: "Validate & Publish",
-                    desc: "An editorial gate enforces institutional standards. Only rigorous, citation-backed insights are published. Quality you can trust.",
-                    color: "#7C3AED",
-                  },
-                ].map((item, i) => (
-                  <div key={i} className="relative group">
-                    <div className="nx-card p-8 h-full">
-                      <div 
-                        className="text-5xl font-display font-light mb-6 opacity-20"
-                        style={{ color: item.color }}
-                      >
-                        {item.step}
-                      </div>
-                      <h3 className="nx-heading-3 text-white/90 mb-3">{item.title}</h3>
-                      <p className="nx-body-sm leading-relaxed">{item.desc}</p>
+              <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+                {features.map((feature, i) => (
+                  <div
+                    key={i}
+                    className={`group relative p-7 rounded-xl border border-white/[0.06] bg-white/[0.02] ${feature.borderHover} hover:bg-white/[0.04] transition-all duration-300`}
+                  >
+                    <div className={`w-10 h-10 rounded-lg bg-gradient-to-br ${feature.gradient} border border-white/[0.08] flex items-center justify-center mb-5`}>
+                      <feature.icon size={18} className={feature.iconColor} />
                     </div>
-                    {/* Connector line */}
-                    {i < 2 && (
-                      <div className="hidden md:block absolute top-1/2 -right-3 w-6 h-px bg-gradient-to-r from-white/10 to-transparent" />
-                    )}
+                    <h3 className="font-display text-base font-semibold text-white mb-2">{feature.title}</h3>
+                    <p className="text-sm text-white/40 leading-relaxed">{feature.description}</p>
                   </div>
                 ))}
               </div>
             </div>
           </section>
 
-          {/* ══════════════════════════════════════════════════════════════════
-              PUBLICATIONS — What you get
-              ══════════════════════════════════════════════════════════════════ */}
-          <section className="relative py-24 sm:py-32">
-            <div className="nx-divider" />
-            <div className="max-w-7xl mx-auto px-6 sm:px-8 pt-24">
-              
-              <div className="grid lg:grid-cols-2 gap-16 items-center">
-                {/* Left: text */}
-                <div>
-                  <span className="nx-label text-[#00D4FF]/50 mb-4 block">Publications</span>
-                  <h2 className="nx-heading-1 text-white/95 mb-6">
-                    Research that<br />
-                    <span className="text-white/40">powers decisions.</span>
-                  </h2>
-                  <p className="nx-body text-lg mb-10">
-                    Every publication is authored by a domain expert, grounded in peer-reviewed 
-                    research, and structured for the people who make the calls.
-                  </p>
+          {/* Institutions Section */}
+          <section className="relative px-6 sm:px-8 py-20">
+            <div className="max-w-5xl mx-auto text-center">
+              <p className="text-xs text-white/30 font-medium tracking-[0.2em] uppercase mb-8">Calibrated to the standards of</p>
+              <div className="flex flex-wrap items-center justify-center gap-x-8 gap-y-4">
+                {institutions.map((inst, i) => (
+                  <span key={i} className="text-sm font-display font-medium text-white/20 hover:text-white/40 transition-colors duration-300">{inst}</span>
+                ))}
+              </div>
+            </div>
+          </section>
 
-                  <div className="space-y-6">
-                    {[
-                      { 
-                        title: "Executive Briefs", 
-                        desc: "2-3 page decision-ready analyses delivered weekly. The research that used to cost $50K/year from consulting firms — now free.",
-                        tag: "FREE",
-                        tagColor: "#10B981",
-                      },
-                      { 
-                        title: "Strategic Reports", 
-                        desc: "10-15 page deep dives with scenario planning, stakeholder mapping, and actionable roadmaps for strategic decisions.",
-                        tag: "PREMIUM",
-                        tagColor: "#F59E0B",
-                      },
-                    ].map((pub, i) => (
-                      <div key={i} className="nx-card p-6 flex gap-5">
-                        <div 
-                          className="w-1 rounded-full flex-shrink-0"
-                          style={{ backgroundColor: `${pub.tagColor}40` }}
-                        />
-                        <div>
-                          <div className="flex items-center gap-3 mb-2">
-                            <h3 className="text-base font-medium text-white/90">{pub.title}</h3>
-                            <span 
-                              className="text-[10px] font-semibold px-2 py-0.5 rounded-full"
-                              style={{ 
-                                backgroundColor: `${pub.tagColor}15`,
-                                color: pub.tagColor,
-                              }}
-                            >
-                              {pub.tag}
-                            </span>
-                          </div>
-                          <p className="nx-body-sm">{pub.desc}</p>
-                        </div>
-                      </div>
-                    ))}
-                  </div>
-                </div>
+          {/* CTA Section */}
+          <section className="relative px-6 sm:px-8 py-24">
+            <div className="max-w-3xl mx-auto text-center">
+              {/* Glow */}
+              <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                <div className="w-[500px] h-[300px] bg-indigo-500/10 rounded-full blur-[120px]" />
+              </div>
 
-                {/* Right: mock publication card */}
-                <div className="relative">
-                  <div className="absolute inset-0 bg-gradient-to-br from-[#00D4FF]/5 to-[#7C3AED]/5 rounded-3xl blur-3xl" />
-                  <div className="relative nx-card p-8 sm:p-10">
-                    {/* Mock header */}
-                    <div className="flex items-center gap-3 mb-6">
-                      <div className="w-10 h-10 rounded-xl bg-gradient-to-br from-cyan-500/20 to-cyan-500/5 border border-cyan-500/20 flex items-center justify-center text-xs font-semibold text-cyan-400">
-                        EV
-                      </div>
-                      <div>
-                        <div className="text-sm font-medium text-white/80">Dr. Elena Vasquez</div>
-                        <div className="text-xs text-white/30">Economics • Harvard Kennedy School</div>
-                      </div>
-                    </div>
-                    {/* Mock content */}
-                    <div className="space-y-3 mb-6">
-                      <div className="h-2 bg-white/[0.06] rounded-full w-full" />
-                      <div className="h-2 bg-white/[0.06] rounded-full w-[90%]" />
-                      <div className="h-2 bg-white/[0.06] rounded-full w-[75%]" />
-                      <div className="h-2 bg-white/[0.04] rounded-full w-[85%] mt-6" />
-                      <div className="h-2 bg-white/[0.04] rounded-full w-[95%]" />
-                      <div className="h-2 bg-white/[0.04] rounded-full w-[60%]" />
-                    </div>
-                    {/* Mock citations */}
-                    <div className="flex gap-2 flex-wrap">
-                      {["SRC-1", "SRC-2", "SRC-3", "SRC-4"].map(src => (
-                        <span key={src} className="text-[10px] px-2 py-1 rounded-md bg-[#00D4FF]/10 text-[#00D4FF]/60 font-mono">
-                          [{src}]
-                        </span>
-                      ))}
-                    </div>
-                    {/* Trust score */}
-                    <div className="mt-6 pt-6 border-t border-white/[0.06] flex items-center justify-between">
-                      <span className="text-xs text-white/30">Trust Score</span>
-                      <div className="flex items-center gap-2">
-                        <div className="w-24 h-1.5 rounded-full bg-white/[0.06] overflow-hidden">
-                          <div className="h-full w-[87%] rounded-full bg-gradient-to-r from-[#00D4FF] to-[#3B82F6]" />
-                        </div>
-                        <span className="text-xs font-mono text-[#00D4FF]">87</span>
-                      </div>
-                    </div>
-                  </div>
+              <div className="relative">
+                <h2 className="font-display text-3xl sm:text-4xl font-semibold text-white mb-4">
+                  Ready to upgrade your
+                  <br />
+                  <span className="nx-gradient-text">strategic operating system?</span>
+                </h2>
+                <p className="text-base text-white/40 mb-8 max-w-xl mx-auto">
+                  Join decision teams using NomosX for institutional-grade strategic intelligence.
+                </p>
+                <button
+                  onClick={() => setShowAuthModal(true)}
+                  className="group px-6 py-3 rounded-lg bg-indigo-500 hover:bg-indigo-400 text-white font-medium text-sm transition-all duration-300 shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40 inline-flex items-center gap-2"
+                >
+                  Start free
+                  <ArrowRight size={16} className="group-hover:translate-x-0.5 transition-transform" />
+                </button>
+                <div className="flex items-center justify-center gap-5 mt-6 text-xs text-white/30">
+                  <span>Free</span>
+                  <span className="w-1 h-1 rounded-full bg-white/10" />
+                  <span>No credit card</span>
+                  <span className="w-1 h-1 rounded-full bg-white/10" />
+                  <span>First analysis in 60s</span>
                 </div>
               </div>
             </div>
           </section>
 
-          {/* ══════════════════════════════════════════════════════════════════
-              NEWSLETTER CTA — Clean, premium
-              ══════════════════════════════════════════════════════════════════ */}
-          <section className="relative py-24 sm:py-32">
-            <div className="nx-divider" />
-            <div className="max-w-3xl mx-auto px-6 sm:px-8 pt-24 text-center">
-              
-              {newsletterSuccess ? (
-                <div className="animate-fade-in">
-                  <div className="w-16 h-16 rounded-2xl bg-emerald-500/10 border border-emerald-500/20 flex items-center justify-center mx-auto mb-6">
-                    <CheckCircle className="w-8 h-8 text-emerald-400" />
-                  </div>
-                  <h2 className="nx-heading-2 text-white/95 mb-3">You're in.</h2>
-                  <p className="nx-body mb-6">
-                    Welcome to NomosX. Executive Briefs will arrive weekly.
-                  </p>
-                  <button
-                    onClick={() => isAuthenticated ? router.push("/dashboard") : setShowAuthModal(true)}
-                    className="text-sm text-[#00D4FF] hover:text-[#00D4FF]/80 transition-colors inline-flex items-center gap-2"
-                  >
-                    Want full access? Start your free trial <ArrowRight className="w-3.5 h-3.5" />
-                  </button>
+          {/* Footer */}
+          <footer className="border-t border-white/[0.06]">
+            <div className="max-w-7xl mx-auto px-6 sm:px-8 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
+              <div className="flex items-center gap-2.5">
+                <div className="w-6 h-6 rounded-md bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center">
+                  <span className="text-[10px] font-bold text-white">N</span>
                 </div>
-              ) : (
-                <>
-                  <span className="nx-label text-[#00D4FF]/50 mb-4 block">Newsletter</span>
-                  <h2 className="nx-heading-1 text-white/95 mb-4">
-                    Intelligence, delivered.
-                  </h2>
-                  <p className="nx-body text-lg mb-10 max-w-xl mx-auto">
-                    Institutional-grade research briefs delivered weekly to your inbox. 
-                    The kind of intelligence that used to require a six-figure retainer.
-                  </p>
-
-                  <form onSubmit={handleNewsletterSubmit} className="max-w-md mx-auto">
-                    <div className="flex gap-3">
-                      <input
-                        type="email"
-                        value={email}
-                        onChange={(e) => setEmail(e.target.value)}
-                        placeholder="your@email.com"
-                        className="flex-1 px-5 py-3.5 rounded-xl bg-white/[0.04] border border-white/[0.08] text-white placeholder-white/25 focus:outline-none focus:border-[#00D4FF]/30 focus:ring-1 focus:ring-[#00D4FF]/20 transition-all text-sm"
-                        disabled={newsletterLoading}
-                        required
-                      />
-                      <button
-                        type="submit"
-                        disabled={newsletterLoading || !email.trim()}
-                        className="px-6 py-3.5 rounded-xl bg-gradient-to-r from-[#00D4FF] to-[#3B82F6] text-white font-medium text-sm shadow-[0_0_30px_rgba(0,212,255,0.2)] hover:shadow-[0_0_40px_rgba(0,212,255,0.35)] disabled:opacity-40 transition-all flex items-center gap-2"
-                      >
-                        {newsletterLoading ? (
-                          <Loader2 className="w-4 h-4 animate-spin" />
-                        ) : (
-                          <>
-                            Subscribe
-                            <ArrowRight className="w-3.5 h-3.5" />
-                          </>
-                        )}
-                      </button>
-                    </div>
-                    {newsletterError && (
-                      <p className="text-sm text-red-400 mt-3">{newsletterError}</p>
-                    )}
-                    <p className="text-xs text-white/20 mt-4">
-                      Free forever. Unsubscribe anytime.
-                    </p>
-                  </form>
-                </>
-              )}
-            </div>
-          </section>
-
-          {/* ══════════════════════════════════════════════════════════════════
-              FOOTER — Minimal, premium
-              ══════════════════════════════════════════════════════════════════ */}
-          <footer className="relative py-12">
-            <div className="nx-divider" />
-            <div className="max-w-7xl mx-auto px-6 sm:px-8 pt-12">
-              <div className="flex flex-col sm:flex-row items-center justify-between gap-6">
-                <div className="flex items-center gap-3">
-                  <div className="w-7 h-7 rounded-lg bg-gradient-to-br from-[#00D4FF]/10 to-[#7C3AED]/5 border border-white/[0.06] flex items-center justify-center">
-                    <span className="font-display text-xs font-medium nx-gradient-text">N</span>
-                  </div>
-                  <span className="text-sm text-white/30">
-                    Nomos<span className="text-[#00D4FF]/40">X</span>
-                    <span className="text-white/15 ml-3">Institutional Intelligence, Democratized</span>
-                  </span>
-                </div>
-                <div className="flex items-center gap-6 text-xs text-white/25">
-                  <button onClick={() => router.push("/about")} className="hover:text-white/50 transition-colors">About</button>
-                  <button onClick={() => router.push("/methodology")} className="hover:text-white/50 transition-colors">Methodology</button>
-                  <button onClick={() => router.push("/pricing")} className="hover:text-white/50 transition-colors">Pricing</button>
-                  <span>&copy; 2026 NomosX</span>
-                </div>
+                <span className="text-sm text-white/40 font-medium">NomosX</span>
+                <span className="text-xs text-white/20">· Autonomous Think Tank</span>
+              </div>
+              <div className="flex items-center gap-6 text-xs text-white/20">
+                <button onClick={() => router.push("/about")} className="hover:text-white/40 transition-colors">About</button>
+                <button onClick={() => router.push("/methodology")} className="hover:text-white/40 transition-colors">Methodology</button>
+                <button onClick={() => router.push("/pricing")} className="hover:text-white/40 transition-colors">Pricing</button>
+                <span>© 2026 NomosX</span>
               </div>
             </div>
           </footer>
@@ -689,18 +330,20 @@ useEffect(() => {
         </div>
       </div>
 
-      <AuthModal 
-        isOpen={showAuthModal} 
-        onClose={() => setShowAuthModal(false)}
-        onSignupSuccess={() => {
-          setShowAuthModal(false);
-          setShowOnboardingModal(true);
-        }}
-      />
-      <OnboardingModal
-        isOpen={showOnboardingModal}
-        onClose={() => setShowOnboardingModal(false)}
-      />
+      {/* Modals */}
+      {showAuthModal && (
+        <AuthModal 
+          isOpen={showAuthModal}
+          onClose={() => setShowAuthModal(false)}
+          onSignupSuccess={handleAuthSuccess}
+        />
+      )}
+      {showOnboardingModal && (
+        <OnboardingModal 
+          isOpen={showOnboardingModal}
+          onClose={() => setShowOnboardingModal(false)}
+        />
+      )}
     </>
   );
 }

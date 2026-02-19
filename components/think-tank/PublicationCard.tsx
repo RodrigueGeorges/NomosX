@@ -48,7 +48,7 @@ const TYPE_LABELS: Record<string, string> = {
 export default function PublicationCard({ publication, compact = false }: PublicationCardProps) {
   const isPublished = !!publication.publishedAt;
   const trustColor = publication.trustScore >= 80 ? "text-emerald-400" :
-                     publication.trustScore >= 70 ? "text-cyan-400" :
+                     publication.trustScore >= 70 ? "text-indigo-300" :
                      publication.trustScore >= 60 ? "text-amber-400" : "text-red-400";
 
   const timeAgo = publication.publishedAt 
@@ -116,7 +116,7 @@ export default function PublicationCard({ publication, compact = false }: Public
             </div>
           </div>
           <Badge variant={isPublished ? "success" : "warning"}>
-            {isPublished ? "Publié" : "Brouillon"}
+            {isPublished ? "Published" : "Draft"}
           </Badge>
         </div>
 
@@ -132,7 +132,7 @@ export default function PublicationCard({ publication, compact = false }: Public
             color={trustColor}
           />
           <StatBox 
-            label="Qualité" 
+            label="Quality" 
             value={publication.qualityScore} 
             suffix="/100"
           />
@@ -144,11 +144,11 @@ export default function PublicationCard({ publication, compact = false }: Public
 
         {/* Footer */}
         <div className="flex items-center justify-between pt-3 border-t border-white/[0.06]">
-          <span className="text-xs text-white/40">{publication.wordCount} mots</span>
+          <span className="text-xs text-white/40">{publication.wordCount} words</span>
           {isPublished && (
             <div className="flex items-center gap-1.5 text-white/40">
               <Eye size={12} />
-              <span className="text-xs">{publication.viewCount} vues</span>
+              <span className="text-xs">{publication.viewCount} views</span>
             </div>
           )}
         </div>
@@ -187,6 +187,6 @@ function formatTimeAgo(date: Date): string {
 
   if (diffMins < 60) return `${diffMins}min`;
   if (diffHours < 24) return `${diffHours}h`;
-  if (diffDays < 7) return `${diffDays}j`;
-  return date.toLocaleDateString("fr-FR", { day: "numeric", month: "short" });
+  if (diffDays < 7) return `${diffDays}d`;
+  return date.toLocaleDateString("en-US", { day: "numeric", month: "short" });
 }

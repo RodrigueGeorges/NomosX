@@ -93,12 +93,12 @@ export default function PaywallTeaser({
 
       {/* Paywall CTA */}
       <div className="absolute bottom-0 left-0 right-0 p-6">
-        <Card variant="default" className="bg-gradient-to-br from-cyan-500/10 to-blue-500/5 border-cyan-500/20 shadow-[0_0_40px_rgba(0,212,255,0.1)]">
+        <Card variant="default" className="bg-gradient-to-br from-indigo-500/10 to-violet-500/5 border-indigo-500/20 shadow-[0_0_40px_rgba(99,102,241,0.1)]">
           <CardContent className="pt-6 pb-6">
             <div className="flex items-center justify-between">
               <div className="flex items-center gap-4">
-                <div className="w-12 h-12 rounded-xl bg-cyan-500/10 border border-cyan-500/20 flex items-center justify-center">
-                  <Lock size={24} className="text-cyan-400" />
+                <div className="w-12 h-12 rounded-xl bg-indigo-500/10 border border-indigo-500/20 flex items-center justify-center">
+                  <Lock size={24} className="text-indigo-400" />
                 </div>
                 <div>
                   <h3 className="text-lg font-medium text-white mb-1">Full report available to subscribers</h3>
@@ -120,19 +120,19 @@ export default function PaywallTeaser({
             {/* What's included */}
             <div className="mt-4 pt-4 border-t border-white/10 grid grid-cols-2 md:grid-cols-4 gap-4">
               <div className="flex items-center gap-2 text-sm text-white/50">
-                <FileText size={14} className="text-cyan-400" />
+                <FileText size={14} className="text-indigo-400" />
                 <span>Full analysis</span>
               </div>
               <div className="flex items-center gap-2 text-sm text-white/50">
-                <TrendingUp size={14} className="text-cyan-400" />
+                <TrendingUp size={14} className="text-indigo-400" />
                 <span>Scenario planning</span>
               </div>
               <div className="flex items-center gap-2 text-sm text-white/50">
-                <Shield size={14} className="text-cyan-400" />
+                <Shield size={14} className="text-indigo-400" />
                 <span>Recommendations</span>
               </div>
               <div className="flex items-center gap-2 text-sm text-white/50">
-                <Layers size={14} className="text-cyan-400" />
+                <Layers size={14} className="text-indigo-400" />
                 <span>PDF export</span>
               </div>
             </div>
