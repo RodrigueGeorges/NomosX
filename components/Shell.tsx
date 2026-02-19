@@ -6,6 +6,7 @@ import { useState,useEffect } from 'react';
 import Link from 'next/link';
 import { useRouter,usePathname } from 'next/navigation';
 import { LayoutDashboard,Zap,Search,Archive,Settings,LogOut,User as UserIcon,Menu,X,PenTool,DollarSign } from 'lucide-react';
+import { NomosXLogo } from '@/components/brand/NomosXLogo';
 import { useAuth } from '@/hooks/useAuth';
 
 // USER Navigation - Reading focused
@@ -86,23 +87,9 @@ export default function Shell({ children }: { children: React.ReactNode }) {
         
         <div className="text-center relative z-10">
           <div className="mb-8">
-            <div className="flex items-center gap-4">
-              {/* Institutional Logo */}
-              <div className="w-12 h-12 rounded-full bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 flex items-center justify-center opacity-80 relative">
-                <span className="text-slate-100 font-serif text-lg font-bold tracking-tight">N</span>
-                {/* Orbital elements */}
-                <div className="absolute inset-0 rounded-full border border-slate-600/30"></div>
-                <div className="absolute top-1 left-1/2 -translate-x-1/2 w-1 h-1 bg-indigo-400 rounded-full opacity-60"></div>
-                <div className="absolute right-1 top-1/2 -translate-y-1/2 w-0.5 h-0.5 bg-slate-400 rounded-full opacity-40"></div>
-                <div className="absolute bottom-1 left-1/2 -translate-x-1/2 w-0.5 h-0.5 bg-slate-400 rounded-full opacity-40"></div>
-                <div className="absolute left-1 top-1/2 -translate-y-1/2 w-0.5 h-0.5 bg-slate-400 rounded-full opacity-40"></div>
-              </div>
-              <div>
-                <h1 className="text-3xl font-serif font-bold text-white/95 mb-1 tracking-tight">
-                  Nomos<span className="text-slate-400">X</span>
-                </h1>
-                <p className="text-xs text-slate-400 tracking-wide uppercase">Institutional Research</p>
-              </div>
+            <div className="flex flex-col items-center gap-4">
+              <NomosXLogo size="lg" variant="full" />
+              <p className="text-xs text-white/30 tracking-[0.15em] uppercase">Autonomous Think Tank</p>
             </div>
           <div className="relative w-12 h-12 mx-auto">
             <div className="absolute inset-0 border-2 border-indigo-500/20 rounded-full"></div>
@@ -150,19 +137,8 @@ export default function Shell({ children }: { children: React.ReactNode }) {
         <div className="px-6 lg:px-8 py-4 flex items-center justify-between max-w-[1400px] mx-auto">
           
           {/* Logo */}
-          <Link href="/dashboard" className="flex items-center gap-2.5 hover:opacity-80 transition-opacity group">
-            <div className="w-8 h-8 rounded-full bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 flex items-center justify-center group-hover:scale-105 transition-transform shadow-lg relative">
-              <span className="text-slate-100 font-serif text-sm font-bold tracking-tight">N</span>
-              {/* Orbital elements */}
-              <div className="absolute inset-0 rounded-full border border-slate-600/30"></div>
-              <div className="absolute top-0.5 left-1/2 -translate-x-1/2 w-1 h-1 bg-indigo-400 rounded-full opacity-60"></div>
-              <div className="absolute right-0.5 top-1/2 -translate-y-1/2 w-0.5 h-0.5 bg-slate-400 rounded-full opacity-40"></div>
-              <div className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-0.5 h-0.5 bg-slate-400 rounded-full opacity-40"></div>
-              <div className="absolute left-0.5 top-1/2 -translate-y-1/2 w-0.5 h-0.5 bg-slate-400 rounded-full opacity-40"></div>
-            </div>
-            <span className="text-lg font-serif font-bold tracking-tight text-white">
-              Nomos<span className="text-slate-400">X</span>
-            </span>
+          <Link href="/dashboard" className="hover:opacity-80 transition-opacity">
+            <NomosXLogo size="sm" variant="full" />
           </Link>
 
           {/* Desktop Navigation - Minimaliste */}

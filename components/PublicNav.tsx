@@ -9,6 +9,7 @@ import React from 'react';
  */
 
 import { useRouter } from 'next/navigation';
+import { NomosXLogo } from '@/components/brand/NomosXLogo';
 
 interface PublicNavProps {
   currentPage?: "home" | "about" | "methodology" | "pricing";
@@ -32,15 +33,10 @@ export default function PublicNav({ currentPage, onSignInClick, isAuthenticated 
       <div className="relative max-w-7xl mx-auto px-6 sm:px-8 h-16 flex items-center justify-between">
         {/* Logo */}
         <div 
-          className="flex items-center gap-2.5 cursor-pointer group"
+          className="cursor-pointer hover:opacity-80 transition-opacity"
           onClick={() => router.push("/")}
         >
-          <div className="w-8 h-8 rounded-lg bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shadow-lg shadow-indigo-500/20 group-hover:shadow-indigo-500/40 transition-all duration-300">
-            <span className="text-sm font-bold text-white">N</span>
-          </div>
-          <span className="font-display text-[15px] font-semibold tracking-tight text-white/90">
-            NomosX
-          </span>
+          <NomosXLogo size="sm" variant="full" />
         </div>
         
         {/* Nav Links */}
