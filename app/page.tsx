@@ -8,6 +8,9 @@ import PublicNav from '@/components/PublicNav';
 import { Brain, Shield, BarChart3, TrendingUp, ArrowRight, Search, FileText, Microscope, Scale, Leaf, Calculator, Globe2, Rss, Clock, BookOpen, ExternalLink } from 'lucide-react';
 import InteractiveDemo from '@/components/InteractiveDemo';
 import { NomosXLogo } from '@/components/brand/NomosXLogo';
+import TrustedByMarquee from '@/components/TrustedByMarquee';
+import TestimonialsSection from '@/components/TestimonialsSection';
+import SiteFooter from '@/components/SiteFooter';
 
 const RESEARCHERS = [
   { name: "Dr. Elena Vasquez",  title: "Econometrics & Policy",    institution: "MIT",          initials: "EV", color: "from-indigo-500 to-indigo-700",   border: "border-indigo-500/35",  ringColor: "rgba(99,102,241,0.6)",  glowRgb: "rgba(99,102,241,0.4)",  specialty: "Macro policy · Carbon pricing · Labor markets",    icon: BarChart3 },
@@ -46,6 +49,15 @@ export default function HomePage() {
   const searchParams = useSearchParams();
 
   const [newsletterMessage, setNewsletterMessage] = useState("");
+
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => entries.forEach(e => { if (e.isIntersecting) e.target.classList.add('is-visible'); }),
+      { threshold: 0.12 }
+    );
+    document.querySelectorAll('.reveal-up').forEach(el => observer.observe(el));
+    return () => observer.disconnect();
+  }, [mounted]);
 
   const handleNewsletterSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -94,6 +106,8 @@ export default function HomePage() {
   return (
     <>
       <div className="min-h-screen bg-[#09090b] text-white overflow-x-hidden">
+
+        <div className="nx-noise" aria-hidden="true" />
 
         <div className="fixed inset-0 pointer-events-none">
           <div className="absolute inset-0 bg-[radial-gradient(ellipse_90%_55%_at_50%_-10%,rgba(99,102,241,0.20),transparent_65%)]" />
@@ -152,6 +166,9 @@ export default function HomePage() {
               </div>
             </div>
           </section>
+
+          {/* TRUSTED BY MARQUEE */}
+          <TrustedByMarquee />
 
           {/* THINK TANK */}
           <section className="relative px-6 sm:px-8 py-28 overflow-hidden">
@@ -372,6 +389,9 @@ export default function HomePage() {
             </div>
           </section>
 
+          {/* TESTIMONIALS */}
+          <TestimonialsSection />
+
           {/* NEWSLETTER — primary CTA */}
           <section className="relative px-6 sm:px-8 py-24">
             <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_60%_at_50%_50%,rgba(99,102,241,0.07),transparent_70%)] pointer-events-none" />
@@ -478,46 +498,8 @@ export default function HomePage() {
             </div>
           </section>
 
-          {/* CTA */}
-          <section className="relative px-6 sm:px-8 py-20">
-            <div className="absolute inset-0 flex items-center justify-center pointer-events-none">
-              <div className="w-[500px] h-[250px] bg-indigo-500/10 rounded-full blur-[120px]" />
-            </div>
-            <div className="max-w-3xl mx-auto text-center relative">
-              <h2 className="font-display text-3xl sm:text-4xl font-bold text-white mb-5">
-                The research runs.<br />
-                <span className="nx-gradient-text">You read the findings.</span>
-              </h2>
-              <p className="text-base text-white/40 mb-8 max-w-xl mx-auto">Join researchers, analysts, and policy teams who receive autonomous intelligence from the NomosX Think Tank.</p>
-              <button onClick={() => setShowAuthModal(true)} className="group px-8 py-4 rounded-xl bg-indigo-500 hover:bg-indigo-400 text-white font-semibold text-sm transition-all duration-300 shadow-lg shadow-indigo-500/30 hover:shadow-indigo-500/50 hover:scale-[1.02] inline-flex items-center gap-2">
-                Start free — no card required
-                <ArrowRight size={15} className="group-hover:translate-x-0.5 transition-transform" />
-              </button>
-              <div className="flex flex-wrap items-center justify-center gap-4 mt-6 text-xs text-white/30">
-                <span>Free 30-day trial</span>
-                <span className="w-1 h-1 rounded-full bg-white/10" />
-                <span>No credit card</span>
-                <span className="w-1 h-1 rounded-full bg-white/10" />
-                <span>Cancel anytime</span>
-              </div>
-            </div>
-          </section>
-
           {/* FOOTER */}
-          <footer className="border-t border-white/[0.06]">
-            <div className="max-w-7xl mx-auto px-6 sm:px-8 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-              <div className="flex items-center gap-3">
-                <NomosXLogo size="sm" variant="full" />
-                <span className="text-xs text-white/20">· Autonomous Think Tank</span>
-              </div>
-              <div className="flex items-center gap-6 text-xs text-white/20">
-                <button onClick={() => router.push("/about")} className="hover:text-white/40 transition-colors">About</button>
-                <button onClick={() => router.push("/methodology")} className="hover:text-white/40 transition-colors">Methodology</button>
-                <button onClick={() => router.push("/pricing")} className="hover:text-white/40 transition-colors">Pricing</button>
-                <span>© 2026 NomosX</span>
-              </div>
-            </div>
-          </footer>
+          <SiteFooter onSignInClick={() => setShowAuthModal(true)} />
 
         </div>
       </div>
