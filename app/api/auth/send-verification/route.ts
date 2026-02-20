@@ -1,7 +1,6 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSession } from '@/lib/auth';
 import { prisma } from '@/lib/db';
-import { nanoid } from 'nanoid';
 import { sendEmailVerificationEmail } from '@/lib/email';
 import { assertRateLimit, RateLimitError } from '@/lib/security/rate-limit';
 
@@ -38,8 +37,10 @@ export async function POST(req: NextRequest) {
       return NextResponse.json({ error: 'User not found' }, { status: 404 });
     }
 
-    // Generate verification token
-    const token = nanoid(32);
+    // Generate verification token using crypto
+    const token = Array.from(crypto.getRandomValues(new Uint8Array(32)))
+      .map(b => b.toString(16).padStart(2, '0'))
+      .join('');
     const expiresAt = new Date();
     expiresAt.setHours(expiresAt.getHours() + 24); // 24 hour expiry
 

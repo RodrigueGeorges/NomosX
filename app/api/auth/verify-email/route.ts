@@ -29,7 +29,10 @@ export async function GET(req: NextRequest) {
       const expiryDate = new Date(user.preferences.emailVerificationExpires);
       if (expiryDate <= new Date()) {
         // Token expired
-        return null;
+        return NextResponse.json({ 
+          error: 'Invalid or expired verification link',
+          code: 'EXPIRED_TOKEN'
+        }, { status: 400 });
       }
     }
 
