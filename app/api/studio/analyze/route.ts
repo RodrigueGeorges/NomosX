@@ -63,7 +63,7 @@ export async function POST(req: NextRequest) {
           data: {
             verticalId: vertical.id,
             type: publicationType === 'STRATEGIC_REPORT' ? 'STRATEGIC_REPORT' : 'EXECUTIVE_BRIEF',
-            title: brief.title || question.trim(),
+            title: brief.question || question.trim(),
             html: brief.html,
             wordCount: Math.round(brief.html.length / 6),
             trustScore: result.stats?.criticalLoop?.finalScore || 80,
