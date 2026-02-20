@@ -79,8 +79,65 @@
 }
 .animate-pulse-glow { animation: pulse-glow 3s ease-in-out infinite; }
 .animate-spin-slow { animation: spin-slow 20s linear infinite; }
+.animate-spin-reverse { animation: spin-slow 12s linear infinite reverse; }
 .animate-slide-up { animation: slide-up 0.4s cubic-bezier(0.16, 1, 0.3, 1) forwards; opacity: 0; }
 .animate-border-glow { animation: border-glow 3s ease-in-out infinite; }
+
+@keyframes scanline {
+  0%   { transform: translateY(-100%); opacity: 0; }
+  10%  { opacity: 1; }
+  90%  { opacity: 1; }
+  100% { transform: translateY(300%); opacity: 0; }
+}
+@keyframes holo-glow {
+  0%, 100% { opacity: 0.5; transform: scale(1); }
+  50%       { opacity: 1;   transform: scale(1.08); }
+}
+@keyframes holo-flicker {
+  0%, 100% { opacity: 1; }
+  92%       { opacity: 1; }
+  93%       { opacity: 0.4; }
+  94%       { opacity: 1; }
+  96%       { opacity: 0.6; }
+  97%       { opacity: 1; }
+}
+@keyframes ring-rotate {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(360deg); }
+}
+@keyframes ring-rotate-reverse {
+  from { transform: rotate(0deg); }
+  to   { transform: rotate(-360deg); }
+}
+@keyframes particle-float {
+  0%   { transform: translateY(0px) translateX(0px); opacity: 0; }
+  20%  { opacity: 1; }
+  80%  { opacity: 1; }
+  100% { transform: translateY(-40px) translateX(10px); opacity: 0; }
+}
+
+.animate-scanline   { animation: scanline 3s ease-in-out infinite; }
+.animate-holo-glow  { animation: holo-glow 2.5s ease-in-out infinite; }
+.animate-holo-flicker { animation: holo-flicker 8s ease-in-out infinite; }
+.animate-ring       { animation: ring-rotate 8s linear infinite; }
+.animate-ring-rev   { animation: ring-rotate-reverse 5s linear infinite; }
+
+/* Hologram card 3D tilt */
+.holo-card {
+  transform-style: preserve-3d;
+  transition: transform 0.3s ease;
+}
+.holo-card:hover {
+  transform: perspective(800px) rotateX(4deg) rotateY(-4deg) scale(1.02);
+}
+
+/* Glassmorphism panel */
+.glass-panel {
+  background: rgba(255, 255, 255, 0.03);
+  backdrop-filter: blur(20px);
+  -webkit-backdrop-filter: blur(20px);
+  border: 1px solid rgba(255, 255, 255, 0.08);
+}
 
 /* Stagger delays */
 .delay-100 { animation-delay: 100ms; }

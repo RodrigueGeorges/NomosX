@@ -9,14 +9,14 @@ import { Brain, Shield, BarChart3, TrendingUp, ArrowRight, Clock, Search, FileTe
 import InteractiveDemo from '@/components/InteractiveDemo';
 
 const RESEARCHERS = [
-  { name: "Dr. Elena Vasquez",  short: "Vasquez",  title: "Econometrics & Policy",    institution: "MIT",          initials: "EV", color: "from-indigo-500 to-blue-600",   border: "border-indigo-500/40",  glow: "shadow-indigo-500/30",  specialty: "Macro policy · Carbon pricing · Labor markets",   icon: BarChart3 },
-  { name: "Dr. James Chen",     short: "Chen",     title: "AI & Digital Systems",     institution: "Stanford",     initials: "JC", color: "from-violet-500 to-purple-600", border: "border-violet-500/40",  glow: "shadow-violet-500/30",  specialty: "LLM governance · Tech regulation · Digital infra", icon: Brain },
-  { name: "Dr. Amara Okafor",   short: "Okafor",   title: "Public Policy",            institution: "Oxford",       initials: "AO", color: "from-emerald-500 to-teal-600",  border: "border-emerald-500/40", glow: "shadow-emerald-500/30", specialty: "Institutional design · Democracy · Africa policy",  icon: Globe2 },
-  { name: "Dr. Sarah Lindström",short: "Lindström",title: "Epidemiology & Health",    institution: "Johns Hopkins",initials: "SL", color: "from-rose-500 to-pink-600",     border: "border-rose-500/40",    glow: "shadow-rose-500/30",    specialty: "Pandemic prep · Health equity · Biostatistics",    icon: Microscope },
-  { name: "Dr. Marcus Webb",    short: "Webb",     title: "Strategic Security",       institution: "Georgetown",   initials: "MW", color: "from-amber-500 to-orange-600",  border: "border-amber-500/40",   glow: "shadow-amber-500/30",   specialty: "Geopolitics · Defense strategy · Intelligence",     icon: Shield },
-  { name: "Dr. Isabelle Moreau",short: "Moreau",   title: "International Law",        institution: "Yale Law",     initials: "IM", color: "from-cyan-500 to-sky-600",      border: "border-cyan-500/40",    glow: "shadow-cyan-500/30",    specialty: "Regulatory frameworks · Trade law · Human rights",  icon: Scale },
-  { name: "Dr. Kenji Tanaka",   short: "Tanaka",   title: "Climate & Environment",    institution: "ETH Zürich",   initials: "KT", color: "from-green-500 to-lime-600",    border: "border-green-500/40",   glow: "shadow-green-500/30",   specialty: "Climate systems · Carbon markets · Net-zero policy",icon: Leaf },
-  { name: "Dr. Priya Sharma",   short: "Sharma",   title: "Quantitative Methods",     institution: "Harvard",      initials: "PS", color: "from-fuchsia-500 to-violet-600",border: "border-fuchsia-500/40", glow: "shadow-fuchsia-500/30", specialty: "Causal inference · Meta-analysis · Bayesian methods",icon: Calculator },
+  { name: "Dr. Elena Vasquez",  title: "Econometrics & Policy",    institution: "MIT",          initials: "EV", color: "from-indigo-500 to-blue-600",    border: "border-indigo-500/40",  ringColor: "rgba(99,102,241,0.7)",   glowRgb: "rgba(99,102,241,0.5)",   specialty: "Macro policy · Carbon pricing · Labor markets",    icon: BarChart3 },
+  { name: "Dr. James Chen",     title: "AI & Digital Systems",     institution: "Stanford",     initials: "JC", color: "from-violet-500 to-purple-600",  border: "border-violet-500/40",  ringColor: "rgba(139,92,246,0.7)",   glowRgb: "rgba(139,92,246,0.5)",   specialty: "LLM governance · Tech regulation · Digital infra",  icon: Brain },
+  { name: "Dr. Amara Okafor",   title: "Public Policy",            institution: "Oxford",       initials: "AO", color: "from-emerald-500 to-teal-600",   border: "border-emerald-500/40", ringColor: "rgba(16,185,129,0.7)",   glowRgb: "rgba(16,185,129,0.5)",   specialty: "Institutional design · Democracy · Africa policy",  icon: Globe2 },
+  { name: "Dr. Sarah Lindström",title: "Epidemiology & Health",    institution: "Johns Hopkins",initials: "SL", color: "from-rose-500 to-pink-600",      border: "border-rose-500/40",    ringColor: "rgba(244,63,94,0.7)",    glowRgb: "rgba(244,63,94,0.5)",    specialty: "Pandemic prep · Health equity · Biostatistics",     icon: Microscope },
+  { name: "Dr. Marcus Webb",    title: "Strategic Security",       institution: "Georgetown",   initials: "MW", color: "from-amber-500 to-orange-600",   border: "border-amber-500/40",   ringColor: "rgba(245,158,11,0.7)",   glowRgb: "rgba(245,158,11,0.5)",   specialty: "Geopolitics · Defense strategy · Intelligence",      icon: Shield },
+  { name: "Dr. Isabelle Moreau",title: "International Law",        institution: "Yale Law",     initials: "IM", color: "from-cyan-500 to-sky-600",       border: "border-cyan-500/40",    ringColor: "rgba(6,182,212,0.7)",    glowRgb: "rgba(6,182,212,0.5)",    specialty: "Regulatory frameworks · Trade law · Human rights",  icon: Scale },
+  { name: "Dr. Kenji Tanaka",   title: "Climate & Environment",    institution: "ETH Zürich",   initials: "KT", color: "from-green-500 to-lime-600",     border: "border-green-500/40",   ringColor: "rgba(34,197,94,0.7)",    glowRgb: "rgba(34,197,94,0.5)",    specialty: "Climate systems · Carbon markets · Net-zero policy", icon: Leaf },
+  { name: "Dr. Priya Sharma",   title: "Quantitative Methods",     institution: "Harvard",      initials: "PS", color: "from-fuchsia-500 to-violet-600", border: "border-fuchsia-500/40", ringColor: "rgba(217,70,239,0.7)",   glowRgb: "rgba(217,70,239,0.5)",   specialty: "Causal inference · Meta-analysis · Bayesian methods",icon: Calculator },
 ];
 
 export default function HomePage() {
@@ -100,20 +100,30 @@ export default function HomePage() {
           </section>
 
           {/* THINK TANK */}
-          <section className="relative px-6 sm:px-8 py-24 overflow-hidden">
-            <div className="absolute inset-0 bg-[radial-gradient(ellipse_60%_50%_at_50%_50%,rgba(99,102,241,0.07),transparent_70%)] pointer-events-none" />
-            <div className="max-w-6xl mx-auto">
-              <div className="text-center mb-16">
-                <p className="text-xs text-indigo-400 font-semibold tracking-[0.25em] uppercase mb-4">The Think Tank</p>
-                <h2 className="font-display text-3xl sm:text-4xl md:text-5xl font-bold text-white mb-5">
-                  Meet your 8 AI researchers
+          <section className="relative px-6 sm:px-8 py-28 overflow-hidden">
+            {/* Deep ambient glow */}
+            <div className="absolute inset-0 pointer-events-none">
+              <div className="absolute inset-0 bg-[radial-gradient(ellipse_70%_60%_at_50%_50%,rgba(99,102,241,0.10),transparent_70%)]" />
+              <div className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[600px] h-[600px] rounded-full bg-indigo-500/5 blur-[100px]" />
+            </div>
+
+            <div className="max-w-7xl mx-auto relative">
+              <div className="text-center mb-20">
+                <div className="inline-flex items-center gap-2 px-3 py-1.5 rounded-full border border-indigo-500/20 bg-indigo-500/5 mb-6">
+                  <span className="w-1.5 h-1.5 rounded-full bg-indigo-400 animate-pulse" />
+                  <span className="text-[11px] text-indigo-300 font-semibold tracking-[0.2em] uppercase">The Think Tank</span>
+                </div>
+                <h2 className="font-display text-4xl sm:text-5xl md:text-6xl font-bold text-white mb-6 leading-tight">
+                  8 AI researchers.<br />
+                  <span className="nx-gradient-text">One unified intelligence.</span>
                 </h2>
-                <p className="text-base sm:text-lg text-white/45 max-w-2xl mx-auto leading-relaxed">
-                  Each researcher holds a PhD-calibrated domain mandate. Every analysis is reviewed by the full council before publication.
+                <p className="text-base sm:text-lg text-white/40 max-w-2xl mx-auto leading-relaxed">
+                  Each researcher holds a PhD-calibrated domain mandate and reviews every brief before publication via the Harvard Council Protocol.
                 </p>
               </div>
 
-              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-4">
+              {/* Hologram researcher grid */}
+              <div className="grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 gap-5">
                 {RESEARCHERS.map((r, i) => {
                   const Icon = r.icon;
                   const isActive = activeR === i;
@@ -122,41 +132,81 @@ export default function HomePage() {
                       key={i}
                       onMouseEnter={() => setActiveR(i)}
                       onMouseLeave={() => setActiveR(null)}
-                      className={`group relative rounded-2xl border bg-white/[0.02] cursor-default transition-all duration-300 overflow-hidden ${isActive ? `${r.border} bg-white/[0.05] scale-[1.02] shadow-xl ${r.glow}` : 'border-white/[0.07] hover:border-white/[0.12]'}`}
+                      className="holo-card group relative cursor-default"
+                      style={{ animationDelay: `${i * 80}ms` }}
                     >
-                      <div className={`h-0.5 w-full bg-gradient-to-r ${r.color} opacity-70`} />
-                      <div className="p-5">
-                        <div className="flex items-start justify-between mb-4">
-                          <div className={`relative w-12 h-12 rounded-xl bg-gradient-to-br ${r.color} flex items-center justify-center shadow-lg transition-transform duration-300 ${isActive ? 'scale-110' : ''}`}>
-                            <span className="text-sm font-bold text-white">{r.initials}</span>
+                      {/* Glass card */}
+                      <div className={`relative rounded-2xl overflow-hidden transition-all duration-500 glass-panel ${isActive ? `${r.border} shadow-2xl` : 'border-white/[0.06]'}`}
+                        style={isActive ? { boxShadow: `0 0 40px ${r.glowRgb}, 0 20px 60px rgba(0,0,0,0.5)` } : {}}>
+
+                        {/* Top accent line */}
+                        <div className={`h-px w-full bg-gradient-to-r ${r.color} transition-opacity duration-300 ${isActive ? 'opacity-100' : 'opacity-40'}`} />
+
+                        {/* Scanline sweep on hover */}
+                        {isActive && (
+                          <div className="absolute inset-0 pointer-events-none overflow-hidden rounded-2xl z-10">
+                            <div className="absolute left-0 right-0 h-8 bg-gradient-to-b from-transparent via-white/[0.04] to-transparent animate-scanline" />
                           </div>
-                          <div className={`w-7 h-7 rounded-lg bg-white/[0.05] border border-white/[0.08] flex items-center justify-center transition-all duration-300 ${isActive ? 'border-white/20 bg-white/[0.08]' : ''}`}>
-                            <Icon size={13} className="text-white/50" />
+                        )}
+
+                        <div className="p-6">
+                          {/* Hologram avatar */}
+                          <div className="flex justify-center mb-5">
+                            <div className="relative w-20 h-20">
+                              {/* Outer ring — rotates */}
+                              <div className={`absolute inset-0 rounded-full animate-ring transition-opacity duration-300 ${isActive ? 'opacity-100' : 'opacity-30'}`}
+                                style={{ background: 'transparent', border: `1.5px dashed`, borderColor: r.ringColor, borderRadius: '50%' }} />
+                              {/* Inner ring — counter-rotates */}
+                              <div className={`absolute inset-[6px] rounded-full animate-ring-rev transition-opacity duration-300 ${isActive ? 'opacity-80' : 'opacity-20'}`}
+                                style={{ background: 'transparent', border: `1px solid`, borderColor: r.ringColor, borderRadius: '50%', borderStyle: 'dotted' }} />
+                              {/* Avatar core */}
+                              <div className={`absolute inset-[12px] rounded-full bg-gradient-to-br ${r.color} flex items-center justify-center transition-all duration-500 animate-holo-flicker`}
+                                style={isActive ? { boxShadow: `0 0 20px ${r.glowRgb}, 0 0 40px ${r.glowRgb}` } : {}}>
+                                <span className="text-base font-bold text-white tracking-tight" style={{ textShadow: isActive ? `0 0 12px ${r.glowRgb}` : 'none' }}>
+                                  {r.initials}
+                                </span>
+                              </div>
+                              {/* Glow halo */}
+                              <div className={`absolute inset-[10px] rounded-full transition-all duration-500 ${isActive ? 'animate-holo-glow' : 'opacity-0'}`}
+                                style={{ background: `radial-gradient(circle, ${r.glowRgb} 0%, transparent 70%)` }} />
+                            </div>
+                          </div>
+
+                          {/* Domain icon badge */}
+                          <div className="flex justify-center mb-4">
+                            <div className={`flex items-center gap-1.5 px-2.5 py-1 rounded-full border transition-all duration-300 ${isActive ? `${r.border} bg-white/[0.06]` : 'border-white/[0.08] bg-white/[0.03]'}`}>
+                              <Icon size={11} className={`transition-colors duration-300 ${isActive ? 'text-white/80' : 'text-white/35'}`} />
+                              <span className={`text-[10px] font-semibold tracking-widest uppercase transition-colors duration-300 ${isActive ? 'text-white/70' : 'text-white/30'}`}>{r.institution}</span>
+                            </div>
+                          </div>
+
+                          {/* Name & title */}
+                          <div className="text-center">
+                            <h3 className={`text-sm font-semibold leading-tight mb-1 transition-colors duration-300 ${isActive ? 'text-white' : 'text-white/80'}`}>{r.name}</h3>
+                            <p className={`text-[11px] font-medium transition-colors duration-300 ${isActive ? 'text-white/60' : 'text-white/35'}`}>{r.title}</p>
+                          </div>
+
+                          {/* Specialty — revealed on hover */}
+                          <div className={`mt-4 pt-4 border-t transition-all duration-400 overflow-hidden ${isActive ? 'max-h-20 opacity-100 border-white/[0.08]' : 'max-h-0 opacity-0 border-transparent'}`}>
+                            <p className="text-[10px] text-white/40 text-center leading-relaxed">{r.specialty}</p>
                           </div>
                         </div>
-                        <div className="mb-3">
-                          <h3 className="text-sm font-semibold text-white leading-tight mb-0.5">{r.name}</h3>
-                          <p className="text-xs text-white/45 font-medium">{r.title}</p>
-                        </div>
-                        <div className="inline-flex items-center gap-1.5 px-2 py-1 rounded-md bg-white/[0.05] border border-white/[0.08] mb-3">
-                          <div className={`w-1.5 h-1.5 rounded-full bg-gradient-to-br ${r.color}`} />
-                          <span className="text-[10px] font-semibold text-white/50 tracking-wide">{r.institution}</span>
-                        </div>
-                        <p className={`text-[10px] text-white/35 leading-relaxed transition-all duration-300 ${isActive ? 'opacity-100 max-h-20' : 'opacity-0 max-h-0 overflow-hidden'}`}>
-                          {r.specialty}
-                        </p>
                       </div>
                     </div>
                   );
                 })}
               </div>
 
-              <div className="mt-10 flex items-center justify-center gap-3">
-                <div className="h-px flex-1 max-w-[120px] bg-gradient-to-r from-transparent to-white/10" />
-                <p className="text-xs text-white/30 text-center">
-                  All 8 researchers review every brief via the <span className="text-white/50 font-medium">Harvard Council Protocol</span> before publication
-                </p>
-                <div className="h-px flex-1 max-w-[120px] bg-gradient-to-l from-transparent to-white/10" />
+              {/* Council note */}
+              <div className="mt-14 flex items-center justify-center gap-4">
+                <div className="h-px flex-1 max-w-[160px] bg-gradient-to-r from-transparent to-white/10" />
+                <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/[0.06] bg-white/[0.02]">
+                  <Shield size={12} className="text-indigo-400" />
+                  <p className="text-xs text-white/35">
+                    All 8 review every brief via the <span className="text-white/55 font-semibold">Harvard Council Protocol</span>
+                  </p>
+                </div>
+                <div className="h-px flex-1 max-w-[160px] bg-gradient-to-l from-transparent to-white/10" />
               </div>
             </div>
           </section>
