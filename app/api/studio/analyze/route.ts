@@ -51,7 +51,7 @@ export async function POST(req: NextRequest) {
     if (result.briefId) {
       const brief = await prisma.brief.findUnique({
         where: { id: result.briefId },
-        select: { html: true, sources: true, title: true },
+        select: { html: true, sources: true, question: true },
       }).catch(() => null);
 
       const vertical = verticalId
