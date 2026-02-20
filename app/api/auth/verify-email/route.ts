@@ -22,9 +22,11 @@ export async function GET(req: NextRequest) {
         email: decodeURIComponent(email),
         verificationToken: token,
         // Check expiry from preferences as fallback until migration is applied
-        preferences: {
-          path: ['emailVerificationExpires'],
-          gt: new Date().toISOString(),
+        AND: {
+          preferences: {
+            path: ['emailVerificationExpires'],
+            gt: new Date().toISOString(),
+          },
         },
       },
     },
