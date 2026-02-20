@@ -23,13 +23,18 @@ import HexResearcherAvatar from '@/components/HexResearcherAvatar';
 import { RESEARCHERS } from '@/lib/researchers';
 import { cn } from '@/lib/utils';
 import FirstVisitBanner from '@/components/FirstVisitBanner';
+import TrialBanner from '@/components/TrialBanner';
 
 interface SubscriptionData {
   plan: 'TRIAL' | 'ANALYST' | 'EXECUTIVE' | 'RESEARCHER' | 'STRATEGY' | 'STUDIO';
+  isTrialActive: boolean;
+  trialDaysRemaining: number;
+  trialExpired: boolean;
   canAccessBriefs: boolean;
   canAccessStudio: boolean;
   canCreateVerticals: boolean;
   canExportPdf: boolean;
+  canCommissionBriefs: boolean;
   weeklyLimit: number;
   studioLimit: number;
   weeklyUsed: number;
@@ -178,6 +183,17 @@ function AnalystDashboard({ subscription, recentBriefs, router }: {
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-8">
         <FirstVisitBanner />
+        
+        {/* Trial Banner - only show if trial is active */}
+        {subscription.isTrialActive && (
+          <TrialBanner 
+            daysRemaining={subscription.trialDaysRemaining}
+            onDismiss={() => {
+              // Optional: handle dismiss if needed
+            }}
+          />
+        )}
+        
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-6">

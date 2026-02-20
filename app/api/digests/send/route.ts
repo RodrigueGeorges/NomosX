@@ -58,10 +58,9 @@ export async function POST(req: Request) {
 
     // Send emails
     const result = await sendDigestEmail(
-      digestId,
+      recipients.join(','), // Convert array to comma-separated string for 'to' parameter
       digest.subject,
-      digest.html,
-      recipients
+      digest.html
     );
 
     // Update digest

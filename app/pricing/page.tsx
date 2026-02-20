@@ -57,7 +57,7 @@ export default function PricingPage() {
         "Everything in Analyst +",
         "Commission research briefs",
         "Strategic reports (15-page deep dives)",
-        "Harvard Council deliberations",
+        "NomosX Council deliberations",
         "Custom research verticals",
         "Verified citation export",
       ],
@@ -101,14 +101,14 @@ export default function PricingPage() {
     {
       icon: Users,
       title: "8 PhD-calibrated agents",
-      description: "Each researcher holds a domain mandate and reviews every publication via the Harvard Council Protocol."
+      description: "Each researcher holds a domain mandate and reviews every publication via the NomosX Council Protocol."
     }
   ];
 
   const faq = [
     {
       q: "What does 'auto-published' mean exactly?",
-      a: "The NomosX pipeline runs on a continuous schedule. It scouts academic sources, ranks them, extracts claims, synthesises findings through a 3-pass analyst, submits to the Harvard Council for peer review, and publishes the final brief — all without any human in the loop."
+      a: "The NomosX pipeline runs on a continuous schedule. It scouts academic sources, ranks them, extracts claims, synthesises findings through a 3-pass analyst, submits to the NomosX Council for peer review, and publishes the final brief — all without any human in the loop."
     },
     {
       q: "What is the difference between a Brief and a Strategic Report?",

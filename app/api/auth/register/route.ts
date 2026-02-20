@@ -3,6 +3,7 @@ import { prisma } from '@/lib/db';
 import { hashPassword,createSession } from '@/lib/auth';
 import { assertRateLimit, RateLimitError } from '@/lib/security/rate-limit';
 import { sendWelcomeEmail } from '@/lib/email';
+import { trackSignup, trackTrialStarted } from '@/lib/analytics';
 import { z } from 'zod';
 
 const registerSchema = z.object({
@@ -59,14 +60,33 @@ export async function POST(req: NextRequest) {
     // Hash password
     const hashedPassword = await hashPassword(password);
 
-    // Create user
+    // Create user with trial subscription
+    const trialEnd = new Date();
+    trialEnd.setDate(trialEnd.getDate() + 30);
+
     const user = await prisma.user.create({
       data: {
         email: email.toLowerCase(),
         password: hashedPassword,
         name: name || null,
         role: "user",
+        subscription: {
+          create: {
+            plan: "ANALYST",
+            status: "active",
+            trialEnd: trialEnd,
+            isTrialActive: true,
+            weeklyPublicationMax: 3,
+            studioQuestionsPerMonth: 0,
+            weeklyPublicationCount: 0,
+            studioQuestionsUsed: 0,
+            canAccessStudio: false,
+            canCreateVerticals: false,
+            canExportPdf: false,
+          },
+        },
       },
+      include: { subscription: true },
     });
 
     // Create session
@@ -81,6 +101,19 @@ export async function POST(req: NextRequest) {
     sendWelcomeEmail(user.email, user.name).catch(err =>
       console.error('[Register] Welcome email failed:', err)
     );
+
+    // Track analytics events (non-blocking)
+    trackSignup(user.id, {
+      plan: 'ANALYST',
+      hasTrial: true,
+      source: 'direct', // TODO: track from referral/UTM params
+    }).catch(err => console.error('[Register] Analytics tracking failed:', err));
+
+    if (user.subscription?.trialEnd) {
+      trackTrialStarted(user.id, user.subscription.trialEnd).catch(err =>
+        console.error('[Register] Trial tracking failed:', err)
+      );
+    }
 
     return NextResponse.json({
       success: true,

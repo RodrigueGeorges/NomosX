@@ -21,6 +21,9 @@ const UTM_CAMPAIGN = {
   brief_ready: 'utm_source=email&utm_medium=transactional&utm_campaign=brief_ready',
   publication: 'utm_source=email&utm_medium=transactional&utm_campaign=publication',
   digest: 'utm_source=email&utm_medium=transactional&utm_campaign=digest',
+  trial_expiry: 'utm_source=email&utm_medium=transactional&utm_campaign=trial_expiry',
+  trial_expired: 'utm_source=email&utm_medium=transactional&utm_campaign=trial_expired',
+  email_verification: 'utm_source=email&utm_medium=transactional&utm_campaign=email_verification',
 };
 
 function addUtmParams(url: string, campaign: string): string {
@@ -286,6 +289,176 @@ export async function sendBriefPublishedNotification(
   `, `${brief.title} — peer-reviewed intelligence from NomosX`);
 
   await sendEmail({ to, subject: `New brief: ${brief.title}`, html });
+}
+
+/**
+ * Trial expiry reminder emails
+ */
+export async function sendTrialExpiryReminder(to: string, name: string | null, daysRemaining: number): Promise<void> {
+  const displayName = name || 'Researcher';
+  const urgency = daysRemaining <= 1 ? 'critical' : daysRemaining <= 3 ? 'high' : 'medium';
+  
+  const upgradeUrl = addUtmParams(`${APP_URL}/pricing`, UTM_CAMPAIGN.trial_expiry);
+  const dashboardUrl = addUtmParams(`${APP_URL}/dashboard`, UTM_CAMPAIGN.trial_expiry);
+  
+  const urgencyColors = {
+    critical: { bg: 'bg-rose-500/10', border: 'border-rose-500/30', text: 'text-rose-400' },
+    high: { bg: 'bg-amber-500/10', border: 'border-amber-500/30', text: 'text-amber-400' },
+    medium: { bg: 'bg-indigo-500/10', border: 'border-indigo-500/30', text: 'text-indigo-400' },
+  };
+  
+  const colors = urgencyColors[urgency];
+  
+  const html = layout(`
+    <div style="background: ${urgency === 'critical' ? '#dc2626' : urgency === 'high' ? '#f59e0b' : '#6366f1'}10; border: 1px solid ${urgency === 'critical' ? '#dc2626' : urgency === 'high' ? '#f59e0b' : '#6366f1'}30; border-radius: 8px; padding: 16px; margin-bottom: 24px;">
+      <p style="font-size: 14px; font-weight: 600; color: ${urgency === 'critical' ? '#dc2626' : urgency === 'high' ? '#f59e0b' : '#6366f1'}; margin: 0;">
+        ${daysRemaining} ${daysRemaining === 1 ? 'day' : 'days'} remaining in your trial
+      </p>
+    </div>
+    
+    <h1 style="font-size: 24px; font-weight: 300; color: #fff; margin: 0 0 8px;">
+      Your NomosX trial expires soon
+    </h1>
+    
+    <p style="font-size: 14px; color: #a1a1aa; margin: 0 0 24px; line-height: 1.6;">
+      Hi ${displayName}, your 30-day free trial of NomosX will expire in ${daysRemaining} ${daysRemaining === 1 ? 'day' : 'days'}.
+      Continue commissioning research briefs and accessing strategic reports by upgrading to a paid plan.
+    </p>
+    
+    <div style="background: #111113; border: 1px solid #27272a; border-radius: 8px; padding: 20px; margin-bottom: 24px;">
+      <h3 style="font-size: 16px; font-weight: 500; color: #fff; margin: 0 0 12px;">
+        What happens if you don't upgrade?
+      </h3>
+      <ul style="font-size: 14px; color: #a1a1aa; margin: 0; padding-left: 20px; line-height: 1.6;">
+        <li style="margin-bottom: 8px;">You'll lose access to commission new briefs</li>
+        <li style="margin-bottom: 8px;">Strategic reports will become read-only</li>
+        <li style="margin-bottom: 8px;">Weekly publication limit drops to 0</li>
+        <li>You'll still receive the weekly intelligence dispatch</li>
+      </ul>
+    </div>
+    
+    <div style="display: flex; gap: 12px; align-items: center;">
+      <a href="${upgradeUrl}"
+         style="display: inline-block; background: linear-gradient(135deg, #6366f1, #7c3aed); color: #fff;
+                text-decoration: none; padding: 12px 28px; border-radius: 8px; font-size: 14px; font-weight: 500;">
+        Upgrade Now →
+      </a>
+      <a href="${dashboardUrl}"
+         style="display: inline-block; color: #818cf8; text-decoration: none; font-size: 14px;">
+        View Dashboard
+      </a>
+    </div>
+    
+    <hr style="border: none; border-top: 1px solid #27272a; margin: 32px 0;" />
+    
+    <p style="font-size: 12px; color: #52525b; margin: 0;">
+      Questions? Reply to this email — we read everything.
+    </p>
+  `, `Your NomosX trial expires in ${daysRemaining} days — upgrade to keep commissioning briefs`);
+
+  await sendEmail({ 
+    to, 
+    subject: `Trial expires in ${daysRemaining} ${daysRemaining === 1 ? 'day' : 'days'} - Upgrade to continue`, 
+    html 
+  });
+}
+
+export async function sendEmailVerificationEmail(to: string, name: string | null, verificationUrl: string): Promise<void> {
+  const displayName = name || 'Researcher';
+  const dashboardUrl = addUtmParams(`${APP_URL}/dashboard`, UTM_CAMPAIGN.email_verification);
+  
+  const html = layout(`
+    <h1 style="font-size: 24px; font-weight: 300; color: #fff; margin: 0 0 8px;">
+      Verify your email address
+    </h1>
+    
+    <p style="font-size: 14px; color: #a1a1aa; margin: 0 0 24px; line-height: 1.6;">
+      Hi ${displayName}, please verify your email address to complete your NomosX registration.
+      This ensures you receive important notifications about your research briefs and account.
+    </p>
+    
+    <div style="background: #111113; border: 1px solid #27272a; border-radius: 8px; padding: 20px; margin-bottom: 24px;">
+      <h3 style="font-size: 16px; font-weight: 500; color: #fff; margin: 0 0 12px;">
+        Why verify your email?
+      </h3>
+      <ul style="font-size: 14px; color: #a1a1aa; margin: 0; padding-left: 20px; line-height: 1.6;">
+        <li style="margin-bottom: 8px;">Receive weekly intelligence dispatch</li>
+        <li style="margin-bottom: 8px;">Get notifications when your briefs are ready</li>
+        <li style="margin-bottom: 8px;">Reset your password if needed</li>
+        <li>Important account security updates</li>
+      </ul>
+    </div>
+    
+    <a href="${verificationUrl}"
+       style="display: inline-block; background: linear-gradient(135deg, #6366f1, #7c3aed); color: #fff;
+              text-decoration: none; padding: 12px 28px; border-radius: 8px; font-size: 14px; font-weight: 500; margin-bottom: 16px;">
+      Verify Email Address →
+    </a>
+    
+    <p style="font-size: 12px; color: #52525b; margin: 0; line-height: 1.6;">
+      This link expires in 24 hours. If you didn't create an account, you can safely ignore this email.
+      <br />
+      Having trouble? <a href="${dashboardUrl}" style="color: #6366f1; text-decoration: none;">Go to your dashboard</a>
+    </p>
+  `, `Verify your email address to activate your NomosX account`);
+
+  await sendEmail({ 
+    to, 
+    subject: 'Verify your email address - NomosX', 
+    html 
+  });
+}
+
+export async function sendTrialExpired(to: string, name: string | null): Promise<void> {
+  const displayName = name || 'Researcher';
+  const upgradeUrl = addUtmParams(`${APP_URL}/pricing`, UTM_CAMPAIGN.trial_expired);
+  const publicationsUrl = addUtmParams(`${APP_URL}/publications`, UTM_CAMPAIGN.trial_expired);
+  
+  const html = layout(`
+    <h1 style="font-size: 24px; font-weight: 300; color: #fff; margin: 0 0 8px;">
+      Your NomosX trial has expired
+    </h1>
+    
+    <p style="font-size: 14px; color: #a1a1aa; margin: 0 0 24px; line-height: 1.6;">
+      Hi ${displayName}, your 30-day free trial of NomosX has expired. 
+      Your access to commission briefs and strategic reports has been paused.
+    </p>
+    
+    <div style="background: #111113; border: 1px solid #27272a; border-radius: 8px; padding: 20px; margin-bottom: 24px;">
+      <h3 style="font-size: 16px; font-weight: 500; color: #fff; margin: 0 0 12px;">
+        What you can still do:
+      </h3>
+      <ul style="font-size: 14px; color: #a1a1aa; margin: 0; padding-left: 20px; line-height: 1.6;">
+        <li style="margin-bottom: 8px;">Browse all published briefs</li>
+        <li style="margin-bottom: 8px;">Receive the weekly intelligence dispatch</li>
+        <li>Read strategic reports (but not commission new ones)</li>
+      </ul>
+    </div>
+    
+    <div style="display: flex; gap: 12px; align-items: center;">
+      <a href="${upgradeUrl}"
+         style="display: inline-block; background: linear-gradient(135deg, #6366f1, #7c3aed); color: #fff;
+                text-decoration: none; padding: 12px 28px; border-radius: 8px; font-size: 14px; font-weight: 500;">
+        Reactivate Access →
+      </a>
+      <a href="${publicationsUrl}"
+         style="display: inline-block; color: #818cf8; text-decoration: none; font-size: 14px;">
+        Browse Publications
+      </a>
+    </div>
+    
+    <hr style="border: none; border-top: 1px solid #27272a; margin: 32px 0;" />
+    
+    <p style="font-size: 12px; color: #52525b; margin: 0;">
+      Want to reactivate your trial? Reply to this email and we'll help you out.
+    </p>
+  `, `Your NomosX trial has expired — upgrade to continue commissioning briefs`);
+
+  await sendEmail({ 
+    to, 
+    subject: 'Your trial has expired - Upgrade to continue', 
+    html 
+  });
 }
 
 /**

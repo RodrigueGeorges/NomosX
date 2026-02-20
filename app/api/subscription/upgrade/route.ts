@@ -1,6 +1,7 @@
 import { NextRequest,NextResponse } from 'next/server';
 import { getSession } from '@/lib/auth';
 import prisma from '@/lib/db';
+import { trackUpgrade } from '@/lib/analytics';
 
 /**
  * POST /api/subscription/upgrade
@@ -28,11 +29,15 @@ export async function POST(req: NextRequest) {
     const body = await req.json();
     const { targetPlan } = body;
 
-    // Validate target plan
-    const validPlans = ['EXECUTIVE', 'STRATEGY'];
+    // Validate target plan (accept both new and legacy names)
+    const validPlans = ['RESEARCHER', 'STUDIO', 'EXECUTIVE', 'STRATEGY'];
     if (!validPlans.includes(targetPlan)) {
       return NextResponse.json({ error: "Invalid plan" }, { status: 400 });
     }
+
+    // Normalize legacy plan names
+    const normalizedPlan = targetPlan === 'EXECUTIVE' ? 'RESEARCHER' : 
+                          targetPlan === 'STRATEGY' ? 'STUDIO' : targetPlan;
 
     // Get or create subscription
     let subscription = user.subscription;
@@ -40,31 +45,33 @@ export async function POST(req: NextRequest) {
       subscription = await prisma.subscription.create({
         data: {
           userId: user.id,
-          plan: targetPlan,
+          plan: normalizedPlan,
           status: "active",
           // Set limits based on plan
           weeklyPublicationMax: -1, // unlimited for paid plans
-          studioQuestionsPerMonth: targetPlan === 'STRATEGY' ? -1 : 0, // unlimited for STRATEGY
-          canAccessStudio: targetPlan === 'STRATEGY',
-          canCreateVerticals: targetPlan === 'STRATEGY',
+          studioQuestionsPerMonth: normalizedPlan === 'STUDIO' ? -1 : 0, // unlimited for STUDIO
+          canAccessStudio: normalizedPlan === 'STUDIO',
+          canCreateVerticals: normalizedPlan === 'STUDIO',
           canExportPdf: true,
+          isTrialActive: false, // Paid plans are not trials
         },
       });
     } else {
       // Update existing subscription
       const updates: any = {
-        plan: targetPlan,
+        plan: normalizedPlan,
         status: "active",
+        isTrialActive: false, // Paid plans are not trials
       };
 
       // Update limits based on target plan
-      if (targetPlan === 'EXECUTIVE') {
+      if (normalizedPlan === 'RESEARCHER') {
         updates.weeklyPublicationMax = -1; // unlimited
         updates.studioQuestionsPerMonth = 0;
         updates.canAccessStudio = false;
         updates.canCreateVerticals = false;
         updates.canExportPdf = true;
-      } else if (targetPlan === 'STRATEGY') {
+      } else if (normalizedPlan === 'STUDIO') {
         updates.weeklyPublicationMax = -1; // unlimited
         updates.studioQuestionsPerMonth = -1; // unlimited
         updates.canAccessStudio = true;
@@ -78,9 +85,17 @@ export async function POST(req: NextRequest) {
       });
     }
 
+    // Track upgrade analytics (non-blocking)
+    const fromPlan = user.subscription?.plan || 'NONE';
+    const revenue = normalizedPlan === 'RESEARCHER' ? 19 : normalizedPlan === 'STUDIO' ? 49 : 0;
+    
+    trackUpgrade(user.id, fromPlan, normalizedPlan, revenue).catch(err =>
+      console.error('[Subscription Upgrade] Analytics tracking failed:', err)
+    );
+
     return NextResponse.json({
       success: true,
-      message: `Upgraded to ${targetPlan} plan`,
+      message: `Upgraded to ${normalizedPlan} plan`,
       subscription: {
         plan: subscription.plan,
         status: subscription.status,

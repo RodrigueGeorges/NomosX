@@ -1,7 +1,7 @@
 /**
  * NomosX AI Researchers — The Council
  * 
- * Single source of truth for all 8 PhD-level AI researchers.
+ * Single source of truth for all 9 PhD-level AI researchers.
  * Used across the entire app: publications (author), landing page, methodology, etc.
  * 
  * Each researcher is a specialized domain expert with:
@@ -120,6 +120,18 @@ export const RESEARCHERS: Researcher[] = [
     colorHex: "#6366F1",
     gradient: "from-indigo-500/20 to-indigo-500/5",
   },
+  {
+    id: "finance",
+    name: "Dr. Alexandre Dubois",
+    title: "Financial Economist",
+    institution: "LSE / BlackRock",
+    domain: "Finance & Markets",
+    specialty: "Asset Pricing & Market Microstructure",
+    initials: "AD",
+    color: "orange",
+    colorHex: "#F97316",
+    gradient: "from-orange-500/20 to-orange-500/5",
+  },
 ];
 
 /** Get a researcher by domain ID */
@@ -132,7 +144,7 @@ export function getLeadResearcher(topic: string): Researcher {
   const t = topic.toLowerCase();
   
   const domainKeywords: Record<string, string[]> = {
-    economics: ["economy", "economic", "fiscal", "monetary", "trade", "gdp", "inflation", "tax", "market", "finance", "banking", "debt", "growth"],
+    economics: ["economy", "economic", "fiscal", "monetary", "trade", "gdp", "inflation", "tax", "banking", "debt", "growth"],
     technology: ["ai", "artificial intelligence", "machine learning", "cyber", "digital", "software", "algorithm", "data", "tech", "computing", "quantum", "blockchain"],
     policy: ["policy", "governance", "regulation", "government", "political", "democracy", "election", "geopolit", "diplomacy", "institution"],
     health: ["health", "medical", "disease", "pandemic", "pharma", "clinical", "epidem", "vaccine", "mental health", "biotech", "hospital"],
@@ -140,6 +152,7 @@ export function getLeadResearcher(topic: string): Researcher {
     law: ["law", "legal", "court", "regulation", "rights", "constitutional", "intellectual property", "patent", "compliance", "jurisdiction"],
     environment: ["climate", "environment", "carbon", "energy", "sustainability", "emission", "renewable", "biodiversity", "pollution", "green"],
     quantitative: ["statistic", "data science", "methodology", "meta-analysis", "causal", "regression", "probability", "sampling", "bias"],
+    finance: ["finance", "financial", "market", "stock", "equity", "bond", "asset", "portfolio", "trading", "investment", "hedge fund", "venture", "capital", "valuation", "risk", "derivatives", "commodity", "currency", "fintech"],
   };
 
   let bestMatch = "economics";

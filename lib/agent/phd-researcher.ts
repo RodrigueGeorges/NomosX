@@ -7,7 +7,7 @@
  * - Calibrated confidence (knows what it doesn't know)
  * - Academic citation standards (APA-level rigor)
  * 
- * Architecture inspired by Harvard Kennedy School policy labs:
+ * Architecture inspired by leading policy research institutions:
  * Each expert independently analyzes the same sources, then the
  * Synthesis Director reconciles their perspectives.
  * 

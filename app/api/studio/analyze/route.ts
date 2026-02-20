@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { getSession } from '@/lib/auth';
 import { prisma } from '@/lib/db';
 import { runPipeline } from '@/lib/agent/pipeline-v2';
+import { requireStudioTier, hasExceededStudioLimit, createAccessDeniedResponse, createLimitExceededResponse } from '@/lib/middleware/subscription';
 
 /**
  * POST /api/studio/analyze
@@ -11,42 +12,20 @@ import { runPipeline } from '@/lib/agent/pipeline-v2';
  */
 export async function POST(req: NextRequest) {
   try {
-    const session = await getSession();
-    if (!session?.email) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
-    // Get user subscription
-    const user = await prisma.user.findUnique({
-      where: { email: session.email },
-      include: { subscription: true },
-    });
-
-    if (!user) {
-      return NextResponse.json({ error: "User not found" }, { status: 404 });
-    }
-
-    const subscription = user.subscription;
-
-    // Check if STUDIO tier (supports legacy STRATEGY name)
-    const hasStudioAccess = subscription?.canAccessStudio ||
-      subscription?.plan === 'STUDIO' ||
-      subscription?.plan === 'STRATEGY';
-    if (!subscription || !hasStudioAccess) {
-      return NextResponse.json({ 
-        error: "Studio access requires Studio tier",
-        currentPlan: subscription?.plan || 'none'
-      }, { status: 403 });
+    // Check STUDIO tier access
+    const subscriptionCheck = await requireStudioTier(req);
+    if (!subscriptionCheck.allowed) {
+      return createAccessDeniedResponse('STUDIO', subscriptionCheck.subscription?.tier);
     }
 
     // Check studio limits
-    if (subscription.studioQuestionsUsed >= subscription.studioQuestionsPerMonth) {
-      return NextResponse.json({ 
-        error: "Studio limit reached",
-        used: subscription.studioQuestionsUsed,
-        limit: subscription.studioQuestionsPerMonth,
-        resetDate: subscription.lastStudioReset
-      }, { status: 429 });
+    if (hasExceededStudioLimit(subscriptionCheck.subscription!)) {
+      return createLimitExceededResponse('studio');
+    }
+
+    const session = await getSession();
+    if (!session?.email) {
+      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
     }
 
     // Parse request body
