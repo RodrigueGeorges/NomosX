@@ -25,14 +25,17 @@ export async function GET(req: NextRequest) {
     });
 
     // Check expiry from preferences as fallback until migration is applied
-    if (user && user.preferences?.emailVerificationExpires) {
-      const expiryDate = new Date(user.preferences.emailVerificationExpires);
-      if (expiryDate <= new Date()) {
-        // Token expired
-        return NextResponse.json({ 
-          error: 'Invalid or expired verification link',
-          code: 'EXPIRED_TOKEN'
-        }, { status: 400 });
+    if (user && user.preferences) {
+      const prefs = user.preferences as Record<string, any>;
+      if (prefs.emailVerificationExpires) {
+        const expiryDate = new Date(prefs.emailVerificationExpires);
+        if (expiryDate <= new Date()) {
+          // Token expired
+          return NextResponse.json({ 
+            error: 'Invalid or expired verification link',
+            code: 'EXPIRED_TOKEN'
+          }, { status: 400 });
+        }
       }
     }
 
