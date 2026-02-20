@@ -21,16 +21,17 @@ export async function GET(req: NextRequest) {
       where: {
         email: decodeURIComponent(email),
         verificationToken: token,
-        // Check expiry from preferences as fallback until migration is applied
-        AND: {
-          preferences: {
-            path: ['emailVerificationExpires'],
-            gt: new Date().toISOString(),
-          },
-        },
       },
-    },
-  });
+    });
+
+    // Check expiry from preferences as fallback until migration is applied
+    if (user && user.preferences?.emailVerificationExpires) {
+      const expiryDate = new Date(user.preferences.emailVerificationExpires);
+      if (expiryDate <= new Date()) {
+        // Token expired
+        return null;
+      }
+    }
 
     if (!user) {
       return NextResponse.json({ 
