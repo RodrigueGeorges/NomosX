@@ -10,10 +10,15 @@ const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://nomosx.com';
 
 // ─── Low-level send via Resend REST API ────────────────────────────────────
 
-async function sendEmail(to: string, subject: string, html: string): Promise<void> {
+interface SendEmailResult {
+  success: boolean;
+  error?: string;
+}
+
+async function sendEmail({ to, subject, html, text }: { to: string; subject: string; html: string; text?: string }): Promise<SendEmailResult> {
   if (!RESEND_API_KEY) {
     console.warn('[Email] RESEND_API_KEY not set — skipping email to', to);
-    return;
+    return { success: false, error: 'RESEND_API_KEY not configured' };
   }
 
   const res = await fetch('https://api.resend.com/emails', {
@@ -22,14 +27,16 @@ async function sendEmail(to: string, subject: string, html: string): Promise<voi
       'Authorization': `Bearer ${RESEND_API_KEY}`,
       'Content-Type': 'application/json',
     },
-    body: JSON.stringify({ from: EMAIL_FROM, to, subject, html }),
+    body: JSON.stringify({ from: EMAIL_FROM, to, subject, html, text }),
   });
 
   if (!res.ok) {
     const body = await res.text();
     console.error('[Email] Resend error:', res.status, body);
-    throw new Error(`Email send failed: ${res.status}`);
+    return { success: false, error: `Resend error: ${res.status}` };
   }
+
+  return { success: true };
 }
 
 // ─── Shared layout wrapper ──────────────────────────────────────────────────
@@ -112,7 +119,7 @@ export async function sendWelcomeEmail(to: string, name?: string | null): Promis
     </p>
   `);
 
-  await sendEmail(to, 'Welcome to NomosX — your think tank is ready', html);
+  await sendEmail({ to, subject: 'Welcome to NomosX — your think tank is ready', html });
 }
 
 /**
@@ -142,7 +149,7 @@ export async function sendNewsletterConfirmation(to: string, confirmToken: strin
     </p>
   `);
 
-  await sendEmail(to, 'Confirm your NomosX subscription', html);
+  await sendEmail({ to, subject: 'Confirm your NomosX subscription', html });
 }
 
 /**
@@ -173,7 +180,7 @@ export async function sendNewsletterWelcome(to: string): Promise<void> {
     </p>
   `);
 
-  await sendEmail(to, 'Welcome to the NomosX intelligence dispatch', html);
+  await sendEmail({ to, subject: 'Welcome to the NomosX intelligence dispatch', html });
 }
 
 /**
@@ -196,12 +203,12 @@ export async function sendBulkNewsletter(
 
     await Promise.allSettled(
       batch.map(async (sub) => {
-        try {
-          await sendEmail(sub.email, subject, html);
+        const result = await sendEmail({ to: sub.email, subject, html });
+        if (result.success) {
           sent++;
-        } catch (err: any) {
+        } else {
           failed++;
-          errors.push(`${sub.email}: ${err.message}`);
+          errors.push(`${sub.email}: ${result.error || 'Unknown error'}`);
         }
       })
     );
@@ -247,7 +254,7 @@ export async function sendBriefPublishedNotification(
     </p>
   `);
 
-  await sendEmail(to, `New brief: ${brief.title}`, html);
+  await sendEmail({ to, subject: `New brief: ${brief.title}`, html });
 }
 
 // ─── Exports for API routes ───────────────────────────────────────────────
@@ -255,6 +262,6 @@ export async function sendBriefPublishedNotification(
 export { sendEmail };
 
 /** Alias for sendEmail — used by digest routes */
-export async function sendDigestEmail(to: string, subject: string, html: string): Promise<void> {
-  return sendEmail(to, subject, html);
+export async function sendDigestEmail(to: string, subject: string, html: string): Promise<SendEmailResult> {
+  return sendEmail({ to, subject, html });
 }
