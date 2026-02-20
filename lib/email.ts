@@ -2,13 +2,31 @@
  * NomosX Email Service — Resend
  * Central email utility for all transactional emails.
  * Requires: RESEND_API_KEY, EMAIL_FROM env vars.
+ * 
+ * Features:
+ * - Premium dark mode design
+ * - Optimized preheaders for email clients
+ * - UTM tracking on all links
+ * - Responsive layout
  */
 
 const RESEND_API_KEY = process.env.RESEND_API_KEY;
 const EMAIL_FROM = process.env.EMAIL_FROM || 'NomosX <noreply@nomosx.com>';
 const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://nomosx.com';
 
-// ─── Low-level send via Resend REST API ────────────────────────────────────
+// UTM params for tracking
+const UTM_CAMPAIGN = {
+  welcome: 'utm_source=email&utm_medium=transactional&utm_campaign=welcome',
+  newsletter: 'utm_source=email&utm_medium=transactional&utm_campaign=newsletter',
+  brief_ready: 'utm_source=email&utm_medium=transactional&utm_campaign=brief_ready',
+  publication: 'utm_source=email&utm_medium=transactional&utm_campaign=publication',
+  digest: 'utm_source=email&utm_medium=transactional&utm_campaign=digest',
+};
+
+function addUtmParams(url: string, campaign: string): string {
+  const separator = url.includes('?') ? '&' : '?';
+  return `${url}${separator}${campaign}`;
+}
 
 interface SendEmailResult {
   success: boolean;
@@ -41,41 +59,50 @@ async function sendEmail({ to, subject, html, text }: { to: string; subject: str
 
 // ─── Shared layout wrapper ──────────────────────────────────────────────────
 
-function layout(content: string): string {
+function layout(content: string, preheader?: string): string {
+  const preheaderHtml = preheader
+    ? `<div style="display:none;max-height:0;overflow:hidden;mso-hide:all;font-size:1px;line-height:1px;opacity:0;">${preheader}</div>`
+    : '';
+
   return `<!DOCTYPE html>
-<html lang="en">
+<html lang="en" dir="ltr">
 <head>
   <meta charset="UTF-8" />
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="color-scheme" content="dark" />
   <title>NomosX</title>
 </head>
-<body style="margin:0;padding:0;background:#09090b;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#e4e4e7;">
-  <table width="100%" cellpadding="0" cellspacing="0" style="background:#09090b;padding:40px 20px;">
+<body style="margin:0;padding:0;background:#09090b;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,'Helvetica Neue',Arial,sans-serif;color:#e4e4e7;-webkit-font-smoothing:antialiased;">
+  ${preheaderHtml}
+  <table width="100%" cellpadding="0" cellspacing="0" border="0" style="background:#09090b;padding:40px 20px;">
     <tr>
       <td align="center">
-        <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
+        <table width="600" cellpadding="0" cellspacing="0" border="0" style="max-width:600px;width:100%;">
           <!-- Header -->
           <tr>
             <td style="padding-bottom:32px;text-align:center;">
-              <span style="font-size:22px;font-weight:300;letter-spacing:-0.02em;color:#fff;">
-                Nomos<span style="background:linear-gradient(135deg,#818cf8,#7c3aed);-webkit-background-clip:text;-webkit-text-fill-color:transparent;font-weight:600;">X</span>
-              </span>
+              <p style="font-size:24px;font-weight:300;letter-spacing:-0.02em;color:#fff;margin:0 0 2px;">
+                Nomos<span style="color:#818cf8;font-weight:600;">X</span>
+              </p>
+              <p style="font-size:10px;font-weight:700;letter-spacing:0.2em;color:#6366f1;text-transform:uppercase;margin:0;">
+                The Autonomous Think Tank
+              </p>
             </td>
           </tr>
           <!-- Content -->
           <tr>
-            <td style="background:#18181b;border:1px solid #27272a;border-radius:12px;padding:40px;">
+            <td style="background:#111113;border:1px solid #27272a;border-radius:12px;padding:36px 40px;">
               ${content}
             </td>
           </tr>
           <!-- Footer -->
           <tr>
             <td style="padding-top:24px;text-align:center;">
-              <p style="font-size:12px;color:#52525b;margin:0;">
+              <p style="font-size:12px;color:#3f3f46;margin:0;">
                 NomosX · The Autonomous Think Tank<br/>
-                <a href="${APP_URL}/unsubscribed" style="color:#6366f1;text-decoration:none;">Unsubscribe</a>
+                <a href="${APP_URL}/api/newsletter/unsubscribe" style="color:#52525b;text-decoration:none;">Unsubscribe</a>
                 &nbsp;·&nbsp;
-                <a href="${APP_URL}/privacy" style="color:#6366f1;text-decoration:none;">Privacy</a>
+                <a href="${APP_URL}/privacy" style="color:#52525b;text-decoration:none;">Privacy</a>
               </p>
             </td>
           </tr>
@@ -94,6 +121,8 @@ function layout(content: string): string {
  */
 export async function sendWelcomeEmail(to: string, name?: string | null): Promise<void> {
   const displayName = name || 'Researcher';
+  const dashboardUrl = addUtmParams(`${APP_URL}/dashboard`, UTM_CAMPAIGN.welcome);
+  const pricingUrl = addUtmParams(`${APP_URL}/pricing`, UTM_CAMPAIGN.welcome);
   const html = layout(`
     <h1 style="font-size:24px;font-weight:300;color:#fff;margin:0 0 8px;">
       Welcome to NomosX, ${displayName}.
@@ -105,10 +134,10 @@ export async function sendWelcomeEmail(to: string, name?: string | null): Promis
     </p>
     <p style="font-size:14px;color:#a1a1aa;margin:0 0 32px;line-height:1.6;">
       As an <strong style="color:#e4e4e7;">Analyst</strong>, you have access to all published briefs
-      and the weekly intelligence dispatch. Ready to commission your own research? Upgrade to
-      <strong style="color:#e4e4e7;">Researcher</strong>.
+      and the weekly intelligence dispatch. Ready to commission your own research?
+      <a href="${pricingUrl}" style="color:#818cf8;text-decoration:none;">Upgrade to Researcher →</a>
     </p>
-    <a href="${APP_URL}/dashboard"
+    <a href="${dashboardUrl}"
        style="display:inline-block;background:linear-gradient(135deg,#6366f1,#7c3aed);color:#fff;
               text-decoration:none;padding:12px 28px;border-radius:8px;font-size:14px;font-weight:500;">
       Go to your dashboard →
@@ -117,7 +146,7 @@ export async function sendWelcomeEmail(to: string, name?: string | null): Promis
     <p style="font-size:12px;color:#52525b;margin:0;">
       Questions? Reply to this email — we read everything.
     </p>
-  `);
+  `, `Your NomosX account is ready, ${displayName} — start exploring 250M+ academic sources`);
 
   await sendEmail({ to, subject: 'Welcome to NomosX — your think tank is ready', html });
 }
@@ -147,7 +176,7 @@ export async function sendNewsletterConfirmation(to: string, confirmToken: strin
       If you didn't request this, you can safely ignore this email.
       This link expires in 48 hours.
     </p>
-  `);
+  `, 'One click to activate — weekly intelligence briefs from 250M+ academic sources');
 
   await sendEmail({ to, subject: 'Confirm your NomosX subscription', html });
 }
@@ -156,6 +185,8 @@ export async function sendNewsletterConfirmation(to: string, confirmToken: strin
  * Welcome email for confirmed newsletter subscribers.
  */
 export async function sendNewsletterWelcome(to: string): Promise<void> {
+  const publicationsUrl = addUtmParams(`${APP_URL}/publications`, UTM_CAMPAIGN.newsletter);
+  const unsubUrl = `${APP_URL}/api/newsletter/unsubscribe?email=${encodeURIComponent(to)}`;
   const html = layout(`
     <h1 style="font-size:24px;font-weight:300;color:#fff;margin:0 0 8px;">
       You're subscribed.
@@ -167,7 +198,7 @@ export async function sendNewsletterWelcome(to: string): Promise<void> {
     <p style="font-size:14px;color:#a1a1aa;margin:0 0 32px;line-height:1.6;">
       Your first dispatch arrives next Monday. In the meantime, browse our published briefs.
     </p>
-    <a href="${APP_URL}/publications"
+    <a href="${publicationsUrl}"
        style="display:inline-block;background:linear-gradient(135deg,#6366f1,#7c3aed);color:#fff;
               text-decoration:none;padding:12px 28px;border-radius:8px;font-size:14px;font-weight:500;">
       Browse publications →
@@ -175,22 +206,22 @@ export async function sendNewsletterWelcome(to: string): Promise<void> {
     <hr style="border:none;border-top:1px solid #27272a;margin:32px 0;" />
     <p style="font-size:12px;color:#52525b;margin:0;">
       To unsubscribe at any time:
-      <a href="${APP_URL}/api/newsletter/unsubscribe?email=${encodeURIComponent(to)}"
-         style="color:#6366f1;text-decoration:none;">click here</a>.
+      <a href="${unsubUrl}" style="color:#6366f1;text-decoration:none;">click here</a>.
     </p>
-  `);
+  `, 'Your first intelligence dispatch arrives Monday — browse this week\'s briefs now');
 
   await sendEmail({ to, subject: 'Welcome to the NomosX intelligence dispatch', html });
 }
 
 /**
  * Bulk newsletter send — used by the weekly newsletter cron job.
+ * Supports per-subscriber HTML override for tier-personalized content.
  * Sends in batches with configurable delay to respect Resend rate limits.
  */
 export async function sendBulkNewsletter(
-  subscribers: Array<{ id: string; email: string }>,
+  subscribers: Array<{ id: string; email: string; html?: string }>,
   subject: string,
-  html: string,
+  fallbackHtml: string,
   options: { batchSize?: number; delayMs?: number } = {}
 ): Promise<{ sent: number; failed: number; errors: string[] }> {
   const { batchSize = 50, delayMs = 200 } = options;
@@ -203,7 +234,7 @@ export async function sendBulkNewsletter(
 
     await Promise.allSettled(
       batch.map(async (sub) => {
-        const result = await sendEmail({ to: sub.email, subject, html });
+        const result = await sendEmail({ to: sub.email, subject, html: sub.html ?? fallbackHtml });
         if (result.success) {
           sent++;
         } else {
@@ -228,10 +259,10 @@ export async function sendBriefPublishedNotification(
   to: string,
   brief: { title: string; summary: string; id: string; trustScore?: number }
 ): Promise<void> {
-  const briefUrl = `${APP_URL}/publications/${brief.id}`;
+  const briefUrl = addUtmParams(`${APP_URL}/publications/${brief.id}`, UTM_CAMPAIGN.publication);
   const trust = brief.trustScore ? `${brief.trustScore}/100` : '';
   const html = layout(`
-    <p style="font-size:11px;font-weight:600;letter-spacing:0.2em;color:#6366f1;text-transform:uppercase;margin:0 0 16px;">
+    <p style="font-size:10px;font-weight:700;letter-spacing:0.2em;color:#6366f1;text-transform:uppercase;margin:0 0 16px;">
       New Publication
     </p>
     <h1 style="font-size:22px;font-weight:300;color:#fff;margin:0 0 16px;line-height:1.3;">
@@ -250,11 +281,91 @@ export async function sendBriefPublishedNotification(
     <p style="font-size:12px;color:#52525b;margin:0;">
       You're receiving this because you subscribed to NomosX publications.
       <a href="${APP_URL}/api/newsletter/unsubscribe?email=${encodeURIComponent(to)}"
-         style="color:#6366f1;text-decoration:none;">Unsubscribe</a>.
+         style="color:#52525b;text-decoration:none;">Unsubscribe</a>.
     </p>
-  `);
+  `, `${brief.title} — peer-reviewed intelligence from NomosX`);
 
   await sendEmail({ to, subject: `New brief: ${brief.title}`, html });
+}
+
+/**
+ * Commissioned brief ready notification — sent to Researcher tier users
+ * when their custom-commissioned brief or strategic report is complete.
+ */
+export async function sendBriefReadyNotification(
+  to: string,
+  brief: {
+    title: string;
+    id: string;
+    type: 'brief' | 'strategic_report';
+    trustScore?: number;
+    sourceCount?: number;
+    question?: string;
+  },
+  name?: string | null
+): Promise<void> {
+  const briefUrl = addUtmParams(`${APP_URL}/publications/${brief.id}`, UTM_CAMPAIGN.brief_ready);
+  const displayName = name || 'Researcher';
+  const isStrategic = brief.type === 'strategic_report';
+  const typeLabel = isStrategic ? '15-Page Strategic Report' : 'Executive Brief';
+  const trustColor = (brief.trustScore || 0) >= 85 ? '#10b981' : (brief.trustScore || 0) >= 70 ? '#f59e0b' : '#6366f1';
+  const preheader = `Your ${isStrategic ? 'strategic report' : 'brief'} is ready: ${brief.title}`;
+
+  const html = layout(`
+    <p style="font-size:10px;font-weight:700;letter-spacing:0.2em;color:#6366f1;text-transform:uppercase;margin:0 0 16px;">
+      ${isStrategic ? '⚡ Strategic Report Ready' : '✓ Brief Ready'}
+    </p>
+    <h1 style="font-size:22px;font-weight:300;color:#fff;margin:0 0 6px;line-height:1.3;">
+      ${brief.title}
+    </h1>
+    ${brief.question ? `<p style="font-size:13px;color:#52525b;margin:0 0 20px;font-style:italic;">"${brief.question}"</p>` : '<div style="margin-bottom:20px;"></div>'}
+
+    <table width="100%" cellpadding="0" cellspacing="0" style="margin-bottom:28px;">
+      <tr>
+        <td style="background:#111113;border:1px solid #27272a;border-radius:8px;padding:16px 20px;">
+          <table cellpadding="0" cellspacing="0">
+            <tr>
+              <td style="padding-right:24px;">
+                <p style="font-size:11px;color:#52525b;margin:0 0 3px;text-transform:uppercase;letter-spacing:0.1em;">Type</p>
+                <p style="font-size:13px;color:#e4e4e7;margin:0;font-weight:500;">${typeLabel}</p>
+              </td>
+              ${brief.trustScore ? `<td style="padding-right:24px;">
+                <p style="font-size:11px;color:#52525b;margin:0 0 3px;text-transform:uppercase;letter-spacing:0.1em;">Trust Score</p>
+                <p style="font-size:13px;font-weight:600;color:${trustColor};margin:0;">${brief.trustScore}/100</p>
+              </td>` : ''}
+              ${brief.sourceCount ? `<td>
+                <p style="font-size:11px;color:#52525b;margin:0 0 3px;text-transform:uppercase;letter-spacing:0.1em;">Sources</p>
+                <p style="font-size:13px;color:#e4e4e7;margin:0;font-weight:500;">${brief.sourceCount} cited</p>
+              </td>` : ''}
+            </tr>
+          </table>
+        </td>
+      </tr>
+    </table>
+
+    <p style="font-size:14px;color:#a1a1aa;line-height:1.65;margin:0 0 28px;">
+      ${displayName}, your commissioned ${isStrategic ? 'strategic report' : 'brief'} has been completed by the NomosX research agents.
+      ${isStrategic ? 'The full 15-page analysis — including scenario planning, stakeholder matrix, and implementation roadmap — is now available.' : 'The full analysis with citations and evidence assessment is ready to read.'}
+    </p>
+
+    <a href="${briefUrl}"
+       style="display:inline-block;background:linear-gradient(135deg,#6366f1,#7c3aed);color:#fff;
+              text-decoration:none;padding:13px 30px;border-radius:8px;font-size:14px;font-weight:500;letter-spacing:0.01em;">
+      ${isStrategic ? 'Read your strategic report →' : 'Read your brief →'}
+    </a>
+
+    <hr style="border:none;border-top:1px solid #27272a;margin:32px 0;" />
+    <p style="font-size:12px;color:#52525b;margin:0;line-height:1.6;">
+      Want to commission another brief?
+      <a href="${addUtmParams(`${APP_URL}/dashboard`, UTM_CAMPAIGN.brief_ready)}" style="color:#6366f1;text-decoration:none;">Go to your dashboard →</a>
+    </p>
+  `, preheader);
+
+  const subject = isStrategic
+    ? `Your strategic report is ready: ${brief.title}`
+    : `Your brief is ready: ${brief.title}`;
+
+  await sendEmail({ to, subject, html });
 }
 
 // ─── Exports for API routes ───────────────────────────────────────────────
