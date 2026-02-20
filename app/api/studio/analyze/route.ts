@@ -38,7 +38,7 @@ export async function POST(req: NextRequest) {
 
     // Increment studio usage
     await prisma.subscription.update({
-      where: { userId: user.id },
+      where: { userId: session.id },
       data: { studioQuestionsUsed: { increment: 1 } },
     });
 
