@@ -45,7 +45,7 @@ export async function POST(req: NextRequest) {
     expiresAt.setHours(expiresAt.getHours() + 24); // 24 hour expiry
 
     // Save verification token (using existing schema fields)
-    const currentPreferences = user.preferences || {};
+    const currentPreferences = (user.preferences as Record<string, any>) || {};
     await prisma.user.update({
       where: { id: user.id },
       data: {

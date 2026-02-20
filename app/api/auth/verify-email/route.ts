@@ -44,7 +44,7 @@ export async function GET(req: NextRequest) {
     }
 
     // Mark email as verified
-    const currentPreferences = user.preferences || {};
+    const currentPreferences = (user.preferences as Record<string, any>) || {};
     await prisma.user.update({
       where: { id: user.id },
       data: {
