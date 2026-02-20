@@ -14,7 +14,6 @@ const textSizes   = { sm: 'text-[15px]', md: 'text-[18px]', lg: 'text-[22px]', x
 const gapSizes    = { sm: 'gap-2', md: 'gap-2.5', lg: 'gap-3', xl: 'gap-4' };
 
 function NomosSymbol({ px, className }: { px: number; className?: string }) {
-  const r = px / 2;
   return (
     <svg
       width={px}
@@ -25,30 +24,35 @@ function NomosSymbol({ px, className }: { px: number; className?: string }) {
       className={className}
     >
       <defs>
-        <linearGradient id="nx-logo-grad" x1="30%" y1="0%" x2="70%" y2="100%">
-          <stop offset="0%"   stopColor="#6366F1" />
-          <stop offset="100%" stopColor="#8B5CF6" />
+        <linearGradient id="nx-logo-grad" x1="20%" y1="0%" x2="80%" y2="100%">
+          <stop offset="0%"   stopColor="#818CF8" />
+          <stop offset="50%"  stopColor="#6366F1" />
+          <stop offset="100%" stopColor="#7C3AED" />
         </linearGradient>
-        <filter id="nx-logo-glow" x="-30%" y="-30%" width="160%" height="160%">
-          <feGaussianBlur stdDeviation="3" result="blur" />
+        <filter id="nx-logo-glow" x="-40%" y="-40%" width="180%" height="180%">
+          <feGaussianBlur stdDeviation="4.5" result="blur" />
+          <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
+        </filter>
+        <filter id="nx-body-glow" x="-20%" y="-20%" width="140%" height="140%">
+          <feGaussianBlur stdDeviation="1.5" result="blur" />
           <feMerge><feMergeNode in="blur" /><feMergeNode in="SourceGraphic" /></feMerge>
         </filter>
       </defs>
 
       {/* Left vertical bar */}
-      <path d="M 25 28 L 25 92 L 34 92 L 34 28 Z" fill="url(#nx-logo-grad)" />
+      <path d="M 25 28 L 25 92 L 34 92 L 34 28 Z" fill="url(#nx-logo-grad)" filter="url(#nx-body-glow)" />
 
       {/* Right vertical bar */}
-      <path d="M 86 28 L 86 92 L 95 92 L 95 28 Z" fill="url(#nx-logo-grad)" />
+      <path d="M 86 28 L 86 92 L 95 92 L 95 28 Z" fill="url(#nx-logo-grad)" filter="url(#nx-body-glow)" />
 
       {/* Top-left to centre diagonal */}
-      <path d="M 34 33 L 62 60 L 86 84 L 94 77 L 62 51 L 34 26 Z" fill="url(#nx-logo-grad)" />
+      <path d="M 34 33 L 62 60 L 86 84 L 94 77 L 62 51 L 34 26 Z" fill="url(#nx-logo-grad)" filter="url(#nx-body-glow)" />
 
       {/* Top-right to centre diagonal */}
-      <path d="M 86 33 L 58 60 L 34 84 L 26 77 L 58 51 L 86 26 Z" fill="url(#nx-logo-grad)" opacity="0.85" />
+      <path d="M 86 33 L 58 60 L 34 84 L 26 77 L 58 51 L 86 26 Z" fill="url(#nx-logo-grad)" opacity="0.80" filter="url(#nx-body-glow)" />
 
-      {/* Centre node */}
-      <circle cx="60" cy="60" r="7"  fill="white"    filter="url(#nx-logo-glow)" />
+      {/* Centre node — glowing */}
+      <circle cx="60" cy="60" r="8"   fill="white"    filter="url(#nx-logo-glow)" opacity="0.9" />
       <circle cx="60" cy="60" r="3.5" fill="#6366F1" />
     </svg>
   );
@@ -69,11 +73,11 @@ export function NomosXLogo({ size = 'md', variant = 'full', className }: LogoPro
     return (
       <div className={cn('inline-flex items-center', className)}>
         <span className={cn(
-          'font-display font-semibold tracking-tight',
-          'bg-gradient-to-r from-white via-indigo-200 to-white bg-clip-text text-transparent',
+          'font-display font-semibold tracking-[-0.02em]',
+          'bg-gradient-to-r from-indigo-300 via-white to-violet-300 bg-clip-text text-transparent',
           textSizes[size]
         )}>
-          NomosX
+          Nomos<span className="bg-gradient-to-r from-indigo-400 to-violet-500 bg-clip-text text-transparent">X</span>
         </span>
       </div>
     );
@@ -83,10 +87,11 @@ export function NomosXLogo({ size = 'md', variant = 'full', className }: LogoPro
     <div className={cn('inline-flex items-center', gapSizes[size], className)}>
       <NomosSymbol px={px} />
       <span className={cn(
-        'font-display font-semibold tracking-tight text-white/90',
+        'font-display font-semibold tracking-[-0.02em]',
+        'bg-gradient-to-r from-white via-indigo-100 to-violet-200 bg-clip-text text-transparent',
         textSizes[size]
       )}>
-        NomosX
+        Nomos<span className="bg-gradient-to-r from-indigo-400 to-violet-500 bg-clip-text text-transparent">X</span>
       </span>
     </div>
   );

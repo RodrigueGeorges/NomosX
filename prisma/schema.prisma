@@ -1007,7 +1007,7 @@ model Subscription {
   userId String @unique
 
   // Plan
-  plan String @default("TRIAL") // TRIAL, EXECUTIVE, STRATEGY
+  plan String @default("ANALYST") // ANALYST, RESEARCHER, STUDIO
 
   // Trial
   trialStart      DateTime?
@@ -1031,15 +1031,15 @@ model Subscription {
   activeVerticalsMax     Int      @default(1)
   lastWeeklyReset        DateTime @default(now())
 
-  // Studio limits (for STRATEGY tier)
+  // Studio limits (for STUDIO tier)
   studioQuestionsPerMonth Int    @default(0)
   studioQuestionsUsed     Int    @default(0)
   lastStudioReset         DateTime @default(now())
 
   // Features
   canExportPdf       Boolean @default(false)
-  canAccessStudio    Boolean @default(false)  // Only STRATEGY
-  canCreateVerticals Boolean @default(false)  // Only STRATEGY
+  canAccessStudio    Boolean @default(false)  // Only STUDIO
+  canCreateVerticals Boolean @default(false)  // Only STUDIO
 
   // Metadata
   canceledAt DateTime?
@@ -1183,8 +1183,8 @@ model NewsletterSubscriber {
   confirmedAt    DateTime?
   
   // Unsubscribe
-  unsubscribedAt DateTime?
-  unsubscribeReason String?
+  unsubscribedAt    DateTime?
+  unsubscribeReason String?   // manual, spam_complaint, bounce, admin
   
   // Engagement
   lastEmailSentAt DateTime?
@@ -1222,7 +1222,7 @@ model NewsletterEdition {
   briefIds       String[]  // IDs of included Executive Briefs
   
   // Status
-  status         String    @default("draft") // draft, scheduled, sending, sent
+  status         String    @default("draft") // draft, scheduled, sending, sent, partial
   scheduledFor   DateTime?
   sentAt         DateTime?
   

@@ -5,9 +5,9 @@ import { useState } from 'react';
 
 import { useRouter } from 'next/navigation';
 import { Modal } from '@/components/ui/Modal';
-import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import { Mail,Chrome as Google,Github } from 'lucide-react';
+import { Mail } from 'lucide-react';
+import { NomosXLogo } from '@/components/brand/NomosXLogo';
 
 interface AuthModalProps {
   isOpen: boolean;
@@ -98,20 +98,7 @@ export default function AuthModal({ isOpen, onClose, initialQuestion, onSignupSu
         <div className="relative mb-10 text-center">
           {/* Logo */}
           <div className="flex justify-center mb-6">
-            <div className="flex items-center gap-3">
-              <div className="relative group">
-                <div className="absolute inset-0 bg-gradient-to-br from-indigo-500/20 to-violet-500/10 rounded-xl blur-xl opacity-0 group-hover:opacity-100 transition-opacity duration-700" />
-                <div className="relative w-12 h-12 rounded-xl bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center shadow-lg shadow-indigo-500/30">
-                  <span className="text-white font-display text-lg font-bold tracking-tight">N</span>
-                </div>
-              </div>
-              <div>
-                <h2 className="text-xl font-display font-semibold text-white mb-0.5 tracking-tight">
-                  NomosX
-                </h2>
-                <p className="text-xs text-white/30 tracking-[0.15em] uppercase">Autonomous Think Tank</p>
-              </div>
-            </div>
+            <NomosXLogo size="md" variant="full" />
           </div>
 
           {/* Title */}
@@ -136,60 +123,32 @@ export default function AuthModal({ isOpen, onClose, initialQuestion, onSignupSu
 
           {/* Trust Bar */}
           <div className="flex items-center justify-center gap-3 text-xs text-white/30 tracking-[0.15em] uppercase">
-            <span>99.2% Citation precision</span>
-            <div className="w-1 h-1 rounded-full bg-indigo-400/40" />
-            <span>60s Analysis</span>
-            <div className="w-1 h-1 rounded-full bg-indigo-400/40" />
             <span>250M+ Sources</span>
+            <div className="w-1 h-1 rounded-full bg-indigo-400/40" />
+            <span>Auto-published</span>
+            <div className="w-1 h-1 rounded-full bg-indigo-400/40" />
+            <span>Free to start</span>
           </div>
         </div>
 
         {mode === "oauth" ? (
-          <div className="relative space-y-3">
-            {/* OAuth Buttons - Premium */}
+          <div className="relative space-y-4">
             <button
-              onClick={() => handleOAuth("google")}
-              disabled={loading}
-              className="group relative w-full p-4 rounded-xl bg-white/[0.03] border border-white/[0.08] hover:border-white/20 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden"
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-indigo-500/5 to-violet-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              <div className="relative flex items-center justify-center gap-3 text-white/90">
-                <Google size={20} strokeWidth={1.5} />
-                <span className="font-medium">Continue with Google</span>
-              </div>
-            </button>
-
-            <button
-              onClick={() => handleOAuth("github")}
-              disabled={loading}
-              className="group relative w-full p-4 rounded-xl bg-white/[0.03] border border-white/[0.08] hover:border-white/20 transition-all duration-300 disabled:opacity-50 disabled:cursor-not-allowed overflow-hidden"
-            >
-              <div className="absolute inset-0 bg-gradient-to-r from-blue-500/5 to-purple-500/5 opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
-              <div className="relative flex items-center justify-center gap-3 text-white/90">
-                <Github size={20} strokeWidth={1.5} />
-                <span className="font-medium">Continue with GitHub</span>
-              </div>
-            </button>
-
-            {/* Divider Premium */}
-            <div className="relative my-8">
-              <div className="absolute inset-0 flex items-center">
-                <div className="w-full border-t border-white/[0.08]"></div>
-              </div>
-              <div className="relative flex justify-center">
-                <span className="bg-[#0A0A0B] px-4 text-xs text-white/40 tracking-[0.2em] uppercase">Or</span>
-              </div>
-            </div>
-
-            {/* Email Button Premium */}
-            <button
-              onClick={() => setMode("email")}
+              onClick={() => { setIsSignup(false); setMode("email"); }}
               className="group relative w-full p-4 rounded-xl bg-gradient-to-r from-indigo-500 to-violet-600 text-white font-medium shadow-[0_0_30px_rgba(99,102,241,0.3)] hover:shadow-[0_0_50px_rgba(99,102,241,0.5)] transition-all duration-300 overflow-hidden"
             >
               <div className="absolute inset-0 bg-gradient-to-r from-indigo-400 to-violet-500 opacity-0 group-hover:opacity-100 blur-sm transition-opacity" />
               <div className="relative flex items-center justify-center gap-3">
-                <Mail size={20} strokeWidth={2} />
-                <span>Continue with Email</span>
+                <Mail size={18} strokeWidth={2} />
+                <span>Sign in with Email</span>
+              </div>
+            </button>
+            <button
+              onClick={() => { setIsSignup(true); setMode("email"); }}
+              className="group relative w-full p-4 rounded-xl bg-white/[0.04] border border-white/[0.10] text-white/80 hover:text-white hover:border-indigo-500/30 hover:bg-white/[0.07] transition-all duration-300"
+            >
+              <div className="relative flex items-center justify-center gap-3">
+                <span>Create an account — free</span>
               </div>
             </button>
           </div>

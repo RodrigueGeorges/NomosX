@@ -114,6 +114,19 @@ export async function GET(req: NextRequest) {
 
     console.log("[Cron/Newsletter] Job completed successfully");
 
+    // Record cron run for health monitoring
+    const now = new Date();
+    prisma.systemMetric.create({
+      data: {
+        metricName: 'cron.newsletter',
+        metricValue: sendResult.sent,
+        unit: 'count',
+        periodStart: now,
+        periodEnd: now,
+        dimensions: { sent: sendResult.sent, failed: sendResult.failed },
+      },
+    }).catch(() => {});
+
     return NextResponse.json({
       success: true,
       editionId: edition.id,

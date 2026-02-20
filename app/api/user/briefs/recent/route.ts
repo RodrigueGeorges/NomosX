@@ -25,7 +25,7 @@ export async function GET(req: NextRequest) {
     }
 
     const subscription = user.subscription;
-    const tier = subscription?.plan || 'TRIAL';
+    const tier = subscription?.plan || 'ANALYST';
 
     // Get recent briefs
     const briefs = await prisma.thinkTankPublication.findMany({
@@ -71,15 +71,14 @@ export async function GET(req: NextRequest) {
         readTime,
         trending: isTrending,
         critical: isCritical,
-        // For TRIAL users, we'll show limited preview
-        preview: tier === 'TRIAL' ? brief.html.substring(0, 200) + '...' : null,
+        preview: (tier === 'TRIAL' || tier === 'ANALYST') ? brief.html.substring(0, 200) + '...' : null,
       };
     });
 
     return NextResponse.json({
       briefs: transformedBriefs,
       tier,
-      canAccessFull: tier !== 'TRIAL',
+      canAccessFull: tier !== 'TRIAL' && tier !== 'ANALYST',
     });
 
   } catch (error) {

@@ -22,9 +22,10 @@ import {
 import HexResearcherAvatar from '@/components/HexResearcherAvatar';
 import { RESEARCHERS } from '@/lib/researchers';
 import { cn } from '@/lib/utils';
+import FirstVisitBanner from '@/components/FirstVisitBanner';
 
 interface SubscriptionData {
-  plan: 'TRIAL' | 'EXECUTIVE' | 'STRATEGY';
+  plan: 'TRIAL' | 'ANALYST' | 'EXECUTIVE' | 'RESEARCHER' | 'STRATEGY' | 'STUDIO';
   canAccessBriefs: boolean;
   canAccessStudio: boolean;
   canCreateVerticals: boolean;
@@ -141,26 +142,26 @@ export default function DashboardPage() {
     );
   }
 
-  // TRIAL Dashboard
-  if (subscription.plan === 'TRIAL') {
-    return <TrialDashboard subscription={subscription} recentBriefs={recentBriefs} router={router} />;
+  // ANALYST / TRIAL Dashboard (free tier)
+  if (subscription.plan === 'TRIAL' || subscription.plan === 'ANALYST') {
+    return <AnalystDashboard subscription={subscription} recentBriefs={recentBriefs} router={router} />;
   }
 
-  // EXECUTIVE Dashboard
-  if (subscription.plan === 'EXECUTIVE') {
-    return <ExecutiveDashboard subscription={subscription} recentBriefs={recentBriefs} researcherStatus={researcherStatus} router={router} />;
+  // RESEARCHER Dashboard (was EXECUTIVE)
+  if (subscription.plan === 'RESEARCHER' || subscription.plan === 'EXECUTIVE') {
+    return <ResearcherDashboard subscription={subscription} recentBriefs={recentBriefs} researcherStatus={researcherStatus} router={router} />;
   }
 
-  // STRATEGY Dashboard
-  if (subscription.plan === 'STRATEGY') {
-    return <StrategyDashboard subscription={subscription} recentBriefs={recentBriefs} researcherStatus={researcherStatus} router={router} />;
+  // STUDIO Dashboard (was STRATEGY)
+  if (subscription.plan === 'STUDIO' || subscription.plan === 'STRATEGY') {
+    return <StudioDashboard subscription={subscription} recentBriefs={recentBriefs} researcherStatus={researcherStatus} router={router} />;
   }
 
   return null;
 }
 
-// TRIAL Dashboard - Focus on discovery and upgrade
-function TrialDashboard({ subscription, recentBriefs, router }: { 
+// ANALYST Dashboard - Free tier, read auto-published output
+function AnalystDashboard({ subscription, recentBriefs, router }: { 
   subscription: SubscriptionData; 
   recentBriefs: BriefData[]; 
   router: any;
@@ -176,6 +177,7 @@ function TrialDashboard({ subscription, recentBriefs, router }: {
       </div>
 
       <div className="relative z-10 max-w-6xl mx-auto px-4 sm:px-6 py-8">
+        <FirstVisitBanner />
         {/* Header */}
         <div className="mb-8">
           <div className="flex items-center justify-between mb-6">
@@ -186,7 +188,7 @@ function TrialDashboard({ subscription, recentBriefs, router }: {
               <p className="text-white/40">Discover strategic intelligence from our autonomous think tank</p>
             </div>
             <div className="px-4 py-2 rounded-full border border-emerald-400/20 bg-emerald-400/5">
-              <span className="text-emerald-400 text-sm font-medium">FREE Plan</span>
+              <span className="text-emerald-400 text-sm font-medium">ANALYST</span>
             </div>
           </div>
         </div>
@@ -201,14 +203,14 @@ function TrialDashboard({ subscription, recentBriefs, router }: {
             </div>
             
             <h2 className="font-display text-3xl sm:text-4xl font-light leading-tight mb-6">
-              <span className="nx-gradient-text">Where Research Becomes Strategy</span>
+              <span className="nx-gradient-text">Commission your own research.</span>
               <br />
-              <span className="text-white/50 text-2xl sm:text-3xl">Get the intelligence others miss</span>
+              <span className="text-white/50 text-2xl sm:text-3xl">Go beyond reading. Start directing.</span>
             </h2>
             
             <p className="text-base text-white/40 mb-8 max-w-2xl mx-auto">
-              While competitors chase yesterday's news, our AI council analyzes 200,000+ academic sources 
-              to identify the strategic shifts that will shape your industry next quarter.
+              As an Analyst you receive the auto-published output. Upgrade to Researcher to commission briefs, 
+              run strategic reports, and access the Harvard Council deliberations.
             </p>
             
             <div className="flex flex-col sm:flex-row gap-4 justify-center mb-8">
@@ -230,9 +232,9 @@ function TrialDashboard({ subscription, recentBriefs, router }: {
             </div>
             
             <div className="flex items-center justify-center gap-6 text-xs text-white/40">
-              <span>Executive: €15/month</span>
+              <span>Researcher: €19/month</span>
               <div className="w-1 h-1 rounded-full bg-indigo-400/40" />
-              <span>Strategy: €39/month</span>
+              <span>Studio: €49/month</span>
               <div className="w-1 h-1 rounded-full bg-indigo-400/40" />
               <span>30-day free trial</span>
             </div>
@@ -345,8 +347,8 @@ function TrialDashboard({ subscription, recentBriefs, router }: {
   );
 }
 
-// EXECUTIVE Dashboard - Full briefs access
-function ExecutiveDashboard({ subscription, recentBriefs, researcherStatus, router }: { 
+// RESEARCHER Dashboard - Commission briefs + strategic reports
+function ResearcherDashboard({ subscription, recentBriefs, researcherStatus, router }: { 
   subscription: SubscriptionData; 
   recentBriefs: BriefData[];
   researcherStatus: ResearcherStatus[];
@@ -373,10 +375,10 @@ function ExecutiveDashboard({ subscription, recentBriefs, researcherStatus, rout
           </div>
           <div className="flex items-center gap-4">
             <div className="px-4 py-2 rounded-full border border-indigo-500/20 bg-indigo-500/10">
-              <span className="text-indigo-300 text-sm font-medium">EXECUTIVE</span>
+              <span className="text-indigo-300 text-sm font-medium">RESEARCHER</span>
             </div>
             <button
-              onClick={() => router.push('/studio')}
+              onClick={() => router.push('/pricing')}
               className="px-4 py-2 rounded-xl border border-white/[0.1] text-white/70 hover:text-white hover:border-white/[0.2] hover:bg-white/[0.03] transition-all flex items-center gap-2"
             >
               <Lock size={14} />
@@ -515,13 +517,13 @@ function ExecutiveDashboard({ subscription, recentBriefs, researcherStatus, rout
                   Need Custom Research?
                 </h3>
                 <p className="text-sm text-white/40 mb-4">
-                  Upgrade to Strategy for personalized analysis from our Harvard Council
+                  Upgrade to Studio for Publications Studio, Council Sessions, and API access
                 </p>
                 <button
                   onClick={() => router.push('/pricing')}
                   className="w-full py-2.5 rounded-lg border border-indigo-500/20 bg-indigo-500/5 text-indigo-300 font-medium hover:bg-indigo-500/10 transition-all"
                 >
-                  Upgrade to Strategy
+                  Upgrade to Studio
                 </button>
               </div>
             </div>
@@ -532,8 +534,8 @@ function ExecutiveDashboard({ subscription, recentBriefs, researcherStatus, rout
   );
 }
 
-// STRATEGY Dashboard - Full access + Studio
-function StrategyDashboard({ subscription, recentBriefs, researcherStatus, router }: { 
+// STUDIO Dashboard - Full access + Publications Studio
+function StudioDashboard({ subscription, recentBriefs, researcherStatus, router }: { 
   subscription: SubscriptionData; 
   recentBriefs: BriefData[];
   researcherStatus: ResearcherStatus[];
@@ -559,8 +561,8 @@ function StrategyDashboard({ subscription, recentBriefs, researcherStatus, route
             <p className="text-white/40">Your personal research council and strategic intelligence hub</p>
           </div>
           <div className="flex items-center gap-4">
-            <div className="px-4 py-2 rounded-full border border-purple-400/20 bg-purple-400/10">
-              <span className="text-purple-400 text-sm font-medium">STRATEGY</span>
+            <div className="px-4 py-2 rounded-full border border-violet-500/20 bg-violet-500/10">
+              <span className="text-violet-300 text-sm font-medium">STUDIO</span>
             </div>
             <button
               onClick={() => router.push('/studio')}

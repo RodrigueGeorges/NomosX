@@ -10,6 +10,7 @@ import { NextRequest,NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { randomBytes } from 'crypto';
 import { assertRateLimit, RateLimitError } from '@/lib/security/rate-limit';
+import { sendNewsletterConfirmation } from '@/lib/email';
 
 // Email validation regex
 const EMAIL_REGEX = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
@@ -81,8 +82,9 @@ export async function POST(req: NextRequest) {
           },
         });
 
-        // TODO: Send confirmation email
-        // await sendConfirmationEmail(normalizedEmail, confirmToken);
+        sendNewsletterConfirmation(normalizedEmail, confirmToken).catch(err =>
+          console.error('[Newsletter] Confirmation email failed:', err)
+        );
 
         return NextResponse.json({
           success: true,
@@ -93,7 +95,9 @@ export async function POST(req: NextRequest) {
 
       // If pending, resend confirmation
       if (existing.status === "pending") {
-        // TODO: Resend confirmation email
+        sendNewsletterConfirmation(normalizedEmail, existing.confirmToken!).catch(err =>
+          console.error('[Newsletter] Resend confirmation failed:', err)
+        );
         return NextResponse.json({
           success: true,
           message: "Please check your email to confirm your subscription.",
@@ -108,23 +112,23 @@ export async function POST(req: NextRequest) {
     await prisma.newsletterSubscriber.create({
       data: {
         email: normalizedEmail,
-        status: "active", // For MVP, skip double opt-in. Change to "pending" for production.
+        status: "pending",
         source,
         referrer,
         confirmToken,
-        confirmedAt: new Date(), // For MVP, auto-confirm. Remove for production double opt-in.
       },
     });
 
-    // TODO: Send welcome email
-    // await sendWelcomeEmail(normalizedEmail);
+    sendNewsletterConfirmation(normalizedEmail, confirmToken).catch(err =>
+      console.error('[Newsletter] Confirmation email failed:', err)
+    );
 
-    // Track conversion event
-    console.log(`[Newsletter] New subscriber: ${normalizedEmail} (source: ${source})`);
+    console.log(`[Newsletter] New subscriber (pending): ${normalizedEmail} (source: ${source})`);
 
     return NextResponse.json({
       success: true,
-      message: "Welcome to NomosX! You'll receive our Executive Briefs weekly.",
+      message: "Almost there! Check your inbox to confirm your subscription.",
+      requiresConfirmation: true,
     });
 
   } catch (error) {

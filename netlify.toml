@@ -1,5 +1,5 @@
 [build]
-  command = "npm cache clean --force && npm install && npm run build"
+  command = "npm cache clean --force && npm install && npx prisma migrate deploy && npm run build"
   publish = ".next"
   functions = "netlify/functions"
 
@@ -37,3 +37,19 @@
 
 [[plugins]]
   package = "@netlify/plugin-nextjs"
+
+# ─── Scheduled Cron Jobs ────────────────────────────────────────────────────
+# These call the Next.js API routes via Netlify Scheduled Functions.
+# Authorization: Bearer $CRON_SECRET (set in Netlify UI env vars)
+
+[functions."cron-newsletter"]
+  schedule = "0 8 * * 1"   # Every Monday at 08:00 UTC
+
+[functions."cron-editorial-plan"]
+  schedule = "0 20 * * 0"  # Every Sunday at 20:00 UTC (before weekly pipeline)
+
+[functions."cron-self-improve"]
+  schedule = "0 3 * * *"   # Every day at 03:00 UTC (low-traffic window)
+
+[functions."cron-generate-briefs"]
+  schedule = "0 22 * * 0"  # Every Sunday at 22:00 UTC (after editorial plan)

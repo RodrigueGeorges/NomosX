@@ -18,12 +18,6 @@ const publicationPostSchema = z.object({
 
 export async function GET(request: NextRequest) {
   try {
-    // Auth protection
-    const user = await getSession();
-    if (!user) {
-      return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
-    }
-
     const { searchParams } = new URL(request.url);
     const verticalId = searchParams.get("verticalId");
     const type = searchParams.get("type");
@@ -31,12 +25,11 @@ export async function GET(request: NextRequest) {
     const limit = parseInt(searchParams.get("limit") || "20");
     const offset = parseInt(searchParams.get("offset") || "0");
 
-    const where: any = {};
+    const where: any = { status: 'PUBLISHED', publishedAt: { not: null } };
 
     if (verticalId) where.verticalId = verticalId;
     if (type) where.type = type;
-    if (published === "true") where.publishedAt = { not: null };
-    if (published === "false") where.publishedAt = null;
+    if (published === "false") { where.publishedAt = null; delete where.status; }
 
     const [publications, total] = await Promise.all([
       prisma.thinkTankPublication.findMany({

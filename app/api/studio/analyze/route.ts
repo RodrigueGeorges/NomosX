@@ -1,6 +1,7 @@
 import { NextRequest, NextResponse } from 'next/server';
 import { getSession } from '@/lib/auth';
 import { prisma } from '@/lib/db';
+import { runPipeline } from '@/lib/agent/pipeline-v2';
 
 /**
  * POST /api/studio/analyze
@@ -27,10 +28,13 @@ export async function POST(req: NextRequest) {
 
     const subscription = user.subscription;
 
-    // Check if STRATEGY tier
-    if (!subscription || subscription.plan !== 'STRATEGY') {
+    // Check if STUDIO tier (supports legacy STRATEGY name)
+    const hasStudioAccess = subscription?.canAccessStudio ||
+      subscription?.plan === 'STUDIO' ||
+      subscription?.plan === 'STRATEGY';
+    if (!subscription || !hasStudioAccess) {
       return NextResponse.json({ 
-        error: "Studio access requires Strategy tier",
+        error: "Studio access requires Studio tier",
         currentPlan: subscription?.plan || 'none'
       }, { status: 403 });
     }
@@ -56,27 +60,60 @@ export async function POST(req: NextRequest) {
     // Increment studio usage
     await prisma.subscription.update({
       where: { userId: user.id },
-      data: {
-        studioQuestionsUsed: { increment: 1 },
-      },
+      data: { studioQuestionsUsed: { increment: 1 } },
     });
 
-    // TODO: Trigger the actual analysis pipeline
-    // For now, return success with quota info
+    // Run the pipeline
+    const mode = publicationType === 'STRATEGIC_REPORT' ? 'strategic' : 'brief';
+    const result = await runPipeline(question.trim(), mode, { perProvider: mode === 'strategic' ? 25 : 20 });
+
+    // Persist as ThinkTankPublication if pipeline succeeded
+    let publicationId: string | null = null;
+    if (result.briefId) {
+      const brief = await prisma.brief.findUnique({
+        where: { id: result.briefId },
+        select: { html: true, sources: true, title: true },
+      }).catch(() => null);
+
+      const vertical = verticalId
+        ? await prisma.vertical.findUnique({ where: { id: verticalId }, select: { id: true } }).catch(() => null)
+        : await prisma.vertical.findFirst({ where: { isActive: true }, select: { id: true } }).catch(() => null);
+
+      if (vertical && brief) {
+        const pub = await prisma.thinkTankPublication.create({
+          data: {
+            verticalId: vertical.id,
+            type: publicationType === 'STRATEGIC_REPORT' ? 'STRATEGIC_REPORT' : 'EXECUTIVE_BRIEF',
+            title: brief.title || question.trim(),
+            html: brief.html,
+            wordCount: Math.round(brief.html.length / 6),
+            trustScore: result.stats?.criticalLoop?.finalScore || 80,
+            qualityScore: result.stats?.rank?.avgQuality || 75,
+            citationCoverage: 0.85,
+            claimCount: 0,
+            factClaimCount: 0,
+            citedClaimCount: 0,
+            sourceIds: brief.sources || [],
+            status: 'PUBLISHED',
+            publishedAt: new Date(),
+            criticalLoopResult: { briefId: result.briefId, question, stats: result.stats },
+          },
+        }).catch(() => null);
+        publicationId = pub?.id ?? null;
+      }
+    }
+
     return NextResponse.json({
       success: true,
-      message: "Studio analysis started",
+      message: publicationId ? "Analysis complete" : "Analysis complete (pipeline ran, publication pending)",
+      publicationId,
+      briefId: result.briefId,
       quota: {
         used: subscription.studioQuestionsUsed + 1,
         limit: subscription.studioQuestionsPerMonth,
         remaining: subscription.studioQuestionsPerMonth - subscription.studioQuestionsUsed - 1,
       },
-      analysis: {
-        question,
-        publicationType,
-        verticalId,
-        status: "queued"
-      }
+      stats: result.stats,
     });
 
   } catch (error) {

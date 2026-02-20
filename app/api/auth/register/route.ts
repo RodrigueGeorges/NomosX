@@ -2,6 +2,7 @@ import { NextRequest,NextResponse } from 'next/server';
 import { prisma } from '@/lib/db';
 import { hashPassword,createSession } from '@/lib/auth';
 import { assertRateLimit, RateLimitError } from '@/lib/security/rate-limit';
+import { sendWelcomeEmail } from '@/lib/email';
 import { z } from 'zod';
 
 const registerSchema = z.object({
@@ -75,6 +76,11 @@ export async function POST(req: NextRequest) {
       name: user.name,
       role: user.role,
     });
+
+    // Send welcome email (non-blocking — don't fail registration if email fails)
+    sendWelcomeEmail(user.email, user.name).catch(err =>
+      console.error('[Register] Welcome email failed:', err)
+    );
 
     return NextResponse.json({
       success: true,

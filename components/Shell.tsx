@@ -5,7 +5,7 @@ import { useState,useEffect } from 'react';
 
 import Link from 'next/link';
 import { useRouter,usePathname } from 'next/navigation';
-import { LayoutDashboard,Zap,Search,Archive,Settings,LogOut,User as UserIcon,Menu,X,PenTool,DollarSign } from 'lucide-react';
+import { LayoutDashboard,Zap,Search,Archive,Settings,LogOut,User as UserIcon,Menu,X,PenTool,DollarSign,CreditCard } from 'lucide-react';
 import { NomosXLogo } from '@/components/brand/NomosXLogo';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -27,6 +27,7 @@ const adminNav = [
 // Secondary navigation
 const secondaryNav = [
   { href: "/pricing", label: "Pricing", icon: DollarSign },
+  { href: "/dashboard/billing", label: "Billing", icon: CreditCard },
 ];
 
 export default function Shell({ children }: { children: React.ReactNode }) {
@@ -182,6 +183,23 @@ export default function Shell({ children }: { children: React.ReactNode }) {
               <span>Pricing</span>
             </Link>
 
+            {/* Billing Link */}
+            <Link
+              href="/dashboard/billing"
+              className={`
+                px-3 py-2 rounded-lg text-sm font-medium
+                inline-flex items-center gap-2 whitespace-nowrap
+                transition-all duration-200
+                ${isActive("/dashboard/billing")
+                  ? 'text-white bg-white/[0.08]'
+                  : 'text-white/50 hover:text-white/80 hover:bg-white/[0.04]'
+                }
+              `}
+            >
+              <CreditCard size={16} strokeWidth={2} />
+              <span>Billing</span>
+            </Link>
+
             {/* Settings Link */}
             <Link
               href="/settings"
@@ -244,7 +262,7 @@ export default function Shell({ children }: { children: React.ReactNode }) {
           />
           <nav className="relative bg-[#111113] border-r border-white/[0.08] h-full w-64 p-4 overflow-y-auto">
             <div className="space-y-1 mb-6">
-              {[...mainNav, { href: "/pricing", label: "Pricing", icon: DollarSign }, { href: "/settings", label: "Settings", icon: Settings }].map((item) => (
+              {[...mainNav, { href: "/pricing", label: "Pricing", icon: DollarSign }, { href: "/dashboard/billing", label: "Billing", icon: CreditCard }, { href: "/settings", label: "Settings", icon: Settings }].map((item) => (
                 <Link
                   key={item.href}
                   href={item.href}
@@ -299,25 +317,13 @@ export default function Shell({ children }: { children: React.ReactNode }) {
         <div className="max-w-[1400px] mx-auto">
           <div className="flex items-center justify-between flex-wrap gap-6">
             <div className="flex items-center gap-2.5">
-              <div className="w-7 h-7 rounded-full bg-gradient-to-br from-slate-800 to-slate-900 border border-slate-700 flex items-center justify-center opacity-80 relative">
-                <span className="text-slate-100 font-serif text-xs font-bold tracking-tight">N</span>
-                {/* Orbital elements */}
-                <div className="absolute inset-0 rounded-full border border-slate-600/30"></div>
-                <div className="absolute top-0.5 left-1/2 -translate-x-1/2 w-0.5 h-0.5 bg-indigo-400 rounded-full opacity-60"></div>
-                <div className="absolute right-0.5 top-1/2 -translate-y-1/2 w-0.5 h-0.5 bg-slate-400 rounded-full opacity-40"></div>
-                <div className="absolute bottom-0.5 left-1/2 -translate-x-1/2 w-0.5 h-0.5 bg-slate-400 rounded-full opacity-40"></div>
-                <div className="absolute left-0.5 top-1/2 -translate-y-1/2 w-0.5 h-0.5 bg-slate-400 rounded-full opacity-40"></div>
-              </div>
-              <div>
-                <span className="text-sm font-serif font-bold tracking-tight text-white/60">
-                  Nomos<span className="text-slate-400">X</span>
-                </span>
-                <p className="text-xs text-slate-500">Institutional Research Platform</p>
-              </div>
+              <NomosXLogo size="sm" variant="full" />
             </div>
             <div className="flex items-center gap-6 text-xs text-white/30">
               <Link href="/publications" className="hover:text-white/60 transition-colors">Publications</Link>
               <Link href="/about" className="hover:text-white/60 transition-colors">About</Link>
+              <Link href="/terms" className="hover:text-white/60 transition-colors">Terms</Link>
+              <Link href="/privacy" className="hover:text-white/60 transition-colors">Privacy</Link>
               <span>© 2026 NomosX</span>
             </div>
           </div>

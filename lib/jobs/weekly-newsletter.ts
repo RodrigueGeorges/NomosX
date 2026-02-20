@@ -13,7 +13,9 @@
 import { prisma } from '@/lib/db';
 import { sendBulkNewsletter } from '@/lib/email';
 
-// Newsletter HTML template
+const APP_URL = process.env.NEXT_PUBLIC_APP_URL || 'https://nomosx.com';
+
+// Newsletter HTML template — dark premium design
 function generateNewsletterHTML(
   edition: { number: number; date: string },
   briefs: Array<{
@@ -25,97 +27,114 @@ function generateNewsletterHTML(
   }>
 ): string {
   const briefsHTML = briefs.map((brief, i) => `
-    <div style="margin-bottom: 32px; padding-bottom: 32px; border-bottom: 1px solid #e5e7eb;">
-      <div style="font-size: 12px; color: #6b7280; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 8px;">
+    <div style="margin-bottom:28px;padding-bottom:28px;border-bottom:1px solid #27272a;">
+      <p style="font-size:11px;font-weight:600;letter-spacing:0.2em;color:#6366f1;text-transform:uppercase;margin:0 0 10px;">
         Brief ${i + 1} of ${briefs.length}
-      </div>
-      <h2 style="font-size: 20px; font-weight: 600; color: #111827; margin: 0 0 12px 0; line-height: 1.3;">
+      </p>
+      <h2 style="font-size:18px;font-weight:300;color:#f4f4f5;margin:0 0 10px;line-height:1.4;">
         ${brief.title}
       </h2>
-      <p style="font-size: 15px; color: #4b5563; line-height: 1.6; margin: 0 0 16px 0;">
+      <p style="font-size:14px;color:#a1a1aa;line-height:1.6;margin:0 0 16px;">
         ${brief.summary}
       </p>
-      <div style="display: flex; align-items: center; gap: 16px;">
-        <span style="font-size: 13px; color: #9ca3af;">${brief.sourceCount} sources</span>
-        <a href="https://nomosx.com/s/${brief.publicId || brief.id}" 
-           style="font-size: 14px; color: #0891b2; text-decoration: none; font-weight: 500;">
+      <div style="display:flex;align-items:center;gap:16px;">
+        <span style="font-size:12px;color:#52525b;">${brief.sourceCount} sources cited</span>
+        <a href="${APP_URL}/publications/${brief.publicId || brief.id}"
+           style="font-size:13px;color:#818cf8;text-decoration:none;font-weight:500;">
           Read full brief →
         </a>
       </div>
     </div>
   `).join("");
 
-  return `
-<!DOCTYPE html>
-<html>
+  // Remove trailing border from last brief
+  const lastDivider = briefsHTML.lastIndexOf('border-bottom:1px solid #27272a;');
+  const cleanBriefsHTML = lastDivider >= 0
+    ? briefsHTML.slice(0, lastDivider) + 'border-bottom:none;' + briefsHTML.slice(lastDivider + 'border-bottom:1px solid #27272a;'.length)
+    : briefsHTML;
+
+  return `<!DOCTYPE html>
+<html lang="en">
 <head>
-  <meta charset="utf-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>NomosX Weekly - Edition ${edition.number}</title>
+  <meta charset="UTF-8"/>
+  <meta name="viewport" content="width=device-width,initial-scale=1.0"/>
+  <title>NomosX Weekly #${edition.number}</title>
 </head>
-<body style="margin: 0; padding: 0; background-color: #f9fafb; font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;">
-  <div style="max-width: 600px; margin: 0 auto; padding: 40px 20px;">
-    
-    <!-- Header -->
-    <div style="text-align: center; margin-bottom: 40px;">
-      <div style="display: inline-block; padding: 8px 16px; background: linear-gradient(135deg, #0891b2 0%, #3b82f6 100%); border-radius: 8px; margin-bottom: 16px;">
-        <span style="font-size: 24px; font-weight: 700; color: white; letter-spacing: -0.5px;">
-          Nomos<span style="color: #67e8f9;">X</span>
-        </span>
-      </div>
-      <h1 style="font-size: 28px; font-weight: 300; color: #111827; margin: 0 0 8px 0;">
-        Executive Briefs
-      </h1>
-      <p style="font-size: 14px; color: #6b7280; margin: 0;">
-        Edition ${edition.number} • ${edition.date}
-      </p>
-    </div>
+<body style="margin:0;padding:0;background:#09090b;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;color:#e4e4e7;">
+  <table width="100%" cellpadding="0" cellspacing="0" style="background:#09090b;padding:40px 20px;">
+    <tr><td align="center">
+      <table width="600" cellpadding="0" cellspacing="0" style="max-width:600px;width:100%;">
 
-    <!-- Intro -->
-    <div style="background: white; border-radius: 12px; padding: 24px; margin-bottom: 32px; border: 1px solid #e5e7eb;">
-      <p style="font-size: 15px; color: #4b5563; line-height: 1.6; margin: 0;">
-        This week, the NomosX Think Tank published <strong>${briefs.length} Executive Brief${briefs.length > 1 ? 's' : ''}</strong>. 
-        Each brief represents a topic that met our editorial standards for novelty, evidence quality, and decision relevance.
-      </p>
-    </div>
+        <!-- Header -->
+        <tr><td style="padding-bottom:32px;text-align:center;">
+          <span style="font-size:22px;font-weight:300;letter-spacing:-0.02em;color:#fff;">
+            Nomos<span style="color:#818cf8;font-weight:600;">X</span>
+          </span>
+          <p style="font-size:11px;font-weight:600;letter-spacing:0.2em;color:#6366f1;text-transform:uppercase;margin:8px 0 0;">
+            Intelligence Dispatch
+          </p>
+        </td></tr>
 
-    <!-- Briefs -->
-    <div style="background: white; border-radius: 12px; padding: 32px; margin-bottom: 32px; border: 1px solid #e5e7eb;">
-      ${briefsHTML}
-    </div>
+        <!-- Edition label -->
+        <tr><td style="padding-bottom:24px;text-align:center;">
+          <p style="font-size:13px;color:#52525b;margin:0;">
+            Edition #${edition.number} &nbsp;·&nbsp; ${edition.date}
+          </p>
+        </td></tr>
 
-    <!-- Strategic Reports CTA -->
-    <div style="background: linear-gradient(135deg, #0c4a6e 0%, #1e3a5f 100%); border-radius: 12px; padding: 32px; margin-bottom: 32px; text-align: center;">
-      <h3 style="font-size: 18px; font-weight: 600; color: white; margin: 0 0 12px 0;">
-        Want deeper analysis?
-      </h3>
-      <p style="font-size: 14px; color: #94a3b8; margin: 0 0 20px 0; line-height: 1.5;">
-        Upgrade to NomosX Access for full Strategic Reports (10-15 pages), 
-        scenario planning, and policy recommendations.
-      </p>
-      <a href="https://nomosx.com/pricing" 
-         style="display: inline-block; padding: 12px 24px; background: linear-gradient(135deg, #0891b2 0%, #3b82f6 100%); color: white; text-decoration: none; border-radius: 8px; font-weight: 500; font-size: 14px;">
-        Start 15-day free trial
-      </a>
-    </div>
+        <!-- Intro card -->
+        <tr><td style="background:#18181b;border:1px solid #27272a;border-radius:12px;padding:24px;margin-bottom:24px;">
+          <p style="font-size:14px;color:#a1a1aa;line-height:1.6;margin:0;">
+            This week, the NomosX Think Tank published
+            <strong style="color:#e4e4e7;">${briefs.length} peer-reviewed brief${briefs.length > 1 ? 's' : ''}</strong>
+            — sourced from 250M+ academic publications, validated by 8 PhD-calibrated research agents.
+          </p>
+        </td></tr>
 
-    <!-- Footer -->
-    <div style="text-align: center; padding-top: 24px; border-top: 1px solid #e5e7eb;">
-      <p style="font-size: 12px; color: #9ca3af; margin: 0 0 8px 0;">
-        NomosX — The Autonomous Think Tank
-      </p>
-      <p style="font-size: 12px; color: #9ca3af; margin: 0 0 16px 0;">
-        You're receiving this because you subscribed to our weekly Executive Briefs.
-      </p>
-      <a href="https://nomosx.com/api/newsletter/unsubscribe?email={{email}}" 
-         style="font-size: 12px; color: #6b7280; text-decoration: underline;">
-        Unsubscribe
-      </a>
-    </div>
-  </div>
+        <tr><td style="padding:24px 0;"></td></tr>
+
+        <!-- Briefs -->
+        <tr><td style="background:#18181b;border:1px solid #27272a;border-radius:12px;padding:32px;">
+          ${cleanBriefsHTML}
+        </td></tr>
+
+        <tr><td style="padding:24px 0;"></td></tr>
+
+        <!-- CTA -->
+        <tr><td style="background:linear-gradient(135deg,rgba(99,102,241,0.15),rgba(124,58,237,0.1));border:1px solid rgba(99,102,241,0.25);border-radius:12px;padding:32px;text-align:center;">
+          <p style="font-size:11px;font-weight:600;letter-spacing:0.2em;color:#6366f1;text-transform:uppercase;margin:0 0 12px;">
+            Go deeper
+          </p>
+          <h3 style="font-size:18px;font-weight:300;color:#fff;margin:0 0 10px;">
+            Commission your own research
+          </h3>
+          <p style="font-size:13px;color:#a1a1aa;margin:0 0 20px;line-height:1.5;">
+            Upgrade to <strong style="color:#e4e4e7;">Researcher</strong> to commission strategic briefs
+            and 15-page reports on any topic — delivered in minutes.
+          </p>
+          <a href="${APP_URL}/pricing"
+             style="display:inline-block;background:linear-gradient(135deg,#6366f1,#7c3aed);color:#fff;text-decoration:none;padding:12px 28px;border-radius:8px;font-size:14px;font-weight:500;">
+            See plans →
+          </a>
+        </td></tr>
+
+        <!-- Footer -->
+        <tr><td style="padding-top:32px;text-align:center;">
+          <p style="font-size:12px;color:#52525b;margin:0 0 8px;">
+            NomosX · The Autonomous Think Tank
+          </p>
+          <p style="font-size:12px;color:#3f3f46;margin:0;">
+            <a href="${APP_URL}/api/newsletter/unsubscribe?email={{email}}" style="color:#6366f1;text-decoration:none;">Unsubscribe</a>
+            &nbsp;·&nbsp;
+            <a href="${APP_URL}/privacy" style="color:#6366f1;text-decoration:none;">Privacy</a>
+          </p>
+        </td></tr>
+
+      </table>
+    </td></tr>
+  </table>
 </body>
-</html>
-  `.trim();
+</html>`;
 }
 
 // Get briefs published in the last week

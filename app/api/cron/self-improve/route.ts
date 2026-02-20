@@ -11,12 +11,14 @@
 import { NextResponse } from 'next/server';
 import { runPredictionAuditor } from '@/lib/agent/prediction-auditor';
 import { updateSourceReputations } from '@/lib/agent/source-reputation-agent';
+import { prisma } from '@/lib/db';
 
 export const maxDuration = 300;
 
 export async function GET(request: Request) {
   const authHeader = request.headers.get('authorization');
-  if (authHeader !== `Bearer ${process.env.CRON_SECRET}`) {
+  const cronSecret = process.env.CRON_SECRET;
+  if (!cronSecret || authHeader !== `Bearer ${cronSecret}`) {
     return NextResponse.json({ error: 'Unauthorized' }, { status: 401 });
   }
 
@@ -50,6 +52,19 @@ export async function GET(request: Request) {
     console.error('[CRON:self-improve] Source Reputation failed:', err.message);
     results.sourceReputation = { error: err.message };
   }
+
+  // Record cron run for health monitoring
+  const now = new Date();
+  prisma.systemMetric.create({
+    data: {
+      metricName: 'cron.self-improve',
+      metricValue: 1,
+      unit: 'count',
+      periodStart: now,
+      periodEnd: now,
+      dimensions: results,
+    },
+  }).catch(() => {});
 
   return NextResponse.json({
     ok: true,

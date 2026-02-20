@@ -13,6 +13,7 @@ import AuthModal from '@/components/AuthModal';
 import PublicNav from '@/components/PublicNav';
 import { RESEARCHERS } from '@/lib/researchers';
 import { Brain, Shield, ArrowRight, Globe, Lightbulb } from 'lucide-react';
+import { NomosXLogo } from '@/components/brand/NomosXLogo';
 
 export default function AboutPage() {
   const router = useRouter();
@@ -226,11 +227,11 @@ export default function AboutPage() {
                 <ArrowRight size={16} className="group-hover:translate-x-0.5 transition-transform" />
               </button>
               <div className="flex items-center justify-center gap-5 mt-6 text-xs text-white/30">
-                <span>Free</span>
+                <span>Free 30-day trial</span>
                 <span className="w-1 h-1 rounded-full bg-white/10" />
                 <span>No credit card</span>
                 <span className="w-1 h-1 rounded-full bg-white/10" />
-                <span>First analysis in 60s</span>
+                <span>Cancel anytime</span>
               </div>
             </div>
           </div>
@@ -239,11 +240,8 @@ export default function AboutPage() {
         {/* Footer */}
         <footer className="border-t border-white/[0.06] relative z-10">
           <div className="max-w-7xl mx-auto px-6 sm:px-8 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2.5">
-              <div className="w-6 h-6 rounded-md bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center">
-                <span className="text-[10px] font-bold text-white">N</span>
-              </div>
-              <span className="text-sm text-white/40 font-medium">NomosX</span>
+            <div className="flex items-center gap-3">
+              <NomosXLogo size="sm" variant="full" />
               <span className="text-xs text-white/20">· Autonomous Think Tank</span>
             </div>
             <div className="flex items-center gap-6 text-xs text-white/20">

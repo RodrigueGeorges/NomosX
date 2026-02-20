@@ -32,14 +32,13 @@ export async function GET(req: NextRequest) {
       subscription = await prisma.subscription.create({
         data: {
           userId: user.id,
-          plan: "TRIAL",
+          plan: "ANALYST",
           trialStart,
           trialEnd,
           isTrialActive: true,
           status: "trialing",
-          // Set default limits based on plan
-          weeklyPublicationMax: 3,        // TRIAL gets 3 briefs/week
-          studioQuestionsPerMonth: 0,    // TRIAL gets no studio access
+          weeklyPublicationMax: 3,
+          studioQuestionsPerMonth: 0,
           canAccessStudio: false,
           canCreateVerticals: false,
         },

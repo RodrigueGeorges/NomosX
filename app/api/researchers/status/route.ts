@@ -21,7 +21,7 @@ export async function GET(req: NextRequest) {
       include: { subscription: true },
     });
 
-    const tier = user?.subscription?.plan || 'TRIAL';
+    const tier = user?.subscription?.plan || 'ANALYST';
 
     // Mock researcher data - in production, this would be real-time
     const researchers = [
@@ -99,8 +99,8 @@ export async function GET(req: NextRequest) {
       },
     ];
 
-    // For TRIAL users, show limited info
-    const filteredResearchers = tier === 'TRIAL' 
+    // For ANALYST/TRIAL users, show limited info
+    const filteredResearchers = (tier === 'TRIAL' || tier === 'ANALYST')
       ? researchers.slice(0, 4).map(r => ({
           ...r,
           currentTask: r.domain, // Hide specific tasks
@@ -111,7 +111,7 @@ export async function GET(req: NextRequest) {
     return NextResponse.json({
       researchers: filteredResearchers,
       tier,
-      councilActive: tier !== 'TRIAL',
+      councilActive: tier !== 'TRIAL' && tier !== 'ANALYST',
     });
 
   } catch (error) {

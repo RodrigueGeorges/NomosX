@@ -2,6 +2,7 @@ import { NextRequest, NextResponse } from 'next/server';
 import { planEditorialAgenda } from '@/lib/agent/editorial-planner';
 import { prisma } from '@/lib/db';
 
+
 /**
  * POST /api/cron/editorial-plan
  * 
@@ -36,6 +37,19 @@ export async function POST(req: NextRequest) {
     console.log(`[Cron] Editorial Planner: ${agenda.proposals.length} proposals`);
     console.log(`[Cron] Auto-commission: ${agenda.autoCommission.length} topics`);
     console.log(`[Cron] Needs review: ${agenda.needsReview.length} topics`);
+
+    // Record cron run for health monitoring
+    const now = new Date();
+    prisma.systemMetric.create({
+      data: {
+        metricName: 'cron.editorial-plan',
+        metricValue: agenda.proposals.length,
+        unit: 'count',
+        periodStart: now,
+        periodEnd: now,
+        dimensions: { proposals: agenda.proposals.length, autoCommission: agenda.autoCommission.length },
+      },
+    }).catch(() => {});
 
     return NextResponse.json({
       success: true,

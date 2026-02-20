@@ -1,64 +1,40 @@
 /**
- * Page Profile - Page de profil utilisateur
- * Suivi de la charte graphique OpenClaw
+ * Profile Page — NomosX Dashboard
  */
 
 import { Metadata } from 'next';
 import { Suspense } from 'react';
 import { ProfileClient } from '@/components/features/user/ProfileClient';
-import { Card,CardContent,CardDescription,CardHeader,CardTitle } from '@/components/ui/Card';
-import { cn } from '@/lib/utils';
 
 export const metadata: Metadata = {
-  title: 'Profil | NomosX',
-  description: 'Gérez votre profil et vos préférences',
+  title: 'Profile | NomosX',
+  description: 'Manage your profile and account settings',
 }
 
 export default function ProfilePage() {
   return (
-    <div className="container mx-auto px-4 py-8">
-      <div className="max-w-4xl mx-auto space-y-8">
+    <div className="min-h-screen bg-[#06060A] text-white">
+      <div className="max-w-4xl mx-auto px-4 sm:px-6 py-10 space-y-8">
         {/* Header */}
         <div>
-          <h1 className="text-4xl font-bold text-gradient mb-2">
-            Mon profil
+          <p className="text-xs text-indigo-400/80 font-semibold tracking-[0.2em] uppercase mb-2">Account</p>
+          <h1 className="font-display text-3xl font-light text-white mb-1">
+            Your <span className="nx-gradient-text">Profile</span>
           </h1>
-          <p className="text-neutral-600">
-            Gérez vos informations personnelles et vos préférences
+          <p className="text-sm text-white/40">
+            Manage your personal information and account settings.
           </p>
         </div>
 
         {/* Profile Content */}
-        <Suspense fallback={<div>Chargement de votre profil...</div>}>
+        <Suspense fallback={
+          <div className="py-16 text-center">
+            <div className="w-6 h-6 border-2 border-indigo-500/20 border-t-indigo-500 rounded-full animate-spin mx-auto" />
+          </div>
+        }>
           <ProfileClient />
         </Suspense>
-
-        {/* Activity Summary */}
-        <Card>
-          <CardHeader>
-            <CardTitle>Résumé d'activité</CardTitle>
-            <CardDescription>
-              Vue d'ensemble de votre utilisation de NomosX
-            </CardDescription>
-          </CardHeader>
-          <CardContent>
-            <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
-              <div className="text-center">
-                <div className="text-4xl font-bold text-primary mb-2">24</div>
-                <div className="text-sm text-neutral-600">Briefs créés</div>
-              </div>
-              <div className="text-center">
-                <div className="text-4xl font-bold text-primary mb-2">156</div>
-                <div className="text-sm text-neutral-600">Newsletters envoyées</div>
-              </div>
-              <div className="text-center">
-                <div className="text-4xl font-bold text-primary mb-2">89%</div>
-                <div className="text-sm text-neutral-600">Taux d'engagement</div>
-              </div>
-            </div>
-          </CardContent>
-        </Card>
       </div>
     </div>
-  )
+  );
 }

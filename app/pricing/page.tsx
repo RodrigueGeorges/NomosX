@@ -5,7 +5,7 @@ import { useState, useEffect } from 'react';
 /**
  * NomosX Pricing Page — Agentic Think Tank
  * 
- * Two tiers: Executive (€15/month) + Strategy (€39/month)
+ * Three tiers: Analyst (€0) + Researcher (€19/month) + Studio (€49/month)
  * 30-day trial without credit card
  * Public marketing page — same layout as About/Methodology
  */
@@ -13,7 +13,8 @@ import { useState, useEffect } from 'react';
 import { useRouter } from 'next/navigation';
 import AuthModal from '@/components/AuthModal';
 import PublicNav from '@/components/PublicNav';
-import { Check, Shield, Zap, Users, ArrowRight } from 'lucide-react';
+import { Shield, Zap, Users, ArrowRight } from 'lucide-react';
+import { NomosXLogo } from '@/components/brand/NomosXLogo';
 
 export default function PricingPage() {
   const router = useRouter();
@@ -24,36 +25,64 @@ export default function PricingPage() {
 
   const plans = [
     {
-      name: "Executive",
-      price: "15",
+      name: "Analyst",
+      price: "0",
       period: "/month",
-      description: "For individual decision-makers and small teams",
+      description: "Read the autonomous output. Subscribe to the weekly dispatch.",
+      accent: "text-white/40",
+      border: "border-white/[0.07]",
+      bg: "bg-white/[0.02]",
+      dotBorder: "border-white/15",
+      dotFill: "bg-white/35",
       features: [
-        "8 PhD perspectives",
-        "60-second analysis",
-        "Verified citations",
-        "Weak-signal radar",
-        "10 analyses/month",
-        "Email support"
+        "Weekly intelligence dispatch",
+        "Access to all published briefs",
+        "Signal radar (read-only)",
+        "Weak-signal alerts",
       ],
       highlighted: false,
+      cta: "Start free"
+    },
+    {
+      name: "Researcher",
+      price: "19",
+      period: "/month",
+      description: "Commission briefs and strategic reports. Full pipeline access.",
+      accent: "text-indigo-300",
+      border: "border-indigo-500/30",
+      bg: "bg-indigo-500/[0.04]",
+      dotBorder: "border-indigo-400/50",
+      dotFill: "bg-indigo-400",
+      features: [
+        "Everything in Analyst +",
+        "Commission research briefs",
+        "Strategic reports (15-page deep dives)",
+        "Harvard Council deliberations",
+        "Custom research verticals",
+        "Verified citation export",
+      ],
+      highlighted: true,
       cta: "Start free trial"
     },
     {
-      name: "Strategy",
-      price: "39",
+      name: "Studio",
+      price: "49",
       period: "/month",
-      description: "For organizations and strategic teams",
+      description: "Full editorial control. Publish under your own brand.",
+      accent: "text-violet-300",
+      border: "border-violet-500/20",
+      bg: "bg-violet-500/[0.02]",
+      dotBorder: "border-violet-400/35",
+      dotFill: "bg-violet-400",
       features: [
-        "Everything in Executive +",
-        "Unlimited analyses",
+        "Everything in Researcher +",
         "Publications Studio",
-        "Council Sessions",
+        "Council Sessions (direct PhD Q&A)",
         "API access",
-        "Priority support",
-        "Custom integrations"
+        "White-label export",
+        "Priority pipeline queue",
       ],
-      highlighted: true,
+      highlighted: false,
       cta: "Start free trial"
     }
   ];
@@ -61,33 +90,41 @@ export default function PricingPage() {
   const trust = [
     {
       icon: Shield,
-      title: "Academic rigor",
-      description: "Verified citations, cross-validation, and full traceability for every insight."
+      title: "Fully autonomous",
+      description: "The pipeline runs continuously. Briefs are published without human trigger or editorial intervention."
     },
     {
       icon: Zap,
-      title: "60 seconds",
-      description: "From complex question to structured brief. Faster than weeks of manual research."
+      title: "250M+ sources",
+      description: "Every brief draws from peer-reviewed literature across OpenAlex, CrossRef, PubMed, arXiv, and 60+ institutional providers."
     },
     {
       icon: Users,
-      title: "8 PhD perspectives",
-      description: "Calibrated to the standards of the world's most respected institutions."
+      title: "8 PhD-calibrated agents",
+      description: "Each researcher holds a domain mandate and reviews every publication via the Harvard Council Protocol."
     }
   ];
 
   const faq = [
     {
+      q: "What does 'auto-published' mean exactly?",
+      a: "The NomosX pipeline runs on a continuous schedule. It scouts academic sources, ranks them, extracts claims, synthesises findings through a 3-pass analyst, submits to the Harvard Council for peer review, and publishes the final brief — all without any human in the loop."
+    },
+    {
+      q: "What is the difference between a Brief and a Strategic Report?",
+      a: "A Brief is a focused 2-4 page synthesis on a specific question, produced by the standard pipeline. A Strategic Report is a 10-15 page deep dive with scenario planning, stakeholder analysis, and full meta-analysis — produced by the extended pipeline with all 8 researchers."
+    },
+    {
+      q: "What is Publications Studio?",
+      a: "Studio gives you full editorial control over the pipeline output: choose your research question, select providers, set the format, and publish under your own brand. It is a separate product layer on top of the autonomous pipeline."
+    },
+    {
       q: "Can I change plan at any time?",
-      a: "Yes. You can upgrade at any time. Changes take effect immediately and you only pay the prorated difference."
+      a: "Yes. Upgrades take effect immediately. You only pay the prorated difference. Downgrades apply at the next billing cycle."
     },
     {
       q: "Is there a long-term commitment?",
-      a: "No. All plans are commitment-free and can be cancelled at any time without penalties."
-    },
-    {
-      q: "What is included in the 30-day free trial?",
-      a: "The free trial gives full access to all features in your selected plan. No credit card required."
+      a: "No. All plans are month-to-month and can be cancelled at any time without penalties."
     }
   ];
 
@@ -112,50 +149,48 @@ export default function PricingPage() {
             </div>
 
             <h1 className="font-display text-4xl sm:text-5xl md:text-6xl font-semibold leading-[1.08] tracking-tight mb-6">
-              <span className="text-white">Intelligence</span>
+              <span className="text-white">Research-grade access,</span>
               <br />
-              <span className="nx-gradient-text">without gatekeeping</span>
+              <span className="nx-gradient-text">three depths.</span>
             </h1>
 
             <p className="text-lg text-white/50 leading-relaxed max-w-2xl mx-auto font-light">
-              Access the autonomous think tank with plans designed for your operating reality. 
+              The Think Tank publishes autonomously. Choose how deep you want to go.
               30-day free trial, no commitment.
             </p>
           </div>
 
-          {/* Pricing Cards */}
-          <div className={`grid grid-cols-1 md:grid-cols-2 gap-4 mb-24 max-w-3xl mx-auto ${mounted ? 'animate-fade-in delay-200' : 'opacity-0'}`}>
+          {/* Pricing Cards — 3 tiers */}
+          <div className={`grid grid-cols-1 md:grid-cols-3 gap-4 mb-24 ${mounted ? 'animate-fade-in delay-200' : 'opacity-0'}`}>
             {plans.map((plan, index) => (
               <div
                 key={index}
-                className={`relative p-8 rounded-xl border transition-all duration-300 ${
-                  plan.highlighted 
-                    ? 'border-indigo-500/30 bg-indigo-500/[0.04]' 
-                    : 'border-white/[0.06] bg-white/[0.02] hover:border-white/[0.12]'
-                }`}
+                className={`relative p-7 rounded-xl border transition-all duration-300 ${plan.border} ${plan.bg} ${!plan.highlighted ? 'hover:border-white/[0.14]' : 'shadow-xl shadow-indigo-500/10'}`}
               >
                 {plan.highlighted && (
                   <div className="absolute -top-3 left-1/2 transform -translate-x-1/2">
-                    <div className="px-3 py-1 bg-indigo-500 text-white text-[10px] font-semibold rounded-full tracking-wide">
-                      MOST POPULAR
+                    <div className="px-3 py-1 bg-indigo-500 text-white text-[10px] font-bold rounded-full tracking-widest uppercase">
+                      Most popular
                     </div>
                   </div>
                 )}
 
-                <div className="mb-8">
-                  <h3 className="font-display text-lg font-semibold text-white mb-1">{plan.name}</h3>
-                  <p className="text-sm text-white/40 mb-5">{plan.description}</p>
-                  <div className="flex items-baseline gap-1">
-                    <span className="text-4xl font-display font-semibold text-white">€{plan.price}</span>
+                <div className="mb-7">
+                  <p className={`text-[10px] font-semibold tracking-[0.25em] uppercase mb-3 ${plan.accent}`}>{plan.name}</p>
+                  <div className="flex items-baseline gap-1 mb-2">
+                    <span className="text-3xl font-display font-bold text-white">€{plan.price}</span>
                     <span className="text-sm text-white/30">{plan.period}</span>
                   </div>
+                  <p className="text-xs text-white/40 leading-relaxed">{plan.description}</p>
                 </div>
 
-                <div className="space-y-3 mb-8">
+                <div className="space-y-2.5 mb-7">
                   {plan.features.map((feature, fi) => (
-                    <div key={fi} className="flex items-center gap-3">
-                      <Check size={14} className={plan.highlighted ? "text-indigo-400" : "text-white/30"} />
-                      <span className="text-sm text-white/60">{feature}</span>
+                    <div key={fi} className="flex items-center gap-2.5">
+                      <div className={`w-3.5 h-3.5 rounded-full border flex items-center justify-center flex-shrink-0 ${plan.dotBorder}`}>
+                        <div className={`w-1 h-1 rounded-full ${plan.dotFill}`} />
+                      </div>
+                      <span className="text-xs text-white/55">{feature}</span>
                     </div>
                   ))}
                 </div>
@@ -164,8 +199,10 @@ export default function PricingPage() {
                   onClick={() => setShowAuthModal(true)}
                   className={`w-full px-5 py-2.5 rounded-lg text-sm font-medium transition-all duration-300 ${
                     plan.highlighted
-                      ? 'bg-indigo-500 hover:bg-indigo-400 text-white shadow-lg shadow-indigo-500/25 hover:shadow-indigo-500/40'
-                      : 'bg-white/[0.06] border border-white/[0.08] text-white/70 hover:text-white hover:bg-white/[0.1]'
+                      ? 'bg-indigo-500 hover:bg-indigo-400 text-white shadow-lg shadow-indigo-500/25'
+                      : plan.name === 'Studio'
+                        ? 'border border-violet-500/25 bg-violet-500/[0.06] text-violet-300 hover:bg-violet-500/[0.12]'
+                        : 'bg-white/[0.04] border border-white/[0.08] text-white/50 hover:text-white/70 hover:bg-white/[0.07]'
                   }`}
                 >
                   {plan.cta}
@@ -179,7 +216,7 @@ export default function PricingPage() {
             <div className="text-center mb-12">
               <p className="text-xs text-indigo-400/80 font-medium tracking-[0.2em] uppercase mb-4">Trust</p>
               <h2 className="font-display text-2xl sm:text-3xl font-semibold text-white">
-                Why decision teams trust NomosX
+                Why researchers and analysts choose NomosX
               </h2>
             </div>
 
@@ -222,10 +259,10 @@ export default function PricingPage() {
             </div>
             <div className="relative">
               <h2 className="font-display text-3xl sm:text-4xl font-semibold text-white mb-4">
-                Ready to start?
+                The research runs.<br />You read the findings.
               </h2>
               <p className="text-base text-white/40 mb-8 max-w-xl mx-auto">
-                30-day free trial. No credit card. No commitment.
+                Join researchers, analysts, and policy teams receiving autonomous intelligence from the NomosX Think Tank. 30-day free trial, no commitment.
               </p>
               <button
                 onClick={() => setShowAuthModal(true)}
@@ -241,11 +278,8 @@ export default function PricingPage() {
         {/* Footer */}
         <footer className="border-t border-white/[0.06] relative z-10">
           <div className="max-w-7xl mx-auto px-6 sm:px-8 py-8 flex flex-col sm:flex-row items-center justify-between gap-4">
-            <div className="flex items-center gap-2.5">
-              <div className="w-6 h-6 rounded-md bg-gradient-to-br from-indigo-500 to-violet-600 flex items-center justify-center">
-                <span className="text-[10px] font-bold text-white">N</span>
-              </div>
-              <span className="text-sm text-white/40 font-medium">NomosX</span>
+            <div className="flex items-center gap-3">
+              <NomosXLogo size="sm" variant="full" />
               <span className="text-xs text-white/20">· Autonomous Think Tank</span>
             </div>
             <div className="flex items-center gap-6 text-xs text-white/20">
