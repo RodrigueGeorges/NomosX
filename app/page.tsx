@@ -172,7 +172,7 @@ export default function HomePage() {
                   <span className="nx-gradient-text">One unified intelligence.</span>
                 </h2>
                 <p className="text-base sm:text-lg text-white/40 max-w-2xl mx-auto leading-relaxed">
-                  Each researcher holds a PhD-calibrated domain mandate and reviews every brief before publication via the Harvard Council Protocol.
+                  Each researcher holds a PhD-calibrated domain mandate. Together, they surpass individual experts — 8 parallel minds, infinite memory, zero cognitive bias.
                 </p>
               </div>
 
@@ -258,7 +258,7 @@ export default function HomePage() {
                 <div className="flex items-center gap-2 px-4 py-2 rounded-full border border-white/[0.06] bg-white/[0.02]">
                   <Shield size={12} className="text-indigo-400" />
                   <p className="text-xs text-white/35">
-                    All 8 review every brief via the <span className="text-white/55 font-semibold">Harvard Council Protocol</span>
+                    All 8 review every brief via the <span className="text-white/55 font-semibold">NomosX Council Protocol</span>
                   </p>
                 </div>
                 <div className="h-px flex-1 max-w-[160px] bg-gradient-to-l from-transparent to-white/10" />
@@ -449,7 +449,7 @@ export default function HomePage() {
                   <div className="flex items-baseline gap-1 mb-2"><span className="text-3xl font-display font-bold text-white">€19</span><span className="text-sm text-white/30">/month</span></div>
                   <p className="text-xs text-white/45 leading-relaxed mb-6">Commission briefs and strategic reports. Full pipeline access.</p>
                   <div className="space-y-2 mb-7">
-                    {["Everything in Analyst +","Commission research briefs","Strategic reports (15-page)","Harvard Council deliberations","Custom research verticals","Verified citation export"].map((f, i) => (
+                    {["Everything in Analyst +","Commission research briefs","Strategic reports (15-page)","NomosX Council deliberations","Custom research verticals","Verified citation export"].map((f, i) => (
                       <div key={i} className="flex items-center gap-2.5">
                         <div className="w-3.5 h-3.5 rounded-full border border-indigo-400/50 flex items-center justify-center flex-shrink-0"><div className="w-1 h-1 rounded-full bg-indigo-400" /></div>
                         <span className="text-xs text-white/65">{f}</span>
