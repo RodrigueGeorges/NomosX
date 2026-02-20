@@ -45,6 +45,7 @@ export async function POST(req: NextRequest) {
     expiresAt.setHours(expiresAt.getHours() + 24); // 24 hour expiry
 
     // Save verification token (using existing schema fields)
+    const currentPreferences = user.preferences || {};
     await prisma.user.update({
       where: { id: user.id },
       data: {
@@ -52,7 +53,7 @@ export async function POST(req: NextRequest) {
         // Note: emailVerificationExpires will be added via migration
         // For now, we'll use a timestamp in preferences as fallback
         preferences: {
-          ...(user.preferences || {}),
+          ...currentPreferences,
           emailVerificationExpires: expiresAt.toISOString(),
         },
       },

@@ -44,6 +44,7 @@ export async function GET(req: NextRequest) {
     }
 
     // Mark email as verified
+    const currentPreferences = user.preferences || {};
     await prisma.user.update({
       where: { id: user.id },
       data: {
@@ -51,7 +52,7 @@ export async function GET(req: NextRequest) {
         verificationToken: null,
         // Clear verification expiry from preferences
         preferences: {
-          ...(user.preferences || {}),
+          ...currentPreferences,
           emailVerificationExpires: null,
         },
       },
