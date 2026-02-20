@@ -249,3 +249,12 @@ export async function sendBriefPublishedNotification(
 
   await sendEmail(to, `New brief: ${brief.title}`, html);
 }
+
+// ─── Exports for API routes ───────────────────────────────────────────────
+
+export { sendEmail };
+
+/** Alias for sendEmail — used by digest routes */
+export async function sendDigestEmail(to: string, subject: string, html: string): Promise<void> {
+  return sendEmail(to, subject, html);
+}
