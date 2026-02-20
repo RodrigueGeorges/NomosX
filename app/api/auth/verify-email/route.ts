@@ -20,12 +20,15 @@ export async function GET(req: NextRequest) {
     const user = await prisma.user.findFirst({
       where: {
         email: decodeURIComponent(email),
-        emailVerificationToken: token,
-        emailVerificationExpires: {
-          gt: new Date(),
+        verificationToken: token,
+        // Check expiry from preferences as fallback until migration is applied
+        preferences: {
+          path: ['emailVerificationExpires'],
+          gt: new Date().toISOString(),
         },
       },
-    });
+    },
+  });
 
     if (!user) {
       return NextResponse.json({ 
@@ -39,8 +42,12 @@ export async function GET(req: NextRequest) {
       where: { id: user.id },
       data: {
         emailVerified: true,
-        emailVerificationToken: null,
-        emailVerificationExpires: null,
+        verificationToken: null,
+        // Clear verification expiry from preferences
+        preferences: {
+          ...(user.preferences || {}),
+          emailVerificationExpires: null,
+        },
       },
     });
 
