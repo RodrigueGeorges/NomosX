@@ -58,7 +58,7 @@ export async function POST(req: NextRequest) {
     trackBriefCommissioned(session.id, {
       format: format,
       questionLength: question.length,
-      estimatedTime: smartSelection?.estimatedTime,
+      estimatedTime: smartSelection?.estimatedTime ? parseInt(smartSelection.estimatedTime) : undefined,
     }).catch(err => console.error('[Brief Auto] Analytics tracking failed:', err));
 
     return NextResponse.json({
