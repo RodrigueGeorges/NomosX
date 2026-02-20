@@ -70,10 +70,11 @@ export async function POST(req: Request) {
     });
 
     return NextResponse.json({
-      success: true,
-      sent: result.sent,
-      failed: result.failed,
+      success: result.success,
+      sent: result.success ? recipients.length : 0,
+      failed: result.success ? 0 : recipients.length,
       recipients: recipients.length,
+      error: result.error,
     });
   } catch (error: any) {
     console.error("[Digest Send] Error:", error);
