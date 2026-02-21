@@ -105,6 +105,7 @@ export {
 // V5 Harvard Council — PhD Expert System
 export {
   runExpertAnalysis, runExpertCouncil, detectRelevantExperts,
+  determineOptimalExpertCount, calculateComplexityScore,
   type ExpertAnalysis, type DomainExpertise,
 } from './phd-researcher';
 export {
@@ -144,6 +145,8 @@ export {
   getResearcherAgenda,
   getThinkTankAgenda,
   requestResearcherSignOff,
+  requiresMultipleResearchers,
+  getAllRelevantResearchers,
   type ResearcherOwner,
   type AgendaItem,
   type ResearcherSignOff,

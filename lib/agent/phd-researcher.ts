@@ -764,7 +764,11 @@ CRITICAL: Every factual claim MUST cite [SRC-N]. Be calibrated — if evidence i
  */
 export function detectRelevantExperts(question: string, options?: { maxExperts?: number; strategic?: boolean }): DomainExpertise[] {
   const q = question.toLowerCase();
-  const maxExperts = options?.maxExperts || (options?.strategic ? 8 : 6);
+  // Use intelligent complexity-based expert count
+  const maxExperts = determineOptimalExpertCount(question, options);
+  const complexity = calculateComplexityScore(question);
+  
+  console.log(`[PhD Council] Topic complexity: ${complexity.toFixed(2)}/5.0 | Selected ${maxExperts} experts`);
 
   // Score each domain by keyword match count (weighted)
   const domainScores: { domain: DomainExpertise; score: number }[] = [
@@ -874,10 +878,10 @@ export function detectRelevantExperts(question: string, options?: { maxExperts?:
     selected.push(d);
   }
 
-  // Smart defaults for Phase 3 - ensure minimum coverage
-  if (selected.length < 3) {
-    // Core domains for comprehensive analysis
-    const coreDefaults = ["economics", "policy", "technology"];
+  // Smart defaults - only add if truly necessary and relevant
+  if (selected.length < 2) {
+    // Only add defaults if we have very few matches
+    const coreDefaults = ["economics", "policy"];
     for (const domain of coreDefaults) {
       if (!selected.includes(domain) && selected.length < maxExperts) {
         selected.push(domain);
@@ -885,14 +889,18 @@ export function detectRelevantExperts(question: string, options?: { maxExperts?:
     }
   }
 
-  // Strategic reports always get quantitative + humanities for comprehensive analysis
-  if (options?.strategic) {
-    if (!selected.includes("quantitative") && selected.length < maxExperts) selected.push("quantitative");
-    if (!selected.includes("humanities") && selected.length < maxExperts) selected.push("humanities");
+  // Strategic reports get quantitative expert for methodological rigor ONLY if relevant
+  if (options?.strategic && selected.length < maxExperts) {
+    const quantitativeKeywords = ["statistic", "data", "method", "analysis", "study", "research", "evidence", "result"];
+    const hasQuantitativeRelevance = quantitativeKeywords.some(kw => q.includes(kw));
+    
+    if (hasQuantitativeRelevance && !selected.includes("quantitative")) {
+      selected.push("quantitative");
+    }
   }
 
-  // For Phase 3, include interdisciplinary domains when relevant
-  const interdisciplinaryKeywords = ["interdisciplinary", "complex", "emergent", "network", "system"];
+  // Add interdisciplinary domains ONLY when explicitly relevant
+  const interdisciplinaryKeywords = ["interdisciplinary", "complex", "emergent", "network", "system", "holistic"];
   const hasInterdisciplinary = interdisciplinaryKeywords.some(kw => q.includes(kw));
   
   if (hasInterdisciplinary && selected.length < maxExperts) {
@@ -904,12 +912,78 @@ export function detectRelevantExperts(question: string, options?: { maxExperts?:
     }
   }
 
-  return selected.slice(0, maxExperts);
+  // Add specialized domains ONLY for very specific topics
+  if (q.includes("urban") || q.includes("city") || q.includes("housing")) {
+    if (!selected.includes("urban-studies") && selected.length < maxExperts) {
+      selected.push("urban-studies");
+    }
+  }
+  
+  if (q.includes("behavioral") || q.includes("nudge") || q.includes("choice")) {
+    if (!selected.includes("behavioral-economics") && selected.length < maxExperts) {
+      selected.push("behavioral-economics");
+    }
+  }
+  
+  if (q.includes("bioethics") || q.includes("medical ethics") || q.includes("genetic")) {
+    if (!selected.includes("bioethics") && selected.length < maxExperts) {
+      selected.push("bioethics");
+    }
+  }
+
+  const finalSelection = selected.slice(0, maxExperts);
+  console.log(`[PhD Council] Final selection: ${finalSelection.join(', ')}`);
+  return finalSelection;
 }
 
 function countMatches(text: string, regex: RegExp): number {
   const matches = text.match(regex);
   return matches ? matches.length : 0;
+}
+
+/**
+ * Calculate topic complexity score to determine optimal expert count
+ */
+function calculateComplexityScore(question: string): number {
+  const q = question.toLowerCase();
+  let score = 1; // Base score
+  
+  // Multi-domain indicators
+  const multiDomainKeywords = ["and", "versus", "compared", "between", "relationship", "impact", "effect"];
+  score += multiDomainKeywords.filter(kw => q.includes(kw)).length * 0.5;
+  
+  // Complexity indicators
+  const complexityKeywords = ["complex", "system", "network", "interdisciplinary", "holistic", "emergent"];
+  score += complexityKeywords.filter(kw => q.includes(kw)).length * 1;
+  
+  // Scope indicators
+  const scopeKeywords = ["global", "international", "worldwide", "comprehensive", "across"];
+  score += scopeKeywords.filter(kw => q.includes(kw)).length * 0.8;
+  
+  // Methodological indicators
+  const methodKeywords = ["analysis", "evaluation", "assessment", "review", "meta-analysis"];
+  score += methodKeywords.filter(kw => q.includes(kw)).length * 0.3;
+  
+  return Math.min(score, 5); // Cap at 5
+}
+
+/**
+ * Determine optimal expert count based on topic complexity and context
+ */
+export function determineOptimalExpertCount(
+  question: string, 
+  options?: { strategic?: boolean; maxExperts?: number }
+): number {
+  if (options?.maxExperts) return options.maxExperts;
+  
+  const complexity = calculateComplexityScore(question);
+  const baseCount = options?.strategic ? 4 : 3; // Conservative base
+  
+  // Scale based on complexity
+  if (complexity <= 1.5) return Math.min(baseCount, 3);
+  if (complexity <= 2.5) return Math.min(baseCount + 1, 4);
+  if (complexity <= 3.5) return Math.min(baseCount + 2, 6);
+  return Math.min(baseCount + 3, 8); // Max 8 for very complex topics
 }
 
 /**

@@ -1171,7 +1171,7 @@ export interface PipelineCoreOptions {
   enableDevilsAdvocate?: boolean;  // default: true
   // Enhanced Harvard Council options
   enableEnhancedCouncil?: boolean; // default: false (use legacy for compatibility)
-  maxExperts?: number;             // default: 12 for strategic, 8 for standard
+  maxExperts?: number;             // default: 6 for strategic, 4 for standard
   enableHierarchical?: boolean;    // default: true for 15+ experts
   enableInterdisciplinary?: boolean; // default: true
 }
@@ -1184,7 +1184,8 @@ async function runPipelineCore(query: string, opts: PipelineCoreOptions) {
 
   // Tier flags — default all true, can be disabled for standard/premium tiers
   const runHarvardCouncilStep = opts.enableHarvardCouncil !== false;
-  const runEnhancedCouncilStep = opts.enableEnhancedCouncil === true;
+  // Enable Enhanced Council for strategic reports (22 PhDs) - Phase 3 default
+  const runEnhancedCouncilStep = isStrategic ? (opts.enableEnhancedCouncil !== false) : (opts.enableEnhancedCouncil === true);
   const runDebateStep = opts.enableDebate !== false;
   const runMetaAnalysisStep = opts.enableMetaAnalysis !== false;
   const runDevilsAdvocateStep = opts.enableDevilsAdvocate !== false;
@@ -1417,10 +1418,11 @@ async function runPipelineCore(query: string, opts: PipelineCoreOptions) {
 
       let council;
       if (runEnhancedCouncilStep) {
-        // Use enhanced council with 15 PhDs
-        console.log(`${label} ENHANCED HARVARD COUNCIL: 15 PhD expert analysis`);
+        // Use enhanced council with intelligent PhD selection
+        const expertCount = opts.maxExperts || (isStrategic ? 6 : 4);
+        console.log(`${label} ENHANCED HARVARD COUNCIL: ${expertCount} PhD expert analysis`);
         council = await runEnhancedHarvardCouncil(query, sourceCtx, topSources.length, {
-          maxExperts: opts.maxExperts || (isStrategic ? 12 : 8),
+          maxExperts: opts.maxExperts || (isStrategic ? 6 : 4),
           enableHierarchical: opts.enableHierarchical !== false,
           enableInterdisciplinary: opts.enableInterdisciplinary !== false,
           strategic: isStrategic,

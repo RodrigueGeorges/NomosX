@@ -382,19 +382,20 @@ export async function runEnhancedHarvardCouncil(
   options?: CouncilConfig
 ): Promise<EnhancedSynthesisReport> {
   const start = Date.now();
+  // More conservative defaults - only use more experts for complex topics
   const config = {
-    maxExperts: 12,
-    timeoutMs: 300000, // 5 minutes for strategic
+    maxExperts: options?.strategic ? 6 : 4, // Reduced from 12 to 6/4
+    timeoutMs: options?.strategic ? 240000 : 120000, // 4min/2min
     enableHierarchical: true,
-    enableInterdisciplinary: true,
+    enableInterdisciplinary: options?.strategic, // Only for strategic
     strategic: true,
     ...options
   };
   
   console.log(`\n${"━".repeat(80)}`);
-  console.log(`  🎓 ENHANCED HARVARD COUNCIL — 15 PhD Expert Analysis`);
+  console.log(`  🎓 ENHANCED HARVARD COUNCIL — ${config.maxExperts} PhD Expert Analysis`);
   console.log(`  Question: "${question.slice(0, 80)}..."`);
-  console.log(`  Max Experts: ${config.maxExperts} | Hierarchical: ${config.enableHierarchical}`);
+  console.log(`  Mode: ${config.strategic ? 'Strategic' : 'Standard'} | Hierarchical: ${config.enableHierarchical}`);
   console.log(`${"━".repeat(80)}\n`);
   
   let totalCost = 0;

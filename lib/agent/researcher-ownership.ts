@@ -230,6 +230,322 @@ export const RESEARCHER_REGISTRY: Record<DomainExpertise, ResearcherOwner> = {
       "Pre-registration and open science: adoption and impact on research quality",
     ],
   },
+
+  // === ADVANCED 6 DOMAINS ===
+  "social-sciences": {
+    id: "social-sciences",
+    name: "Dr. María González",
+    title: "Sociologist & Social Dynamics Expert",
+    institution: "UC Berkeley / Institute for Social Research",
+    domains: [
+      "social", "society", "cultural", "behavior", "community", "inequality", "demographic",
+      "urban", "migration", "education", "family", "religion", "sociology", "anthropology",
+      "social change", "social justice", "diversity", "inclusion", "social mobility", "social capital",
+      "social network", "collective action", "social norms", "social theory"
+    ],
+    providers: ["openalex", "crossref", "semanticscholar", "ssrn", "jstor", "sagepub", "taylor-francis"],
+    publicationCadence: "biweekly",
+    minQualityThreshold: 70,
+    maxBriefPerRun: 2,
+    preferredFormats: ["brief", "strategic"],
+    focusAreas: [
+      "Social inequality and wealth concentration in post-pandemic economies",
+      "Cultural polarization and echo chamber effects in digital media",
+      "Urban gentrification and displacement patterns in major cities",
+      "Social capital erosion in remote work environments"
+    ],
+  },
+
+  humanities: {
+    id: "humanities",
+    name: "Dr. Thomas Weber",
+    title: "Philosopher & Ethics Expert",
+    institution: "Sorbonne / Collège de France",
+    domains: [
+      "ethics", "ethical", "moral", "philosophy", "humanities", "history", "literature", "arts",
+      "culture", "values", "meaning", "human condition", "democratic", "political philosophy",
+      "justice", "rights", "dignity", "virtue", "character", "wisdom", "reason", "logic",
+      "critical thinking", "debate", "argument", "bioethics", "environmental ethics"
+    ],
+    providers: ["openalex", "crossref", "philpapers", "jstor", "project_muse", "ssrn"],
+    publicationCadence: "monthly",
+    minQualityThreshold: 72,
+    maxBriefPerRun: 1,
+    preferredFormats: ["brief", "strategic"],
+    focusAreas: [
+      "Ethical frameworks for AI governance and autonomous systems",
+      "Democratic theory in the age of digital surveillance",
+      "Philosophical foundations of climate justice and intergenerational equity",
+      "Human dignity and rights in the age of biotechnology"
+    ],
+  },
+
+  "energy-advanced": {
+    id: "energy-advanced",
+    name: "Dr. Fatima Al-Rashid",
+    title: "Energy Systems & Grid Integration Expert",
+    institution: "Imperial College London / IRENA",
+    domains: [
+      "energy", "renewable", "solar", "wind", "hydrogen", "grid", "storage", "nuclear",
+      "fusion", "efficiency", "transition", "decarbonization", "energy systems", "smart grid",
+      "microgrid", "battery", "clean energy", "green energy", "power", "electricity",
+      "infrastructure", "transmission", "distribution", "off grid", "island", "carbon neutral"
+    ],
+    providers: ["openalex", "crossref", "iea", "irena", "energy", "nature", "science", "arxiv"],
+    publicationCadence: "biweekly",
+    minQualityThreshold: 71,
+    maxBriefPerRun: 2,
+    preferredFormats: ["brief", "strategic"],
+    focusAreas: [
+      "Grid stability challenges with high renewable energy penetration",
+      "Economic viability of green hydrogen production and storage",
+      "Energy justice and equitable access to clean energy transitions",
+      "Nuclear fusion commercialization prospects and policy frameworks"
+    ],
+  },
+
+  geopolitics: {
+    id: "geopolitics",
+    name: "Dr. Sergei Petrov",
+    title: "International Relations & Geopolitics Expert",
+    institution: "Geneva Graduate Institute / United Nations",
+    domains: [
+      "geopolitics", "international", "diplomacy", "foreign policy", "trade war", "sanctions",
+      "alliance", "treaty", "multilateral", "un", "nato", "brics", "eu", "asean", "global governance",
+      "soft power", "hard power", "bloc", "regional", "hegemony", "superpower", "emerging",
+      "developing", "north", "south", "west", "east", "great power", "competition"
+    ],
+    providers: ["openalex", "crossref", "un", "nato", "chatham-house", "carnegie", "rand", "brookings"],
+    publicationCadence: "weekly",
+    minQualityThreshold: 70,
+    maxBriefPerRun: 2,
+    preferredFormats: ["brief", "strategic"],
+    focusAreas: [
+      "Multipolar world order and shifting alliance structures",
+      "Economic statecraft and sanctions effectiveness in the 2020s",
+      "Climate geopolitics and resource competition in the Arctic",
+      "Digital sovereignty and technological decoupling strategies"
+    ],
+  },
+
+  "cognitive-science": {
+    id: "cognitive-science",
+    name: "Dr. Lisa Chang",
+    title: "Cognitive Neuroscientist & Decision Science Expert",
+    institution: "UCL / Max Planck Institute for Human Development",
+    domains: [
+      "cognitive", "neuroscience", "brain", "decision", "behavioral", "psychology", "perception",
+      "memory", "learning", "reasoning", "neuro", "cognitive bias", "heuristics", "rationality",
+      "choice", "attention", "consciousness", "intelligence", "mind", "mental model",
+      "dual process", "system 1", "system 2", "fast", "slow", "thinking", "neuroeconomics"
+    ],
+    providers: ["openalex", "crossref", "pubmed", "nature", "science", "cell", "neuron", "arxiv", "ssrn"],
+    publicationCadence: "monthly",
+    minQualityThreshold: 73,
+    maxBriefPerRun: 1,
+    preferredFormats: ["brief", "strategic"],
+    focusAreas: [
+      "Cognitive biases in policy decision-making and behavioral public policy",
+      "Neuroscience of trust and credibility in digital information environments",
+      "Decision fatigue and choice architecture in complex policy systems",
+      "Cognitive enhancement technologies and ethical implications for society"
+    ],
+  },
+
+  "digital-society": {
+    id: "digital-society",
+    name: "Dr. Kwame Osei",
+    title: "Digital Sociologist & Technology Impact Expert",
+    institution: "MIT Media Lab / Oxford Internet Institute",
+    domains: [
+      "digital", "digital transformation", "social media", "internet", "platform", "tech society",
+      "online", "virtual", "cybersociety", "digital divide", "platform economy", "gig economy",
+      "digital rights", "data privacy", "algorithmic governance", "online behavior", "digital trace",
+      "big data", "social computing", "network society", "information society", "digital anthropology"
+    ],
+    providers: ["openalex", "crossref", "ssrn", "joi", "plos one", "arxiv", "nature"],
+    publicationCadence: "biweekly",
+    minQualityThreshold: 70,
+    maxBriefPerRun: 2,
+    preferredFormats: ["brief", "strategic"],
+    focusAreas: [
+      "Platform governance and algorithmic accountability in democratic societies",
+      "Digital inequality and access to essential services in the Global South",
+      "Social media's impact on political polarization and civic engagement",
+      "Data sovereignty and cross-border data flows in the digital economy"
+    ],
+  },
+
+  // === SPECIALIZED 7 DOMAINS ===
+  "behavioral-economics": {
+    id: "behavioral-economics",
+    name: "Dr. Rachel Kim",
+    title: "Behavioral Economist & Choice Architecture Expert",
+    institution: "University of Chicago / NBER",
+    domains: [
+      "behavioral", "nudge", "choice architecture", "prospect theory", "loss aversion", "heuristics",
+      "biases", "decision making", "irrationality", "behavioral finance", "experimental economics",
+      "psychology and economics", "public policy", "default options", "present bias",
+      "time inconsistency", "field experiment", "libertarian paternalism", "behavioral intervention"
+    ],
+    providers: ["openalex", "crossref", "nber", "ssrn", "science", "nature", "pnas", "ideas42"],
+    publicationCadence: "monthly",
+    minQualityThreshold: 71,
+    maxBriefPerRun: 1,
+    preferredFormats: ["brief", "strategic"],
+    focusAreas: [
+      "Effectiveness of behavioral interventions in climate policy compliance",
+      "Choice architecture in digital platforms and consumer protection",
+      "Behavioral insights for improving tax compliance and public program uptake",
+      "Ethical considerations in behavioral public policy and libertarian paternalism"
+    ],
+  },
+
+  "urban-studies": {
+    id: "urban-studies",
+    name: "Dr. Carlos Rodriguez",
+    title: "Urban Planner & Smart Cities Expert",
+    institution: "MIT / Lincoln Institute of Land Policy",
+    domains: [
+      "urban", "city", "cities", "smart city", "urban planning", "infrastructure", "housing",
+      "transportation", "public space", "urban development", "metropolitan", "suburban",
+      "gentrification", "displacement", "urban sprawl", "density", "zoning", "land use", "mixed use",
+      "transit", "walkability", "livability", "sustainable", "urban", "resilience"
+    ],
+    providers: ["openalex", "crossref", "ssrn", "urban", "worldbank", "un-habitat", "lincoln"],
+    publicationCadence: "biweekly",
+    minQualityThreshold: 69,
+    maxBriefPerRun: 2,
+    preferredFormats: ["brief", "strategic"],
+    focusAreas: [
+      "Smart city governance and citizen participation in urban decision-making",
+      "Housing affordability and inclusive urban development strategies",
+      "Sustainable transportation and multimodal integration in metropolitan areas",
+      "Urban resilience and climate adaptation in coastal cities"
+    ],
+  },
+
+  "development-economics": {
+    id: "development-economics",
+    name: "Dr. Aisha Patel",
+    title: "Development Economist & Poverty Alleviation Expert",
+    institution: "World Bank / Princeton",
+    domains: [
+      "development", "poverty", "emerging", "markets", "foreign aid", "microfinance",
+      "economic growth", "human development", "education", "health", "infrastructure",
+      "institutional", "development", "third world", "global south", "low income",
+      "middle income", "structural transformation", "industrial policy", "agriculture",
+      "rural", "urbanization", "demographic transition", "capacity building"
+    ],
+    providers: ["worldbank", "imf", "oecd", "openalex", "crossref", "ssrn", "nber", "ifpri"],
+    publicationCadence: "monthly",
+    minQualityThreshold: 68,
+    maxBriefPerRun: 1,
+    preferredFormats: ["brief", "strategic"],
+    focusAreas: [
+      "Effectiveness of conditional cash transfers in poverty reduction programs",
+      "Digital financial inclusion and mobile money in developing economies",
+      "Education quality and learning outcomes in low-income countries",
+      "Infrastructure investment and economic growth in emerging markets"
+    ],
+  },
+
+  "computational-social-science": {
+    id: "computational-social-science",
+    name: "Dr. David Liu",
+    title: "Computational Social Scientist & Network Analysis Expert",
+    institution: "Carnegie Mellon / Santa Fe Institute",
+    domains: [
+      "computational", "social network", "big data", "social media", "agent based", "simulation",
+      "modeling", "digital trace", "online behavior", "social computing", "network analysis",
+      "social data", "machine learning", "social simulation", "complex systems", "emergence",
+      "predictive modeling", "digital humanities", "computational methods", "social science"
+    ],
+    providers: ["openalex", "arxiv", "ssrn", "plos one", "nature", "science", "joi"],
+    publicationCadence: "monthly",
+    minQualityThreshold: 70,
+    maxBriefPerRun: 1,
+    preferredFormats: ["brief", "strategic"],
+    focusAreas: [
+      "Network analysis of misinformation spread and social influence patterns",
+      "Computational approaches to detecting and measuring social phenomena",
+      "Big data methods for understanding collective behavior and social trends",
+      "Agent-based modeling for policy simulation and intervention testing"
+    ],
+  },
+
+  "bioethics": {
+    id: "bioethics",
+    name: "Dr. Sophie Martin",
+    title: "Bioethicist & Medical Ethics Expert",
+    institution: "Johns Hopkins / Hastings Center",
+    domains: [
+      "bioethics", "medical ethics", "biotechnology", "genetic", "engineering", "cloning",
+      "stem cells", "end of life", "euthanasia", "genetic privacy", "clinical trials",
+      "informed consent", "patient autonomy", "research ethics", "human subjects", "irb",
+      "institutional review board", "privacy", "confidentiality", "healthcare ethics"
+    ],
+    providers: ["pubmed", "europepmc", "openalex", "crossref", "nature", "cell", "jama", "nejm"],
+    publicationCadence: "monthly",
+    minQualityThreshold: 74,
+    maxBriefPerRun: 1,
+    preferredFormats: ["brief", "strategic"],
+    focusAreas: [
+      "Ethical frameworks for CRISPR and gene editing technologies",
+      "Privacy and consent in genomic research and biobanking",
+      "Resource allocation and priority setting in pandemic response",
+      "Artificial intelligence in medical diagnosis and treatment decision support"
+    ],
+  },
+
+  "complexity-science": {
+    id: "complexity-science",
+    name: "Dr. Michael Zhang",
+    title: "Complexity Scientist & Complex Systems Expert",
+    institution: "Oxford / Santa Fe Institute",
+    domains: [
+      "complexity", "complex systems", "emergence", "self organization", "networks", "chaos",
+      "fractals", "nonlinear", "dynamics", "adaptation", "system thinking", "interdisciplinarity",
+      "phase transition", "tipping point", "scaling laws", "universality", "unpredictability",
+      "butterfly effect", "black swan", "strange attractor", "complexity science"
+    ],
+    providers: ["arxiv", "nature", "science", "plos one", "santa fe", "complexity", "chaos", "nonlinearity"],
+    publicationCadence: "monthly",
+    minQualityThreshold: 71,
+    maxBriefPerRun: 1,
+    preferredFormats: ["brief", "strategic"],
+    focusAreas: [
+      "Complex systems approaches to climate change and ecological resilience",
+      "Network effects and cascade failures in financial and technological systems",
+      "Emergent phenomena in social and economic systems",
+      "Predictive limitations and uncertainty in complex adaptive systems"
+    ],
+  },
+
+  "risk-analysis": {
+    id: "risk-analysis",
+    name: "Dr. Jennifer Thompson",
+    title: "Risk Analyst & Financial Risk Expert",
+    institution: "Wharton / Federal Reserve",
+    domains: [
+      "risk", "uncertainty", "probability", "risk assessment", "risk management", "systemic risk",
+      "financial risk", "operational risk", "market risk", "credit risk", "liquidity risk",
+      "counterparty risk", "var", "volatility", "correlation", "diversification", "hedge",
+      "insurance", "scenario", "analysis", "stress test", "monte carlo", "value at risk",
+      "expected return", "sharpe ratio", "beta", "capital asset pricing", "black scholes"
+    ],
+    providers: ["openalex", "crossref", "ssrn", "repec", "bis", "imf", "worldbank", "nber"],
+    publicationCadence: "weekly",
+    minQualityThreshold: 72,
+    maxBriefPerRun: 2,
+    preferredFormats: ["brief", "strategic"],
+    focusAreas: [
+      "Systemic risk assessment in interconnected financial markets",
+      "Climate risk modeling and scenario analysis for insurance sectors",
+      "Cybersecurity risk quantification and enterprise risk management",
+      "Emerging market volatility and currency risk in global portfolios"
+    ],
+  },
 };
 
 // ============================================================================
@@ -270,6 +586,60 @@ export function getPrimaryOwner(topic: string): ResearcherOwner {
   return detectOwners(topic)[0];
 }
 
+/**
+ * Determine if a topic requires multiple researchers for comprehensive coverage
+ */
+export function requiresMultipleResearchers(topic: string): {
+  const q = topic.toLowerCase();
+  
+  // Multi-domain indicators
+  const multiDomainIndicators = [
+    " and ", " versus ", " compared ", " between ", " relationship ", " impact ", " effect ",
+    " across ", " throughout ", " among ", " within "
+  ];
+  
+  // Complex interdisciplinary topics
+  const interdisciplinaryKeywords = [
+    "interdisciplinary", "holistic", "systems thinking", "network", "complex", "emergent"
+  ];
+  
+  // High-stakes topics
+  const highStakesKeywords = [
+    "global", "international", "systemic", "crisis", "strategic", "comprehensive"
+  ];
+  
+  const hasMultiDomain = multiDomainIndicators.some(kw => q.includes(kw));
+  const hasInterdisciplinary = interdisciplinaryKeywords.some(kw => q.includes(kw));
+  const hasHighStakes = highStakesKeywords.some(kw => q.includes(kw));
+  
+  return hasMultiDomain || hasInterdisciplinary || hasHighStakes;
+}
+
+/**
+ * Get all relevant researchers for a topic (for collaborative publications)
+ */
+export function getAllRelevantResearchers(topic: string): ResearcherOwner[] {
+  const q = topic.toLowerCase();
+  const relevant: ResearcherOwner[] = [];
+  
+  for (const owner of Object.values(RESEARCHER_REGISTRY)) {
+    let relevanceScore = 0;
+    for (const keyword of owner.domains) {
+      if (q.includes(keyword)) {
+        relevanceScore += keyword.split(" ").length;
+      }
+    }
+    if (relevanceScore > 0) {
+      relevant.push({ ...owner, relevanceScore });
+    }
+  }
+  
+  // Sort by relevance and return top researchers
+  return relevant
+    .sort((a, b) => b.relevanceScore - a.relevanceScore)
+    .slice(0, 8); // Max 8 collaborators
+}
+
 // ============================================================================
 // PIPELINE TIER SELECTION
 // ============================================================================
@@ -292,23 +662,27 @@ export function selectPipelineTier(
   topic: string,
   format: "brief" | "strategic",
   owner: ResearcherOwner,
-  options?: { forceStrategic?: boolean; forcePremium?: boolean }
+  options?: { forceStrategic?: boolean; forcePremium?: boolean; forceCollaborative?: boolean }
 ): PipelineTier {
   if (options?.forceStrategic || format === "strategic") return "strategic";
   if (options?.forcePremium) return "premium";
+  
+  // Check if topic requires collaborative treatment
+  const needsCollaborative = requiresMultipleResearchers(topic);
+  if (options?.forceCollaborative && needsCollaborative) return "strategic";
 
   const topicLower = topic.toLowerCase();
 
   // Topics that always warrant full strategic treatment
   const strategicTriggers = [
-    "nuclear", "pandemic", "systemic risk", "financial crisis", "war",
+    "nuclear", "pacific", "systemic risk", "financial crisis", "war",
     "geopolitical", "constitutional", "climate tipping", "ai safety",
     "democratic", "sovereignty",
   ];
   if (strategicTriggers.some(t => topicLower.includes(t))) return "strategic";
 
   // High-rigor domains default to premium
-  const premiumDomains: DomainExpertise[] = ["health", "law", "quantitative", "security"];
+  const premiumDomains: DomainExpertise[] = ["health", "law", "quantitative", "security", "bioethics", "complexity-science"];
   if (premiumDomains.includes(owner.id)) return "premium";
 
   return "standard";

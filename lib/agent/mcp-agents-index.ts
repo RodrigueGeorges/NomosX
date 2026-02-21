@@ -203,6 +203,8 @@ export const mcpAgents = {
   runExpertAnalysis,
   runExpertCouncil,
   detectRelevantExperts,
+  determineOptimalExpertCount,
+  calculateComplexityScore,
   runHarvardCouncil,
   runReviewBoard,
   gradeEvidence,
@@ -261,6 +263,8 @@ export const mcpAgents = {
   getResearcherAgenda,
   getThinkTankAgenda,
   requestResearcherSignOff,
+  requiresMultipleResearchers,
+  getAllRelevantResearchers,
 
   // V7 Autonomous Intelligence — Self-Learning & Adversarial Gate
   buildMemoryInjection,
@@ -327,7 +331,7 @@ export type {
 } from './mcp-agents-aliases';
 
 export type {
-  AgentPerformanceRecord, AgentLesson, AgentCalibration, MemoryInjection, FailureMode,
+  Agents, AgentPerformanceRecord, AgentLesson, AgentCalibration, MemoryInjection, FailureMode,
 } from './agent-memory';
 export type {
   ResearcherPosition, PredictionRecord, ResearcherProfile, PositionUpdate,

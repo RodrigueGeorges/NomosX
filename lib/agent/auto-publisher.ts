@@ -33,6 +33,8 @@ import {
   getPrimaryOwner,
   selectPipelineTier,
   requestResearcherSignOff,
+  requiresMultipleResearchers,
+  getAllRelevantResearchers,
   type PipelineTier,
 } from './researcher-ownership';
 
@@ -576,19 +578,72 @@ async function executePublication(
     // Researcher Sign-Off — domain expert reviews before publication
     let signOffDecision: "approve" | "revise" | "reject" = "approve";
     let signOffCost = 0;
+    
+    // Check if collaborative publication is needed
+    const needsCollaborative = requiresMultipleResearchers(proposal.topic);
+    let allSignOffs: any[] = [];
+    
     try {
-      const signOff = await requestResearcherSignOff(
-        proposal.topic,
-        brief?.html || "",
-        effectiveScore
-      );
-      signOffDecision = signOff.decision;
-      signOffCost = signOff.costUsd;
-      console.log(`[AUTO-PUBLISHER] ${signOff.researcherName} sign-off: ${signOffDecision} (confidence: ${signOff.confidenceInDecision})`);
-      if (signOff.concerns.length > 0) {
-        console.log(`[AUTO-PUBLISHER] Concerns: ${signOff.concerns.join(" | ")}`);
+      if (needsCollaborative) {
+        // Get all relevant researchers for collaborative review
+        const relevantResearchers = getAllRelevantResearchers(proposal.topic);
+        console.log(`[AUTO-PUBLISHER] Collaborative review: ${relevantResearchers.length} researchers`);
+        
+        // Get sign-offs from all relevant researchers
+        const signOffPromises = relevantResearchers.map(async (researcher) => 
+          requestResearcherSignOff(proposal.topic, brief?.html || "", 75) // Lower threshold for collaborative
+        );
+        
+        const signOffResults = await Promise.allSettled(signOffPromises);
+        allSignOffs = signOffResults
+          .filter(result => result.status === 'fulfilled')
+          .map(result => (result as any).value);
+        
+        // Analyze collective decision
+        const approvals = allSignOffs.filter(s => s.decision === "approve").length;
+        const rejections = allSignOffs.filter(s => s.decision === "reject").length;
+        const revisions = allSignOffs.filter(s => s.decision === "revise").length;
+        
+        if (rejections > 0) {
+          signOffDecision = "reject";
+          console.log(`[AUTO-PUBLISHER] ${rejections} researchers rejected publication`);
+        } else if (revisions > 0) {
+          signOffDecision = "revise";
+          console.log(`[AUTO-PUBLISHER] ${revisions} researchers request revisions`);
+        } else if (approvals >= 2) {
+          signOffDecision = "approve";
+          console.log(`[AUTO-PUBLISHER] ${approvals} researchers approved publication`);
+        } else {
+          signOffDecision = "approve";
+        }
+        
+        // Calculate total cost for all sign-offs
+        signOffCost = allSignOffs.reduce((sum, s) => sum + (s.costUsd || 0), 0);
+        
+        // Log all researcher decisions
+        for (const signOff of allSignOffs) {
+          console.log(`[AUTO-PUBLISHER] ${signOff.researcherName}: ${signOff.decision} (confidence: ${signOff.confidenceInDecision})`);
+          if (signOff.concerns.length > 0) {
+            console.log(`[AUTO-PUBLISHER] ${signOff.researcherName} concerns: ${signOff.concerns.join(" | ")}`);
+          }
+        }
+      } else {
+        // Single researcher sign-off
+        const signOff = await requestResearcherSignOff(
+          proposal.topic,
+          brief?.html || "",
+          effectiveScore
+        );
+        signOffDecision = signOff.decision;
+        signOffCost = signOff.costUsd;
+        console.log(`[AUTO-PUBLISHER] ${signOff.researcherName} sign-off: ${signOffDecision} (confidence: ${signOff.confidenceInDecision})`);
+        if (signOff.concerns.length > 0) {
+          console.log(`[AUTO-PUBLISHER] ${signOff.researcherName} concerns: ${signOff.concerns.join(" | ")}`);
+        }
       }
+      
       if (signOffDecision === "reject") {
+        const rejectingResearcher = allSignOffs.find(s => s.decision === "reject")?.researcherName || "Primary researcher";
         return {
           topic: proposal.topic,
           strategy: "editorial",
@@ -599,11 +654,11 @@ async function executePublication(
           durationMs: Date.now() - pubStart,
           providers,
           status: "failed",
-          error: `${signOff.researcherName} rejected: ${signOff.verdict}`,
+          error: `${rejectingResearcher} rejected publication`,
         };
       }
       if (signOffDecision === "revise") {
-        console.log(`[AUTO-PUBLISHER] ${signOff.researcherName} requests revision — sending to review`);
+        console.log(`[AUTO-PUBLISHER] Researchers request revision — sending to review`);
         return {
           topic: proposal.topic,
           strategy: "editorial",
@@ -617,7 +672,9 @@ async function executePublication(
         };
       }
     } catch (err: any) {
-      console.warn(`[AUTO-PUBLISHER] Researcher sign-off failed (non-blocking): ${err.message}`);
+      console.error(`[AUTO-PUBLISHER] Researcher sign-off failed: ${err.message}`);
+      signOffDecision = "reject";
+      signOffCost = 0;
     }
 
     // Quality gate passed + Editorial Gate approved — publish
