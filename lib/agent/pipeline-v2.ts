@@ -26,6 +26,7 @@ import { metaAnalysisEngine } from './meta-analysis-engine';
 import { extractAndStoreConcepts } from './knowledge-graph';
 import { primeContext } from './context-primer';
 import { runHarvardCouncil } from './review-board';
+import { runEnhancedHarvardCouncil } from './harvard-council-enhanced';
 import { buildMemoryInjection, recordAgentPerformance, autoDetectFailureModes, extractLessons, storeLesson } from './agent-memory';
 import { runDevilsAdvocate } from './devils-advocate';
 import { recordSourceUsage } from './source-reputation-agent';
@@ -1150,11 +1151,11 @@ export const DEFAULT_ACADEMIC_PROVIDERS: Providers = [
   "core", "europepmc", "doaj", "ssrn", "repec",
 ];
 
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
-// SHARED PIPELINE CORE â€” single implementation for brief + strategic
-// â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€â”€
+// ———————————————————————————————————————————————————————————————————————————————————
+// SHARED PIPELINE CORE — single implementation for brief + strategic
+// ———————————————————————————————————————————————————————————————————————————————————
 
-interface PipelineCoreOptions {
+export interface PipelineCoreOptions {
   isStrategic: boolean;
   providers?: Providers;
   perProvider?: number;
@@ -1168,6 +1169,11 @@ interface PipelineCoreOptions {
   enableDebate?: boolean;          // default: true
   enableMetaAnalysis?: boolean;    // default: true (strategic only)
   enableDevilsAdvocate?: boolean;  // default: true
+  // Enhanced Harvard Council options
+  enableEnhancedCouncil?: boolean; // default: false (use legacy for compatibility)
+  maxExperts?: number;             // default: 12 for strategic, 8 for standard
+  enableHierarchical?: boolean;    // default: true for 15+ experts
+  enableInterdisciplinary?: boolean; // default: true
 }
 
 async function runPipelineCore(query: string, opts: PipelineCoreOptions) {
@@ -1178,6 +1184,7 @@ async function runPipelineCore(query: string, opts: PipelineCoreOptions) {
 
   // Tier flags — default all true, can be disabled for standard/premium tiers
   const runHarvardCouncilStep = opts.enableHarvardCouncil !== false;
+  const runEnhancedCouncilStep = opts.enableEnhancedCouncil === true;
   const runDebateStep = opts.enableDebate !== false;
   const runMetaAnalysisStep = opts.enableMetaAnalysis !== false;
   const runDevilsAdvocateStep = opts.enableDevilsAdvocate !== false;
@@ -1402,35 +1409,81 @@ async function runPipelineCore(query: string, opts: PipelineCoreOptions) {
   if (!runHarvardCouncilStep) {
     console.log(`${label} HARVARD COUNCIL: skipped (tier=standard)`);
     stats.harvardCouncil = { skipped: true };
-  } else
-  try {
-    const sourceCtx = topSources.map((s: any, i: number) =>
-      `[SRC-${i + 1}] ${s.title} (${s.year || "N/A"}) â€” ${(s.abstract || "").slice(0, 400)}`
-    ).join("\n\n");
-    const council = await runHarvardCouncil(query, sourceCtx, topSources.length, {
-      strategic: isStrategic,
-      runId: pipelineRun.id,
-    });
-    stats.harvardCouncil = {
-      experts: council.expertAnalyses.length,
-      reviewers: council.reviews.length,
-      evidenceLevel: council.evidenceGrade.cebmLevel,
-      gradeCertainty: council.evidenceGrade.gradeCertainty,
-      avgRigor: council.reviews.length > 0
-        ? Math.round(council.reviews.reduce((s, r) => s + r.overallRigor, 0) / council.reviews.length)
-        : 0,
-      predictions: council.synthesis.calibratedPredictions?.length || 0,
-      recommendations: council.synthesis.recommendations?.length || 0,
-      costUsd: council.totalCostUsd,
-      durationMs: council.totalDurationMs,
-    };
-    if (council.synthesis.executiveSummary) {
-      (analysis as any)._harvardCouncil = council.synthesis;
+  } else {
+    try {
+      const sourceCtx = topSources.map((s: any, i: number) =>
+        `[SRC-${i + 1}] ${s.title} (${s.year || "N/A"}) â€” ${(s.abstract || "").slice(0, 400)}`
+      ).join("\n\n");
+
+      let council;
+      if (runEnhancedCouncilStep) {
+        // Use enhanced council with 15 PhDs
+        console.log(`${label} ENHANCED HARVARD COUNCIL: 15 PhD expert analysis`);
+        council = await runEnhancedHarvardCouncil(query, sourceCtx, topSources.length, {
+          maxExperts: opts.maxExperts || (isStrategic ? 12 : 8),
+          enableHierarchical: opts.enableHierarchical !== false,
+          enableInterdisciplinary: opts.enableInterdisciplinary !== false,
+          strategic: isStrategic,
+          runId: pipelineRun.id,
+        });
+        
+        stats.harvardCouncil = {
+          enhanced: true,
+          experts: council.expertCount,
+          domainLeads: council.domainLeads.length,
+          interdisciplinary: {
+            connections: council.interdisciplinary.connections.length,
+            conflicts: council.interdisciplinary.conflicts.length,
+            synergies: council.interdisciplinary.synergies.length,
+          },
+          evidenceLevel: council.evidenceQuality.overallLevel,
+          avgConfidence: council.domainLeads.reduce((sum, lead) => sum + lead.leadExpert.confidence, 0) / council.domainLeads.length,
+          recommendations: {
+            immediate: council.recommendations.immediate.length,
+            shortTerm: council.recommendations.shortTerm.length,
+            longTerm: council.recommendations.longTerm.length,
+            research: council.recommendations.research.length,
+          },
+          costUsd: council.totalCostUsd,
+          durationMs: council.totalDurationMs,
+        };
+        
+        console.log(`${label} ENHANCED COUNCIL: ${council.expertCount} experts, ${council.domainLeads.length} domain leads, ${council.totalDurationMs}ms`);
+      } else {
+        // Use legacy council for backward compatibility
+        console.log(`${label} LEGACY HARVARD COUNCIL: 9 PhD expert analysis`);
+        council = await runHarvardCouncil(query, sourceCtx, topSources.length, {
+          strategic: isStrategic,
+          runId: pipelineRun.id,
+        });
+        
+        stats.harvardCouncil = {
+          enhanced: false,
+          experts: council.expertAnalyses.length,
+          reviewers: council.reviews.length,
+          evidenceLevel: council.evidenceGrade.cebmLevel,
+          gradeCertainty: council.evidenceGrade.gradeCertainty,
+          avgRigor: council.reviews.length > 0
+            ? Math.round(council.reviews.reduce((s, r) => s + r.overallRigor, 0) / council.reviews.length)
+            : 0,
+          predictions: council.synthesis.calibratedPredictions?.length || 0,
+          recommendations: council.synthesis.recommendations?.length || 0,
+          costUsd: council.totalCostUsd,
+          durationMs: council.totalDurationMs,
+        };
+        
+        console.log(`${label} LEGACY COUNCIL: CEBM ${council.evidenceGrade.cebmLevel}, GRADE ${council.evidenceGrade.gradeCertainty}, ${council.expertAnalyses.length} experts`);
+      }
+      
+      // Store council synthesis in analysis
+      if (council.synthesis || council.consensus) {
+        (analysis as any)._harvardCouncil = council.synthesis || council;
+      }
+      
+    } catch (err) {
+      console.warn(`${label} HARVARD COUNCIL: failed (non-blocking):`, err);
+      stats.harvardCouncil = { error: String(err) };
     }
-    console.log(`${label} HARVARD COUNCIL: CEBM ${council.evidenceGrade.cebmLevel}, GRADE ${council.evidenceGrade.gradeCertainty}, ${council.expertAnalyses.length} experts`);
-  } catch (err) {
-    console.warn(`${label} HARVARD COUNCIL: failed (non-blocking):`, err);
-    stats.harvardCouncil = { error: String(err) };
   }
 
   // â”€â”€ STEP 7: CITATION GUARD â”€â”€

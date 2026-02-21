@@ -1,18 +1,16 @@
 /**
- * NomosX PhD RESEARCHER AGENTS — Domain Expert Council
+ * NomosX PhD RESEARCHER AGENTS — Expanded Domain Expert Council (15 domains)
  * 
- * 8 specialized PhD-level domain experts, each with:
+ * 15 specialized PhD-level domain experts, each with:
  * - Deep domain knowledge encoded in system prompts
  * - Specific analytical frameworks (econometrics, ML theory, policy analysis...)
  * - Calibrated confidence (knows what it doesn't know)
  * - Academic citation standards (APA-level rigor)
  * 
- * Architecture inspired by leading policy research institutions:
- * Each expert independently analyzes the same sources, then the
- * Synthesis Director reconciles their perspectives.
- * 
- * MOAT: The combination of domain-specific prompts + adversarial review
- * + evidence grading creates analysis quality unreachable by generic LLMs.
+ * Architecture optimized for scalable parallel processing:
+ * - Smart domain selection based on topic relevance
+ * - Load balancing for optimal performance
+ * - Hierarchical consensus for large councils
  */
 
 import { callLLM } from '../llm/unified-llm';
@@ -24,6 +22,7 @@ import { buildResearcherProfile, storeExpertAnalysisMemory } from './researcher-
 // ============================================================================
 
 export type DomainExpertise =
+  // === EXISTING 9 DOMAINS ===
   | "economics"       // Macro/micro economics, econometrics, trade, fiscal policy
   | "technology"      // CS, AI/ML, cybersecurity, digital transformation
   | "policy"          // Public policy, governance, regulation, geopolitics
@@ -31,7 +30,15 @@ export type DomainExpertise =
   | "security"        // National security, defense, intelligence, conflict
   | "law"             // International law, regulatory frameworks, constitutional, IP
   | "environment"     // Climate science, ecology, energy transition, sustainability
-  | "quantitative";   // Statistics, data science, causal inference, meta-analysis
+  | "quantitative"    // Statistics, data science, causal inference, meta-analysis
+  | "finance"         // Financial markets, asset pricing, risk management
+  // === NEW 6 DOMAINS ===
+  | "social-sciences" // Sociology, social behavior, cultural dynamics, inequality
+  | "humanities"      // Philosophy, ethics, AI governance, human values
+  | "energy-advanced" // Renewable energy, grid integration, energy systems
+  | "geopolitics"     // International relations, great power competition, multilateralism
+  | "cognitive-science" // Neuroscience, decision-making, behavioral economics
+  | "digital-society"; // Social impact of technology, digital transformation
 
 export interface ExpertAnalysis {
   expertId: DomainExpertise;

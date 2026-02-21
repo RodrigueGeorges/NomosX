@@ -1,13 +1,14 @@
 /**
- * NomosX AI Researchers — The Council
+ * NomosX AI Researchers — The Council (Expanded to 15)
  * 
- * Single source of truth for all 9 PhD-level AI researchers.
+ * Single source of truth for all 15 PhD-level AI researchers.
  * Used across the entire app: publications (author), landing page, methodology, etc.
  * 
  * Each researcher is a specialized domain expert with:
  * - A real-sounding academic identity
  * - A specific analytical framework
  * - A signature color for UI consistency
+ * - Institutional credibility
  */
 
 export interface Researcher {
@@ -24,6 +25,7 @@ export interface Researcher {
 }
 
 export const RESEARCHERS: Researcher[] = [
+  // === EXISTING 9 PhDs ===
   {
     id: "economics",
     name: "Dr. Elena Vasquez",
@@ -132,6 +134,80 @@ export const RESEARCHERS: Researcher[] = [
     colorHex: "#F97316",
     gradient: "from-orange-500/20 to-orange-500/5",
   },
+
+  // === NEW 6 PhDs ===
+  {
+    id: "social-sciences",
+    name: "Dr. María González",
+    title: "Sociologist",
+    institution: "UC Berkeley / Institute for Social Research",
+    domain: "Social Sciences",
+    specialty: "Social Behavior & Cultural Dynamics",
+    initials: "MG",
+    color: "purple",
+    colorHex: "#A855F7",
+    gradient: "from-purple-500/20 to-purple-500/5",
+  },
+  {
+    id: "humanities",
+    name: "Dr. Thomas Weber",
+    title: "Philosopher",
+    institution: "Sorbonne / Collège de France",
+    domain: "Humanities",
+    specialty: "Ethics & AI Governance",
+    initials: "TW",
+    color: "slate",
+    colorHex: "#64748B",
+    gradient: "from-slate-500/20 to-slate-500/5",
+  },
+  {
+    id: "energy-advanced",
+    name: "Dr. Fatima Al-Rashid",
+    title: "Energy Engineer",
+    institution: "Imperial College / IRENA",
+    domain: "Energy Systems",
+    specialty: "Renewable Energy & Grid Integration",
+    initials: "FA",
+    color: "green",
+    colorHex: "#22C55E",
+    gradient: "from-green-500/20 to-green-500/5",
+  },
+  {
+    id: "geopolitics",
+    name: "Dr. Sergei Petrov",
+    title: "International Relations Expert",
+    institution: "Geneva Graduate Institute / UN",
+    domain: "Geopolitics",
+    specialty: "Great Power Relations & Multilateralism",
+    initials: "SP",
+    color: "red",
+    colorHex: "#EF4444",
+    gradient: "from-red-500/20 to-red-500/5",
+  },
+  {
+    id: "cognitive-science",
+    name: "Dr. Lisa Chang",
+    title: "Cognitive Neuroscientist",
+    institution: "UCL / Max Planck Institute",
+    domain: "Cognitive Science",
+    specialty: "Decision-Making & Behavioral Economics",
+    initials: "LC",
+    color: "pink",
+    colorHex: "#EC4899",
+    gradient: "from-pink-500/20 to-pink-500/5",
+  },
+  {
+    id: "digital-society",
+    name: "Dr. Kwame Osei",
+    title: "Digital Sociologist",
+    institution: "MIT Media Lab / Oxford Internet Institute",
+    domain: "Digital Society",
+    specialty: "Social Impact of Technology & Digital Transformation",
+    initials: "KO",
+    color: "cyan",
+    colorHex: "#06B6D4",
+    gradient: "from-cyan-500/20 to-cyan-500/5",
+  },
 ];
 
 /** Get a researcher by domain ID */
@@ -153,6 +229,12 @@ export function getLeadResearcher(topic: string): Researcher {
     environment: ["climate", "environment", "carbon", "energy", "sustainability", "emission", "renewable", "biodiversity", "pollution", "green"],
     quantitative: ["statistic", "data science", "methodology", "meta-analysis", "causal", "regression", "probability", "sampling", "bias"],
     finance: ["finance", "financial", "market", "stock", "equity", "bond", "asset", "portfolio", "trading", "investment", "hedge fund", "venture", "capital", "valuation", "risk", "derivatives", "commodity", "currency", "fintech"],
+    "social-sciences": ["social", "society", "cultural", "behavior", "community", "inequality", "demographic", "urban", "migration", "education", "family", "religion", "sociology", "anthropology", "social change", "social justice", "diversity", "inclusion"],
+    humanities: ["ethics", "moral", "philosophy", "humanities", "history", "literature", "arts", "culture", "values", "meaning", "human condition", "democratic theory", "political philosophy", "justice", "rights", "dignity"],
+    "energy-advanced": ["renewable", "solar", "wind", "hydrogen", "grid", "storage", "nuclear", "fusion", "efficiency", "transition", "decarbonization", "energy systems", "smart grid", "microgrid", "battery", "clean energy", "green energy"],
+    geopolitics: ["geopolitic", "international", "diplomacy", "foreign policy", "trade war", "sanctions", "alliance", "treaty", "multilateral", "un", "nato", "brics", "eu", "asean", "global governance", "soft power", "hard power"],
+    "cognitive-science": ["cognitive", "neuroscience", "brain", "decision", "behavioral", "psychology", "perception", "memory", "learning", "reasoning", "neuro", "cognitive bias", "heuristics", "rationality", "choice", "attention"],
+    "digital-society": ["digital transformation", "social media", "internet", "platform", "tech society", "online", "virtual", "cybersociety", "digital divide", "platform economy", "gig economy", "digital rights", "data privacy", "algorithmic governance"],
   };
 
   let bestMatch = "economics";
@@ -166,5 +248,35 @@ export function getLeadResearcher(topic: string): Researcher {
     }
   }
 
-  return RESEARCHERS.find(r => r.id === bestMatch) || RESEARCHERS[0];
+  return getResearcher(bestMatch) || RESEARCHERS[0];
+}
+
+/** Get researchers by tier (for subscription gating) */
+export function getResearchersByTier(tier: 'standard' | 'premium' | 'strategic'): Researcher[] {
+  switch (tier) {
+    case 'standard':
+      return RESEARCHERS.slice(0, 6); // Core domains
+    case 'premium':
+      return RESEARCHERS.slice(0, 12); // Core + advanced
+    case 'strategic':
+      return RESEARCHERS; // All 15
+    default:
+      return RESEARCHERS.slice(0, 6);
+  }
+}
+
+/** Get total count of researchers */
+export function getResearcherCount(): number {
+  return RESEARCHERS.length;
+}
+
+/** Get researchers by domain category */
+export function getResearchersByCategory(category: 'stem' | 'social' | 'humanities'): Researcher[] {
+  const categoryMap = {
+    stem: ['technology', 'health', 'environment', 'quantitative', 'finance', 'energy-advanced', 'cognitive-science'],
+    social: ['economics', 'policy', 'security', 'social-sciences', 'geopolitics', 'digital-society'],
+    humanities: ['law', 'humanities']
+  };
+  
+  return RESEARCHERS.filter(r => categoryMap[category].includes(r.id));
 }
