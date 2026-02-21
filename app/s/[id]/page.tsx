@@ -5,7 +5,7 @@ import { NomosXLogo } from '@/components/brand/NomosXLogo';
 
 export async function generateMetadata({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const brief = await prisma.brief.findFirst({
+  const brief = await prisma.thinkTankPublication.findFirst({
     where: { OR: [{ publicId: id }, { id }] },
     select: { title: true },
   });
@@ -17,7 +17,7 @@ export async function generateMetadata({ params }: { params: Promise<{ id: strin
 
 export default async function SharedBrief({ params }: { params: Promise<{ id: string }> }) {
   const { id } = await params;
-  const brief = await prisma.brief.findFirst({
+  const brief = await prisma.thinkTankPublication.findFirst({
     where: { OR: [{ publicId: id }, { id }] },
     select: { id: true, title: true, html: true, createdAt: true },
   });
