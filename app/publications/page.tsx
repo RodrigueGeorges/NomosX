@@ -240,7 +240,7 @@ export default function PublicationsPage() {
           <div className="space-y-3">
             {filteredPublications.map(pub => {
               const typeConfig = TYPE_LABELS[pub.type] || { label: pub.type, color: "bg-background/5 text-white/60 border-white/10" };
-              const statusConfig = STATUS_CONFIG[pub.status];
+              const statusConfig = STATUS_CONFIG[pub.status] || { label: pub.status || 'Unknown', icon: CheckCircle, color: "text-white/40" };
               const StatusIcon = statusConfig.icon;
 
               const researcher = pub.vertical?.slug ? getLeadResearcher(pub.vertical.slug) : null;

@@ -133,7 +133,11 @@ function StudioPageContent() {
       <Shell>
         <div className="flex items-center justify-center min-h-96">
           <div className="text-center">
-            <div className="text-white/50 mb-4">Loading Studio...</div>
+            <div className="w-16 h-16 rounded-xl bg-gradient-to-br from-indigo-500/20 to-violet-500/20 border border-indigo-500/20 flex items-center justify-center mx-auto mb-4">
+              <Sparkles className="w-8 h-8 text-indigo-400" />
+            </div>
+            <div className="text-white/50 mb-2">Loading Studio</div>
+            <div className="text-white/20 text-sm">Initializing research environment...</div>
           </div>
         </div>
       </Shell>
@@ -460,20 +464,27 @@ function StudioPageContent() {
             )}
 
             {/* Question Input */}
-            <Textarea
-              value={question}
-              onChange={(e) => setQuestion(e.target.value)}
-              placeholder="What question deserves institutional publication?"
-              rows={4}
-              className="mb-4 bg-background/[0.03] border-white/10 focus:border-indigo-500/50 text-base resize-none"
-              disabled={isLoading}
-              onKeyDown={(e) => {
-                if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
-                  e.preventDefault();
-                  handleGenerate();
-                }
-              }}
-            />
+            <div className="relative">
+              <Textarea
+                value={question}
+                onChange={(e) => setQuestion(e.target.value)}
+                placeholder="What question deserves institutional publication?"
+                rows={4}
+                className="mb-4 bg-gradient-to-br from-slate-900/50 to-slate-800/50 border border-white/10 focus:border-indigo-500/50 focus:shadow-[0_0_20px_rgba(99,102,241,0.1)] text-base resize-none backdrop-blur-sm transition-all"
+                disabled={isLoading}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter' && (e.metaKey || e.ctrlKey)) {
+                    e.preventDefault();
+                    handleGenerate();
+                  }
+                }}
+              />
+              {question.length > 0 && (
+                <div className="absolute top-2 right-2">
+                  <div className="w-2 h-2 rounded-full bg-indigo-400 animate-pulse"></div>
+                </div>
+              )}
+            </div>
 
             {/* Intent Detection */}
             {detectedIntent && detectedIntent.confidence > 0.6 && (
