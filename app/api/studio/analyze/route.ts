@@ -90,9 +90,9 @@ export async function POST(req: NextRequest) {
       publicationId,
       briefId: result.briefId,
       quota: {
-        used: subscription.studioQuestionsUsed + 1,
-        limit: subscription.studioQuestionsPerMonth,
-        remaining: subscription.studioQuestionsPerMonth - subscription.studioQuestionsUsed - 1,
+        used: subscription.studioUsed + 1,
+        limit: subscription.studioLimit,
+        remaining: subscription.studioLimit - subscription.studioUsed - 1,
       },
       stats: result.stats,
     });
