@@ -23,6 +23,8 @@ export async function POST(req: NextRequest) {
       return createLimitExceededResponse('studio');
     }
 
+    const subscription = subscriptionCheck.subscription!;
+
     const session = await getSession();
     if (!session?.email) {
       return NextResponse.json({ error: "Unauthorized" }, { status: 401 });
