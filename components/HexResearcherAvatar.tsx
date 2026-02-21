@@ -4,7 +4,9 @@ import React, { useState } from 'react';
 import { Researcher } from '@/lib/researchers';
 import {
   TrendingUp, Brain, Shield, BookOpen,
-  Scale, Leaf, Calculator, Cpu
+  Scale, Leaf, Calculator, Cpu,
+  Users, GraduationCap, Zap, Globe,
+  Eye, Smartphone, Building2, Heart, AlertTriangle
 } from 'lucide-react';
 
 interface HexResearcherAvatarProps {
@@ -17,15 +19,32 @@ interface HexResearcherAvatarProps {
 }
 
 const domainIcons: Record<string, React.ElementType> = {
-  economics:    TrendingUp,
-  technology:   Cpu,
-  policy:       Shield,
-  health:       BookOpen,
-  security:     Scale,
-  law:          Scale,
-  environment:  Leaf,
-  quantitative: Calculator,
-  default:      Brain,
+  // === CORE 9 DOMAINS ===
+  economics:       TrendingUp,
+  technology:      Cpu,
+  policy:          Shield,
+  health:          BookOpen,
+  security:        Scale,
+  law:             Scale,
+  environment:     Leaf,
+  quantitative:    Calculator,
+  finance:         TrendingUp,
+  // === ADVANCED 6 DOMAINS ===
+  "social-sciences": Users,
+  humanities:      GraduationCap,
+  "energy-advanced": Zap,
+  geopolitics:      Globe,
+  "cognitive-science": Eye,
+  "digital-society": Smartphone,
+  // === SPECIALIZED 7 DOMAINS ===
+  "behavioral-economics": Users,
+  "urban-studies": Building2,
+  "development-economics": TrendingUp,
+  "computational-social-science": Cpu,
+  "bioethics": Heart,
+  "complexity-science": Brain,
+  "risk-analysis": AlertTriangle,
+  default:         Brain,
 };
 
 const statusConfig = {

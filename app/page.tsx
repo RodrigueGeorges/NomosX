@@ -297,7 +297,7 @@ export default function HomePage() {
                   { icon: BarChart3,  label: "RANK",    desc: "Quality filter",   color: "from-indigo-500 to-violet-600",  step: "02" },
                   { icon: FileText,   label: "READER",  desc: "Claim extraction", color: "from-violet-600 to-violet-500",  step: "03" },
                   { icon: Brain,      label: "ANALYST", desc: "3-pass synthesis", color: "from-violet-500 to-purple-600",  step: "04" },
-                  { icon: Shield,     label: "COUNCIL", desc: "9 PhD review",     color: "from-purple-600 to-indigo-700",  step: "05" },
+                  { icon: Shield,     label: "COUNCIL", desc: "22 PhD review",     color: "from-purple-600 to-indigo-700",  step: "05" },
                   { icon: TrendingUp, label: "PUBLISH", desc: "Auto-published",   color: "from-indigo-700 to-violet-800",  step: "06" },
                 ].map((step, i) => {
                   const Icon = step.icon;
@@ -408,7 +408,7 @@ export default function HomePage() {
                     <span className="nx-gradient-text">Directly in your inbox.</span>
                   </h2>
                   <p className="text-base text-white/45 mb-3 max-w-xl mx-auto leading-relaxed">
-                    Every week, the Think Tank publishes its most significant findings — synthesised from hundreds of peer-reviewed sources, validated by 9 PhD-calibrated agents, delivered automatically.
+                    Every week, the Think Tank publishes its most significant findings — synthesised from hundreds of peer-reviewed sources, validated by 22 PhD-calibrated agents, delivered automatically.
                   </p>
                   <p className="text-sm text-white/25 mb-10 max-w-md mx-auto">No editorial team. No curation bias. Pure autonomous research output.</p>
                   {newsletterStatus === "success" ? (

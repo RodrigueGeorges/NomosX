@@ -100,7 +100,7 @@ export default function PricingPage() {
     },
     {
       icon: Users,
-      title: "9 PhD-calibrated agents",
+      title: "22 PhD-calibrated agents",
       description: "Each researcher holds a domain mandate and reviews every publication via the NomosX Council Protocol."
     }
   ];
@@ -108,7 +108,7 @@ export default function PricingPage() {
   const faq = [
     {
       q: "What does 'auto-published' mean exactly?",
-      a: "NomosX publishes peer-reviewed strategic research autonomously — synthesised from 250M+ academic sources, validated by 9 PhD-calibrated agents. The pipeline runs continuously. Briefs are published without human trigger or editorial intervention."
+      a: "NomosX publishes peer-reviewed strategic research autonomously — synthesised from 250M+ academic sources, validated by 22 PhD-calibrated agents. The pipeline runs continuously. Briefs are published without human trigger or editorial intervention."
     },
     {
       q: "What is the difference between a Brief and a Strategic Report?",
@@ -155,7 +155,7 @@ export default function PricingPage() {
             </h1>
 
             <p className="text-lg text-white/50 leading-relaxed max-w-2xl mx-auto font-light">
-              Every week, the Think Tank publishes its most significant findings — synthesised from hundreds of peer-reviewed sources, validated by 9 PhD-calibrated agents, delivered automatically.
+              Every week, the Think Tank publishes its most significant findings — synthesised from hundreds of peer-reviewed sources, validated by 22 PhD-calibrated agents, delivered automatically.
             </p>
           </div>
 

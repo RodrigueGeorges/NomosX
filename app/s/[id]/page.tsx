@@ -80,7 +80,7 @@ export default async function SharedBrief({ params }: { params: Promise<{ id: st
             Get weekly intelligence briefs like this one.
           </h2>
           <p className="text-sm text-white/40 mb-6 max-w-md mx-auto">
-            NomosX publishes peer-reviewed strategic research autonomously — synthesised from 250M+ academic sources, validated by 9 PhD-calibrated agents.
+            NomosX publishes peer-reviewed strategic research autonomously — synthesised from 250M+ academic sources, validated by 22 PhD-calibrated agents.
           </p>
           <div className="flex flex-col sm:flex-row gap-3 justify-center">
             <Link

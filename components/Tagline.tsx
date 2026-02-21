@@ -28,7 +28,7 @@ const taglines = [
   {
     primary: "Turning Academic Insights Into Boardroom Decisions",
     secondary: "Strategic Intelligence for Modern Leaders",
-    description: "9 PhD researchers working exclusively for your strategic advantage"
+    description: "22 PhD researchers working exclusively for your strategic advantage"
   }
 ];
 
@@ -197,7 +197,7 @@ export function ValueProposition({ tier = 'TRIAL', compact = false }: ValuePropo
       {
         icon: <Brain size={20} />,
         title: "Institutional-grade analysis without the six-figure retainer",
-        description: "9 PhD-calibrated researchers delivering the analysis that used to require elite consulting firms"
+        description: "22 PhD-calibrated researchers delivering the analysis that used to require elite consulting firms"
       },
       {
         icon: <Sparkles size={20} />,
