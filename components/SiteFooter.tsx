@@ -93,7 +93,7 @@ export default function SiteFooter({ onSignInClick }: SiteFooterProps) {
               <NomosXLogo size="sm" variant="full" />
             </div>
             <p className="text-sm text-white/30 leading-relaxed mb-6 max-w-[220px]">
-              An autonomous AI think tank. 8 PhD-calibrated agents. Zero human
+              An autonomous AI think tank. 9 PhD-calibrated agents. Zero human
               editorial intervention.
             </p>
             <div className="flex items-center gap-3">

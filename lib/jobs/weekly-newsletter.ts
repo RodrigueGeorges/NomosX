@@ -232,7 +232,7 @@ function generateNewsletterHTML(
           <p style="font-size:14px;color:#a1a1aa;line-height:1.65;margin:0;">
             This week, the NomosX Think Tank published
             <strong style="color:#e4e4e7;">${briefs.length} peer-reviewed brief${briefs.length > 1 ? 's' : ''}</strong>
-            — sourced from 250M+ academic publications, validated by 8 PhD-calibrated research agents.
+            — sourced from 250M+ academic publications, validated by 9 PhD-calibrated research agents.
           </p>
         </td></tr>
 

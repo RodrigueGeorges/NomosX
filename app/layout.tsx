@@ -33,7 +33,7 @@ export const metadata = {
     default: "NomosX — The Autonomous Think Tank",
     template: "%s | NomosX"
   },
-  description: "8 PhD-calibrated AI researchers continuously scan 250M+ academic publications and publish source-grounded briefs autonomously — no human trigger required.",
+  description: "9 PhD-calibrated AI researchers continuously scan 250M+ academic publications and publish source-grounded briefs autonomously — no human trigger required.",
   keywords: ["think tank", "AI", "artificial intelligence", "academic research", "strategic analysis", "decision intelligence", "autonomous research"],
   authors: [{ name: "NomosX" }],
   creator: "NomosX",
@@ -51,12 +51,12 @@ export const metadata = {
     locale: 'en_US',
     siteName: 'NomosX',
     title: 'NomosX — The Autonomous Think Tank',
-    description: '8 PhD-calibrated AI researchers scan 250M+ academic publications and publish source-grounded briefs autonomously.',
+    description: '9 PhD-calibrated AI researchers scan 250M+ academic publications and publish source-grounded briefs autonomously.',
   },
   twitter: {
     card: 'summary_large_image',
     title: 'NomosX — The Autonomous Think Tank',
-    description: '8 PhD-calibrated AI researchers scan 250M+ academic publications and publish source-grounded briefs autonomously.',
+    description: '9 PhD-calibrated AI researchers scan 250M+ academic publications and publish source-grounded briefs autonomously.',
   },
 };
 

@@ -100,7 +100,7 @@ export default function PricingPage() {
     },
     {
       icon: Users,
-      title: "8 PhD-calibrated agents",
+      title: "9 PhD-calibrated agents",
       description: "Each researcher holds a domain mandate and reviews every publication via the NomosX Council Protocol."
     }
   ];
@@ -108,11 +108,11 @@ export default function PricingPage() {
   const faq = [
     {
       q: "What does 'auto-published' mean exactly?",
-      a: "The NomosX pipeline runs on a continuous schedule. It scouts academic sources, ranks them, extracts claims, synthesises findings through a 3-pass analyst, submits to the NomosX Council for peer review, and publishes the final brief — all without any human in the loop."
+      a: "NomosX publishes peer-reviewed strategic research autonomously — synthesised from 250M+ academic sources, validated by 9 PhD-calibrated agents. The pipeline runs continuously. Briefs are published without human trigger or editorial intervention."
     },
     {
       q: "What is the difference between a Brief and a Strategic Report?",
-      a: "A Brief is a focused 2-4 page synthesis on a specific question, produced by the standard pipeline. A Strategic Report is a 10-15 page deep dive with scenario planning, stakeholder analysis, and full meta-analysis — produced by the extended pipeline with all 8 researchers."
+      a: "A Brief is a focused 2-4 page synthesis on a specific question, produced by the standard pipeline. A Strategic Report is a 10-15 page deep dive with scenario planning, stakeholder analysis, and full meta-analysis — produced by the extended pipeline with all 9 researchers."
     },
     {
       q: "What is Publications Studio?",
@@ -155,8 +155,7 @@ export default function PricingPage() {
             </h1>
 
             <p className="text-lg text-white/50 leading-relaxed max-w-2xl mx-auto font-light">
-              The Think Tank publishes autonomously. Choose how deep you want to go.
-              30-day free trial, no commitment.
+              Every week, the Think Tank publishes its most significant findings — synthesised from hundreds of peer-reviewed sources, validated by 9 PhD-calibrated agents, delivered automatically.
             </p>
           </div>
 

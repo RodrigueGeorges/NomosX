@@ -33,7 +33,7 @@ export default function MethodologyPage() {
     {
       icon: Brain,
       title: "Collective expertise",
-      description: "8 PhD perspectives from leading institutions for multidimensional analysis."
+      description: "9 PhD perspectives from leading institutions for multidimensional analysis."
     },
     {
       icon: Shield,

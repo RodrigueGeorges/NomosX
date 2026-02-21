@@ -83,9 +83,9 @@ SYNTHESIS DIRECTOR → Final integrated analysis
 
 ## ✨ Features Uniques
 
-### 🎯 V5 Harvard Council (8 PhD Researchers)
+### 🎯 V5 Harvard Council (9 PhD Researchers)
 
-Analyse **8 perspectives expertes** automatiquement :
+Analyse **9 perspectives expertes** automatiquement :
 
 ```
 � Dr. Elena Vasquez (MIT PhD) → Econometrics & Policy Economics

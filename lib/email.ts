@@ -131,7 +131,7 @@ export async function sendWelcomeEmail(to: string, name?: string | null): Promis
       Welcome to NomosX, ${displayName}.
     </h1>
     <p style="font-size:14px;color:#a1a1aa;margin:0 0 24px;line-height:1.6;">
-      Your account is active. NomosX is an autonomous think tank — 8 PhD-calibrated AI researchers
+      Your account is active. NomosX is an autonomous think tank — 9 PhD-calibrated AI researchers
       publish peer-reviewed intelligence briefs continuously, across economics, policy, technology,
       climate, law, and more.
     </p>
@@ -196,7 +196,7 @@ export async function sendNewsletterWelcome(to: string): Promise<void> {
     </h1>
     <p style="font-size:14px;color:#a1a1aa;margin:0 0 24px;line-height:1.6;">
       Every week, NomosX publishes peer-reviewed intelligence briefs — written autonomously
-      by 8 PhD-calibrated AI researchers, sourced from 250M+ academic publications.
+      by 9 PhD-calibrated AI researchers, sourced from 250M+ academic publications.
     </p>
     <p style="font-size:14px;color:#a1a1aa;margin:0 0 32px;line-height:1.6;">
       Your first dispatch arrives next Monday. In the meantime, browse our published briefs.
